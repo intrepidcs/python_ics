@@ -28,11 +28,29 @@ module = Extension('ics',
   extra_compile_args=['-fpermissive'])
 
 setup (name = 'python_ics',
-       version = '%d.%d-2' % (MAJOR_VERSION, MINOR_VERSION),
+       version = '%d.%d-3' % (MAJOR_VERSION, MINOR_VERSION),
        description = 'Intrepidcs icsneo40 Python 3 API/Wrapper',
+       long_description = 
+       """Python C Code module for interfacing to the icsneo40 dynamic library. Code tries 
+to respect PEP 8 (https://www.python.org/dev/peps/pep-0008/). Function naming convention does 
+not follow the tradition c style icsneo40 naming convention as the python_ics module 
+name acts as the namespace (icsneo portion of the function) and function names 
+are suppose to be lowercase with underscores instead of mixedCase like icsneo API.""",
+       license = "MIT",
        author = 'David Rebbe',
        author_email='drebbe@intrepidcs.com',
-       url='http://www.intrepidcs.com',
+       maintainer = 'David Rebbe',
+       maintainer_email='drebbe@intrepidcs.com',
+       url='https://github.com/ic3man5/python_ics/',
        cmdclass = { 'build': build, },
        download_url = 'https://github.com/ic3man5/python_ics/archive/1.0-2.tar.gz',
-       ext_modules = [module])
+       ext_modules = [module],
+       classifiers = [
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        ],)
