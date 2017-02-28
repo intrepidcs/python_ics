@@ -27,11 +27,12 @@ module = Extension('ics',
   sources = source_files,
   extra_compile_args=['-fpermissive'])
 
-setup (name = 'ICS',
+setup (name = 'python_ics',
        version = '%d.%d' % (MAJOR_VERSION, MINOR_VERSION),
        description = 'Intrepidcs icsneo40 Python 3 API/Wrapper',
        author = 'David Rebbe',
        author_email='drebbe@intrepidcs.com',
        url='http://www.intrepidcs.com',
        cmdclass = { 'build': build, },
+       download_url = 'https://github.com/ic3man5/python_ics/archive/1.0.tar.gz',
        ext_modules = [module])
