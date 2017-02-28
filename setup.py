@@ -3,7 +3,7 @@ from setuptools import setup, Extension
 from distutils.command import build as build_module
 import os
 
-MAJOR_VERSION = 1
+MAJOR_VERSION = 2
 MINOR_VERSION = 0
 
 class build(build_module.build):
@@ -28,7 +28,7 @@ module = Extension('ics',
   extra_compile_args=['-fpermissive'])
 
 setup (name = 'python_ics',
-       version = '%d.%d-3' % (MAJOR_VERSION, MINOR_VERSION),
+       version = '%d.%d' % (MAJOR_VERSION, MINOR_VERSION),
        description = 'Intrepidcs icsneo40 Python 3 API/Wrapper',
        long_description = 
        """Python C Code module for interfacing to the icsneo40 dynamic library. Code tries 
@@ -43,7 +43,7 @@ are suppose to be lowercase with underscores instead of mixedCase like icsneo AP
        maintainer_email='drebbe@intrepidcs.com',
        url='https://github.com/ic3man5/python_ics/',
        cmdclass = { 'build': build, },
-       download_url = 'https://github.com/ic3man5/python_ics/archive/1.0-2.tar.gz',
+       download_url = 'https://github.com/ic3man5/python_ics/releases',
        ext_modules = [module],
        classifiers = [
         'Programming Language :: Python :: 2',
