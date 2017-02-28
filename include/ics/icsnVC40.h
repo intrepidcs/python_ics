@@ -26,7 +26,24 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef _ICSNVC40_H
 #define _ICSNVC40_H
 
-#include <stdint.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#if defined(_MSC_VER) && (_MSC_VER <= 1500)
+    // Visual studio has extremely poor support for C99 pre-2010
+    typedef signed char int8_t;
+    typedef short int16_t;
+    typedef int int32_t;
+    typedef __int64 int64_t;
+
+    typedef unsigned char uint8_t;
+    typedef unsigned short uint16_t;
+    typedef unsigned int uint32_t;
+    typedef unsigned __int64 uint64_t;
+#else
+    #include <stdint.h>
+#endif
 
 /* OpenPort "OpenType" Argument Constants -- deprecated, use OpenNeoDevice */
 #define    NEOVI_COMMTYPE_RS232                       0
@@ -1823,5 +1840,9 @@ CHECK_STRUCT_SIZE(icsSpyMessageJ1850);
 CHECK_STRUCT_SIZE(icsSpyMessageVSB);
 
 #endif /* __cplusplus > 199711L */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _ICSNVC40_H */
