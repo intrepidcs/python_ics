@@ -34,5 +34,5 @@ setup (name = 'python_ics',
        author_email='drebbe@intrepidcs.com',
        url='http://www.intrepidcs.com',
        cmdclass = { 'build': build, },
-       download_url = 'https://github.com/ic3man5/python_ics/archive/1.0.tar.gz',
+       download_url = 'https://github.com/ic3man5/python_ics/archive/1.0-2.tar.gz',
        ext_modules = [module])
