@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from distutils.core import setup, Extension
+from setuptools import setup, Extension
 from distutils.command import build as build_module
 import os
 
@@ -28,7 +28,7 @@ module = Extension('ics',
   extra_compile_args=['-fpermissive'])
 
 setup (name = 'python_ics',
-       version = '%d.%d' % (MAJOR_VERSION, MINOR_VERSION),
+       version = '%d.%d-2' % (MAJOR_VERSION, MINOR_VERSION),
        description = 'Intrepidcs icsneo40 Python 3 API/Wrapper',
        author = 'David Rebbe',
        author_email='drebbe@intrepidcs.com',

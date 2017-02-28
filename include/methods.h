@@ -5,6 +5,7 @@
 #include "object_fire_settings.h"
 #include "object_neo_device.h"
 #include "object_api_firmware_info.h"
+#include "setup_module_auto_defines.h"
 
 #ifdef _cplusplus
 extern "C" {
@@ -24,7 +25,9 @@ PyObject* meth_transmit_messages(PyObject* self, PyObject* args);
 PyObject* meth_get_messages(PyObject* self, PyObject* args);
 PyObject* meth_get_script_status(PyObject* self, PyObject* args);
 PyObject* meth_get_error_messages(PyObject* self, PyObject* args);
+#ifdef _USE_INTERNAL_HEADER_
 PyObject* meth_flash_devices(PyObject* self, PyObject* args);
+#endif // _USE_INTERNAL_HEADER_
 PyObject* meth_set_reflash_callback(PyObject* self, PyObject* args);
 PyObject* meth_get_device_settings(PyObject* self, PyObject* args);
 PyObject* meth_set_device_settings(PyObject* self, PyObject* args);
@@ -859,7 +862,9 @@ static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("get_messages", "GetMessages", meth_get_messages, METH_VARARGS, _DOC_GET_MESSAGES),
     _EZ_ICS_STRUCT_METHOD("get_script_status", "icsneoScriptGetScriptStatusEx", meth_get_script_status, METH_VARARGS, "Accepts a " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME ", exception on error. Returns a list of values of what ulParameters would hold"),
     _EZ_ICS_STRUCT_METHOD("get_error_messages", "GetErrorMessages", meth_get_error_messages, METH_VARARGS, _DOC_GET_ERROR_MESSAGES),
+#ifdef _USE_INTERNAL_HEADER_
     _EZ_ICS_STRUCT_METHOD("flash_devices", "FlashDevice2", meth_flash_devices, METH_VARARGS, "int _stdcall FlashDevice2()"),
+#endif
     _EZ_ICS_STRUCT_METHOD("set_reflash_callback", "SetReflashDisplayCallback", meth_set_reflash_callback, METH_VARARGS, _DOC_SET_REFLASH_CALLBACK),
     _EZ_ICS_STRUCT_METHOD("get_device_settings", "icsneoGetFireSettings", meth_get_device_settings, METH_VARARGS, _DOC_GET_DEVICE_SETTINGS),
     _EZ_ICS_STRUCT_METHOD_MULTIPLE("get_device_settings", "icsneoGetVCAN3Settings", meth_get_device_settings, METH_VARARGS, _DOC_GET_DEVICE_SETTINGS),

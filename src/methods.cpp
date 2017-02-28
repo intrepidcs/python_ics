@@ -5,7 +5,6 @@
     #define USING_STUDIO_8 1
 #endif
 #include <icsnVC40.h>
-#include <icsnVC40Internal.h>
 #include <datetime.h>
 #include "object_spy_message.h"
 #include "object_neo_device.h"
@@ -24,6 +23,7 @@
 #include "object_op_eth_general_settings.h"
 #include "object_op_eth_settings.h"
 #include "object_rad_galaxy_settings.h"
+#include "setup_module_auto_defines.h"
 
 extern PyTypeObject spy_message_object_type;
 // __func__, __FUNCTION__ and __PRETTY_FUNCTION__ are not preprocessor macros.
@@ -39,6 +39,18 @@ const char* arg_parse(const char* args, const char* func)
     strcat(buffer, func);
     return buffer;
 }
+#endif
+
+#ifndef _USE_INTERNAL_HEADER_
+typedef struct 
+{
+    unsigned char sec;           // --- Seconds (00-59)
+    unsigned char min;        // --- (00-59)
+    unsigned char hour;        // --- (00-23)
+    unsigned char day;        // --- (01-31)
+    unsigned char month;            // --- (01-12)
+    unsigned char year;        // --- (00-99)
+} icsSpyTime;
 #endif
 
 // Linux specific fixes
@@ -89,7 +101,7 @@ char* neodevice_to_string(unsigned long type)
     case NEODEVICE_ECU25: return "neoECU25";
     case NEODEVICE_EEVB: return "EEVB";
     case NEODEVICE_VCANRF: return "ValueCAN.rf";
-    case NEODEVICE_FIRE2_CYAN: return "neoVI FIRE2 CYAN";
+    case NEODEVICE_FIRE2: return "neoVI FIRE2";
     case NEODEVICE_FLEX: return "FLEX";
     case NEODEVICE_RADGALAXY: return "RAD Galaxy";
     default: return "unknown/unsupported";
@@ -1005,6 +1017,7 @@ static void message_callback(const char* message, bool success)
     }
 }
 
+#ifdef _USE_INTERNAL_HEADER_
 PyObject* meth_flash_devices(PyObject* self, PyObject* args)
 {
     PyObject* obj = NULL;
@@ -1073,6 +1086,7 @@ PyObject* meth_flash_devices(PyObject* self, PyObject* args)
     }
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
+#endif // _USE_INTERNAL_HEADER_
 
 PyObject* msg_reflash_callback = NULL;
 static void message_reflash_callback(const wchar_t* message, unsigned long progress)
@@ -1547,7 +1561,7 @@ PyObject* meth_get_device_settings(PyObject* self, PyObject* args)
         return _get_vcan3_settings(handle);
     } else if (device_type == NEODEVICE_VCANRF) {
         return _get_vcanrf_settings(handle);
-    } else if (device_type == NEODEVICE_FIRE2_CYAN) {
+    } else if (device_type == NEODEVICE_FIRE2) {
         return _get_cyan_settings(handle);
     } else if (device_type == NEODEVICE_RADGALAXY) {
         return _get_rad_galaxy_settings(handle);
@@ -1897,7 +1911,7 @@ PyObject* meth_set_device_settings(PyObject* self, PyObject* args)
         return _set_vcan3_settings(handle, settings, save_to_eeprom);
     } else if (device_type == NEODEVICE_VCANRF) {
         return _set_vcanrf_settings(handle, settings, save_to_eeprom);
-    } else if (device_type == NEODEVICE_FIRE2_CYAN) {
+    } else if (device_type == NEODEVICE_FIRE2) {
         return _set_cyan_settings(handle, settings, save_to_eeprom);
     } else if (device_type == NEODEVICE_RADGALAXY) {
         return _set_rad_galaxy_settings(handle, settings, save_to_eeprom);
