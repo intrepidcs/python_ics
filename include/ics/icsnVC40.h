@@ -26,10 +26,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef _ICSNVC40_H
 #define _ICSNVC40_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #if defined(_MSC_VER) && (_MSC_VER <= 1500)
     // Visual studio has extremely poor support for C99 pre-2010
     typedef signed char int8_t;
@@ -46,84 +42,84 @@ extern "C" {
 #endif
 
 /* OpenPort "OpenType" Argument Constants -- deprecated, use OpenNeoDevice */
-#define    NEOVI_COMMTYPE_RS232                       0
-#define    NEOVI_COMMTYPE_USB_BULK                    1
-#define    NEOVI_COMMTYPE_TCPIP                    3
-#define    NEOVI_COMMTYPE_FIRE_USB                    5
+#define	NEOVI_COMMTYPE_RS232			   	    0
+#define	NEOVI_COMMTYPE_USB_BULK				    1
+#define	NEOVI_COMMTYPE_TCPIP		    	    3
+#define	NEOVI_COMMTYPE_FIRE_USB				    5
 
 /* Network IDs -- value of NetworkID member of icsSpyMessage */
-#define    NETID_DEVICE                            0
-#define    NETID_HSCAN                                 1
-#define    NETID_MSCAN                                2
-#define    NETID_SWCAN                                3
-#define    NETID_LSFTCAN                            4
-#define    NETID_FORDSCP                            5
-#define    NETID_J1708                                6
-#define    NETID_AUX                                7
-#define    NETID_JVPW                                8
-#define    NETID_ISO                                9
-#define    NETID_ISOPIC                           10
-#define    NETID_MAIN51                           11
-#define    NETID_RED                               12
+#define	NETID_DEVICE	                        0
+#define	NETID_HSCAN		     	                1
+#define	NETID_MSCAN			                    2
+#define	NETID_SWCAN		    	                3
+#define	NETID_LSFTCAN		                    4
+#define	NETID_FORDSCP		                    5
+#define	NETID_J1708		    	                6
+#define	NETID_AUX			                    7
+#define	NETID_JVPW		                	    8
+#define	NETID_ISO			                    9
+#define	NETID_ISOPIC		                   10
+#define	NETID_MAIN51		                   11
+#define	NETID_RED		                       12
 #define NETID_SCI                              13
 #define NETID_ISO2                             14
 #define NETID_ISO14230                         15
-#define    NETID_LIN                               16
-#define    NETID_OP_ETHERNET1                       17
-#define    NETID_OP_ETHERNET2                       18
-#define    NETID_OP_ETHERNET3                       19
+#define	NETID_LIN			                   16
+#define	NETID_OP_ETHERNET1				       17
+#define	NETID_OP_ETHERNET2				       18
+#define	NETID_OP_ETHERNET3				       19
 #define NETID_ISO3                             41
 #define NETID_HSCAN2                           42
 #define NETID_HSCAN3                           44
-#define    NETID_OP_ETHERNET4                       45
-#define    NETID_OP_ETHERNET5                       46
+#define	NETID_OP_ETHERNET4				       45
+#define	NETID_OP_ETHERNET5				       46
 #define NETID_ISO4                             47
 #define NETID_LIN2                             48
 #define NETID_LIN3                             49
 #define NETID_LIN4                             50
-#define NETID_MOST                               51
+#define NETID_MOST	                           51
 #define NETID_RED_APP_ERROR                    52
-#define    NETID_CGI                               53
-#define NETID_3G_RESET_STATUS                   54
-#define    NETID_3G_FB_STATUS                       55
-#define    NETID_3G_APP_SIGNAL_STATUS               56
-#define    NETID_3G_READ_DATALINK_CM_TX_MSG       57
-#define    NETID_3G_READ_DATALINK_CM_RX_MSG       58
-#define    NETID_3G_LOGGING_OVERFLOW               59
-#define    NETID_3G_READ_SETTINGS_EX               60
+#define	NETID_CGI			                   53
+#define NETID_3G_RESET_STATUS			       54
+#define	NETID_3G_FB_STATUS			           55
+#define	NETID_3G_APP_SIGNAL_STATUS		       56
+#define	NETID_3G_READ_DATALINK_CM_TX_MSG       57
+#define	NETID_3G_READ_DATALINK_CM_RX_MSG       58
+#define	NETID_3G_LOGGING_OVERFLOW		       59
+#define	NETID_3G_READ_SETTINGS_EX		       60
 #define NETID_HSCAN4                           61
-#define NETID_HSCAN5                             62
-#define NETID_RS232                             63
-#define NETID_UART                             64
-#define NETID_UART2                             65
-#define NETID_UART3                             66
-#define NETID_UART4                             67
-#define NETID_SWCAN2                             68
-#define NETID_ETHERNET_DAQ                       69
-#define NETID_DATA_TO_HOST                       70
-#define NETID_TEXTAPI_TO_HOST                   71
-#define    NETID_I2C1                               71
-#define    NETID_SPI1                               72
-#define    NETID_OP_ETHERNET6                       73
-#define    NETID_RED_VBAT                           74
-#define NETID_OP_ETHERNET7                       75
-#define    NETID_OP_ETHERNET8                       76
-#define    NETID_OP_ETHERNET9                       77
-#define    NETID_OP_ETHERNET10                       78
-#define    NETID_OP_ETHERNET11                       79
-#define    NETID_FLEXRAY1A                           80
-#define    NETID_FLEXRAY1B                           81
-#define    NETID_FLEXRAY2A                           82
-#define    NETID_FLEXRAY2B                           83
-#define NETID_LIN5                               84
-#define    NETID_FLEXRAY                           85
-#define    NETID_FLEXRAY2                           86
-#define    NETID_OP_ETHERNET12                       87
-#define NETID_MOST25                           90
-#define NETID_MOST50                           91
-#define NETID_MOST150                           92
-#define NETID_ETHERNET                           93
-#define NETID_GMFSA                               94
+#define NETID_HSCAN5          	               62
+#define NETID_RS232          	               63
+#define NETID_UART          	               64
+#define NETID_UART2          	               65
+#define NETID_UART3          	               66
+#define NETID_UART4          	               67
+#define NETID_SWCAN2          	               68
+#define NETID_ETHERNET_DAQ	                   69
+#define NETID_DATA_TO_HOST		               70
+#define NETID_TEXTAPI_TO_HOST	               71
+#define	NETID_I2C1				               71
+#define	NETID_SPI1				               72
+#define	NETID_OP_ETHERNET6				       73
+#define	NETID_RED_VBAT		                   74
+#define NETID_OP_ETHERNET7				       75
+#define	NETID_OP_ETHERNET8				       76
+#define	NETID_OP_ETHERNET9				       77
+#define	NETID_OP_ETHERNET10				       78
+#define	NETID_OP_ETHERNET11				       79
+#define	NETID_FLEXRAY1A			               80
+#define	NETID_FLEXRAY1B			               81
+#define	NETID_FLEXRAY2A			               82
+#define	NETID_FLEXRAY2B			               83
+#define NETID_LIN5						       84
+#define	NETID_FLEXRAY			               85
+#define	NETID_FLEXRAY2			               86
+#define	NETID_OP_ETHERNET12				       87
+#define NETID_MOST25	                       90
+#define NETID_MOST50	                       91
+#define NETID_MOST150	                       92
+#define NETID_ETHERNET	                       93
+#define NETID_GMFSA						       94
 #define NETID_TCP                              95
 #define NETID_HSCAN6                           96
 #define NETID_HSCAN7                           97
@@ -139,38 +135,38 @@ extern "C" {
 
 /* Device types -- value of DeviceType of NeoDevice */
 #define NEODEVICE_UNKNOWN                       0
-#define NEODEVICE_BLUE                            1
-#define NEODEVICE_SW_VCAN                        2
-#define NEODEVICE_DW_VCAN                        4
-#define NEODEVICE_FIRE                               8
-#define NEODEVICE_VCAN3                            16
-#define NEODEVICE_RED                              64
-#define NEODEVICE_ECU                            128
-#define NEODEVICE_IEVB                           256
-#define NEODEVICE_PENDANT                         512
+#define NEODEVICE_BLUE			                1
+#define NEODEVICE_SW_VCAN		                2
+#define NEODEVICE_DW_VCAN		                4
+#define NEODEVICE_FIRE		           	        8
+#define NEODEVICE_VCAN3		         	       16
+#define NEODEVICE_RED		           	       64
+#define NEODEVICE_ECU		          	      128
+#define NEODEVICE_IEVB       	  		      256
+#define NEODEVICE_PENDANT	       	          512
 #define NEODEVICE_VIRTUAL_NEOVI              1024
-#define NEODEVICE_ECUCHIP_UART                 2048
-#define NEODEVICE_PLASMA_1_11               0x1000
-#define NEODEVICE_FIRE_VNET                   0x2000
-#define NEODEVICE_NEOANALOG                   0x4000
+#define NEODEVICE_ECUCHIP_UART		         2048
+#define NEODEVICE_PLASMA_1_11			   0x1000
+#define NEODEVICE_FIRE_VNET				   0x2000
+#define NEODEVICE_NEOANALOG		           0x4000
 #define NEODEVICE_CT_OBD                   0x8000
-#define NEODEVICE_PLASMA_1_12              0x10000
-#define NEODEVICE_PLASMA_1_13              0x20000
+#define NEODEVICE_PLASMA_1_12			  0x10000
+#define NEODEVICE_PLASMA_1_13			  0x20000
 #define NEODEVICE_ION_2                   0x40000
-#define NEODEVICE_RADSTAR                  0x80000
-#define NEODEVICE_ION_3                  0x100000
-#define NEODEVICE_VCANFD                 0x200000
-#define NEODEVICE_ECU15                     0x400000
-#define NEODEVICE_ECU25                     0x800000
-#define NEODEVICE_EEVB                    0x1000000
-#define NEODEVICE_VCANRF                0x2000000
+#define NEODEVICE_RADSTAR	              0x80000
+#define NEODEVICE_ION_3 			     0x100000
+#define NEODEVICE_VCANFD			     0x200000
+#define NEODEVICE_ECU15				     0x400000
+#define NEODEVICE_ECU25				     0x800000
+#define NEODEVICE_EEVB				    0x1000000
+#define NEODEVICE_VCANRF			    0x2000000
 #define NEODEVICE_FIRE2                 0x4000000
-#define NEODEVICE_FLEX                    0x8000000
-#define NEODEVICE_RADGALAXY               0x10000000
+#define NEODEVICE_FLEX				    0x8000000
+#define NEODEVICE_RADGALAXY			   0x10000000
 #define NEODEVICE_ANY_PLASMA           (NEODEVICE_PLASMA_1_11 | NEODEVICE_FIRE_VNET | NEODEVICE_PLASMA_1_12 | NEODEVICE_PLASMA_1_13)
 #define NEODEVICE_ANY_ION              (NEODEVICE_ION_2 | NEODEVICE_ION_3)
 #define NEODEVICE_ALL                  0xFFFFBFFF
-#define NEODEVICE_NEOECUCHIP           NEODEVICE_IEVB
+#define NEODEVICE_NEOECUCHIP	       NEODEVICE_IEVB
 
 #define ISO15765_2_NETWORK_HSCAN             0x01
 #define ISO15765_2_NETWORK_MSCAN             0x02
@@ -194,10 +190,10 @@ extern "C" {
 #define SCRIPT_STATUS_STOPPED                   0
 #define SCRIPT_STATUS_RUNNING                   1
 
-#define SCRIPT_LOCATION_FLASH_MEM                  0
-#define SCRIPT_LOCATION_INTERNAL_FLASH            2
-#define SCRIPT_LOCATION_SDCARD                     1
-#define SCRIPT_LOCATION_VCAN3_MEM                  4
+#define SCRIPT_LOCATION_FLASH_MEM  		        0
+#define SCRIPT_LOCATION_INTERNAL_FLASH	        2
+#define SCRIPT_LOCATION_SDCARD     		        1
+#define SCRIPT_LOCATION_VCAN3_MEM  		        4
 
 /* Protocols -- value of Protocol member of icsSpyMessage */
 #define SPY_PROTOCOL_CUSTOM                     0
@@ -290,7 +286,7 @@ extern "C" {
 #define SPY_STATUS2_LIN_ERR_RX_DATA_GREATER_8       0x1000000
 #define SPY_STATUS2_LIN_ERR_TX_RX_MISMATCH          0x2000000
 #define SPY_STATUS2_LIN_ERR_MSG_ID_PARITY           0x4000000
-#define SPY_STATUS2_ISO_FRAME_ERROR                 0x8000000
+#define SPY_STATUS2_ISO_FRAME_ERROR 		        0x8000000
 #define SPY_STATUS2_LIN_SYNC_FRAME_ERROR            0x8000000
 #define SPY_STATUS2_ISO_OVERFLOW_ERROR              0x10000000
 #define SPY_STATUS2_LIN_ID_FRAME_ERROR              0x10000000
@@ -303,17 +299,17 @@ extern "C" {
 #define SPY_STATUS3_LIN_ONLY_UPDATE_SLAVE_TABLE_ONCE            0x4
 
 /* MOST Specific - check protocol before handling */
-#define SPY_STATUS2_MOST_PACKET_DATA                0x200000
-#define SPY_STATUS2_MOST_STATUS                         0x400000 /* reflects changes in light/lock/MPR/SBC/etc... */
-#define SPY_STATUS2_MOST_LOW_LEVEL                     0x800000 /* MOST low level message, allocs, deallocs, remote requests...*/
-#define SPY_STATUS2_MOST_CONTROL_DATA                 0x1000000
-#define SPY_STATUS2_MOST_MHP_USER_DATA                 0x2000000 /* MOST HIGH User Data Frame */
-#define SPY_STATUS2_MOST_MHP_CONTROL_DATA            0x4000000 /* MOST HIGH Control Data */
-#define SPY_STATUS2_MOST_I2S_DUMP                     0x8000000
-#define SPY_STATUS2_MOST_TOO_SHORT                      0x10000000
-#define SPY_STATUS2_MOST_MOST50                      0x20000000 /* absence of MOST50 and MOST150 implies it's MOST25 */
-#define SPY_STATUS2_MOST_MOST150                     0x40000000
-#define SPY_STATUS2_MOST_CHANGED_PAR                 0x80000000 /* first byte in ack reflects what changed. */
+#define SPY_STATUS2_MOST_PACKET_DATA		        0x200000
+#define SPY_STATUS2_MOST_STATUS	 	                0x400000 /* reflects changes in light/lock/MPR/SBC/etc... */
+#define SPY_STATUS2_MOST_LOW_LEVEL 		            0x800000 /* MOST low level message, allocs, deallocs, remote requests...*/
+#define SPY_STATUS2_MOST_CONTROL_DATA 	            0x1000000
+#define SPY_STATUS2_MOST_MHP_USER_DATA 	            0x2000000 /* MOST HIGH User Data Frame */
+#define SPY_STATUS2_MOST_MHP_CONTROL_DATA	        0x4000000 /* MOST HIGH Control Data */
+#define SPY_STATUS2_MOST_I2S_DUMP 		            0x8000000
+#define SPY_STATUS2_MOST_TOO_SHORT 		 	        0x10000000
+#define SPY_STATUS2_MOST_MOST50 		 	        0x20000000 /* absence of MOST50 and MOST150 implies it's MOST25 */
+#define SPY_STATUS2_MOST_MOST150		 	        0x40000000
+#define SPY_STATUS2_MOST_CHANGED_PAR		 	    0x80000000 /* first byte in ack reflects what changed. */
 
 /* Ethernet Specific - check protocol before handling */
 #define SPY_STATUS2_ETHERNET_CRC_ERROR              0x200000
@@ -342,25 +338,25 @@ extern "C" {
 
 /* Configuration Array constants */
 /* HSCAN neoVI or ValueCAN */
-#define    NEO_CFG_MPIC_HS_CAN_CNF1    (512 + 10)
-#define    NEO_CFG_MPIC_HS_CAN_CNF2    (512 + 9)
-#define    NEO_CFG_MPIC_HS_CAN_CNF3    (512 + 8)
-#define    NEO_CFG_MPIC_HS_CAN_MODE    (512 + 54)
+#define	NEO_CFG_MPIC_HS_CAN_CNF1    (512 + 10)
+#define	NEO_CFG_MPIC_HS_CAN_CNF2    (512 + 9)
+#define	NEO_CFG_MPIC_HS_CAN_CNF3    (512 + 8)
+#define	NEO_CFG_MPIC_HS_CAN_MODE    (512 + 54)
 
 /* med speed neoVI CAN */
-#define    NEO_CFG_MPIC_MS_CAN_CNF1    (512 + 22)
-#define    NEO_CFG_MPIC_MS_CAN_CNF2    (512 + 21)
-#define    NEO_CFG_MPIC_MS_CAN_CNF3    (512 + 20)
+#define	NEO_CFG_MPIC_MS_CAN_CNF1    (512 + 22)
+#define	NEO_CFG_MPIC_MS_CAN_CNF2    (512 + 21)
+#define	NEO_CFG_MPIC_MS_CAN_CNF3    (512 + 20)
 
 /* med speed neoVI CAN */
-#define    NEO_CFG_MPIC_SW_CAN_CNF1    (512 + 34)
-#define    NEO_CFG_MPIC_SW_CAN_CNF2    (512 + 33)
-#define    NEO_CFG_MPIC_SW_CAN_CNF3    (512 + 32)
+#define	NEO_CFG_MPIC_SW_CAN_CNF1    (512 + 34)
+#define	NEO_CFG_MPIC_SW_CAN_CNF2    (512 + 33)
+#define	NEO_CFG_MPIC_SW_CAN_CNF3    (512 + 32)
 
 /* med speed neoVI CAN */
-#define    NEO_CFG_MPIC_LSFT_CAN_CNF1  (512 + 46)
-#define    NEO_CFG_MPIC_LSFT_CAN_CNF2  (512 + 45)
-#define    NEO_CFG_MPIC_LSFT_CAN_CNF3  (512 + 44)
+#define	NEO_CFG_MPIC_LSFT_CAN_CNF1  (512 + 46)
+#define	NEO_CFG_MPIC_LSFT_CAN_CNF2  (512 + 45)
+#define	NEO_CFG_MPIC_LSFT_CAN_CNF3  (512 + 44)
 
 /* Constants used to calculate timestamps */
 #define NEOVI_TIMESTAMP_2               0.1048576
@@ -594,7 +590,7 @@ typedef struct _LIN_SETTINGS
 {
     uint32_t        Baudrate;      /* New products since FIREVNETEP should rely on this only */
     uint16_t        spbrg;         /* Precompiled to be 40Mhz/Baudrate/16 - 1.  Only used in neoVI FIRE/FIREVNET(4dw) */
-    uint8_t         brgh;            /* Must be zero */
+    uint8_t         brgh; 	       /* Must be zero */
     uint8_t         numBitsDelay;
     uint8_t         MasterResistor;
     uint8_t         Mode;
@@ -854,8 +850,8 @@ enum
     REPORT_ON_MISC4_AIN,
     REPORT_ON_MISC5_AIN,
     REPORT_ON_MISC6_AIN,
-    REPORT_ON_PWM_IN1,     /* send PWM 0x101 on change */
-    REPORT_ON_GPS,         /* send GPS 0x110-0x116 on change */
+    REPORT_ON_PWM_IN1, 	/* send PWM 0x101 on change */
+    REPORT_ON_GPS, 		/* send GPS 0x110-0x116 on change */
 };
 
 typedef struct _SFireSettings
@@ -894,7 +890,7 @@ typedef struct _SFireSettings
     uint16_t        ain_sample_period;
     uint16_t        ain_threshold;
 
-    uint16_t         iso15765_separation_time_offset;
+    uint16_t 	    iso15765_separation_time_offset;
 
     uint16_t        iso9141_kwp_enable_reserved;
     ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings;
@@ -1121,7 +1117,7 @@ typedef struct _SCyanSettings
         uint32_t reserved :31;
     } flags;
 }   SCyanSettings;
-#define          SCyanSettings_SIZE 890
+#define          SCyanSettings_SIZE 898
 
 typedef SCyanSettings SFire2Settings;
 
@@ -1234,8 +1230,8 @@ typedef struct _SVCANRFSettings
     uint16_t        idle_wakeup_network_enables_1;
     uint16_t        idle_wakeup_network_enables_2;
 
-    unsigned        disableFwLEDs:1;
-    unsigned        reservedZero:15;
+    uint16_t        disableFwLEDs:1;
+    uint16_t        reservedZero:15;
 }   SVCANRFSettings;
 #define          SVCANRFSettings_SIZE 340
 
@@ -1361,7 +1357,7 @@ typedef struct _SIEVBSettings
     uint16_t        misc_io_initial_latch;
     uint16_t        misc_io_analog_enable;
     uint16_t        misc_io_report_period;
-    uint16_t        misc_io_on_report_events;
+    uint16_t	    misc_io_on_report_events;
     uint16_t        ain_sample_period;
     uint16_t        ain_threshold;
 
@@ -1512,42 +1508,42 @@ typedef struct _GLOBAL_SETTINGS
         SRADGalaxySettings  radgalaxy;
     };
 }   GLOBAL_SETTINGS;
-#define          GLOBAL_SETTINGS_SIZE 896
+#define          GLOBAL_SETTINGS_SIZE 904
 
 #define    NEOVI_3G_MAX_SETTINGS_SIZE sizeof(GLOBAL_SETTINGS)
 
 typedef struct _stCM_ISO157652_TxMessage
 {
-    uint16_t        vs_netid;    /* The netid of the message (determines which network to transmit on),  not supported */
+    uint16_t        vs_netid;	/* The netid of the message (determines which network to transmit on),  not supported */
 
-    uint8_t         padding;    /* The padding byte to use to fill the unused portion of
+    uint8_t         padding;	/* The padding byte to use to fill the unused portion of
                                  * transmitted CAN frames (single frame, first frame, consecutive frame) */
-    uint8_t            tx_index;
+    uint8_t		    tx_index;
 
-    uint32_t        id;            /* arbId of transmitted frames (CAN id to transmit to) */
-    uint32_t        fc_id;        /* flow control arb id filter value (response id from receiver) */
-    uint32_t        fc_id_mask;    /* The flow control arb filter mask (response id from receiver) */
+    uint32_t        id;	        /* arbId of transmitted frames (CAN id to transmit to) */
+    uint32_t        fc_id;		/* flow control arb id filter value (response id from receiver) */
+    uint32_t        fc_id_mask;	/* The flow control arb filter mask (response id from receiver) */
 
-    uint8_t            stMin;      /* Overrides the stMin that the receiver reports, see overrideSTmin. Set to J2534's STMIN_TX if <= 0xFF */
-    uint8_t            blockSize;  /* Overrides the block size that the receiver reports, see overrideBlockSize.   Set to J2534's BS_TX if <= 0xFF */
-    uint8_t            flowControlExtendedAddress;    /* Expected Extended Address byte of response from receiver.  see fc_ext_address_enable, not supported */
-    uint8_t            extendedAddress;            /* Extended Address byte of transmitter. see ext_address_enable, not supported */
+    uint8_t		    stMin;      /* Overrides the stMin that the receiver reports, see overrideSTmin. Set to J2534's STMIN_TX if <= 0xFF */
+    uint8_t		    blockSize;  /* Overrides the block size that the receiver reports, see overrideBlockSize.   Set to J2534's BS_TX if <= 0xFF */
+    uint8_t		    flowControlExtendedAddress;	/* Expected Extended Address byte of response from receiver.  see fc_ext_address_enable, not supported */
+    uint8_t		    extendedAddress;			/* Extended Address byte of transmitter. see ext_address_enable, not supported */
 
-    uint16_t        fs_timeout;        /* max timeout (ms) for waiting on flow control respons. Set this to N_BS_MAX's value if J2534 */
-    uint16_t        fs_wait;        /* max timeout (ms) for waiting on flow control response after receiving flow control
+    uint16_t        fs_timeout;		/* max timeout (ms) for waiting on flow control respons. Set this to N_BS_MAX's value if J2534 */
+    uint16_t        fs_wait;		/* max timeout (ms) for waiting on flow control response after receiving flow control
                                      * with flow status set to WAIT.   Set this to N_BS_MAX's value if J2534. */
 
     uint8_t         data[4*1024];   /* The data */
 
-    uint32_t        num_bytes;        /* Number of data bytes */
+    uint32_t        num_bytes;	    /* Number of data bytes */
 
     union
     {
         struct
         {
-            unsigned id_29_bit_enable:1;     /* Enables 29 bit arbId for transmitted frames.  Set to 1 so transmitted frames use 29 bit ids, not supported */
-            unsigned fc_id_29_bit_enable:1;     /* Enables 29 bit arbId for Flow Control filter.  Set to 1 if receiver response uses 29 bit ids, not supported */
-            unsigned ext_address_enable:1;     /* Enables Extended Addressing, Set to 1 if transmitted frames should have extended addres byte, not supported */
+            unsigned id_29_bit_enable:1;	 /* Enables 29 bit arbId for transmitted frames.  Set to 1 so transmitted frames use 29 bit ids, not supported */
+            unsigned fc_id_29_bit_enable:1;	 /* Enables 29 bit arbId for Flow Control filter.  Set to 1 if receiver response uses 29 bit ids, not supported */
+            unsigned ext_address_enable:1;	 /* Enables Extended Addressing, Set to 1 if transmitted frames should have extended addres byte, not supported */
             unsigned fc_ext_address_enable:1;/* Enables Extended Addressing for Flow Control filter.  Set to 1 if receiver responds with extended address byte, not supported */
 
             unsigned overrideSTmin:1;        /* Uses member stMin and not receiver's flow control's stMin */
@@ -1563,21 +1559,21 @@ typedef struct _stCM_ISO157652_TxMessage
 
 typedef struct _stCM_ISO157652_RxMessage
 {
-    uint16_t        vs_netid;    /* The netid of the message (determines which network to decode receives),  not supported */
+    uint16_t        vs_netid;	/* The netid of the message (determines which network to decode receives),  not supported */
 
-    uint8_t         padding;    /* The padding byte to use to fill the unused portion of
+    uint8_t         padding;	/* The padding byte to use to fill the unused portion of
                                  * transmitted CAN frames (flow control), see paddingEnable. */
 
 
-    uint32_t        id;            /* ArbId filter value for frames from transmitter (from ECU to neoVI) */
-    uint32_t        id_mask;    /* ArbId filter mask for frames from transmitter (from ECU to neoVI) */
-    uint32_t        fc_id;        /* flow control arbId to transmit in flow control (from neoVI to ECU) */
+    uint32_t        id;			/* ArbId filter value for frames from transmitter (from ECU to neoVI) */
+    uint32_t        id_mask;	/* ArbId filter mask for frames from transmitter (from ECU to neoVI) */
+    uint32_t        fc_id;		/* flow control arbId to transmit in flow control (from neoVI to ECU) */
 
-    uint8_t            flowControlExtendedAddress;    /* Extended Address byte used in flow control (from neoVI to ECU). see fc_ext_address_enable */
-    uint8_t            extendedAddress;            /* Expected Extended Address byte of frames sent by transmitter (from ECU to neoVI).  see ext_address_enable */
+    uint8_t		    flowControlExtendedAddress;	/* Extended Address byte used in flow control (from neoVI to ECU). see fc_ext_address_enable */
+    uint8_t		    extendedAddress;	        /* Expected Extended Address byte of frames sent by transmitter (from ECU to neoVI).  see ext_address_enable */
 
-    uint8_t            blockSize;    /* Block Size to report in flow control response */
-    uint8_t            stMin;        /* Minimum seperation time (between consecutive frames) to report in flow control response */
+    uint8_t		    blockSize;	/* Block Size to report in flow control response */
+    uint8_t		    stMin;		/* Minimum seperation time (between consecutive frames) to report in flow control response */
 
     uint16_t        cf_timeout; /* max timeout (ms) for waiting on consecutive frame.  Set this to N_CR_MAX's value in J2534 */
 
@@ -1585,10 +1581,10 @@ typedef struct _stCM_ISO157652_RxMessage
     {
         struct
         {
-            unsigned id_29_bit_enable:1;             /* Enables 29 bit arbId filter for frames (from ECU to neoVI) */
-            unsigned fc_id_29_bit_enable:1;             /* Enables 29 bit arbId for Flow Control (from neoVI to ECU) */
-            unsigned ext_address_enable:1;             /* Enables Extended Addressing (from ECU to neoVI) */
-            unsigned fc_ext_address_enable:1;         /* Enables Extended Addressing (from neoVI to ECU) */
+            unsigned id_29_bit_enable:1;	         /* Enables 29 bit arbId filter for frames (from ECU to neoVI) */
+            unsigned fc_id_29_bit_enable:1;	         /* Enables 29 bit arbId for Flow Control (from neoVI to ECU) */
+            unsigned ext_address_enable:1;	         /* Enables Extended Addressing (from ECU to neoVI) */
+            unsigned fc_ext_address_enable:1;	     /* Enables Extended Addressing (from neoVI to ECU) */
             unsigned enableFlowControlTransmission:1;/*< Enables Flow Control frame transmission (from neoVI to ECU) */
             unsigned paddingEnable:1;                /* Enables padding */
             unsigned iscanFD:1;
@@ -1604,26 +1600,26 @@ typedef struct _stCM_ISO157652_RxMessage
 
 typedef struct
 {
-    uint32_t    StatusValue;
-    uint32_t    StatusMask;
-    uint32_t    Status2Value;
-    uint32_t    Status2Mask;
-    uint32_t    Header;
-    uint32_t    HeaderMask;
-    uint32_t    MiscData;
-    uint32_t    MiscDataMask; 
-    uint32_t    ByteDataMSB;
-    uint32_t    ByteDataLSB;
-    uint32_t    ByteDataMaskMSB;
-    uint32_t    ByteDataMaskLSB;
-    uint32_t    HeaderLength;
-    uint32_t    ByteDataLength;
-    uint32_t    NetworkID;
-    uint16_t    FrameMaster;
-    uint8_t     bUseArbIdRangeFilter;
-    uint8_t     bStuff2;
-    uint32_t    ExpectedLength;
-    uint32_t    NodeID;
+	uint32_t    StatusValue;
+	uint32_t    StatusMask;
+	uint32_t    Status2Value;
+	uint32_t    Status2Mask;
+	uint32_t    Header;
+	uint32_t    HeaderMask;
+	uint32_t    MiscData;
+	uint32_t    MiscDataMask; 
+	uint32_t    ByteDataMSB;
+	uint32_t    ByteDataLSB;
+	uint32_t    ByteDataMaskMSB;
+	uint32_t    ByteDataMaskLSB;
+	uint32_t    HeaderLength;
+	uint32_t    ByteDataLength;
+	uint32_t    NetworkID;
+	uint16_t    FrameMaster;
+	uint8_t     bUseArbIdRangeFilter;
+	uint8_t     bStuff2;
+	uint32_t    ExpectedLength;
+	uint32_t    NodeID;
 }   spyFilterLong;
 #define spyFilterLong_SIZE 72
 
@@ -1799,7 +1795,7 @@ typedef struct _icsSpyMessageVSB
 #define ICS_GET_NETWORKID(m)    ((((unsigned int)m.NetworkID2)<<8) | m.NetworkID)
 #define ICS_SET_NETWORKID(m,X)  do{m.NetworkID = X; m.NetworkID2 = X >> 8;}while(0)
 
-#if defined(__cplusplus) && (__cplusplus > 199711L) && !defined(INTREPID_NO_CHECK_STRUCT_SIZE)
+#if defined(__cplusplus) && (__cplusplus >= 199711L) && !defined(INTREPID_NO_CHECK_STRUCT_SIZE)
 
 #define CHECK_STRUCT_SIZE(X) static_assert(sizeof(X) == X ## _SIZE, #X " is the wrong size");
 
@@ -1840,9 +1836,5 @@ CHECK_STRUCT_SIZE(icsSpyMessageJ1850);
 CHECK_STRUCT_SIZE(icsSpyMessageVSB);
 
 #endif /* __cplusplus > 199711L */
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* _ICSNVC40_H */

@@ -1,0 +1,2 @@
+recursive-include include *.h
+include extract_icsneo40_defines.py
