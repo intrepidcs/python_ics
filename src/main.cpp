@@ -53,7 +53,12 @@
     "The handle normally returned from `icsneoOpenNeoDevice()` is stored inside _Handle and setting AutoHandleClose to True (Default)\n" \
     "will automatically close the handle when the :class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"` goes out of scope.\n" \
     "\n" \
-    "\n"
+    "\n" \
+    "Installation:\n" \
+    "\n" \
+    "\tpip install python_ics\n" \
+    "\n" \
+    "https://pypi.python.org/pypi/python-ics\n"
 
 
 #if PY_MAJOR_VERSION >= 3
@@ -68,6 +73,10 @@ static PyModuleDef IcsModule = {
     NULL,
     NULL
 };
+#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 #if PY_MAJOR_VERSION >= 3
@@ -122,3 +131,7 @@ void initics(void)
     return;
 #endif
 }
+
+#ifdef __cplusplus
+}
+#endif
