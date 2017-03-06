@@ -1795,9 +1795,17 @@ typedef struct _icsSpyMessageVSB
 #define ICS_GET_NETWORKID(m)    ((((unsigned int)m.NetworkID2)<<8) | m.NetworkID)
 #define ICS_SET_NETWORKID(m,X)  do{m.NetworkID = X; m.NetworkID2 = X >> 8;}while(0)
 
-#if defined(__cplusplus) && (__cplusplus >= 199711L) && !defined(INTREPID_NO_CHECK_STRUCT_SIZE)
+#ifndef INTREPID_NO_CHECK_STRUCT_SIZE
 
-#define CHECK_STRUCT_SIZE(X) static_assert(sizeof(X) == X ## _SIZE, #X " is the wrong size");
+#if defined(__cplusplus) && (__cplusplus > 199711L)
+    #define ics_static_assert(e, msg) static_assert(e, msg)
+#else
+    #define ASSERT_CONCAT_(a, b) a##b
+    #define ASSERT_CONCAT(a, b) ASSERT_CONCAT_(a, b)
+    #define ics_static_assert(e, msg) enum { ASSERT_CONCAT(assert_line_, __LINE__) = 1/(int)(!!(e)) }
+#endif
+
+#define CHECK_STRUCT_SIZE(X) ics_static_assert(sizeof(X) == X ## _SIZE, #X " is the wrong size");
 
 CHECK_STRUCT_SIZE(CAN_SETTINGS);
 CHECK_STRUCT_SIZE(CANFD_SETTINGS);
@@ -1835,6 +1843,6 @@ CHECK_STRUCT_SIZE(icsSpyMessageLong);
 CHECK_STRUCT_SIZE(icsSpyMessageJ1850);
 CHECK_STRUCT_SIZE(icsSpyMessageVSB);
 
-#endif /* __cplusplus > 199711L */
+#endif /* INTREPID_NO_CHECK_STRUCT_SIZE */
 
 #endif /* _ICSNVC40_H */
