@@ -128,13 +128,13 @@ PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
     try
     {
         ice::Function<int __stdcall (unsigned long, NeoDevice*, int*)> icsneoFindNeoDevices(lib, "icsneoFindNeoDevices");
-        ice::Function<int __stdcall (unsigned long, NeoDevice*, int*, const POptionsFindNeoEx)> icsneoFindNeoDevicesEx(lib, "icsneoFindNeoDevicesEx");
         Py_BEGIN_ALLOW_THREADS
         if (ex_options == -1 && !icsneoFindNeoDevices(device_type, devices, &count)) {
             Py_BLOCK_THREADS
             return set_ics_exception(exception_runtime_error(), "icsneoFindNeoDevices() Failed");
         } 
         if (ex_options != -1) {
+            ice::Function<int __stdcall (unsigned long, NeoDevice*, int*, const POptionsFindNeoEx)> icsneoFindNeoDevicesEx(lib, "icsneoFindNeoDevicesEx");
             OptionsFindNeoEx opts = {0};
             opts.CANOptions.iNetworkID = ex_options;
             if (!icsneoFindNeoDevicesEx(device_type, devices, &count, &opts)) {
@@ -223,8 +223,6 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
         }
         ice::Function<int __stdcall (unsigned long, NeoDevice*, int*)> icsneoFindNeoDevices(lib, "icsneoFindNeoDevices");
         ice::Function<int __stdcall (NeoDevice*, ICS_HANDLE*, unsigned char*, int, int)> icsneoOpenNeoDevice(lib, "icsneoOpenNeoDevice");
-        ice::Function<int __stdcall (unsigned long, NeoDevice*, int*, const POptionsFindNeoEx)> icsneoFindNeoDevicesEx(lib, "icsneoFindNeoDevicesEx");
-        ice::Function<int __stdcall (NeoDevice*, ICS_HANDLE*, unsigned char*, int, int, POptionsOpenNeoEx)> icsneoOpenNeoDeviceEx(lib, "icsneoOpenNeoDeviceEx");
         if (use_user_neo_device) {
             neo_device_object* neo_device = PyNeoDevice_GetNeoDevice(obj);
             ICS_HANDLE handle = PyNeoDevice_GetHandle(neo_device);
@@ -234,6 +232,7 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
                 return set_ics_exception_dev(exception_runtime_error(), obj, "Failed to open device");
             }
             if (ex_options != -1) {
+                ice::Function<int __stdcall (NeoDevice*, ICS_HANDLE*, unsigned char*, int, int, POptionsOpenNeoEx)> icsneoOpenNeoDeviceEx(lib, "icsneoOpenNeoDeviceEx");
                 OptionsOpenNeoEx opts = {0};
                 opts.CANOptions.iNetworkID = ex_options;
                 if (!icsneoOpenNeoDeviceEx(&PyNeoDevice_GetNeoDevice(obj)->dev, &handle, (bNetworkIDs ? net_ids : NULL), bConfigRead, iOptions, &opts)) {
@@ -262,6 +261,7 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
                 return set_ics_exception(exception_runtime_error(), "icsneoFindNeoDevices() failed");
             }
             if (ex_options != -1) {
+                ice::Function<int __stdcall (unsigned long, NeoDevice*, int*, const POptionsFindNeoEx)> icsneoFindNeoDevicesEx(lib, "icsneoFindNeoDevicesEx");
                 OptionsFindNeoEx opts = {0};
                 opts.CANOptions.iNetworkID = ex_options;
                 if (!icsneoFindNeoDevicesEx(device_type, devices, &count, &opts)) {
@@ -283,6 +283,7 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
                         return set_ics_exception_dev(exception_runtime_error(), device, "Failed to open device");
                     }
                     if (ex_options != -1) {
+                        ice::Function<int __stdcall (NeoDevice*, ICS_HANDLE*, unsigned char*, int, int, POptionsOpenNeoEx)> icsneoOpenNeoDeviceEx(lib, "icsneoOpenNeoDeviceEx");
                         OptionsOpenNeoEx opts = {0};
                         opts.CANOptions.iNetworkID = ex_options;
                         if (!icsneoOpenNeoDeviceEx(&PyNeoDevice_GetNeoDevice(obj)->dev, &handle, (bNetworkIDs ? net_ids : NULL), bConfigRead, iOptions, &opts)) {
@@ -303,6 +304,7 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
                         return set_ics_exception_dev(exception_runtime_error(), device, "Failed to open device");
                     }
                     if (ex_options != -1) {
+                        ice::Function<int __stdcall (NeoDevice*, ICS_HANDLE*, unsigned char*, int, int, POptionsOpenNeoEx)> icsneoOpenNeoDeviceEx(lib, "icsneoOpenNeoDeviceEx");
                         OptionsOpenNeoEx opts = {0};
                         opts.CANOptions.iNetworkID = ex_options;
                         if (!icsneoOpenNeoDeviceEx(&PyNeoDevice_GetNeoDevice(obj)->dev, &handle, (bNetworkIDs ? net_ids : NULL), bConfigRead, iOptions, &opts)) {
