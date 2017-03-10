@@ -128,6 +128,7 @@ typedef unsigned __int64 uint64_t;
 /**
  * To the next person to add a network, please make it 512!
  */
+#define NETID_HW_COM_LATENCY_TEST 512
 
 /* Upper boundry of Network IDs */
 #define NETID_MAX 100
@@ -155,7 +156,7 @@ typedef unsigned __int64 uint64_t;
 #define NEODEVICE_ION_2 0x40000
 #define NEODEVICE_RADSTAR 0x80000
 #define NEODEVICE_ION_3 0x100000
-#define NEODEVICE_VCANFD 0x200000
+#define NEODEVICE_VCAN4 0x200000
 #define NEODEVICE_ECU15 0x400000
 #define NEODEVICE_ECU25 0x800000
 #define NEODEVICE_EEVB 0x1000000
@@ -163,6 +164,9 @@ typedef unsigned __int64 uint64_t;
 #define NEODEVICE_FIRE2 0x4000000
 #define NEODEVICE_FLEX 0x8000000
 #define NEODEVICE_RADGALAXY 0x10000000
+#define NEODEVICE_RADSTAR2 0x20000000
+#define NEODEVICE_VIVIDCAN 0x40000000
+#define NEODEVICE_OBD2_SIM 0x80000000
 #define NEODEVICE_ANY_PLASMA                                                   \
   (NEODEVICE_PLASMA_1_11 | NEODEVICE_FIRE_VNET | NEODEVICE_PLASMA_1_12 |       \
    NEODEVICE_PLASMA_1_13)
@@ -327,6 +331,7 @@ typedef unsigned __int64 uint64_t;
   0x800000 /* This frame contains FCS (4 bytes) obtained from ICS Ethernet     \
               hardware (ex. RAD-STAR) */
 #define SPY_STATUS2_ETHERNET_NO_PADDING 0x1000000
+#define SPY_STATUS2_ETHERNET_PREEMPTION_ENABLED 0x2000000
 
 /* FlexRay Specific - check protocol before handling */
 #define SPY_STATUS2_FLEXRAY_TX_AB 0x200000
@@ -344,7 +349,7 @@ typedef unsigned __int64 uint64_t;
 #define SPY_STATUS3_CANFD_ESI 0x01
 #define SPY_STATUS3_CANFD_IDE 0x02
 #define SPY_STATUS3_CANFD_RTR 0x04
-#define SPY_STATUS3_CANFD_EDL 0x08
+#define SPY_STATUS3_CANFD_FDF 0x08
 #define SPY_STATUS3_CANFD_BRS 0x10
 
 /* Configuration Array constants */
@@ -713,6 +718,15 @@ typedef union _stChipVersions {
     uint8_t zynq_core_minor;
   } radgalaxy_versions;
 
+  struct {
+    uint8_t zynq_core_major;
+    uint8_t zynq_core_minor;
+  } radstar2_versions;
+  struct {
+    uint8_t mpic_maj;
+    uint8_t mpic_min;
+  } vividcan_versions;
+
 } stChipVersions;
 #define stChipVersions_SIZE 8
 
@@ -724,7 +738,11 @@ typedef struct _SNeoMostGatewaySettings {
 #define SNeoMostGatewaySettings_SIZE 4
 
 /* ucInterfaceType in OP_ETH_GENERAL_SETTINGS */
-enum { OPETH_FUNC_TAP = 0, OPETH_FUNC_MEDIACONVERTER };
+enum {
+  OPETH_FUNC_TAP = 0,
+  OPETH_FUNC_MEDIACONVERTER,
+  OPETH_FUNC_TAP_LOW_LATENCY
+};
 
 typedef struct OP_ETH_GENERAL_SETTINGS_t {
   uint8_t ucInterfaceType;
@@ -751,7 +769,8 @@ enum { OPETH_LINK_AUTO = 0, OPETH_LINK_MASTER, OPETH_LINK_SLAVE };
 
 typedef struct OP_ETH_SETTINGS_t {
   uint8_t ucConfigMode;
-  uint8_t reserved0[15];
+  unsigned char preemption_en;
+  unsigned char reserved0[14];
 } OP_ETH_SETTINGS;
 #define OP_ETH_SETTINGS_SIZE 16
 
@@ -770,6 +789,13 @@ typedef struct {
   uint16_t reserved[2];
 } CANTERM_SETTINGS;
 #define CANTERM_SETTINGS_SIZE 6
+
+typedef struct {
+  uint8_t MasterEnable;
+  uint8_t SlaveEnable;
+  uint8_t MasterNetwork;
+  uint8_t SlaveNetwork;
+} TIMESYNC_ICSHARDWARE_SETTINGS;
 
 /* These are bit positions for misc_io_on_report_eventsin SFireSettings */
 enum {
@@ -866,15 +892,15 @@ typedef struct _SFireSettings {
 
 #define VNETBITS_FEATURE_ANDROID_MSGS (1)
   /**
-   * Unfortuntely I haven't gone thru the trouble
-   * of splitting the FIRE VNET and FIRE settings
-   * structures. So until I can do so and reserve
-   * some time to test it, add a member that only
-   * VNET looks at for VNET features (like
-   * Android CoreMiniMsg pump).
-   * Defaults to zero.
-   * @see VNETBITS_FEATURE_ANDROID_MSGS
-   */
+*Unfortuntely I haven't gone thru the trouble
+*of splitting the FIRE VNET and FIRE settings
+*structures. So until I can do so and reserve
+*some time to test it, add a member that only
+*VNET looks at for VNET features (like
+*Android CoreMiniMsg pump).
+*Defaults to zero.
+*@see VNETBITS_FEATURE_ANDROID_MSGS
+*/
   uint16_t vnetBits;
 } SFireSettings;
 #define SFireSettings_SIZE 744
@@ -956,10 +982,10 @@ typedef struct _SFireVnetSettings {
 #define VNETBITS_FEATURE_ANDROID_MSGS (1)
 #define VNETBITS_FEATURE_DISABLE_USB_CHECK (2)
   /**
-   * VNET options bitfield.
-   * Defaults to zero.
-   * @see VNETBITS_FEATURE_ANDROID_MSGS
-   */
+*VNET options bitfield.
+*Defaults to zero.
+*@see VNETBITS_FEATURE_ANDROID_MSGS
+*/
   uint16_t vnetBits;
 
   CAN_SETTINGS can5;
@@ -1054,8 +1080,10 @@ typedef struct _SCyanSettings {
     uint32_t disableUsbCheckOnBoot : 1;
     uint32_t reserved : 31;
   } flags;
+  uint16_t digitalIoThresholdTicks;
+  uint16_t digitalIoThresholdEnable;
 } SCyanSettings;
-#define SCyanSettings_SIZE 898
+#define SCyanSettings_SIZE 902
 
 typedef SCyanSettings SFire2Settings;
 
@@ -1077,7 +1105,7 @@ typedef struct _SVCAN3Settings {
 } SVCAN3Settings;
 #define SVCAN3Settings_SIZE 40
 
-typedef struct _SVCANFDSettings {
+typedef struct _SVCAN4Settings {
   CAN_SETTINGS can1;
   CAN_SETTINGS can2;
 
@@ -1122,8 +1150,8 @@ typedef struct _SVCANFDSettings {
   UART_SETTINGS uart2;
 
   STextAPISettings text_api;
-} SVCANFDSettings;
-#define SVCANFDSettings_SIZE 470
+} SVCAN4Settings;
+#define SVCAN4Settings_SIZE 470
 
 typedef struct _SVCANRFSettings {
   CAN_SETTINGS can1;
@@ -1172,10 +1200,10 @@ typedef struct _SVCANRFSettings {
 
 typedef struct _SECUSettings {
   /* ECU ID used in CAN communications.
-   * TX ID = ECU ID with bit28 cleared,
-   * RX ID = ECUID with bit28 set,
-   * ECU ID = 0 implies ECU ID = serial no with bit 27 set\
-  */
+*TX ID = ECU ID with bit28 cleared,
+*RX ID = ECUID with bit28 set,
+*ECU ID = 0 implies ECU ID = serial no with bit 27 set\
+*/
   uint32_t ecu_id;
 
   uint16_t selected_network; // not supported yet - default to HSCAN
@@ -1415,8 +1443,114 @@ typedef struct _SRADGalaxySettings {
 
   uint16_t can_switch_mode;
   STextAPISettings text_api;
+  TIMESYNC_ICSHARDWARE_SETTINGS timeSyncSettings;
+  uint16_t hwComLatencyTestEn;
 } SRADGalaxySettings;
-#define SRADGalaxySettings_SIZE 658
+#define SRADGalaxySettings_SIZE 662
+
+typedef struct _SRADStar2Settings {
+  uint16_t perf_en;
+
+  OP_ETH_GENERAL_SETTINGS opEthGen;
+  OP_ETH_SETTINGS opEth1;
+  OP_ETH_SETTINGS opEth2;
+
+  CAN_SETTINGS can1;
+  CANFD_SETTINGS canfd1;
+  CAN_SETTINGS can2;
+  CANFD_SETTINGS canfd2;
+
+  uint16_t network_enables;
+  uint16_t network_enables_2;
+
+  LIN_SETTINGS lin1;
+  uint16_t misc_io_initial_ddr;
+  uint16_t misc_io_initial_latch;
+  uint16_t misc_io_report_period;
+  uint16_t misc_io_on_report_events;
+  uint16_t misc_io_analog_enable;
+  uint16_t ain_sample_period;
+  uint16_t ain_threshold;
+
+  uint32_t pwr_man_timeout;
+  uint16_t pwr_man_enable;
+
+  uint16_t network_enabled_on_boot;
+
+  uint16_t iso15765_separation_time_offset;
+
+  uint16_t iso_9141_kwp_enable_reserved;
+  ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings_1;
+  uint16_t iso_parity_1;
+
+  uint16_t iso_msg_termination_1;
+
+  uint16_t idle_wakeup_network_enables_1;
+  uint16_t idle_wakeup_network_enables_2;
+
+  uint16_t network_enables_3;
+  uint16_t idle_wakeup_network_enables_3;
+
+  uint16_t can_switch_mode;
+  STextAPISettings text_api;
+  uint16_t pc_com_mode;
+  TIMESYNC_ICSHARDWARE_SETTINGS timeSyncSettings;
+  uint16_t hwComLatencyTestEn;
+} SRADStar2Settings;
+
+#define SRADStar2Settings_SIZE 344
+
+typedef struct _SVividCANSettings {
+  uint32_t ecu_id;
+
+  CAN_SETTINGS can1;     // 12 bytes
+  SWCAN_SETTINGS swcan1; // 14 bytes
+  CAN_SETTINGS lsftcan1; // 12 bytes
+
+  uint16_t network_enables;
+  uint16_t network_enabled_on_boot;
+
+  uint16_t iso15765_separation_time_offset;
+
+  uint16_t perf_en;
+
+  uint32_t pwr_man_timeout;
+  uint16_t pwr_man_enable;
+
+  uint16_t can_switch_mode;
+
+  uint16_t rsvd;
+} SVividCANSettings;
+#define SVividCANSettings_SIZE 60
+
+typedef struct _SOBD2SimSettings {
+  CAN_SETTINGS can1;
+  CAN_SETTINGS can2;
+
+  uint16_t network_enables;
+  uint16_t network_enabled_on_boot;
+
+  int16_t iso15765_separation_time_offset;
+
+  uint16_t perf_en;
+
+  uint16_t misc_io_initial_ddr;
+  uint16_t misc_io_initial_latch;
+  uint16_t misc_io_report_period;
+  uint16_t misc_io_on_report_events;
+  uint16_t misc_io_analog_enable;
+  uint16_t ain_sample_period;
+  uint16_t ain_threshold;
+
+  CANFD_SETTINGS canfd1;
+  CANFD_SETTINGS canfd2;
+
+  uint16_t network_enables_2;
+
+  STextAPISettings text_api;
+
+} SOBD2SimSettings;
+#define SOBD2SimSettings_SIZE 140
 
 #define GS_VERSION 5
 typedef struct _GLOBAL_SETTINGS {
@@ -1429,14 +1563,16 @@ typedef struct _GLOBAL_SETTINGS {
     SFireVnetSettings firevnet;
     SCyanSettings cyan;
     SVCAN3Settings vcan3;
-    SVCANFDSettings vcanFD;
+    SVCAN4Settings vcan4;
     SECUSettings ecu;
     SIEVBSettings ievb;
     SPendantSettings pendant;
     SRADGalaxySettings radgalaxy;
+    SRADStar2Settings radstar2;
+    SOBD2SimSettings neoobd2_sim;
   };
 } GLOBAL_SETTINGS;
-#define GLOBAL_SETTINGS_SIZE 904
+#define GLOBAL_SETTINGS_SIZE (SCyanSettings_SIZE + 6)
 
 #define NEOVI_3G_MAX_SETTINGS_SIZE sizeof(GLOBAL_SETTINGS)
 
@@ -1444,9 +1580,10 @@ typedef struct _stCM_ISO157652_TxMessage {
   uint16_t vs_netid; /* The netid of the message (determines which network to
                         transmit on),  not supported */
 
-  uint8_t padding; /* The padding byte to use to fill the unused portion of
-                    * transmitted CAN frames (single frame, first frame,
-                    * consecutive frame) */
+  uint8_t
+      padding; /* The padding byte to use to fill the unused portion of
+                       * transmitted CAN frames (single frame, first frame,
+                * consecutive frame) */
   uint8_t tx_index;
 
   uint32_t id; /* arbId of transmitted frames (CAN id to transmit to) */
@@ -1467,13 +1604,12 @@ typedef struct _stCM_ISO157652_TxMessage {
                               ext_address_enable, not supported */
 
   uint16_t
-      fs_timeout; /* max timeout (ms) for waiting on flow control respons. Set
-                     this to N_BS_MAX's value if J2534 */
-  uint16_t
-      fs_wait; /* max timeout (ms) for waiting on flow control response after
-            * receiving flow control
-            * with flow status set to WAIT.   Set this to N_BS_MAX's value if
-            * J2534. */
+      fs_timeout;   /* max timeout (ms) for waiting on flow control respons. Set
+                       this to N_BS_MAX's value if J2534 */
+  uint16_t fs_wait; /* max timeout (ms) for waiting on flow control response
+                     * after receiving flow control
+                               * with flow status set to WAIT.   Set this to
+                     * N_BS_MAX's value if J2534. */
 
   uint8_t data[4 * 1024]; /* The data */
 
@@ -1514,9 +1650,9 @@ typedef struct _stCM_ISO157652_RxMessage {
   uint16_t vs_netid; /* The netid of the message (determines which network to
                         decode receives),  not supported */
 
-  uint8_t
-      padding; /* The padding byte to use to fill the unused portion of
-                * transmitted CAN frames (flow control), see paddingEnable. */
+  uint8_t padding; /* The padding byte to use to fill the unused portion of
+                           * transmitted CAN frames (flow control), see
+                    * paddingEnable. */
 
   uint32_t id; /* ArbId filter value for frames from transmitter (from ECU to
                   neoVI) */
@@ -1592,7 +1728,7 @@ typedef struct {
 } spyFilterLong;
 #define spyFilterLong_SIZE 72
 
-#ifndef VSPY3_GUI
+#if !defined(VSPY3_GUI) && !defined(WIVI_EXPORT) && !defined(VS4A)
 typedef int16_t descIdType;
 #else
 typedef uint32_t descIdType;
@@ -1791,13 +1927,15 @@ CHECK_STRUCT_SIZE(SFireSettings);
 CHECK_STRUCT_SIZE(SFireVnetSettings);
 CHECK_STRUCT_SIZE(SCyanSettings);
 CHECK_STRUCT_SIZE(SVCAN3Settings);
-CHECK_STRUCT_SIZE(SVCANFDSettings);
+CHECK_STRUCT_SIZE(SVCAN4Settings);
 CHECK_STRUCT_SIZE(SVCANRFSettings);
 CHECK_STRUCT_SIZE(SECUSettings);
 CHECK_STRUCT_SIZE(SPendantSettings);
 CHECK_STRUCT_SIZE(SIEVBSettings);
 CHECK_STRUCT_SIZE(SEEVBSettings);
 CHECK_STRUCT_SIZE(SRADGalaxySettings);
+CHECK_STRUCT_SIZE(SRADStar2Settings);
+CHECK_STRUCT_SIZE(SOBD2SimSettings)
 CHECK_STRUCT_SIZE(GLOBAL_SETTINGS);
 CHECK_STRUCT_SIZE(stCM_ISO157652_TxMessage);
 CHECK_STRUCT_SIZE(stCM_ISO157652_RxMessage);
