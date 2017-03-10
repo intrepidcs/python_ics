@@ -29,11 +29,11 @@ use_enums = True
 with open('src/setup_module_auto_defines.cpp', 'w') as f:
     print(boiler_plate, file=f)
     # Include the header files needed for the defines
-    print("#include <Python.h>\n#include \"ics/icsnVC40.h\"", file=f)
+    print("#include \"setup_module_auto_defines.h\"\n#include <Python.h>\n#include \"ics/icsnVC40.h\"", file=f)
     if use_internal:
         print("#include \"ics/icsnVC40Internal.h\"", file=f)
 
-    print("int setup_module_auto_defines(PyObject * module)\n{", file=f)
+    print("\nint setup_module_auto_defines(PyObject * module)\n{", file=f)
     print("\tint result = 0;\n", file=f)
     # Let's get to work here!
     for header_file in ('include/ics/icsnVC40.h', 'include/ics/icsnVC40Internal.h'):
