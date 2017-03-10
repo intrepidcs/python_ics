@@ -5,6 +5,9 @@
     #define USING_STUDIO_8 1
 #endif
 #include <icsnVC40.h>
+#ifdef _USE_INTERNAL_HEADER_
+#include <icsnVC40Internal.h>
+#endif
 #include <datetime.h>
 #include "object_spy_message.h"
 #include "object_neo_device.h"
