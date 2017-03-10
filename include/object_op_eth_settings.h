@@ -38,6 +38,7 @@ typedef struct {
 
 static PyMemberDef op_eth_settings_object_members[] = {
     { "ucConfigMode", T_UBYTE, offsetof(op_eth_settings_object, s.ucConfigMode), 0, ""},
+    { "preemption_en", T_UBYTE, offsetof(op_eth_settings_object, s.preemption_en), 0, ""},
     { "reserved0", T_OBJECT_EX, NULL, 0, ""},
     { NULL, 0, 0, 0, 0 },
 };
@@ -67,7 +68,7 @@ static PyObject* op_eth_settings_object_getattr(PyObject *o, PyObject *attr_name
     if (PyUnicode_CompareWithASCIIString(attr_name, "reserved0") == 0) {
         Py_DECREF(attr_name);
         op_eth_settings_object* obj = (op_eth_settings_object*)o;
-        PyObject* temp = Py_BuildValue("(i,i,i,i,i,i,i,i,i,i,i,i,i,i,i)",
+        PyObject* temp = Py_BuildValue("(i,i,i,i,i,i,i,i,i,i,i,i,i,i)",
             obj->s.reserved0[0],
             obj->s.reserved0[1],
             obj->s.reserved0[2],
@@ -81,9 +82,8 @@ static PyObject* op_eth_settings_object_getattr(PyObject *o, PyObject *attr_name
             obj->s.reserved0[10],
             obj->s.reserved0[11],
             obj->s.reserved0[12],
-            obj->s.reserved0[13],
-            obj->s.reserved0[14]);
-        PyObject* data = PyTuple_GetSlice(temp, 0, 15);
+            obj->s.reserved0[13]);
+        PyObject* data = PyTuple_GetSlice(temp, 0, 14);
         Py_DECREF(temp);
         return data;
     }
