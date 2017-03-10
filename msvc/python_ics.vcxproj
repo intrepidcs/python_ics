@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release34|Win32">
+      <Configuration>Release34</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{39C87EAC-CA09-4438-9659-6FEFB1361253}</ProjectGuid>
+    <RootNamespace>python_ics</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release34|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release34|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release34|Win32'">
+    <IncludePath>C:\Python34\include;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release34|Win32'">
+    <LibraryPath>C:\Python34\libs;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib</LibraryPath>
+    <TargetName>ics</TargetName>
+    <TargetExt>.pyd</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release34|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>..\include;..\include\ics;..\include\ice</AdditionalIncludeDirectories>
+      <AdditionalOptions>/export:PyInit_ics %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>C:\Python34\Lib\$(TargetName)$(TargetExt)</OutputFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\defines.h" />
+    <ClInclude Include="..\include\dll.h" />
+    <ClInclude Include="..\include\exceptions.h" />
+    <ClInclude Include="..\include\ice\ice.h" />
+    <ClInclude Include="..\include\ice\ice_exception.h" />
+    <ClInclude Include="..\include\ice\ice_function.h" />
+    <ClInclude Include="..\include\ice\ice_library.h" />
+    <ClInclude Include="..\include\ics\icsnVC40.h" />
+    <ClInclude Include="..\include\ics\icsnVC40Internal.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\include\methods.h" />
+    <ClInclude Include="..\include\object_api_firmware_info.h" />
+    <ClInclude Include="..\include\object_canfd_settings.h" />
+    <ClInclude Include="..\include\object_can_settings.h" />
+    <ClInclude Include="..\include\object_cyan_settings.h" />
+    <ClInclude Include="..\include\object_fire_settings.h" />
+    <ClInclude Include="..\include\object_iso9141_keyword2000_init_steps.h" />
+    <ClInclude Include="..\include\object_iso9141_keyword2000_settings.h" />
+    <ClInclude Include="..\include\object_lin_settings.h" />
+    <ClInclude Include="..\include\object_neo_device.h" />
+    <ClInclude Include="..\include\object_op_eth_general_settings.h" />
+    <ClInclude Include="..\include\object_op_eth_settings.h" />
+    <ClInclude Include="..\include\object_rad_galaxy_settings.h" />
+    <ClInclude Include="..\include\object_spy_message.h" />
+    <ClInclude Include="..\include\object_swcan_settings.h" />
+    <ClInclude Include="..\include\object_textapi_settings.h" />
+    <ClInclude Include="..\include\object_uart_settings.h" />
+    <ClInclude Include="..\include\object_vcan3_settings.h" />
+    <ClInclude Include="..\include\object_vcanrf_settings.h" />
+    <ClInclude Include="..\include\setup_module_auto_defines.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\defines.cpp" />
+    <ClCompile Include="..\src\dll.cpp" />
+    <ClCompile Include="..\src\exceptions.cpp" />
+    <ClCompile Include="..\src\ice\ice_library.cpp" />
+    <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\methods.cpp" />
+    <ClCompile Include="..\src\object_api_firmware_info.cpp" />
+    <ClCompile Include="..\src\object_canfd_settings.cpp" />
+    <ClCompile Include="..\src\object_can_settings.cpp" />
+    <ClCompile Include="..\src\object_cyan_settings.cpp" />
+    <ClCompile Include="..\src\object_fire_settings.cpp" />
+    <ClCompile Include="..\src\object_iso9141_keyword2000_init_steps.cpp" />
+    <ClCompile Include="..\src\object_iso9141_keyword2000_settings.cpp" />
+    <ClCompile Include="..\src\object_lin_settings.cpp" />
+    <ClCompile Include="..\src\object_neo_device.cpp" />
+    <ClCompile Include="..\src\object_op_eth_general_settings.cpp" />
+    <ClCompile Include="..\src\object_op_eth_settings.cpp" />
+    <ClCompile Include="..\src\object_rad_galaxy_settings.cpp" />
+    <ClCompile Include="..\src\object_spy_message.cpp" />
+    <ClCompile Include="..\src\object_swcan_settings.cpp" />
+    <ClCompile Include="..\src\object_textapi_settings.cpp" />
+    <ClCompile Include="..\src\object_uart_settings.cpp" />
+    <ClCompile Include="..\src\object_vcan3_settings.cpp" />
+    <ClCompile Include="..\src\object_vcanrf_settings.cpp" />
+    <ClCompile Include="..\src\setup_module_auto_defines.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
