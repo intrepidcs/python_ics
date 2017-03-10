@@ -91,6 +91,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, NETID_HSCAN7);
 	result += PyModule_AddIntMacro(module, NETID_LIN6);
 	result += PyModule_AddIntMacro(module, NETID_LSFTCAN2);
+	result += PyModule_AddIntMacro(module, NETID_HW_COM_LATENCY_TEST);
 	result += PyModule_AddIntMacro(module, NETID_MAX);
 	result += PyModule_AddIntMacro(module, NETID_INVALID);
 	result += PyModule_AddIntMacro(module, NEODEVICE_UNKNOWN);
@@ -114,7 +115,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, NEODEVICE_ION_2);
 	result += PyModule_AddIntMacro(module, NEODEVICE_RADSTAR);
 	result += PyModule_AddIntMacro(module, NEODEVICE_ION_3);
-	result += PyModule_AddIntMacro(module, NEODEVICE_VCANFD);
+	result += PyModule_AddIntMacro(module, NEODEVICE_VCAN4);
 	result += PyModule_AddIntMacro(module, NEODEVICE_ECU15);
 	result += PyModule_AddIntMacro(module, NEODEVICE_ECU25);
 	result += PyModule_AddIntMacro(module, NEODEVICE_EEVB);
@@ -122,6 +123,9 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, NEODEVICE_FIRE2);
 	result += PyModule_AddIntMacro(module, NEODEVICE_FLEX);
 	result += PyModule_AddIntMacro(module, NEODEVICE_RADGALAXY);
+	result += PyModule_AddIntMacro(module, NEODEVICE_RADSTAR2);
+	result += PyModule_AddIntMacro(module, NEODEVICE_VIVIDCAN);
+	result += PyModule_AddIntMacro(module, NEODEVICE_OBD2_SIM);
 	result += PyModule_AddIntMacro(module, NEODEVICE_ANY_PLASMA);
 	result += PyModule_AddIntMacro(module, NEODEVICE_ANY_ION);
 	result += PyModule_AddIntMacro(module, NEODEVICE_ALL);
@@ -244,6 +248,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, SPY_STATUS3_LIN_SLAVE_DATA_TOO_SHORT);
 	result += PyModule_AddIntMacro(module, SPY_STATUS3_LIN_ONLY_UPDATE_SLAVE_TABLE_ONCE);
 	result += PyModule_AddIntMacro(module, SPY_STATUS2_MOST_PACKET_DATA);
+	result += PyModule_AddIntMacro(module, SPY_STATUS2_MOST_STATUS);
 	result += PyModule_AddIntMacro(module, SPY_STATUS2_MOST_LOW_LEVEL);
 	result += PyModule_AddIntMacro(module, SPY_STATUS2_MOST_CONTROL_DATA);
 	result += PyModule_AddIntMacro(module, SPY_STATUS2_MOST_MHP_USER_DATA);
@@ -255,7 +260,9 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, SPY_STATUS2_MOST_CHANGED_PAR);
 	result += PyModule_AddIntMacro(module, SPY_STATUS2_ETHERNET_CRC_ERROR);
 	result += PyModule_AddIntMacro(module, SPY_STATUS2_ETHERNET_FRAME_TOO_SHORT);
+	result += PyModule_AddIntMacro(module, SPY_STATUS2_ETHERNET_FCS_AVAILABLE);
 	result += PyModule_AddIntMacro(module, SPY_STATUS2_ETHERNET_NO_PADDING);
+	result += PyModule_AddIntMacro(module, SPY_STATUS2_ETHERNET_PREEMPTION_ENABLED);
 	result += PyModule_AddIntMacro(module, SPY_STATUS2_FLEXRAY_TX_AB);
 	result += PyModule_AddIntMacro(module, SPY_STATUS2_FLEXRAY_TX_AB_NO_A);
 	result += PyModule_AddIntMacro(module, SPY_STATUS2_FLEXRAY_TX_AB_NO_B);
@@ -267,7 +274,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, SPY_STATUS3_CANFD_ESI);
 	result += PyModule_AddIntMacro(module, SPY_STATUS3_CANFD_IDE);
 	result += PyModule_AddIntMacro(module, SPY_STATUS3_CANFD_RTR);
-	result += PyModule_AddIntMacro(module, SPY_STATUS3_CANFD_EDL);
+	result += PyModule_AddIntMacro(module, SPY_STATUS3_CANFD_FDF);
 	result += PyModule_AddIntMacro(module, SPY_STATUS3_CANFD_BRS);
 	result += PyModule_AddIntMacro(module, NEO_CFG_MPIC_HS_CAN_CNF1);
 	result += PyModule_AddIntMacro(module, NEO_CFG_MPIC_HS_CAN_CNF2);
@@ -295,8 +302,6 @@ int setup_module_auto_defines(PyObject * module)
 	// enum
 	result += PyModule_AddIntMacro(module, AUTO);
 	result += PyModule_AddIntMacro(module, USE_TQ);
-	// end of enum -  };
-
 	// enum
 	result += PyModule_AddIntMacro(module, BPS20);
 	result += PyModule_AddIntMacro(module, BPS33);
@@ -324,8 +329,6 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, LOOPBACK);
 	result += PyModule_AddIntMacro(module, LISTEN_ONLY);
 	result += PyModule_AddIntMacro(module, LISTEN_ALL);
-	// end of enum -  };
-
 	result += PyModule_AddIntMacro(module, CAN_SETTINGS_SIZE);
 	// enum
 	result += PyModule_AddIntMacro(module, NO_CANFD);
@@ -359,15 +362,11 @@ int setup_module_auto_defines(PyObject * module)
 	// enum
 	result += PyModule_AddIntMacro(module, RESISTOR_ON);
 	result += PyModule_AddIntMacro(module, RESISTOR_OFF);
-	// end of enum -  };
-
 	// enum
 	result += PyModule_AddIntMacro(module, SLEEP_MODE);
 	result += PyModule_AddIntMacro(module, SLOW_MODE);
 	result += PyModule_AddIntMacro(module, NORMAL_MODE);
 	result += PyModule_AddIntMacro(module, FAST_MODE);
-	// end of enum -  };
-
 	result += PyModule_AddIntMacro(module, LIN_SETTINGS_SIZE);
 	result += PyModule_AddIntMacro(module, ISO9141_KEYWORD2000__INIT_STEP_SIZE);
 	result += PyModule_AddIntMacro(module, ISO9141_KEYWORD2000_SETTINGS_SIZE);
@@ -380,6 +379,7 @@ int setup_module_auto_defines(PyObject * module)
 	// enum
 	result += PyModule_AddIntMacro(module, OPETH_FUNC_TAP);
 	result += PyModule_AddIntMacro(module, OPETH_FUNC_MEDIACONVERTER);
+	result += PyModule_AddIntMacro(module, OPETH_FUNC_TAP_LOW_LATENCY);
 	// end of enum -  };
 
 	result += PyModule_AddIntMacro(module, OP_ETH_GENERAL_SETTINGS_SIZE);
@@ -387,8 +387,6 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, OPETH_LINK_AUTO);
 	result += PyModule_AddIntMacro(module, OPETH_LINK_MASTER);
 	result += PyModule_AddIntMacro(module, OPETH_LINK_SLAVE);
-	// end of enum -  };
-
 	result += PyModule_AddIntMacro(module, OP_ETH_SETTINGS_SIZE);
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS_SIZE);
 	result += PyModule_AddIntMacro(module, CANTERM_SETTINGS_SIZE);
@@ -418,13 +416,16 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, SFireVnetSettings_SIZE);
 	result += PyModule_AddIntMacro(module, SCyanSettings_SIZE);
 	result += PyModule_AddIntMacro(module, SVCAN3Settings_SIZE);
-	result += PyModule_AddIntMacro(module, SVCANFDSettings_SIZE);
+	result += PyModule_AddIntMacro(module, SVCAN4Settings_SIZE);
 	result += PyModule_AddIntMacro(module, SVCANRFSettings_SIZE);
 	result += PyModule_AddIntMacro(module, SECUSettings_SIZE);
 	result += PyModule_AddIntMacro(module, SPendantSettings_SIZE);
 	result += PyModule_AddIntMacro(module, SIEVBSettings_SIZE);
 	result += PyModule_AddIntMacro(module, SEEVBSettings_SIZE);
 	result += PyModule_AddIntMacro(module, SRADGalaxySettings_SIZE);
+	result += PyModule_AddIntMacro(module, SRADStar2Settings_SIZE);
+	result += PyModule_AddIntMacro(module, SVividCANSettings_SIZE);
+	result += PyModule_AddIntMacro(module, SOBD2SimSettings_SIZE);
 	result += PyModule_AddIntMacro(module, GS_VERSION);
 	result += PyModule_AddIntMacro(module, GLOBAL_SETTINGS_SIZE);
 	result += PyModule_AddIntMacro(module, NEOVI_3G_MAX_SETTINGS_SIZE);
@@ -438,6 +439,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, icsSpyMessageLong_SIZE);
 	result += PyModule_AddIntMacro(module, icsSpyMessageJ1850_SIZE);
 	result += PyModule_AddIntMacro(module, icsSpyMessageVSB_SIZE);
+	// enum
 
 	return result == 0 ? 1 : 0;
 }
