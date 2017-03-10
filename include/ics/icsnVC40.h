@@ -1446,7 +1446,7 @@ typedef struct _SRADGalaxySettings {
   TIMESYNC_ICSHARDWARE_SETTINGS timeSyncSettings;
   uint16_t hwComLatencyTestEn;
 } SRADGalaxySettings;
-#define SRADGalaxySettings_SIZE 662
+#define SRADGalaxySettings_SIZE 664
 
 typedef struct _SRADStar2Settings {
   uint16_t perf_en;
@@ -1498,7 +1498,7 @@ typedef struct _SRADStar2Settings {
   uint16_t hwComLatencyTestEn;
 } SRADStar2Settings;
 
-#define SRADStar2Settings_SIZE 344
+#define SRADStar2Settings_SIZE 346
 
 typedef struct _SVividCANSettings {
   uint32_t ecu_id;
