@@ -96,7 +96,7 @@ char* neodevice_to_string(unsigned long type)
     case NEODEVICE_ION_2: return "neoVI ION (v2)";
     case NEODEVICE_ION_3: return "neoVI ION (v3)";
     case NEODEVICE_RADSTAR: return "RADSTAR";
-    case NEODEVICE_VCANFD: return "ValueCAN FD";
+    case NEODEVICE_VCAN4: return "ValueCAN4";
     case NEODEVICE_ECU15: return "neoECU15";
     case NEODEVICE_ECU25: return "neoECU25";
     case NEODEVICE_EEVB: return "EEVB";
@@ -104,6 +104,9 @@ char* neodevice_to_string(unsigned long type)
     case NEODEVICE_FIRE2: return "neoVI FIRE2";
     case NEODEVICE_FLEX: return "FLEX";
     case NEODEVICE_RADGALAXY: return "RAD Galaxy";
+    case NEODEVICE_RADSTAR2: return "RAD Star2";
+    case NEODEVICE_VIVIDCAN: return "VividCAN";
+    case NEODEVICE_OBD2_SIM: return "OBD2 Sim";
     default: return "unknown/unsupported";
     };
     return "unknown/unsupported";
