@@ -778,7 +778,6 @@ PyObject* meth_transmit_messages(PyObject* self, PyObject* args)
         ice::Function<int __stdcall (ICS_HANDLE, icsSpyMessage*, int, int)> icsneoTxMessages(lib, "icsneoTxMessages");
         const Py_ssize_t TUPLE_COUNT = PyTuple_Size(tuple);
         icsSpyMessage** msgs = new icsSpyMessage*[TUPLE_COUNT]();
-        unsigned char net_id = 0;
         for (int i=0; i < TUPLE_COUNT; ++i) {
             spy_message_object* obj = (spy_message_object*)PyTuple_GetItem(tuple, i);
             if (!obj) {
@@ -789,16 +788,10 @@ PyObject* meth_transmit_messages(PyObject* self, PyObject* args)
                 return set_ics_exception(exception_runtime_error(), "Tuple item must be of " MODULE_NAME "." SPY_MESSAGE_OBJECT_NAME);
             }
             msgs[i] = &(obj->msg);
-            if (obj->msg.NetworkID != net_id && i) {
-                delete[] msgs;
-                return set_ics_exception(exception_runtime_error(), "Tuple items must all have same " MODULE_NAME "." SPY_MESSAGE_OBJECT_NAME ".NetworkID");
-            } else if (!i) {
-                net_id = obj->msg.NetworkID;
-            }
         }
         Py_BEGIN_ALLOW_THREADS
         for (int i=0; i < TUPLE_COUNT; ++i) {
-            if (!icsneoTxMessages(handle, msgs[0], net_id, TUPLE_COUNT)) {
+            if (!icsneoTxMessages(handle, msgs[i], msgs[i]->NetworkID, 1)) {
                 Py_BLOCK_THREADS
                 if (created_tuple) {
                     Py_XDECREF(tuple);
