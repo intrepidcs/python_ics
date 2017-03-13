@@ -37,13 +37,13 @@ int PyUnicode_CompareWithASCIIString(PyObject *uni, const char *string)
 typedef struct {
     PyObject_HEAD
     icsSpyMessage msg;
-    std::vector<unsigned char> ExtraDataBuffer;
+    //std::vector<unsigned char> ExtraDataBuffer;
 } spy_message_object;
 
 typedef struct {
     PyObject_HEAD
     icsSpyMessageJ1850 msg;
-    std::vector<unsigned char> ExtraDataBuffer;
+    //std::vector<unsigned char> ExtraDataBuffer;
 } spy_message_j1850_object;
 
 static PyMemberDef spy_message_object_members[] = {
@@ -164,12 +164,16 @@ static PyObject* spy_message_object_getattr(PyObject *o, PyObject *attr_name)
     else if (PyUnicode_CompareWithASCIIString(attr_name, "ExtraDataPtr") == 0) {
         Py_DECREF(attr_name);
         spy_message_j1850_object* obj = (spy_message_j1850_object*)o;
-        PyObject* tuple = PyTuple_New(obj->ExtraDataBuffer.size());
-        std::vector<unsigned char>::iterator it = obj->ExtraDataBuffer.begin();
-        for (int i=0; it != obj->ExtraDataBuffer.end(); ++it,++i) {
-            PyTuple_SET_ITEM(tuple, i, PyLong_FromLong(*it));
+        unsigned char *ExtraDataPtr = (unsigned char*)obj->msg.ExtraDataPtr;
+        if (obj->msg.ExtraDataPtrEnabled && obj->msg.NumberBytesData && obj->msg.ExtraDataPtr) {
+            PyObject *tuple = PyTuple_New(obj->msg.NumberBytesData);
+            for (int i=0; i < obj->msg.NumberBytesData; ++i) {
+                PyTuple_SET_ITEM(tuple, i, PyLong_FromLong(ExtraDataPtr[i]));
+            }
+            return tuple;
+        } else {
+            return Py_None;
         }
-        return tuple;
     }
     else {
         return PyObject_GenericGetAttr(o, attr_name);
@@ -250,15 +254,19 @@ static int spy_message_object_setattr(PyObject *o, PyObject *name, PyObject *val
 
         // Get tuple items and place them in array, set as 0 if error.
         Py_ssize_t length = PyObject_Length(value);
-        ((spy_message_j1850_object*)obj)->ExtraDataBuffer.clear();
+        if (obj->msg.ExtraDataPtr != NULL)
+            delete[] obj->msg.ExtraDataPtr;
+        obj->msg.ExtraDataPtr = new unsigned char[PyObject_Length(value)];
+        obj->msg.NumberBytesData = PyObject_Length(value);
+        obj->msg.ExtraDataPtrEnabled = 1;
+        unsigned char * ExtraDataPtr = (unsigned char*)(obj->msg.ExtraDataPtr);
         for (int i=0; i < PyObject_Length(value); ++i) {
             PyObject* data = PyTuple_GetItem(value, i);
             if (!data && !PyLong_Check(data)) {
-                obj->ExtraDataBuffer.push_back(0);
+                ExtraDataPtr[i] = (unsigned char)0;
             } else {
-                obj->ExtraDataBuffer.push_back((unsigned char)PyLong_AsLong(data));
+                ExtraDataPtr[i] = (unsigned char)PyLong_AsLong(data);
             }
-            obj->msg.NumberBytesHeader = PyObject_Length(value);
         }
         return 0;
     }
