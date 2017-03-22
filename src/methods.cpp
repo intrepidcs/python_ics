@@ -2907,3 +2907,105 @@ PyObject* meth_get_dll_firmware_info(PyObject* self, PyObject* args)
     }
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
+
+PyObject* meth_get_backup_power_enabled(PyObject* self, PyObject* args)
+{
+    PyObject* obj = NULL;
+    unsigned int enabled = 0;
+    if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
+        return NULL;
+    }
+    if (!PyNeoDevice_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        ice::Function<int __stdcall (ICS_HANDLE, unsigned int&)> icsneoGetBackupPowerEnabled(lib, "icsneoGetBackupPowerEnabled");
+        Py_BEGIN_ALLOW_THREADS
+        if (!icsneoGetBackupPowerEnabled(handle, enabled)) {
+            Py_BLOCK_THREADS
+            return set_ics_exception(exception_runtime_error(), "icsneoGetBackupPowerEnabled() Failed");
+        }
+        Py_END_ALLOW_THREADS
+        return Py_BuildValue("b", enabled);
+    }
+    catch (ice::Exception& ex)
+    {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
+
+PyObject* meth_set_backup_power_enabled(PyObject* self, PyObject* args)
+{
+    PyObject* obj = NULL;
+    unsigned int enabled = 1;
+    if (!PyArg_ParseTuple(args, arg_parse("O|b:", __FUNCTION__), &obj, &enabled)) {
+        return NULL;
+    }
+    if (!PyNeoDevice_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        ice::Function<int __stdcall (ICS_HANDLE, unsigned int)> icsneoSetBackupPowerEnabled(lib, "icsneoSetBackupPowerEnabled");
+        Py_BEGIN_ALLOW_THREADS
+        if (!icsneoSetBackupPowerEnabled(handle, enabled)) {
+            Py_BLOCK_THREADS
+            return set_ics_exception(exception_runtime_error(), "icsneoSetBackupPowerEnabled() Failed");
+        }
+        Py_END_ALLOW_THREADS
+        return Py_BuildValue("b", enabled);
+    }
+    catch (ice::Exception& ex)
+    {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
+
+PyObject* meth_set_backup_power_ready(PyObject* self, PyObject* args)
+{
+    PyObject* obj = NULL;
+    unsigned int enabled = 0;
+    if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
+        return NULL;
+    }
+    if (!PyNeoDevice_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        ice::Function<int __stdcall (ICS_HANDLE, unsigned int&)> icsneoGetBackupPowerReady(lib, "icsneoGetBackupPowerReady");
+        Py_BEGIN_ALLOW_THREADS
+        if (!icsneoGetBackupPowerReady(handle, enabled)) {
+            Py_BLOCK_THREADS
+            return set_ics_exception(exception_runtime_error(), "icsneoGetBackupPowerReady() Failed");
+        }
+        Py_END_ALLOW_THREADS
+        return Py_BuildValue("b", enabled);
+    }
+    catch (ice::Exception& ex)
+    {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
