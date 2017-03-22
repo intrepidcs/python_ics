@@ -799,6 +799,10 @@ PyObject* meth_transmit_messages(PyObject* self, PyObject* args)
                 delete[] msgs;
                 return set_ics_exception(exception_runtime_error(), "icsneoTxMessages() Failed");
             }
+            if (msgs[i]->ExtraDataPtrEnabled && msgs[i]->ExtraDataPtr != NULL) {
+                delete msgs[i]->ExtraDataPtr;
+                msgs[i]->ExtraDataPtrEnabled = 0;
+            }
         }
         Py_END_ALLOW_THREADS
         if (created_tuple) {
