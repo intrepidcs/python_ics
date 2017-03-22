@@ -57,6 +57,9 @@ PyObject* meth_set_context(PyObject* self, PyObject* args);
 PyObject* meth_force_firmware_update(PyObject* self, PyObject* args);
 PyObject* meth_firmware_update_required(PyObject* self, PyObject* args);
 PyObject* meth_get_dll_firmware_info(PyObject* self, PyObject* args);
+PyObject* meth_get_backup_power_enabled(PyObject* self, PyObject* args);
+PyObject* meth_set_backup_power_enabled(PyObject* self, PyObject* args);
+PyObject* meth_set_backup_power_ready(PyObject* self, PyObject* args);
 
 
 
@@ -847,6 +850,51 @@ PyObject* meth_get_dll_firmware_info(PyObject* self, PyObject* args);
     "\t55\n" \
     "\t>>>\n"
 
+#define _DOC_GET_BACKUP_POWER_ENABLED \
+    MODULE_NAME".get_backup_power_enabled(device)\n" \
+    "\n" \
+    "Returns the device backup power enabled for the device.\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`): :class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`"MODULE_NAME".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\tBoolean: True on success, False on failure.\n" \
+    "\n"
+
+#define _DOC_SET_BACKUP_POWER_ENABLED \
+    MODULE_NAME".set_backup_power_enabled(device, enable)\n" \
+    "\n" \
+    "Sets the device backup power enabled for the device.\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`): :class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`"MODULE_NAME".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\tBoolean: True on success, False on failure.\n" \
+    "\n"
+
+#define _DOC_GET_BACKUP_POWER_READY \
+    MODULE_NAME".get_backup_power_ready(device)\n" \
+    "\n" \
+    "Returns the device backup power is ready for the device.\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`): :class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`"MODULE_NAME".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\tBoolean: True on success, False on failure.\n" \
+    "\n"
+
 static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("find_devices", "FindNeoDevices", (PyCFunction)meth_find_devices, METH_VARARGS | METH_KEYWORDS, _DOC_FIND_DEVICES),
     _EZ_ICS_STRUCT_METHOD("open_device", "OpenNeoDevice", (PyCFunction)meth_open_device, METH_VARARGS | METH_KEYWORDS, _DOC_OPEN_DEVICES),
@@ -896,7 +944,9 @@ static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("force_firmware_update", "icsneoForceFirmwareUpdate", meth_force_firmware_update, METH_VARARGS, _DOC_FORCE_FIRMWARE_UPDATE),
     _EZ_ICS_STRUCT_METHOD("firmware_update_required", "icsneoFirmwareUpdateRequired", meth_firmware_update_required, METH_VARARGS, _DOC_FIRMWARE_UPDATE_REQUIRED),
     _EZ_ICS_STRUCT_METHOD("get_dll_firmware_info", "icsneoGetDLLFirmwareInfo", meth_get_dll_firmware_info, METH_VARARGS, _DOC_GET_DLL_FIRMWARE_INFO),
-
+    _EZ_ICS_STRUCT_METHOD("get_backup_power_enabled", "icsneoGetBackupPowerEnabled", meth_get_backup_power_enabled, METH_VARARGS, _DOC_GET_BACKUP_POWER_ENABLED),
+    _EZ_ICS_STRUCT_METHOD("set_backup_power_enabled", "icsneoSetBackupPowerEnabled", meth_set_backup_power_enabled, METH_VARARGS, _DOC_SET_BACKUP_POWER_ENABLED),
+    _EZ_ICS_STRUCT_METHOD("get_backup_power_ready", "icsneoGetBackupPowerReady", meth_set_backup_power_ready, METH_VARARGS, _DOC_GET_BACKUP_POWER_READY),
     
     { NULL, NULL, 0, NULL }
 };
