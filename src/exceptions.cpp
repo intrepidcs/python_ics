@@ -7,6 +7,38 @@
 static PyObject* IcsArgumentError = NULL;
 static PyObject* IcsRuntimeError = NULL;
 
+char *pyics_base36enc(int sn)
+{
+    char *result = NULL;
+#if PY_MAJOR_VERSION >= 3
+    PyObject *name = PyUnicode_FromString("ics");
+#else
+    PyObject *name = PyString_FromString("ics");
+#endif
+    PyObject *module = PyImport_Import(name);
+    PyObject *dict = PyModule_GetDict(module);
+    PyObject *base36enc = PyDict_GetItemString(dict, "base36enc");
+    if (PyCallable_Check(base36enc)) {
+        PyObject *return_value = PyObject_CallFunction(base36enc, "i", sn);
+        if (return_value == NULL) {
+            // We failed for some reason...
+            PyErr_Print();
+            Py_DECREF(module);
+            Py_DECREF(name);
+            return NULL;
+        } else {
+#if PY_MAJOR_VERSION >= 3
+            return PyUnicode_AsUTF8(return_value);
+#else
+            return PyString_AsString(return_value);
+#endif
+        }
+    }
+    Py_DECREF(module);
+    Py_DECREF(name);
+    return "";
+}
+
 int initialize_exceptions(PyObject* module)
 {
     if (!module && IcsArgumentError && IcsRuntimeError) {
@@ -66,7 +98,13 @@ PyObject* _set_ics_exception_dev(PyObject* exception, PyObject* obj, char* msg, 
         if (name) {
             ss << name << " ";
         }
-        ss << PyNeoDevice_GetSerialNumber(obj) << ")";
+        char* b36sn = pyics_base36enc(PyNeoDevice_GetSerialNumber(obj));
+        ss << PyNeoDevice_GetSerialNumber(obj);
+        if (b36sn != NULL && PyNeoDevice_GetSerialNumber(obj) >= 604661760 /* "A0000" */) {
+            ss << " - " << b36sn << ")";
+        } else {
+            ss << ")";
+        }
     }
     if (!exception) {
         PyErr_SetString(PyExc_Exception, ss.str().c_str());
