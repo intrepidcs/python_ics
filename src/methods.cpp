@@ -799,10 +799,13 @@ PyObject* meth_transmit_messages(PyObject* self, PyObject* args)
                 delete[] msgs;
                 return set_ics_exception(exception_runtime_error(), "icsneoTxMessages() Failed");
             }
+            /*
             if (msgs[i]->ExtraDataPtrEnabled && msgs[i]->ExtraDataPtr != NULL) {
                 delete msgs[i]->ExtraDataPtr;
+                msgs[i]->ExtraDataPtr = NULL;
                 msgs[i]->ExtraDataPtrEnabled = 0;
             }
+            */
         }
         Py_END_ALLOW_THREADS
         if (created_tuple) {
@@ -886,11 +889,13 @@ PyObject* meth_get_messages(PyObject* self, PyObject* args)
             if (use_j1850) {
                 spy_message_j1850_object* msg = (spy_message_j1850_object*)obj;
                 memcpy(&msg->msg, &msgs[i].msg_j1850, sizeof(msgs[i].msg_j1850));
-                //msg->msg = msgs[i].msg_j1850;
+                // Looks like icsneo40 does its own memory management so don't delete when we dealloc
+                msg->noExtraDataPtrCleanup = true;
             } else {
                 spy_message_object* msg = (spy_message_object*)obj;
                 memcpy(&msg->msg, &msgs[i].msg, sizeof(msgs[i].msg));
-                //msg->msg = (icsSpyMessage)msgs[i];
+                // Looks like icsneo40 does its own memory management so don't delete when we dealloc
+                msg->noExtraDataPtrCleanup = true;
             }
             PyTuple_SetItem(tuple, i, obj);
         }

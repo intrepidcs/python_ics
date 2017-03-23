@@ -37,13 +37,13 @@ int PyUnicode_CompareWithASCIIString(PyObject *uni, const char *string)
 typedef struct {
     PyObject_HEAD
     icsSpyMessage msg;
-    //std::vector<unsigned char> ExtraDataBuffer;
+    bool noExtraDataPtrCleanup;
 } spy_message_object;
 
 typedef struct {
     PyObject_HEAD
     icsSpyMessageJ1850 msg;
-    //std::vector<unsigned char> ExtraDataBuffer;
+    bool noExtraDataPtrCleanup;
 } spy_message_j1850_object;
 
 static PyMemberDef spy_message_object_members[] = {
@@ -70,6 +70,7 @@ static PyMemberDef spy_message_object_members[] = {
     { "AckBytes", T_OBJECT_EX, NULL, 0, "" },
     { "ExtraDataPtr", T_OBJECT_EX, offsetof(spy_message_object, msg.ExtraDataPtr), 0, "" },
     { "MiscData", T_UBYTE, offsetof(spy_message_object, msg.MiscData), 0, "" },
+    { "noExtraDataPtrCleanup", T_BOOL, offsetof(spy_message_object, noExtraDataPtrCleanup), 0, "Tells Python to not clean up ExtraDataPtrMemory, If this is enabled. Ignore, if unsure." },
     { NULL, 0, 0, 0, 0 },
 };
 
@@ -97,11 +98,26 @@ static PyMemberDef spy_message_j1850_object_members[] = {
     { "AckBytes", T_OBJECT_EX, NULL, 0, "" },
     { "ExtraDataPtr", T_OBJECT_EX, offsetof(spy_message_j1850_object, msg.ExtraDataPtr), 0, "" },
     { "MiscData", T_UBYTE, offsetof(spy_message_j1850_object, msg.MiscData), 0, "" },
+    { "noExtraDataPtrCleanup", T_BOOL, offsetof(spy_message_object, noExtraDataPtrCleanup), 0, "Tells Python to not clean up ExtraDataPtrMemory, If this is enabled. Ignore, if unsure." },
     { NULL, 0, 0, 0, 0 },
 };
 
+
+static int spy_message_object_alloc(spy_message_object* self, PyObject* args, PyObject* kwds)
+{
+    memset(&self->msg, 0, sizeof(self->msg));
+    self->noExtraDataPtrCleanup = false;
+    return 0;
+}
+
 static void spy_message_object_dealloc(spy_message_object* self)
 {
+    if (!self->noExtraDataPtrCleanup && self->msg.ExtraDataPtrEnabled && self->msg.ExtraDataPtr != NULL) {
+        // Clean up the ExtraDataPtr if we can
+        delete[] self->msg.ExtraDataPtr;
+        self->msg.ExtraDataPtr = NULL;
+        self->msg.ExtraDataPtrEnabled = 0;
+    }
     Py_TYPE(self)->tp_free((PyObject*)self);
 }
 
@@ -269,6 +285,14 @@ static int spy_message_object_setattr(PyObject *o, PyObject *name, PyObject *val
             }
         }
         return 0;
+    }
+    else if (PyUnicode_CompareWithASCIIString(name, "ExtraDataPtrEnabled") == 0) {
+        // Make sure we clean up here so we don't memory leak
+        if (!obj->noExtraDataPtrCleanup && PyLong_AsLong(value) != 1 && obj->msg.ExtraDataPtrEnabled == 1) {
+            if (obj->msg.ExtraDataPtr != NULL)
+                delete[] obj->msg.ExtraDataPtr;
+        }
+        return PyObject_GenericSetAttr(o, name, value);
     }
     else {
         return PyObject_GenericSetAttr(o, name, value);

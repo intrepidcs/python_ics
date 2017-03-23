@@ -30,6 +30,13 @@ PyTypeObject spy_message_object_type = {
     0,                         /* tp_iternext */
     0,                         /* tp_methods */
     spy_message_object_members, /* tp_members */
+    0,                         /* tp_getset */
+    0,                         /* tp_base */
+    0,                         /* tp_dict */
+    0,                         /* tp_descr_get */
+    0,                         /* tp_descr_set */
+    0,                         /* tp_dictoffset */
+    (initproc)spy_message_object_alloc, /* tp_init */
 };
 
 PyTypeObject spy_message_j1850_object_type = {
@@ -62,6 +69,13 @@ PyTypeObject spy_message_j1850_object_type = {
     0,                         /* tp_iternext */
     0,                         /* tp_methods */
     spy_message_j1850_object_members, /* tp_members */
+    0,                         /* tp_getset */
+    0,                         /* tp_base */
+    0,                         /* tp_dict */
+    0,                         /* tp_descr_get */
+    0,                         /* tp_descr_set */
+    0,                         /* tp_dictoffset */
+    (initproc)spy_message_object_alloc, /* tp_init */
 };
 
 bool setup_spy_message_object(PyObject* module)
