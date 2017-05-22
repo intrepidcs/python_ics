@@ -20,12 +20,10 @@
 #include "object_uart_settings.h"
 #include "object_iso9141_keyword2000_settings.h"
 #include "object_canfd_settings.h"
+#include "object_ethernet_settings.h"
 
 #define CYAN_SETTINGS_OBJECT_NAME "CyanSettings"
 
-/*
-
-    */
 typedef struct {
     PyObject_HEAD
     PyObject* can1;
@@ -53,6 +51,7 @@ typedef struct {
     PyObject* lin3;
     PyObject* lin4;
     PyObject* lin5;
+    PyObject* lin6;
 
     PyObject* iso9141_kw1;
     PyObject* iso9141_kw2;
@@ -62,6 +61,8 @@ typedef struct {
     PyObject* uart;
     PyObject* uart2;
     PyObject* textapi;
+
+    PyObject* ethernet;
 
     SCyanSettings s;
 } cyan_settings_object;
@@ -90,6 +91,7 @@ static PyMemberDef cyan_settings_object_members[] = {
     { "lin3", T_OBJECT_EX, offsetof(cyan_settings_object, lin3), 0, MODULE_NAME "." LIN_SETTINGS_OBJECT_NAME" Object" },
     { "lin4", T_OBJECT_EX, offsetof(cyan_settings_object, lin4), 0, MODULE_NAME "." LIN_SETTINGS_OBJECT_NAME" Object" },
     { "lin5", T_OBJECT_EX, offsetof(cyan_settings_object, lin5), 0, MODULE_NAME "." LIN_SETTINGS_OBJECT_NAME" Object" },
+    { "lin6", T_OBJECT_EX, offsetof(cyan_settings_object, lin6), 0, MODULE_NAME "." LIN_SETTINGS_OBJECT_NAME" Object" },
 
     { "swcan1", T_OBJECT_EX, offsetof(cyan_settings_object, swcan1), 0, MODULE_NAME "." SWCAN_SETTINGS_OBJECT_NAME" Object" },
     { "swcan2", T_OBJECT_EX, offsetof(cyan_settings_object, swcan2), 0, MODULE_NAME "." SWCAN_SETTINGS_OBJECT_NAME" Object" },
@@ -133,6 +135,18 @@ static PyMemberDef cyan_settings_object_members[] = {
 
     { "text_api", T_OBJECT_EX, offsetof(cyan_settings_object, textapi), 0, MODULE_NAME "." TEXTAPI_SETTINGS_OBJECT_NAME" Object" },
     { "termination_enables", T_ULONGLONG, offsetof(cyan_settings_object, s.termination_enables), 0, "" },
+
+    { "ethernet", T_OBJECT_EX, offsetof(cyan_settings_object, ethernet), 0, MODULE_NAME "." ETHERNET_SETTINGS_OBJECT_NAME" Object" },
+
+    { "slaveVnetA", T_USHORT, offsetof(cyan_settings_object, s.slaveVnetA), 0, "" },
+    { "slaveVnetB", T_USHORT, offsetof(cyan_settings_object, s.slaveVnetB), 0, "" },
+
+    { "disableUsbCheckOnBoot", T_USHORT, 0, 0, "" },
+    { "enableLatencyTest", T_USHORT, 0, 0, "" },
+    { "reserved", T_USHORT, 0, 0, "" },
+
+    { "digitalIoThresholdTicks", T_USHORT, offsetof(cyan_settings_object, s.digitalIoThresholdTicks), 0, "" },
+    { "digitalIoThresholdEnable", T_USHORT, offsetof(cyan_settings_object, s.digitalIoThresholdEnable), 0, "" },
     
     { NULL, 0, 0, 0, 0 },
 };
@@ -169,6 +183,7 @@ static int cyan_settings_object_init(cyan_settings_object* self, PyObject* args,
     self->lin3 = PyObject_CallObject((PyObject*)&lin_settings_object_type, NULL);
     self->lin4 = PyObject_CallObject((PyObject*)&lin_settings_object_type, NULL);
     self->lin5 = PyObject_CallObject((PyObject*)&lin_settings_object_type, NULL);
+    self->lin6 = PyObject_CallObject((PyObject*)&lin_settings_object_type, NULL);
     // Initialize ISO9141Keyword2000 Objects
     self->iso9141_kw1 = PyObject_CallObject((PyObject*)&iso9141keyword2000_settings_object_type, NULL);
     self->iso9141_kw2 = PyObject_CallObject((PyObject*)&iso9141keyword2000_settings_object_type, NULL);
@@ -176,7 +191,81 @@ static int cyan_settings_object_init(cyan_settings_object* self, PyObject* args,
     self->iso9141_kw4 = PyObject_CallObject((PyObject*)&iso9141keyword2000_settings_object_type, NULL);
     // Initialize TextAPI Objects
     self->textapi = PyObject_CallObject((PyObject*)&textapi_settings_object_type, NULL);
+    // Initialize ETHERNET_SETTINGS Objects
+    self->ethernet = PyObject_CallObject((PyObject*)&ethernet_settings_object_type, NULL);
     return 0;
+}
+
+static PyObject* cyan_settings_object_getattr(PyObject *o, PyObject *attr_name)
+{
+#if PY_MAJOR_VERSION >= 3
+    if (!PyUnicode_Check(attr_name)) {
+#else
+    if (!PyString_Check(attr_name)) {
+#endif
+        PyErr_Format(PyExc_TypeError,
+                    "attribute name must be string, not '%.200s'",
+                    attr_name->ob_type->tp_name);
+        return NULL;
+    }
+    else {
+        Py_INCREF(attr_name);
+    }
+
+    cyan_settings_object* obj = (cyan_settings_object*)o;
+    if (PyUnicode_CompareWithASCIIString(attr_name, "disableUsbCheckOnBoot") == 0) {
+        Py_DECREF(attr_name);
+        return Py_BuildValue("i", (obj->s.flags.disableUsbCheckOnBoot));
+    }
+    else if (PyUnicode_CompareWithASCIIString(attr_name, "enableLatencyTest") == 0) {
+        Py_DECREF(attr_name);
+        return Py_BuildValue("i", (obj->s.flags.enableLatencyTest));
+    }
+    else if (PyUnicode_CompareWithASCIIString(attr_name, "reserved") == 0) {
+        Py_DECREF(attr_name);
+        return Py_BuildValue("i", (obj->s.flags.reserved));
+    }
+    else {
+        return PyObject_GenericGetAttr(o, attr_name);
+    }
+}
+
+static int cyan_settings_object_setattr(PyObject *o, PyObject *name, PyObject *value)
+{
+    cyan_settings_object* obj = (cyan_settings_object*)o;
+    if (PyUnicode_CompareWithASCIIString(name, "disableUsbCheckOnBoot") == 0) {
+        if (!PyLong_Check(value)) {
+            PyErr_Format(PyExc_AttributeError,
+                "'%.50s' object attribute '%.400s' needs to be a int",
+                MODULE_NAME "." ETHERNET_SETTINGS_OBJECT_NAME, name);
+            return -1;
+        }
+        obj->s.flags.disableUsbCheckOnBoot = PyLong_AsLong(value) & 0x01;
+        return 0;
+    }
+    else if (PyUnicode_CompareWithASCIIString(name, "enableLatencyTest") == 0) {
+        if (!PyLong_Check(value)) {
+            PyErr_Format(PyExc_AttributeError,
+                "'%.50s' object attribute '%.400s' needs to be a int",
+                MODULE_NAME "." ETHERNET_SETTINGS_OBJECT_NAME, name);
+            return -1;
+        }
+        obj->s.flags.enableLatencyTest = PyLong_AsLong(value) & 0x01;
+        return 0;
+    }
+    else if (PyUnicode_CompareWithASCIIString(name, "reserved") == 0) {
+        if (!PyLong_Check(value)) {
+            PyErr_Format(PyExc_AttributeError,
+                "'%.50s' object attribute '%.400s' needs to be a int",
+                MODULE_NAME "." ETHERNET_SETTINGS_OBJECT_NAME, name);
+            return -1;
+        }
+        obj->s.flags.reserved = PyLong_AsLong(value);
+        return 0;
+    }
+    else {
+        return PyObject_GenericSetAttr(o, name, value);
+    }
 }
 
 extern PyTypeObject cyan_settings_object_type;

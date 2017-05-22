@@ -1,14 +1,14 @@
-#include "object_cyan_settings.h"
+#include "object_ethernet_settings.h"
 
-PyTypeObject cyan_settings_object_type = {
+PyTypeObject ethernet_settings_object_type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    MODULE_NAME "." CYAN_SETTINGS_OBJECT_NAME, /* tp_name */
-    sizeof(cyan_settings_object), /* tp_basicsize */
+    MODULE_NAME "." ETHERNET_SETTINGS_OBJECT_NAME, /* tp_name */
+    sizeof(ethernet_settings_object), /* tp_basicsize */
     0,                         /* tp_itemsize */
     (destructor)0,             /* tp_dealloc */
     0,                         /* tp_print */
-    (getattrfunc)PyObject_GenericGetAttr, /* tp_getattr */
-    (setattrfunc)PyObject_GenericSetAttr, /* tp_setattr */
+    0, /* tp_getattr */
+    0, /* tp_setattr */
     0,                         /* tp_reserved */
     0,                         /* tp_repr */
     0,                         /* tp_as_number */
@@ -17,12 +17,12 @@ PyTypeObject cyan_settings_object_type = {
     0,                         /* tp_hash  */
     0,                         /* tp_call */
     0,                         /* tp_str */
-    cyan_settings_object_getattr,   /* tp_getattro */
-    cyan_settings_object_setattr,   /* tp_setattro */
+    ethernet_settings_object_getattr,   /* tp_getattro */
+    ethernet_settings_object_setattr,   /* tp_setattro */
     0,                         /* tp_as_buffer */
     Py_TPFLAGS_DEFAULT |
     Py_TPFLAGS_BASETYPE,       /* tp_flags */
-    CYAN_SETTINGS_OBJECT_NAME" object",      /* tp_doc */
+    ETHERNET_SETTINGS_OBJECT_NAME" object",      /* tp_doc */
     0,                         /* tp_traverse */
     0,                         /* tp_clear */
     0,                         /* tp_richcompare */
@@ -30,26 +30,25 @@ PyTypeObject cyan_settings_object_type = {
     0,                         /* tp_iter */
     0,                         /* tp_iternext */
     0,                         /* tp_methods */
-    cyan_settings_object_members, /* tp_members */
+    ethernet_settings_object_members, /* tp_members */
     0,                         /* tp_getset */
     0,                         /* tp_base */
     0,                         /* tp_dict */
     0,                         /* tp_descr_get */
     0,                         /* tp_descr_set */
     0,                         /* tp_dictoffset */
-    (initproc)cyan_settings_object_init, /* tp_init */
+    (initproc)ethernet_settings_object_init, /* tp_init */
     0,                         /* tp_alloc */
     0,                         /* tp_new */
 };
 
-
-bool setup_cyan_settings_object(PyObject* module)
+bool setup_ethernet_settings_object(PyObject* module)
 {
-    cyan_settings_object_type.tp_new = PyType_GenericNew;
-    if (PyType_Ready(&cyan_settings_object_type) < 0) {
+    ethernet_settings_object_type.tp_new = PyType_GenericNew;
+    if (PyType_Ready(&ethernet_settings_object_type) < 0) {
         return false;
     }
-    Py_INCREF(&cyan_settings_object_type);
-    PyModule_AddObject(module, CYAN_SETTINGS_OBJECT_NAME, (PyObject*)&cyan_settings_object_type);
+    Py_INCREF(&ethernet_settings_object_type);
+    PyModule_AddObject(module, ETHERNET_SETTINGS_OBJECT_NAME, (PyObject*)&ethernet_settings_object_type);
     return true;
 }

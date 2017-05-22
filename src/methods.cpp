@@ -1414,8 +1414,11 @@ static PyObject* __get_cyan_settings(ICS_HANDLE handle, char* func_name)
         ((lin_settings_object*)s_obj->lin3)->s = s->lin3;
         ((lin_settings_object*)s_obj->lin4)->s = s->lin4;
         ((lin_settings_object*)s_obj->lin5)->s = s->lin5;
+        ((lin_settings_object*)s_obj->lin6)->s = s->lin6;
         // Since TextAPI Structures are Python objects, we need to manually update them here.
         ((textapi_settings_object*)s_obj->textapi)->s = s->text_api;
+        // Since ETHERNET_SETTINGS Structures are Python objects, we need to manually update them here.
+        ((ethernet_settings_object*)s_obj->ethernet)->s = s->ethernet;
         // Since ISO9141Keyword2000 Structures are Python objects, we need to manually update them here.
         ((iso9141keyword2000_settings_object*)s_obj->iso9141_kw1)->s = s->iso9141_kwp_settings_1;
         ((iso9141keyword2000_settings_object*)s_obj->iso9141_kw2)->s = s->iso9141_kwp_settings_2;
@@ -1780,8 +1783,11 @@ static PyObject* __set_cyan_settings(ICS_HANDLE handle, PyObject* settings, int&
         s->lin3 = ((lin_settings_object*)s_obj->lin3)->s;
         s->lin4 = ((lin_settings_object*)s_obj->lin4)->s;
         s->lin5 = ((lin_settings_object*)s_obj->lin5)->s;
+        s->lin6 = ((lin_settings_object*)s_obj->lin6)->s;
         // Since TextAPI Structures are Python objects, we need to manually update them here.
         ((textapi_settings_object*)s_obj->textapi)->s = s->text_api; 
+        // Since ETHERNET_SETTINGS Structures are Python objects, we need to manually update them here.
+        ((ethernet_settings_object*)s_obj->ethernet)->s = s->ethernet; 
         // Since ISO9141Keyword2000 Structures are Python objects, we need to manually update them here.
         s->iso9141_kwp_settings_1 = ((iso9141keyword2000_settings_object*)s_obj->iso9141_kw1)->s;
         s->iso9141_kwp_settings_2 = ((iso9141keyword2000_settings_object*)s_obj->iso9141_kw2)->s;
