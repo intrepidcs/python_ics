@@ -2,9 +2,10 @@
 from setuptools import setup, Extension
 from distutils.command import build as build_module
 import os
+import platform
 
 MAJOR_VERSION = 2
-MINOR_VERSION = 3
+MINOR_VERSION = 4
 
 class build(build_module.build):
     def run(self):
@@ -19,13 +20,24 @@ for root, dirs, files in os.walk('src'):
         if file.endswith('.cpp') or file.endswith('.c'):
             source_files.append(os.path.join(root, file))
 
+# Set compiler flags here
+if 'LINUX' in platform.system().upper():
+	compile_args = [
+		'-fpermissive', 
+		'-Wno-unused-variable',
+		'-Wno-unused-function',
+		'-Wno-write-strings'
+	]
+else:
+	compile_args = []
+
 module = Extension('ics',
   define_macros = [('MAJOR_VERSION', MAJOR_VERSION), ('MINOR_VERSION', MINOR_VERSION)],
   include_dirs=['include', 'include/ics', 'include/ice'],
   libraries = [],
   library_dirs = ['/usr/local/lib'],
   sources = source_files,
-  extra_compile_args=['-fpermissive'])
+  extra_compile_args=compile_args)
 
 setup (name = 'python_ics',
        version = '%d.%d' % (MAJOR_VERSION, MINOR_VERSION),
