@@ -804,7 +804,7 @@ PyObject* meth_transmit_messages(PyObject* self, PyObject* args)
                 delete msgs[i]->ExtraDataPtr;
                 msgs[i]->ExtraDataPtr = NULL;
                 msgs[i]->ExtraDataPtrEnabled = 0;
-            }
+            } 
             */
         }
         Py_END_ALLOW_THREADS
@@ -3011,6 +3011,88 @@ PyObject* meth_set_backup_power_ready(PyObject* self, PyObject* args)
         }
         Py_END_ALLOW_THREADS
         return Py_BuildValue("b", enabled);
+    }
+    catch (ice::Exception& ex)
+    {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
+
+//icsneoScriptLoadReadBin
+PyObject* meth_load_readbin(PyObject* self, PyObject* args)
+{
+    PyObject* arg_data = NULL;
+    int location;
+    PyObject* obj = NULL;
+    bool isFileData = false;
+    if (!PyArg_ParseTuple(args, arg_parse("OOi:", __FUNCTION__), &obj, &arg_data, &location)) {
+        return NULL;
+    }
+    if (!PyNeoDevice_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    ICS_HANDLE handle = PyNeoDevice_GetNeoDevice(obj)->handle;    
+    long fsize;
+    unsigned char* data = NULL;
+    int data_size = 0;
+#if PY_MAJOR_VERSION >= 3
+    if (PyUnicode_CheckExact(arg_data)) {
+        char* file_name = PyUnicode_AsUTF8(arg_data);
+#else
+    if (PyString_Check(arg_data)) {
+        char* file_name = PyString_AsString(arg_data);
+#endif
+        if (!file_name) {
+            return set_ics_exception_dev(exception_runtime_error(), obj, "Failed to convert file path to string");
+        }
+        FILE* f;
+        f = fopen(file_name, "rb");
+        if (!f)    {
+            std::stringstream ss;
+            ss << "Failed to open Readbin: '" << file_name << "'. Please make sure path exists";
+            return set_ics_exception_dev(exception_runtime_error(), obj, (char*)ss.str().c_str());
+        }
+        fseek(f, 0, SEEK_END);
+        fsize = ftell(f);
+        rewind(f);
+        data = (unsigned char*) malloc(sizeof(char)*fsize);
+        data_size = (int)fread(data, 1, fsize, f);
+        fclose(f);
+        if (fsize != data_size) {
+            return set_ics_exception_dev(exception_runtime_error(), obj, "Readbin file size mismatch");
+        }
+    } else if (PyTuple_CheckExact(arg_data)) {
+        Py_ssize_t tuple_size = PyTuple_Size(arg_data);
+        data = (unsigned char*) malloc(sizeof(char)*tuple_size);
+        // Move tuple data into array
+        for (int i=0; i < tuple_size; ++i) {
+            PyObject* value = PyTuple_GET_ITEM(arg_data, i);
+            if (!PyLong_CheckExact(value)) {
+                return set_ics_exception_dev(exception_runtime_error(), obj, "Failed to convert tuple data. Tuple data must be integer type");
+            }
+            data[i] = (unsigned char)PyLong_AsLong(PyTuple_GET_ITEM(arg_data, i));
+        }
+        fsize = tuple_size;
+        data_size = fsize;
+    } else {
+        return set_ics_exception_dev(exception_runtime_error(), obj, "Argument must be filepath or tuple");
+    }
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        ice::Function<int __stdcall (ICS_HANDLE, const unsigned char*, unsigned long, int)> icsneoScriptLoadReadBin(lib, "icsneoScriptLoadReadBin");
+        Py_BEGIN_ALLOW_THREADS
+        if (!icsneoScriptLoadReadBin(handle, data, data_size, location)) {
+            Py_BLOCK_THREADS
+            return set_ics_exception(exception_runtime_error(), "icsneoScriptLoadReadBin() Failed");
+        }
+        Py_END_ALLOW_THREADS
+        Py_RETURN_NONE;
     }
     catch (ice::Exception& ex)
     {

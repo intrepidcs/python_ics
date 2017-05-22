@@ -60,6 +60,7 @@ PyObject* meth_get_dll_firmware_info(PyObject* self, PyObject* args);
 PyObject* meth_get_backup_power_enabled(PyObject* self, PyObject* args);
 PyObject* meth_set_backup_power_enabled(PyObject* self, PyObject* args);
 PyObject* meth_set_backup_power_ready(PyObject* self, PyObject* args);
+PyObject* meth_load_readbin(PyObject* self, PyObject* args);
 
 
 
@@ -895,6 +896,9 @@ PyObject* meth_set_backup_power_ready(PyObject* self, PyObject* args);
     "\tBoolean: True on success, False on failure.\n" \
     "\n"
 
+#define _DOC_LOAD_READBIN \
+    "Internal Use only\n"
+
 static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("find_devices", "FindNeoDevices", (PyCFunction)meth_find_devices, METH_VARARGS | METH_KEYWORDS, _DOC_FIND_DEVICES),
     _EZ_ICS_STRUCT_METHOD("open_device", "OpenNeoDevice", (PyCFunction)meth_open_device, METH_VARARGS | METH_KEYWORDS, _DOC_OPEN_DEVICES),
@@ -947,7 +951,9 @@ static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("get_backup_power_enabled", "icsneoGetBackupPowerEnabled", meth_get_backup_power_enabled, METH_VARARGS, _DOC_GET_BACKUP_POWER_ENABLED),
     _EZ_ICS_STRUCT_METHOD("set_backup_power_enabled", "icsneoSetBackupPowerEnabled", meth_set_backup_power_enabled, METH_VARARGS, _DOC_SET_BACKUP_POWER_ENABLED),
     _EZ_ICS_STRUCT_METHOD("get_backup_power_ready", "icsneoGetBackupPowerReady", meth_set_backup_power_ready, METH_VARARGS, _DOC_GET_BACKUP_POWER_READY),
-    
+#ifdef _USE_INTERNAL_HEADER_
+    _EZ_ICS_STRUCT_METHOD("load_readbin", "icsneoScriptLoadReadBin", meth_load_readbin, METH_VARARGS, _DOC_LOAD_READBIN),
+#endif
     { NULL, NULL, 0, NULL }
 };
 
