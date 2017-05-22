@@ -1413,7 +1413,7 @@ static PyObject* __get_cyan_settings(ICS_HANDLE handle, char* func_name)
         ((lin_settings_object*)s_obj->lin2)->s = s->lin2;
         ((lin_settings_object*)s_obj->lin3)->s = s->lin3;
         ((lin_settings_object*)s_obj->lin4)->s = s->lin4;
-        ((lin_settings_object*)s_obj->lin4)->s = s->lin5;
+        ((lin_settings_object*)s_obj->lin5)->s = s->lin5;
         // Since TextAPI Structures are Python objects, we need to manually update them here.
         ((textapi_settings_object*)s_obj->textapi)->s = s->text_api;
         // Since ISO9141Keyword2000 Structures are Python objects, we need to manually update them here.

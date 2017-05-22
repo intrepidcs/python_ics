@@ -89,7 +89,7 @@ static PyMemberDef cyan_settings_object_members[] = {
     { "lin2", T_OBJECT_EX, offsetof(cyan_settings_object, lin2), 0, MODULE_NAME "." LIN_SETTINGS_OBJECT_NAME" Object" },
     { "lin3", T_OBJECT_EX, offsetof(cyan_settings_object, lin3), 0, MODULE_NAME "." LIN_SETTINGS_OBJECT_NAME" Object" },
     { "lin4", T_OBJECT_EX, offsetof(cyan_settings_object, lin4), 0, MODULE_NAME "." LIN_SETTINGS_OBJECT_NAME" Object" },
-    { "lin5", T_OBJECT_EX, offsetof(cyan_settings_object, lin4), 0, MODULE_NAME "." LIN_SETTINGS_OBJECT_NAME" Object" },
+    { "lin5", T_OBJECT_EX, offsetof(cyan_settings_object, lin5), 0, MODULE_NAME "." LIN_SETTINGS_OBJECT_NAME" Object" },
 
     { "swcan1", T_OBJECT_EX, offsetof(cyan_settings_object, swcan1), 0, MODULE_NAME "." SWCAN_SETTINGS_OBJECT_NAME" Object" },
     { "swcan2", T_OBJECT_EX, offsetof(cyan_settings_object, swcan2), 0, MODULE_NAME "." SWCAN_SETTINGS_OBJECT_NAME" Object" },
