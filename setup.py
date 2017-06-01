@@ -53,9 +53,9 @@ are suppose to be lowercase with underscores instead of mixedCase like icsneo AP
        author_email='drebbe@intrepidcs.com',
        maintainer = 'David Rebbe',
        maintainer_email='drebbe@intrepidcs.com',
-       url='https://github.com/ic3man5/python_ics/',
+       url='https://github.com/intrepidcs/python_ics/',
        cmdclass = { 'build': build, },
-       download_url = 'https://github.com/ic3man5/python_ics/releases',
+       download_url = 'https://github.com/intrepidcs/python_ics/releases',
        ext_modules = [module],
        classifiers = [
         'Programming Language :: Python :: 2',
