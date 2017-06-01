@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from __future__ import print_function
 import os.path
+import re
 
 use_internal = False
 if os.path.isfile('include/ics/icsnVC40Internal.h'):
@@ -73,7 +74,12 @@ with open('src/setup_module_auto_defines.cpp', 'w') as f:
                     #print('\t\t' + str(sline))
                     if any(x in sline[1] for x in ignores):
                         continue
-                    print('\tresult += PyModule_AddIntMacro(module, %s);' % sline[1], file=f)
+                    if re.match("^\d+?\.\d+?$", sline[2]) is not None:
+                        # Value is a float
+                        print('\tresult += PyModule_AddObject(module, "{0}", PyFloat_FromDouble({0}));'.format(sline[1]), file=f)
+                    else:
+                        print('\tresult += PyModule_AddIntMacro(module, %s);' % sline[1], file=f)
+
                 elif '/*' in line:
                     inside_comment = True
                     continue
