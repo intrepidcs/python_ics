@@ -62,9 +62,7 @@ Variables
 .. py:data:: BPS83333
 	:annotation: = 6
 .. py:data:: BUILD_DATETIME
-	:annotation: = Aug 10 2016 14:36:20
-.. py:data:: BUILT_WITH_DLL
-	:annotation: = 3.8.0.65
+	:annotation: = Jun  5 2017 23:26:17
 .. py:data:: CANFD_BRS_ENABLED
 	:annotation: = 2
 .. py:data:: CANFD_BRS_ENABLED_ISO
@@ -94,7 +92,7 @@ Variables
 .. py:data:: FAST_MODE
 	:annotation: = 3
 .. py:data:: GLOBAL_SETTINGS_SIZE
-	:annotation: = 896
+	:annotation: = 908
 .. py:data:: GS_VERSION
 	:annotation: = 5
 .. py:data:: ISO15765_2_NETWORK_HSCAN
@@ -131,8 +129,6 @@ Variables
 	:annotation: = 3
 .. py:data:: LOOPBACK
 	:annotation: = 2
-.. py:data:: MODULE_VERSION
-	:annotation: = 1.6
 .. py:data:: NEODEVICE_ALL
 	:annotation: = -16385
 .. py:data:: NEODEVICE_ANY_ION
@@ -173,6 +169,8 @@ Variables
 	:annotation: = 16384
 .. py:data:: NEODEVICE_NEOECUCHIP
 	:annotation: = 256
+.. py:data:: NEODEVICE_OBD2_SIM
+	:annotation: = -2147483648
 .. py:data:: NEODEVICE_PENDANT
 	:annotation: = 512
 .. py:data:: NEODEVICE_PLASMA_1_11
@@ -185,6 +183,8 @@ Variables
 	:annotation: = 268435456
 .. py:data:: NEODEVICE_RADSTAR
 	:annotation: = 524288
+.. py:data:: NEODEVICE_RADSTAR2
+	:annotation: = 536870912
 .. py:data:: NEODEVICE_RED
 	:annotation: = 64
 .. py:data:: NEODEVICE_SW_VCAN
@@ -193,22 +193,24 @@ Variables
 	:annotation: = 0
 .. py:data:: NEODEVICE_VCAN3
 	:annotation: = 16
-.. py:data:: NEODEVICE_VCANFD
+.. py:data:: NEODEVICE_VCAN4
 	:annotation: = 2097152
 .. py:data:: NEODEVICE_VCANRF
 	:annotation: = 33554432
 .. py:data:: NEODEVICE_VIRTUAL_NEOVI
 	:annotation: = 1024
+.. py:data:: NEODEVICE_VIVIDCAN
+	:annotation: = 1073741824
 .. py:data:: NEOVI6_VCAN_TIMESTAMP_1
-	:annotation: = 0
+	:annotation: = 1e-06
 .. py:data:: NEOVI6_VCAN_TIMESTAMP_2
-	:annotation: = 0
+	:annotation: = 0.065536
 .. py:data:: NEOVIPRO_VCAN_TIMESTAMP_1
-	:annotation: = 0
+	:annotation: = 1e-06
 .. py:data:: NEOVIPRO_VCAN_TIMESTAMP_2
-	:annotation: = 0
+	:annotation: = 0.065536
 .. py:data:: NEOVI_3G_MAX_SETTINGS_SIZE
-	:annotation: = 896
+	:annotation: = 908
 .. py:data:: NEOVI_COMMTYPE_FIRE_USB
 	:annotation: = 5
 .. py:data:: NEOVI_COMMTYPE_RS232
@@ -218,17 +220,17 @@ Variables
 .. py:data:: NEOVI_COMMTYPE_USB_BULK
 	:annotation: = 1
 .. py:data:: NEOVI_RED_TIMESTAMP_1_10NS
-	:annotation: = 0
+	:annotation: = 1e-08
 .. py:data:: NEOVI_RED_TIMESTAMP_1_25NS
-	:annotation: = 0
+	:annotation: = 2.5e-08
 .. py:data:: NEOVI_RED_TIMESTAMP_2_10NS
-	:annotation: = 429
+	:annotation: = 429.4967296
 .. py:data:: NEOVI_RED_TIMESTAMP_2_25NS
-	:annotation: = 107
+	:annotation: = 107.3741824
 .. py:data:: NEOVI_TIMESTAMP_1
-	:annotation: = 0
+	:annotation: = 1.6e-06
 .. py:data:: NEOVI_TIMESTAMP_2
-	:annotation: = 0
+	:annotation: = 0.1048576
 .. py:data:: NEO_CFG_MPIC_HS_CAN_CNF1
 	:annotation: = 522
 .. py:data:: NEO_CFG_MPIC_HS_CAN_CNF2
@@ -311,6 +313,8 @@ Variables
 	:annotation: = 96
 .. py:data:: NETID_HSCAN7
 	:annotation: = 97
+.. py:data:: NETID_HW_COM_LATENCY_TEST
+	:annotation: = 512
 .. py:data:: NETID_I2C1
 	:annotation: = 71
 .. py:data:: NETID_INVALID
@@ -423,6 +427,8 @@ Variables
 	:annotation: = 1
 .. py:data:: OPETH_FUNC_TAP
 	:annotation: = 0
+.. py:data:: OPETH_FUNC_TAP_LOW_LATENCY
+	:annotation: = 2
 .. py:data:: OPETH_LINK_AUTO
 	:annotation: = 0
 .. py:data:: OPETH_LINK_MASTER
@@ -571,8 +577,14 @@ Variables
 	:annotation: = 131072
 .. py:data:: SPY_STATUS2_ETHERNET_CRC_ERROR
 	:annotation: = 2097152
+.. py:data:: SPY_STATUS2_ETHERNET_FCS_AVAILABLE
+	:annotation: = 8388608
 .. py:data:: SPY_STATUS2_ETHERNET_FRAME_TOO_SHORT
 	:annotation: = 4194304
+.. py:data:: SPY_STATUS2_ETHERNET_NO_PADDING
+	:annotation: = 16777216
+.. py:data:: SPY_STATUS2_ETHERNET_PREEMPTION_ENABLED
+	:annotation: = 33554432
 .. py:data:: SPY_STATUS2_FLEXRAY_NO_CRC
 	:annotation: = 33554432
 .. py:data:: SPY_STATUS2_FLEXRAY_NO_HEADERCRC
@@ -637,6 +649,8 @@ Variables
 	:annotation: = 536870912
 .. py:data:: SPY_STATUS2_MOST_PACKET_DATA
 	:annotation: = 2097152
+.. py:data:: SPY_STATUS2_MOST_STATUS
+	:annotation: = 4194304
 .. py:data:: SPY_STATUS2_MOST_TOO_SHORT
 	:annotation: = 268435456
 .. py:data:: SPY_STATUS2_RX_TIMEOUT_ERROR
@@ -645,10 +659,10 @@ Variables
 	:annotation: = 2
 .. py:data:: SPY_STATUS3_CANFD_BRS
 	:annotation: = 16
-.. py:data:: SPY_STATUS3_CANFD_EDL
-	:annotation: = 8
 .. py:data:: SPY_STATUS3_CANFD_ESI
 	:annotation: = 1
+.. py:data:: SPY_STATUS3_CANFD_FDF
+	:annotation: = 8
 .. py:data:: SPY_STATUS3_CANFD_IDE
 	:annotation: = 2
 .. py:data:: SPY_STATUS3_CANFD_RTR
@@ -751,6 +765,9 @@ Variables
 	:annotation: = 1
 .. py:data:: VNETBITS_FEATURE_ANDROID_MSGS
 	:annotation: = 1
+.. py:data:: VNETBITS_FEATURE_DISABLE_USB_CHECK
+	:annotation: = 2
+
 
 
 

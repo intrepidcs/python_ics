@@ -4,8 +4,10 @@
 // Any changes here will be overwritten!
 //
 
+#include "setup_module_auto_defines.h"
 #include <Python.h>
 #include "ics/icsnVC40.h"
+
 int setup_module_auto_defines(PyObject * module)
 {
 	int result = 0;
@@ -289,16 +291,16 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, NEO_CFG_MPIC_LSFT_CAN_CNF1);
 	result += PyModule_AddIntMacro(module, NEO_CFG_MPIC_LSFT_CAN_CNF2);
 	result += PyModule_AddIntMacro(module, NEO_CFG_MPIC_LSFT_CAN_CNF3);
-	result += PyModule_AddIntMacro(module, NEOVI_TIMESTAMP_2);
-	result += PyModule_AddIntMacro(module, NEOVI_TIMESTAMP_1);
-	result += PyModule_AddIntMacro(module, NEOVIPRO_VCAN_TIMESTAMP_2);
-	result += PyModule_AddIntMacro(module, NEOVIPRO_VCAN_TIMESTAMP_1);
-	result += PyModule_AddIntMacro(module, NEOVI6_VCAN_TIMESTAMP_2);
-	result += PyModule_AddIntMacro(module, NEOVI6_VCAN_TIMESTAMP_1);
-	result += PyModule_AddIntMacro(module, NEOVI_RED_TIMESTAMP_2_25NS);
-	result += PyModule_AddIntMacro(module, NEOVI_RED_TIMESTAMP_1_25NS);
-	result += PyModule_AddIntMacro(module, NEOVI_RED_TIMESTAMP_2_10NS);
-	result += PyModule_AddIntMacro(module, NEOVI_RED_TIMESTAMP_1_10NS);
+	result += PyModule_AddObject(module, "NEOVI_TIMESTAMP_2", PyFloat_FromDouble(NEOVI_TIMESTAMP_2));
+	result += PyModule_AddObject(module, "NEOVI_TIMESTAMP_1", PyFloat_FromDouble(NEOVI_TIMESTAMP_1));
+	result += PyModule_AddObject(module, "NEOVIPRO_VCAN_TIMESTAMP_2", PyFloat_FromDouble(NEOVIPRO_VCAN_TIMESTAMP_2));
+	result += PyModule_AddObject(module, "NEOVIPRO_VCAN_TIMESTAMP_1", PyFloat_FromDouble(NEOVIPRO_VCAN_TIMESTAMP_1));
+	result += PyModule_AddObject(module, "NEOVI6_VCAN_TIMESTAMP_2", PyFloat_FromDouble(NEOVI6_VCAN_TIMESTAMP_2));
+	result += PyModule_AddObject(module, "NEOVI6_VCAN_TIMESTAMP_1", PyFloat_FromDouble(NEOVI6_VCAN_TIMESTAMP_1));
+	result += PyModule_AddObject(module, "NEOVI_RED_TIMESTAMP_2_25NS", PyFloat_FromDouble(NEOVI_RED_TIMESTAMP_2_25NS));
+	result += PyModule_AddObject(module, "NEOVI_RED_TIMESTAMP_1_25NS", PyFloat_FromDouble(NEOVI_RED_TIMESTAMP_1_25NS));
+	result += PyModule_AddObject(module, "NEOVI_RED_TIMESTAMP_2_10NS", PyFloat_FromDouble(NEOVI_RED_TIMESTAMP_2_10NS));
+	result += PyModule_AddObject(module, "NEOVI_RED_TIMESTAMP_1_10NS", PyFloat_FromDouble(NEOVI_RED_TIMESTAMP_1_10NS));
 	// enum
 	result += PyModule_AddIntMacro(module, AUTO);
 	result += PyModule_AddIntMacro(module, USE_TQ);

@@ -27,7 +27,7 @@
 
 #define _DOC_ICS_MODULE \
     "Python C Code module for interfacing to the icsneo40 dynamic library. Code tries\n" \
-    "to respect PEP 8 (http://legacy.python.org/dev/peps/pep-0008). Function naming convention does\n" \
+    "to respect PEP 8 (http://python.org/dev/peps/pep-0008). Function naming convention does\n" \
     "not follow the tradition c style icsneo40 naming convention as pyics module\n" \
     "name acts as the namespace (icsneo portion of the function) and function names\n" \
     "are suppose to be lowercase with underscores instead of mixedCase like icsneo API.\n" \

@@ -10,6 +10,10 @@ Python C Code module for interfacing to the icsneo40 dynamic library. Code tries
 
 # How to use
 
+#### Documentation
+
+http://python-ics.readthedocs.io/
+
 #### C API can be mimiced almost identically by doing the following:
 
     >>> import ics as icsneo
