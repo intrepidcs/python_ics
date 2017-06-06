@@ -1978,7 +1978,7 @@ PyObject* meth_read_sdcard(PyObject* self, PyObject* args) // icsneoReadSDCard(i
     PyObject* obj = NULL;
     unsigned long index = 0;
     unsigned long size = 0;
-    if (!PyArg_ParseTuple(args, arg_parse("Oi:", __FUNCTION__), &obj, &index, &size)) {
+    if (!PyArg_ParseTuple(args, arg_parse("Ok:", __FUNCTION__), &obj, &index, &size)) {
         return NULL;
     }
     if (!PyNeoDevice_CheckExact(obj)) {
@@ -2023,7 +2023,7 @@ PyObject* meth_write_sdcard(PyObject* self, PyObject* args) // icsneoWriteSDCard
     PyObject* obj = NULL;
     unsigned long index = 0;
     PyObject* ba_obj = NULL;
-    if (!PyArg_ParseTuple(args, arg_parse("OiO:", __FUNCTION__), &obj, &index, &ba_obj)) {
+    if (!PyArg_ParseTuple(args, arg_parse("OkO:", __FUNCTION__), &obj, &index, &ba_obj)) {
         return NULL;
     }
     if (!PyNeoDevice_CheckExact(obj)) {
