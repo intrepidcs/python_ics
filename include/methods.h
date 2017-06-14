@@ -900,7 +900,7 @@ PyObject* meth_iso15765_receive_message(PyObject* self, PyObject* args); // icsn
 
 // void* hObject, unsigned long ulNetworkID, stCM_ISO157652_TxMessage *pMsg, unsigned long ulBlockingTimeout
 #define _DOC_ISO15765_TRANSMIT_MESSAGE \
-    MODULE_NAME".meth_iso15765_transmit_message(device, ulNetworkID, pMsg, ulBlockingTimeout)\n" \
+    MODULE_NAME".iso15765_transmit_message(device, ulNetworkID, pMsg, ulBlockingTimeout)\n" \
     "\n" \
     "Transmits an ISO15765 Message.\n" \
     "\n" \
@@ -918,7 +918,7 @@ PyObject* meth_iso15765_receive_message(PyObject* self, PyObject* args); // icsn
 
 // (void* hObject, unsigned int iIndex, const stCM_ISO157652_RxMessage * pRxMessage)
 #define _DOC_ISO15765_RECEIVE_MESSAGE \
-    MODULE_NAME".meth_iso15765_receive_message(device, iIndex)\n" \
+    MODULE_NAME".iso15765_receive_message(device, iIndex)\n" \
     "\n" \
     "Receives an ISO15765 Message.\n" \
     "\n" \
