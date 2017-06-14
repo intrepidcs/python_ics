@@ -6,6 +6,8 @@
 #include "object_neo_device.h"
 #include "object_api_firmware_info.h"
 #include "setup_module_auto_defines.h"
+#include "object_cm_iso157652_tx_message.h"
+#include "object_cm_iso157652_rx_message.h"
 
 #ifdef _cplusplus
 extern "C" {
@@ -61,11 +63,8 @@ PyObject* meth_get_backup_power_enabled(PyObject* self, PyObject* args);
 PyObject* meth_set_backup_power_enabled(PyObject* self, PyObject* args);
 PyObject* meth_set_backup_power_ready(PyObject* self, PyObject* args);
 PyObject* meth_load_readbin(PyObject* self, PyObject* args);
-
-
-
-
-
+PyObject* meth_iso15765_transmit_message(PyObject* self, PyObject* args); // icsneoISO15765_TransmitMessage
+PyObject* meth_iso15765_receive_message(PyObject* self, PyObject* args); // icsneoISO15765_ReceiveMessageMessage
 
 #ifdef _cplusplus
 }
@@ -899,6 +898,42 @@ PyObject* meth_load_readbin(PyObject* self, PyObject* args);
 #define _DOC_LOAD_READBIN \
     "Internal Use only\n"
 
+// void* hObject, unsigned long ulNetworkID, stCM_ISO157652_TxMessage *pMsg, unsigned long ulBlockingTimeout
+#define _DOC_ISO15765_TRANSMIT_MESSAGE \
+    MODULE_NAME".meth_iso15765_transmit_message(device, ulNetworkID, pMsg, ulBlockingTimeout)\n" \
+    "\n" \
+    "Transmits an ISO15765 Message.\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`): :class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`\n\n" \
+    "\n" \
+    "\tpMsg (:class:`"MODULE_NAME"."CM_ISO157652_TX_MESSAGE_OBJECT_NAME"`): :class:`"MODULE_NAME"."CM_ISO157652_TX_MESSAGE_OBJECT_NAME"`\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`"MODULE_NAME".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\tBoolean: True on success, False on failure.\n" \
+    "\n"
+
+// (void* hObject, unsigned int iIndex, const stCM_ISO157652_RxMessage * pRxMessage)
+#define _DOC_ISO15765_RECEIVE_MESSAGE \
+    MODULE_NAME".meth_iso15765_receive_message(device, iIndex)\n" \
+    "\n" \
+    "Receives an ISO15765 Message.\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`): :class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`"MODULE_NAME".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\tBoolean: True on success, False on failure.\n" \
+    "\n"
+    
+
+
 static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("find_devices", "FindNeoDevices", (PyCFunction)meth_find_devices, METH_VARARGS | METH_KEYWORDS, _DOC_FIND_DEVICES),
     _EZ_ICS_STRUCT_METHOD("open_device", "OpenNeoDevice", (PyCFunction)meth_open_device, METH_VARARGS | METH_KEYWORDS, _DOC_OPEN_DEVICES),
@@ -954,6 +989,9 @@ static PyMethodDef IcsMethods[] = {
 #ifdef _USE_INTERNAL_HEADER_
     _EZ_ICS_STRUCT_METHOD("load_readbin", "icsneoScriptLoadReadBin", meth_load_readbin, METH_VARARGS, _DOC_LOAD_READBIN),
 #endif
+    _EZ_ICS_STRUCT_METHOD("iso15765_transmit_message", "icsneoISO15765_TransmitMessage", meth_iso15765_transmit_message, METH_VARARGS, _DOC_ISO15765_TRANSMIT_MESSAGE),
+    _EZ_ICS_STRUCT_METHOD("iso15765_receive_message", "icsneoISO15765_ReceiveMessage", meth_iso15765_receive_message, METH_VARARGS, _DOC_ISO15765_RECEIVE_MESSAGE),
+    
     { NULL, NULL, 0, NULL }
 };
 

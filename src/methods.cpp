@@ -27,6 +27,8 @@
 #include "object_op_eth_settings.h"
 #include "object_rad_galaxy_settings.h"
 #include "setup_module_auto_defines.h"
+#include "object_cm_iso157652_tx_message.h"
+#include "object_cm_iso157652_rx_message.h"
 
 extern PyTypeObject spy_message_object_type;
 // __func__, __FUNCTION__ and __PRETTY_FUNCTION__ are not preprocessor macros.
@@ -3099,6 +3101,97 @@ PyObject* meth_load_readbin(PyObject* self, PyObject* args)
         }
         Py_END_ALLOW_THREADS
         Py_RETURN_NONE;
+    }
+    catch (ice::Exception& ex)
+    {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
+
+//void* hObject, unsigned long ulNetworkID, stCM_ISO157652_TxMessage *pMsg, unsigned long ulBlockingTimeout)
+PyObject* meth_iso15765_transmit_message(PyObject* self, PyObject* args)
+{
+    PyObject* obj = NULL;
+    unsigned long ulNetworkID = 0;
+    PyObject* obj_tx_msg = NULL;
+    unsigned long ulBlockingTimeout = 0;
+    if (!PyArg_ParseTuple(args, arg_parse("OkOk:", __FUNCTION__), &obj, &ulNetworkID, &obj_tx_msg, &ulBlockingTimeout)) {
+        return NULL;
+    }
+    if (!PyNeoDevice_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    if (!PyCmISO157652TxMessage_Check(obj_tx_msg)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." CM_ISO157652_TX_MESSAGE_OBJECT_NAME);
+    }
+    cm_iso157652_tx_message_object *temp = (cm_iso157652_tx_message_object*)obj_tx_msg;
+    ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        ice::Function<int __stdcall (ICS_HANDLE, unsigned long, stCM_ISO157652_TxMessage*, unsigned long)> icsneoISO15765_TransmitMessage(lib, "icsneoISO15765_TransmitMessage");
+        Py_BEGIN_ALLOW_THREADS
+        if (!icsneoISO15765_TransmitMessage(handle, ulNetworkID, &temp->s, ulBlockingTimeout)) {
+            Py_BLOCK_THREADS
+            return set_ics_exception(exception_runtime_error(), "icsneoISO15765_TransmitMessage() Failed");
+        }
+        Py_END_ALLOW_THREADS
+        return Py_BuildValue("b", true);
+    }
+    catch (ice::Exception& ex)
+    {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
+
+/*
+
+PyObject* obj = NULL;
+            if (use_j1850) {
+                obj = PyObject_CallObject((PyObject*)&spy_message_j1850_object_type, NULL);
+            } else {
+                obj = PyObject_CallObject((PyObject*)&spy_message_object_type, NULL);
+            }
+
+*/
+// (void* hObject, unsigned int iIndex, const stCM_ISO157652_RxMessage * pRxMessage)
+PyObject* meth_iso15765_receive_message(PyObject* self, PyObject* args)
+{
+    PyObject* obj = NULL;
+    unsigned int iIndex = 0;
+    PyObject* obj_rx_msg = PyObject_CallObject((PyObject*)&cm_iso157652_rx_message_object_type, NULL);
+    if (!PyArg_ParseTuple(args, arg_parse("Oi:", __FUNCTION__), &obj, &iIndex)) {
+        return NULL;
+    }
+    if (!PyNeoDevice_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    if (!PyCmISO157652TxMessage_Check(obj_rx_msg)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." CM_ISO157652_RX_MESSAGE_OBJECT_NAME);
+    }
+    cm_iso157652_rx_message_object *temp = (cm_iso157652_rx_message_object*)obj_rx_msg;
+    ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        ice::Function<int __stdcall (ICS_HANDLE, unsigned int, stCM_ISO157652_RxMessage*)> icsneoISO15765_ReceiveMessage(lib, "icsneoISO15765_ReceiveMessage");
+        Py_BEGIN_ALLOW_THREADS
+        if (!icsneoISO15765_ReceiveMessage(handle, iIndex, &temp->s)) {
+            Py_BLOCK_THREADS
+            return set_ics_exception(exception_runtime_error(), "icsneoISO15765_ReceiveMessage() Failed");
+        }
+        Py_END_ALLOW_THREADS
+        return obj_rx_msg;
     }
     catch (ice::Exception& ex)
     {

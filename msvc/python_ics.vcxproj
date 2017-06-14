@@ -157,6 +157,8 @@
     <ClInclude Include="..\include\object_api_firmware_info.h" />
     <ClInclude Include="..\include\object_canfd_settings.h" />
     <ClInclude Include="..\include\object_can_settings.h" />
+    <ClInclude Include="..\include\object_cm_iso157652_rx_message.h" />
+    <ClInclude Include="..\include\object_cm_iso157652_tx_message.h" />
     <ClInclude Include="..\include\object_cyan_settings.h" />
     <ClInclude Include="..\include\object_ethernet_settings.h" />
     <ClInclude Include="..\include\object_fire_settings.h" />
@@ -185,6 +187,8 @@
     <ClCompile Include="..\src\object_api_firmware_info.cpp" />
     <ClCompile Include="..\src\object_canfd_settings.cpp" />
     <ClCompile Include="..\src\object_can_settings.cpp" />
+    <ClCompile Include="..\src\object_cm_iso157652_rx_message.cpp" />
+    <ClCompile Include="..\src\object_cm_iso157652_tx_message.cpp" />
     <ClCompile Include="..\src\object_cyan_settings.cpp" />
     <ClCompile Include="..\src\object_ethernet_settings.cpp" />
     <ClCompile Include="..\src\object_fire_settings.cpp" />

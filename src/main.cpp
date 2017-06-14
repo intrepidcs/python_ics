@@ -24,6 +24,8 @@
 #include "object_op_eth_settings.h"
 #include "object_rad_galaxy_settings.h"
 #include "object_ethernet_settings.h"
+#include "object_cm_iso157652_tx_message.h"
+#include "object_cm_iso157652_rx_message.h"
 
 #define _DOC_ICS_MODULE \
     "Python C Code module for interfacing to the icsneo40 dynamic library. Code tries\n" \
@@ -126,6 +128,8 @@ void initics(void)
     setup_op_eth_settings_object(module);
     setup_rad_galaxy_settings_object(module);
     setup_ethernet_settings_object(module);
+    setup_cm_iso157652_tx_message_object(module);
+    setup_cm_iso157652_rx_message_object(module);
 
 #if PY_MAJOR_VERSION >= 3
     return module;
