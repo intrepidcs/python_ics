@@ -158,6 +158,7 @@
     <ClInclude Include="..\include\object_canfd_settings.h" />
     <ClInclude Include="..\include\object_can_settings.h" />
     <ClInclude Include="..\include\object_cyan_settings.h" />
+    <ClInclude Include="..\include\object_ethernet_settings.h" />
     <ClInclude Include="..\include\object_fire_settings.h" />
     <ClInclude Include="..\include\object_iso9141_keyword2000_init_steps.h" />
     <ClInclude Include="..\include\object_iso9141_keyword2000_settings.h" />
@@ -185,6 +186,7 @@
     <ClCompile Include="..\src\object_canfd_settings.cpp" />
     <ClCompile Include="..\src\object_can_settings.cpp" />
     <ClCompile Include="..\src\object_cyan_settings.cpp" />
+    <ClCompile Include="..\src\object_ethernet_settings.cpp" />
     <ClCompile Include="..\src\object_fire_settings.cpp" />
     <ClCompile Include="..\src\object_iso9141_keyword2000_init_steps.cpp" />
     <ClCompile Include="..\src\object_iso9141_keyword2000_settings.cpp" />
