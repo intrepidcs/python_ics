@@ -45,7 +45,7 @@
 #define ICS_HANDLE_PY_TYPE T_INT
 #else
 #define ICS_HANDLE void*
-#define ICS_HANDLE_PY_TYPE T_OBJECT_EX
+#define ICS_HANDLE_PY_TYPE T_INT
 #endif
 
 typedef struct {
