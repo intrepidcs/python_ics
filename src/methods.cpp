@@ -90,7 +90,7 @@ char* neodevice_to_string(unsigned long type)
     case NEODEVICE_ECU: return "ECU";
     case NEODEVICE_IEVB: return "IEVB";
     case NEODEVICE_PENDANT: return "Pendant";
-    case NEODEVICE_VIRTUAL_NEOVI: return "Virtual neoVI";
+    //case NEODEVICE_VIRTUAL_NEOVI: return "Virtual neoVI";
     case NEODEVICE_ECUCHIP_UART: return "ECUCHIP (UART)";
     case NEODEVICE_PLASMA_1_11: return "neoVI PLASMA (v1.11)";
     case NEODEVICE_FIRE_VNET: return "neoVI FIRE VNET";
@@ -102,8 +102,11 @@ char* neodevice_to_string(unsigned long type)
     case NEODEVICE_ION_3: return "neoVI ION (v3)";
     case NEODEVICE_RADSTAR: return "RADSTAR";
     case NEODEVICE_VCAN4: return "ValueCAN4";
-    case NEODEVICE_ECU15: return "neoECU15";
-    case NEODEVICE_ECU25: return "neoECU25";
+    case NEODEVICE_CMPROBE: return "cmProbe";
+    //case NEODEVICE_ECU15: return "neoECU15";
+    //case NEODEVICE_ECU25: return "neoECU25";
+    case NEODEVICE_OBD2_PRO: return "neoOBD2 Pro";
+    case NEODEVICE_VCAN4_12: return "ValueCAN4";
     case NEODEVICE_EEVB: return "EEVB";
     case NEODEVICE_VCANRF: return "ValueCAN.rf";
     case NEODEVICE_FIRE2: return "neoVI FIRE2";
