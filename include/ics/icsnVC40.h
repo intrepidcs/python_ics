@@ -27,18 +27,18 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define _ICSNVC40_H
 
 #if defined(_MSC_VER) && (_MSC_VER <= 1500)
-    // Visual studio has extremely poor support for C99 pre-2010
-    typedef signed char int8_t;
-    typedef short int16_t;
-    typedef int int32_t;
-    typedef __int64 int64_t;
+// Visual studio has extremely poor support for C99 pre-2010
+typedef signed char int8_t;
+typedef short int16_t;
+typedef int int32_t;
+typedef __int64 int64_t;
 
-    typedef unsigned char uint8_t;
-    typedef unsigned short uint16_t;
-    typedef unsigned int uint32_t;
-    typedef unsigned __int64 uint64_t;
+typedef unsigned char uint8_t;
+typedef unsigned short uint16_t;
+typedef unsigned int uint32_t;
+typedef unsigned __int64 uint64_t;
 #else
-    #include <stdint.h>
+#include <stdint.h>
 #endif
 
 /* OpenPort "OpenType" Argument Constants -- deprecated, use OpenNeoDevice */
@@ -128,7 +128,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 /**
  * To the next person to add a network, please make it 512!
  */
-#define NETID_HW_COM_LATENCY_TEST		512
+#define NETID_HW_COM_LATENCY_TEST 512
+#define NETID_DEVICE_STATUS 513
 
 /* Upper boundry of Network IDs */
 #define NETID_MAX 100
@@ -145,7 +146,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define NEODEVICE_ECU 128
 #define NEODEVICE_IEVB 256
 #define NEODEVICE_PENDANT 512
-#define NEODEVICE_VIRTUAL_NEOVI 1024
+#define NEODEVICE_OBD2_PRO 1024
 #define NEODEVICE_ECUCHIP_UART 2048
 #define NEODEVICE_PLASMA_1_11 0x1000
 #define NEODEVICE_FIRE_VNET 0x2000
@@ -157,8 +158,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define NEODEVICE_RADSTAR 0x80000
 #define NEODEVICE_ION_3 0x100000
 #define NEODEVICE_VCAN4 0x200000
-#define NEODEVICE_ECU15 0x400000
-#define NEODEVICE_ECU25 0x800000
+#define NEODEVICE_VCAN4_12 0x400000
+#define NEODEVICE_CMPROBE 0x800000
 #define NEODEVICE_EEVB 0x1000000
 #define NEODEVICE_VCANRF 0x2000000
 #define NEODEVICE_FIRE2 0x4000000
@@ -321,7 +322,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define SPY_STATUS2_ETHERNET_FCS_AVAILABLE \
 	0x800000 /* This frame contains FCS (4 bytes) obtained from ICS Ethernet hardware (ex. RAD-STAR) */
 #define SPY_STATUS2_ETHERNET_NO_PADDING 0x1000000
-#define SPY_STATUS2_ETHERNET_PREEMPTION_ENABLED	0x2000000
+#define SPY_STATUS2_ETHERNET_PREEMPTION_ENABLED 0x2000000
 
 /* FlexRay Specific - check protocol before handling */
 #define SPY_STATUS2_FLEXRAY_TX_AB 0x200000
@@ -761,14 +762,42 @@ typedef union _stChipVersions {
 		uint8_t zynq_core_major;
 		uint8_t zynq_core_minor;
 	} radstar2_versions;
+
 	struct
 	{
 		uint8_t mpic_maj;
 		uint8_t mpic_min;
+		uint8_t ext_flash_maj;
+		uint8_t ext_flash_min;
+		uint8_t nrf52_maj;
+		uint8_t nrf52_min;
 	} vividcan_versions;
 
+	struct
+	{
+		uint8_t zynq_core_major;
+		uint8_t zynq_core_minor;
+	} cmprobe_versions;
 
+	struct
+	{
+		uint8_t mchip_major;
+		uint8_t mchip_minor;
+	} obd2pro_versions;
+
+	struct
+	{
+		uint8_t mchip_major;
+		uint8_t mchip_minor;
+	} vcan41_versions;
+
+	struct
+	{
+		uint8_t mchip_major;
+		uint8_t mchip_minor;
+	} vcan42_versions;
 } stChipVersions;
+
 #define stChipVersions_SIZE 8
 
 typedef struct _SNeoMostGatewaySettings
@@ -843,12 +872,13 @@ typedef struct
 } CANTERM_SETTINGS;
 #define CANTERM_SETTINGS_SIZE 6
 
-typedef struct{
+typedef struct
+{
 	uint8_t MasterEnable;
 	uint8_t SlaveEnable;
 	uint8_t MasterNetwork;
 	uint8_t SlaveNetwork;
-}TIMESYNC_ICSHARDWARE_SETTINGS;
+} TIMESYNC_ICSHARDWARE_SETTINGS;
 
 /* These are bit positions for misc_io_on_report_eventsin SFireSettings */
 enum
@@ -1133,7 +1163,8 @@ typedef struct _SCyanSettings
 	{
 		uint32_t disableUsbCheckOnBoot : 1;
 		uint32_t enableLatencyTest : 1;
-		uint32_t reserved : 30;
+		uint32_t busMessagesToAndroid : 1;
+		uint32_t reserved : 29;
 	} flags;
 	uint16_t digitalIoThresholdTicks;
 	uint16_t digitalIoThresholdEnable;
@@ -1583,10 +1614,16 @@ typedef struct _SVividCANSettings
 	uint16_t pwr_man_enable;
 
 	uint16_t can_switch_mode;
+	uint16_t termination_enables;
 
-	uint16_t rsvd;
+	struct
+	{
+		uint32_t disableUsbCheckOnBoot : 1;
+		uint32_t enableLatencyTest : 1;
+		uint32_t reserved : 30;
+	} flags;
 } SVividCANSettings;
-#define SVividCANSettings_SIZE 60
+#define SVividCANSettings_SIZE 64
 
 typedef struct _SOBD2SimSettings
 {
@@ -1618,6 +1655,114 @@ typedef struct _SOBD2SimSettings
 } SOBD2SimSettings;
 #define SOBD2SimSettings_SIZE 140
 
+typedef struct _CmProbeSettings
+{
+	//	uint16_t        perf_en;
+
+	//	ETHERNET_SETTINGS eth1;  // 16 bytes
+	//	OP_ETH_SETTINGS opEth1;
+
+	uint16_t network_enables;
+
+	//	uint16_t        misc_io_initial_ddr;
+	//	uint16_t        misc_io_initial_latch;
+	//	uint16_t        misc_io_report_period;
+	//	uint16_t        misc_io_on_report_events;
+	//	uint16_t        misc_io_analog_enable;
+	//	uint16_t        ain_sample_period;
+	//	uint16_t        ain_threshold;
+	//
+	//	uint32_t        pwr_man_timeout;
+	//	uint16_t        pwr_man_enable;
+	//
+	uint16_t network_enabled_on_boot;
+	//
+	//	uint16_t        idle_wakeup_network_enables_1;
+
+} CmProbeSettings;
+#define CmProbeSettings_SIZE 4
+
+typedef struct _OBD2ProSettings
+{
+	/* Performance Test */
+	uint16_t perf_en;
+
+	CAN_SETTINGS can1;
+	CANFD_SETTINGS canfd1;
+	CAN_SETTINGS can2;
+	CANFD_SETTINGS canfd2;
+	CAN_SETTINGS can3;
+	CANFD_SETTINGS canfd3;
+	CAN_SETTINGS can4;
+	CANFD_SETTINGS canfd4;
+
+	SWCAN_SETTINGS swcan1;
+
+	LIN_SETTINGS lin1;
+	LIN_SETTINGS lin2;
+
+	ETHERNET_SETTINGS ethernet;
+
+	/* ISO9141 - Keyword */
+	ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings_1;
+	uint16_t iso_parity_1;
+	uint16_t iso_msg_termination_1;
+
+	ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings_2;
+	uint16_t iso_parity_2;
+	uint16_t iso_msg_termination_2;
+
+	uint64_t network_enables;
+
+	uint32_t pwr_man_timeout;
+	uint16_t pwr_man_enable;
+
+	uint16_t network_enabled_on_boot;
+
+	/* ISO15765-2 Transport Layer */
+	int16_t iso15765_separation_time_offset;
+
+	STextAPISettings text_api;
+	struct
+	{
+		uint32_t disableUsbCheckOnBoot : 1;
+		uint32_t enableLatencyTest : 1;
+		uint32_t reserved : 30;
+	} flags;
+} OBD2ProSettings;
+#define OBD2ProSettings_SIZE 462
+
+typedef struct _VCAN412Settings
+{
+	/* Performance Test */
+	uint16_t perf_en;
+
+	CAN_SETTINGS can1;
+	CANFD_SETTINGS canfd1;
+	CAN_SETTINGS can2;
+	CANFD_SETTINGS canfd2;
+
+	uint64_t network_enables;
+	uint64_t termination_enables;
+
+	uint32_t pwr_man_timeout;
+	uint16_t pwr_man_enable;
+
+	uint16_t network_enabled_on_boot;
+
+	/* ISO15765-2 Transport Layer */
+	int16_t iso15765_separation_time_offset;
+
+	STextAPISettings text_api;
+	struct
+	{
+		uint32_t disableUsbCheckOnBoot : 1;
+		uint32_t enableLatencyTest : 1;
+		uint32_t reserved : 30;
+	} flags;
+} VCAN412Settings;
+#define VCAN412Settings_SIZE 148
+
 #define GS_VERSION 5
 typedef struct _GLOBAL_SETTINGS
 {
@@ -1637,6 +1782,9 @@ typedef struct _GLOBAL_SETTINGS
 		SRADGalaxySettings radgalaxy;
 		SRADStar2Settings radstar2;
 		SOBD2SimSettings neoobd2_sim;
+		CmProbeSettings cmprobe;
+		OBD2ProSettings obd2pro;
+		VCAN412Settings vcan412;
 	};
 } GLOBAL_SETTINGS;
 #define GLOBAL_SETTINGS_SIZE (SCyanSettings_SIZE + 6)
@@ -1686,11 +1834,59 @@ typedef struct _stCM_ISO157652_TxMessage
 			unsigned paddingEnable : 1; /* Enables padding */
 			unsigned iscanFD : 1;
 			unsigned isBRSEnabled : 1;
+			unsigned : 15;
+			unsigned tx_dl : 8;
 		};
 		uint32_t flags;
 	};
 } stCM_ISO157652_TxMessage;
 #define stCM_ISO157652_TxMessage_SIZE 4128
+
+typedef struct
+{
+	uint16_t vs_netid; /* network id for transmitted/received frames */
+	uint8_t padding; /* if paddingEnable is set, frames will be padded to full length (see tx_dl) with this byte */
+
+	uint8_t tx_index; /* identifier for this transmit message */
+
+	uint32_t id; /* ArbID of transmitted frames, see id_29_bit_enable */
+	uint32_t fc_id; /* Flow control response ArbID Value, see fc_id_29_bit_enable */
+	uint32_t fc_id_mask; /* Flow control response ArbID mask */
+
+	uint8_t stMin; /* If overrideSTmin is set, this value supercedes the value in the flow control responses */
+	uint8_t blockSize; /* if overrideBlockSize is ser, this value supercedes the value in the flow control responses */
+
+	uint8_t flowControlExtendedAddress; /* Expected EA from the receiver, see fc_ext_address_enable */
+	uint8_t extendedAddress; /* EA for transmitted frames, see ext_address_enable */
+
+	uint16_t fs_timeout; /* timeout in milliseconds for waiting on flow control response */
+	uint16_t
+		fs_wait; /* timeout in milliseconds for waiting on another flow control response after receiving flow control with status set to WAIT */
+
+	uint8_t* data; /* pointer to the data bytes, this needs to by dynamically allocated in the application */
+	uint32_t
+		num_bytes; /* number of data bytes, 0-4294967295. As of 06-22-2017, the embedded side has about 60MB of memory available to hold this data */
+
+	uint8_t tx_dl; /* Maximum CAN(FD) protocol length for transmitted frames. Valid values are 8, 12, 16, 20, 24, 32, 48, 64 */
+
+	union {
+		struct
+		{
+			uint16_t id_29_bit_enable : 1;
+			uint16_t fc_id_29_bit_enable : 1;
+			uint16_t ext_address_enable : 1;
+			uint16_t fc_ext_address_enable : 1;
+			uint16_t overrideSTmin : 1;
+			uint16_t overrideBlockSize : 1;
+			uint16_t paddingEnable : 1;
+			uint16_t iscanFD : 1;
+			uint16_t isBRSEnabled : 1;
+			uint16_t : 7;
+		};
+		uint16_t flags;
+	};
+} ISO15765_2015_TxMessage;
+#define ISO15765_2015_TxMessage_SIZE (32 + sizeof(uint8_t*))
 
 typedef struct _stCM_ISO157652_RxMessage
 {
@@ -1991,17 +2187,32 @@ typedef struct _icsSpyMessageVSB
 		m.NetworkID2 = X >> 8;  \
 	} while (0)
 
+typedef struct
+{
+	uint8_t backupPowerGood;
+	uint8_t backupPowerEnabled;
+	uint8_t usbHostPowerEnabled;
+	uint8_t ethernetActivationLineEnabled;
+} icsFire2DeviceStatus;
+
+typedef union {
+	icsFire2DeviceStatus fire2Status;
+} icsDeviceStatus;
 #ifndef INTREPID_NO_CHECK_STRUCT_SIZE
 
 #if defined(__cplusplus) && (__cplusplus > 199711L)
-    #define ics_static_assert(e, msg) static_assert(e, msg)
+#define ics_static_assert(e, msg) static_assert(e, msg)
 #else
-    #define ASSERT_CONCAT_(a, b) a##b
-    #define ASSERT_CONCAT(a, b) ASSERT_CONCAT_(a, b)
-    #define ics_static_assert(e, msg) enum { ASSERT_CONCAT(assert_line_, __LINE__) = 1/(int)(!!(e)) }
+#define ASSERT_CONCAT_(a, b) a##b
+#define ASSERT_CONCAT(a, b) ASSERT_CONCAT_(a, b)
+#define ics_static_assert(e, msg)                                \
+	enum                                                         \
+	{                                                            \
+		ASSERT_CONCAT(assert_line_, __LINE__) = 1 / (int)(!!(e)) \
+	}
 #endif
 
-#define CHECK_STRUCT_SIZE(X) ics_static_assert(sizeof(X) == X ## _SIZE, #X " is the wrong size");
+#define CHECK_STRUCT_SIZE(X) ics_static_assert(sizeof(X) == X##_SIZE, #X " is the wrong size");
 
 CHECK_STRUCT_SIZE(CAN_SETTINGS);
 CHECK_STRUCT_SIZE(CANFD_SETTINGS);
@@ -2032,6 +2243,7 @@ CHECK_STRUCT_SIZE(SEEVBSettings);
 CHECK_STRUCT_SIZE(SRADGalaxySettings);
 CHECK_STRUCT_SIZE(SRADStar2Settings);
 CHECK_STRUCT_SIZE(SOBD2SimSettings)
+CHECK_STRUCT_SIZE(CmProbeSettings);
 CHECK_STRUCT_SIZE(GLOBAL_SETTINGS);
 CHECK_STRUCT_SIZE(stCM_ISO157652_TxMessage);
 CHECK_STRUCT_SIZE(stCM_ISO157652_RxMessage);
@@ -2040,6 +2252,8 @@ CHECK_STRUCT_SIZE(icsSpyMessage);
 CHECK_STRUCT_SIZE(icsSpyMessageLong);
 CHECK_STRUCT_SIZE(icsSpyMessageJ1850);
 CHECK_STRUCT_SIZE(icsSpyMessageVSB);
+CHECK_STRUCT_SIZE(OBD2ProSettings);
+CHECK_STRUCT_SIZE(ISO15765_2015_TxMessage);
 
 #endif /* INTREPID_NO_CHECK_STRUCT_SIZE */
 
