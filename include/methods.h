@@ -65,6 +65,8 @@ PyObject* meth_set_backup_power_ready(PyObject* self, PyObject* args);
 PyObject* meth_load_readbin(PyObject* self, PyObject* args);
 PyObject* meth_iso15765_transmit_message(PyObject* self, PyObject* args); // icsneoISO15765_TransmitMessage
 PyObject* meth_iso15765_receive_message(PyObject* self, PyObject* args); // icsneoISO15765_ReceiveMessageMessage
+PyObject* meth_get_active_vnet_channel(PyObject* self, PyObject* args);
+PyObject* meth_set_active_vnet_channel(PyObject* self, PyObject* args);
 
 #ifdef _cplusplus
 }
@@ -364,9 +366,9 @@ PyObject* meth_iso15765_receive_message(PyObject* self, PyObject* args); // icsn
 
 // _DOC_GET_DEVICE_SETTINGS), meth_get_device_settings, METH_VARARGS, "Accepts a " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME " and a " VCAN3_SETTINGS_OBJECT_NAME "/" FIRE_SETTINGS_OBJECT_NAME ", exception on error."),
 #define _DOC_GET_DEVICE_SETTINGS \
-    MODULE_NAME".get_device_settings(device)\n" \
+    MODULE_NAME".get_device_settings(device, device_type)\n" \
     "\n" \
-    "Gets the settings in the device.\n" \
+    "Gets the settings in the device. device_type can override which setting object we deal with normally\n" \
     "\n" \
     "Args:\n" \
     "\tdevice (:class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`): :class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`\n\n" \
@@ -931,7 +933,36 @@ PyObject* meth_iso15765_receive_message(PyObject* self, PyObject* args); // icsn
     "Returns:\n" \
     "\tBoolean: True on success, False on failure.\n" \
     "\n"
-    
+
+#define _DOC_GET_ACTIVE_VNET_CHANNEL \
+    MODULE_NAME".get_active_vnet_channel(device)\n" \
+    "\n" \
+    "Gets active vnet channel for the device.\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`): :class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`"MODULE_NAME".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\tInt: Returns active vnet channel.\n" \
+    "\n"
+
+#define _DOC_SET_ACTIVE_VNET_CHANNEL \
+    MODULE_NAME".set_active_vnet_channel(device, channel)\n" \
+    "\n" \
+    "Sets active vnet channel for the device.\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`): :class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`"MODULE_NAME".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\tBoolean: True on success, False on failure.\n" \
+    "\n"
 
 
 static PyMethodDef IcsMethods[] = {
@@ -991,6 +1022,9 @@ static PyMethodDef IcsMethods[] = {
 #endif
     _EZ_ICS_STRUCT_METHOD("iso15765_transmit_message", "icsneoISO15765_TransmitMessage", meth_iso15765_transmit_message, METH_VARARGS, _DOC_ISO15765_TRANSMIT_MESSAGE),
     _EZ_ICS_STRUCT_METHOD("iso15765_receive_message", "icsneoISO15765_ReceiveMessage", meth_iso15765_receive_message, METH_VARARGS, _DOC_ISO15765_RECEIVE_MESSAGE),
+
+    _EZ_ICS_STRUCT_METHOD("get_active_vnet_channel", "icsneoGetActiveVNETChannel", meth_get_active_vnet_channel, METH_VARARGS, _DOC_GET_ACTIVE_VNET_CHANNEL),
+    _EZ_ICS_STRUCT_METHOD("set_active_vnet_channel", "icsneoSetActiveVNETChannel", meth_set_active_vnet_channel, METH_VARARGS, _DOC_SET_ACTIVE_VNET_CHANNEL),
     
     { NULL, NULL, 0, NULL }
 };

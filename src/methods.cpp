@@ -1567,14 +1567,17 @@ static PyObject* __get_rad_galaxy_settings(ICS_HANDLE handle, char* func_name)
 PyObject* meth_get_device_settings(PyObject* self, PyObject* args)
 {
     PyObject* obj = NULL;
-    if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
+    unsigned long device_type = 0;
+    if (!PyArg_ParseTuple(args, arg_parse("O|k:", __FUNCTION__), &obj, &device_type)) {
         return NULL;
     }
     if (!PyNeoDevice_CheckExact(obj)) {
         return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
     }
     ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
-    unsigned long device_type = ((neo_device_object*)obj)->dev.DeviceType;
+    // User is overriding the device type here, this is useful for FIRE2 VNET for PLASMA/ION.
+    if (!device_type)
+        device_type = ((neo_device_object*)obj)->dev.DeviceType;
     if (device_type == NEODEVICE_VCAN3) {
         return _get_vcan3_settings(handle);
     } else if (device_type == NEODEVICE_VCANRF) {
@@ -1919,15 +1922,17 @@ PyObject* meth_set_device_settings(PyObject* self, PyObject* args)
 {
     PyObject* obj = NULL;
     PyObject* settings = NULL;
+    unsigned long device_type = 0;
     int save_to_eeprom = 1;
-    if (!PyArg_ParseTuple(args, arg_parse("OO|i:", __FUNCTION__), &obj, &settings, &save_to_eeprom)) {
+    if (!PyArg_ParseTuple(args, arg_parse("OO|ki:", __FUNCTION__), &obj, &settings, &device_type, &save_to_eeprom)) {
         return NULL;
     }
     if (!PyNeoDevice_CheckExact(obj)) {
         return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
     }
     ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
-    unsigned long device_type = ((neo_device_object*)obj)->dev.DeviceType;
+    if (!device_type)
+        device_type = ((neo_device_object*)obj)->dev.DeviceType;
     if (device_type == NEODEVICE_VCAN3) {
         return _set_vcan3_settings(handle, settings, save_to_eeprom);
     } else if (device_type == NEODEVICE_VCANRF) {
@@ -3195,6 +3200,74 @@ PyObject* meth_iso15765_receive_message(PyObject* self, PyObject* args)
         }
         Py_END_ALLOW_THREADS
         return obj_rx_msg;
+    }
+    catch (ice::Exception& ex)
+    {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
+
+PyObject* meth_get_active_vnet_channel(PyObject* self, PyObject* args)
+{
+    PyObject* obj = NULL;
+    unsigned long channel = 0;
+    if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
+        return NULL;
+    }
+    if (!PyNeoDevice_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        ice::Function<int __stdcall (ICS_HANDLE, unsigned long*)> icsneoGetActiveVNETChannel(lib, "icsneoGetActiveVNETChannel");
+        Py_BEGIN_ALLOW_THREADS
+        if (!icsneoGetActiveVNETChannel(handle, &channel)) {
+            Py_BLOCK_THREADS
+            return set_ics_exception(exception_runtime_error(), "icsneoGetActiveVNETChannel() Failed");
+        }
+        Py_END_ALLOW_THREADS
+        return Py_BuildValue("i", channel);
+    }
+    catch (ice::Exception& ex)
+    {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
+
+PyObject* meth_set_active_vnet_channel(PyObject* self, PyObject* args)
+{
+    PyObject* obj = NULL;
+    unsigned long channel = 0;
+    if (!PyArg_ParseTuple(args, arg_parse("Oi:", __FUNCTION__), &obj, &channel)) {
+        return NULL;
+    }
+    if (!PyNeoDevice_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        ice::Function<int __stdcall (ICS_HANDLE, unsigned long)> icsneoSetActiveVNETChannel(lib, "icsneoSetActiveVNETChannel");
+        Py_BEGIN_ALLOW_THREADS
+        if (!icsneoSetActiveVNETChannel(handle, channel)) {
+            Py_BLOCK_THREADS
+            return set_ics_exception(exception_runtime_error(), "icsneoSetActiveVNETChannel() Failed");
+        }
+        Py_END_ALLOW_THREADS
+        return Py_BuildValue("i", channel);
     }
     catch (ice::Exception& ex)
     {
