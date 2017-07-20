@@ -62,7 +62,7 @@ Variables
 .. py:data:: BPS83333
 	:annotation: = 6
 .. py:data:: BUILD_DATETIME
-	:annotation: = Jun  5 2017 23:26:17
+	:annotation: = Jun 14 2017 17:06:40
 .. py:data:: CANFD_BRS_ENABLED
 	:annotation: = 2
 .. py:data:: CANFD_BRS_ENABLED_ISO
@@ -137,16 +137,14 @@ Variables
 	:annotation: = 208896
 .. py:data:: NEODEVICE_BLUE
 	:annotation: = 1
+.. py:data:: NEODEVICE_CMPROBE
+	:annotation: = 8388608
 .. py:data:: NEODEVICE_CT_OBD
 	:annotation: = 32768
 .. py:data:: NEODEVICE_DW_VCAN
 	:annotation: = 4
 .. py:data:: NEODEVICE_ECU
 	:annotation: = 128
-.. py:data:: NEODEVICE_ECU15
-	:annotation: = 4194304
-.. py:data:: NEODEVICE_ECU25
-	:annotation: = 8388608
 .. py:data:: NEODEVICE_ECUCHIP_UART
 	:annotation: = 2048
 .. py:data:: NEODEVICE_EEVB
@@ -169,6 +167,8 @@ Variables
 	:annotation: = 16384
 .. py:data:: NEODEVICE_NEOECUCHIP
 	:annotation: = 256
+.. py:data:: NEODEVICE_OBD2_PRO
+	:annotation: = 1024
 .. py:data:: NEODEVICE_OBD2_SIM
 	:annotation: = -2147483648
 .. py:data:: NEODEVICE_PENDANT
@@ -195,10 +195,10 @@ Variables
 	:annotation: = 16
 .. py:data:: NEODEVICE_VCAN4
 	:annotation: = 2097152
+.. py:data:: NEODEVICE_VCAN4_12
+	:annotation: = 4194304
 .. py:data:: NEODEVICE_VCANRF
 	:annotation: = 33554432
-.. py:data:: NEODEVICE_VIRTUAL_NEOVI
-	:annotation: = 1024
 .. py:data:: NEODEVICE_VIVIDCAN
 	:annotation: = 1073741824
 .. py:data:: NEOVI6_VCAN_TIMESTAMP_1
@@ -279,6 +279,8 @@ Variables
 	:annotation: = 70
 .. py:data:: NETID_DEVICE
 	:annotation: = 0
+.. py:data:: NETID_DEVICE_STATUS
+	:annotation: = 513
 .. py:data:: NETID_ETHERNET
 	:annotation: = 93
 .. py:data:: NETID_ETHERNET_DAQ
@@ -649,8 +651,6 @@ Variables
 	:annotation: = 536870912
 .. py:data:: SPY_STATUS2_MOST_PACKET_DATA
 	:annotation: = 2097152
-.. py:data:: SPY_STATUS2_MOST_STATUS
-	:annotation: = 4194304
 .. py:data:: SPY_STATUS2_MOST_TOO_SHORT
 	:annotation: = 268435456
 .. py:data:: SPY_STATUS2_RX_TIMEOUT_ERROR
@@ -767,6 +767,15 @@ Variables
 	:annotation: = 1
 .. py:data:: VNETBITS_FEATURE_DISABLE_USB_CHECK
 	:annotation: = 2
+.. py:data:: VNET_LOCATION_MAIN
+	:annotation: = 1
+.. py:data:: VNET_LOCATION_SLAVE_A
+	:annotation: = 2
+.. py:data:: VNET_LOCATION_SLAVE_B
+	:annotation: = 3
+
+
+
 
 
 
