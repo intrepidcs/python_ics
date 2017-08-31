@@ -855,7 +855,12 @@ PyObject* meth_get_messages(PyObject* self, PyObject* args)
             icsSpyMessageJ1850 msg_j1850;
             icsSpyMessage msg;
         };
-        SpyMessage msgs[20000];
+        SpyMessage *msgs = PyMem_New(SpyMessage, 20000);
+        if (!msgs) {
+            // This should only happen if we run out of memory (malloc failure)?
+            PyErr_Print();
+            return set_ics_exception_dev(exception_runtime_error(), obj, "Failed to allocate " SPY_MESSAGE_OBJECT_NAME);
+        }
         for (double i=timeout; i > 0; --i) {
             count = 20000;
             errors = 0;
@@ -908,6 +913,7 @@ PyObject* meth_get_messages(PyObject* self, PyObject* args)
         // We have to decrement the ref counter here because BuildValue increases it and
         // the tuple and its objects will never get freed causing a memory leak.
         Py_XDECREF(tuple);
+        PyMem_Del(msgs);
         return result;
     }
     catch (ice::Exception& ex)
