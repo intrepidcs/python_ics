@@ -47,7 +47,7 @@ with open('src/setup_module_auto_defines.cpp', 'w') as f:
             inside_enum = False
             inside_comment = False
             for line in fname:
-                if line.startswith('//'):
+                if line.lstrip().startswith('//'):
                     continue
                 if inside_enum and '}' in line:
                     inside_enum = False
