@@ -270,6 +270,7 @@ typedef unsigned __int64 uint64_t;
 #define SPY_STATUS_LIN_MASTER 0x20000000
 #define SPY_STATUS_CANFD 0x20000000
 #define SPY_STATUS_FLEXRAY_PDU 0x20000000
+#define SPY_STATUS_PDU SPY_STATUS_FLEXRAY_PDU
 #define SPY_STATUS_HIGH_SPEED 0x40000000
 #define SPY_STATUS_EXTENDED 0x80000000 /* if this bit is set than decode StatusBitField3 in AckBytes */
 #define SPY_STATUS_FLEXRAY_PDU_UPDATE_BIT_SET 0x40000000
@@ -1631,10 +1632,13 @@ typedef struct _SVividCANSettings
 
 typedef struct _SOBD2SimSettings
 {
+
 	CAN_SETTINGS can1;
 	CAN_SETTINGS can2;
+	CANFD_SETTINGS canfd1;
+	CANFD_SETTINGS canfd2;
 
-	uint16_t network_enables;
+	uint64_t network_enables;
 	uint16_t network_enabled_on_boot;
 
 	int16_t iso15765_separation_time_offset;
@@ -1649,15 +1653,16 @@ typedef struct _SOBD2SimSettings
 	uint16_t ain_sample_period;
 	uint16_t ain_threshold;
 
-	CANFD_SETTINGS canfd1;
-	CANFD_SETTINGS canfd2;
-
-	uint16_t network_enables_2;
+	struct
+	{
+		uint32_t : 1;
+		uint32_t enableLatencyTest : 1;
+		uint32_t reserved : 30;
+	} flags;
 
 	STextAPISettings text_api;
-
 } SOBD2SimSettings;
-#define SOBD2SimSettings_SIZE 140
+#define SOBD2SimSettings_SIZE 148
 
 typedef struct _CmProbeSettings
 {
@@ -1794,6 +1799,38 @@ typedef struct _GLOBAL_SETTINGS
 #define GLOBAL_SETTINGS_SIZE (SCyanSettings_SIZE + 6)
 
 #define NEOVI_3G_MAX_SETTINGS_SIZE sizeof(GLOBAL_SETTINGS)
+
+typedef enum _EDeviceSettingsType {
+	DeviceFireSettingsType,
+	DeviceFireVnetSettingsType,
+	DeviceFire2SettingsType,
+	DeviceVCAN3SettingsType,
+	DeviceRADGalaxySettingsType,
+	DeviceRADStar2SettingsType,
+	DeviceVCAN4SettingsType,
+	DeviceVCAN412SettingsType,
+	//
+	// add new settings type here
+	// ...
+	DeviceSettingsTypeMax
+} EDeviceSettingsType;
+
+typedef struct _SDeviceSettings {
+	EDeviceSettingsType	DeviceSettingType;
+	union {
+		SFireSettings fire;
+		SFireVnetSettings firevnet;
+		SCyanSettings cyan;
+		SVCAN3Settings vcan3;
+		SRADGalaxySettings radgalaxy;
+		SRADStar2Settings radstar2;
+		SVCAN4Settings vcan4;
+		VCAN412Settings vcan4_12;
+		//
+		// add new settings type for each new settings structure in the union
+		// ...
+	} Settings;
+} SDeviceSettings;
 
 typedef struct _stCM_ISO157652_TxMessage
 {

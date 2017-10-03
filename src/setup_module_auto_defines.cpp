@@ -222,6 +222,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, SPY_STATUS_LIN_MASTER);
 	result += PyModule_AddIntMacro(module, SPY_STATUS_CANFD);
 	result += PyModule_AddIntMacro(module, SPY_STATUS_FLEXRAY_PDU);
+	result += PyModule_AddIntMacro(module, SPY_STATUS_PDU);
 	result += PyModule_AddIntMacro(module, SPY_STATUS_HIGH_SPEED);
 	result += PyModule_AddIntMacro(module, SPY_STATUS_EXTENDED);
 	result += PyModule_AddIntMacro(module, SPY_STATUS_FLEXRAY_PDU_UPDATE_BIT_SET);
@@ -447,6 +448,18 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, GS_VERSION);
 	result += PyModule_AddIntMacro(module, GLOBAL_SETTINGS_SIZE);
 	result += PyModule_AddIntMacro(module, NEOVI_3G_MAX_SETTINGS_SIZE);
+	// enum
+	result += PyModule_AddIntMacro(module, DeviceFireSettingsType);
+	result += PyModule_AddIntMacro(module, DeviceFireVnetSettingsType);
+	result += PyModule_AddIntMacro(module, DeviceFire2SettingsType);
+	result += PyModule_AddIntMacro(module, DeviceVCAN3SettingsType);
+	result += PyModule_AddIntMacro(module, DeviceRADGalaxySettingsType);
+	result += PyModule_AddIntMacro(module, DeviceRADStar2SettingsType);
+	result += PyModule_AddIntMacro(module, DeviceVCAN4SettingsType);
+	result += PyModule_AddIntMacro(module, DeviceVCAN412SettingsType);
+	result += PyModule_AddIntMacro(module, DeviceSettingsTypeMax);
+	// end of enum -  } EDeviceSettingsType;
+
 	result += PyModule_AddIntMacro(module, stCM_ISO157652_TxMessage_SIZE);
 	result += PyModule_AddIntMacro(module, ISO15765_2015_TxMessage_SIZE);
 	result += PyModule_AddIntMacro(module, stCM_ISO157652_RxMessage_SIZE);
