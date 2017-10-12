@@ -70,6 +70,9 @@ static PyMemberDef vcan412_settings_object_members[] = {
     { "network_enables", T_ULONGLONG, offsetof(vcan412_settings_object, s.network_enables), 0, "" },
     { "termination_enables", T_ULONGLONG, offsetof(vcan412_settings_object, s.termination_enables), 0, "" },
 
+    { "pwr_man_timeout", T_UINT, offsetof(vcan412_settings_object, s.pwr_man_timeout), 0, "" },
+    { "pwr_man_enable", T_USHORT, offsetof(vcan412_settings_object, s.pwr_man_enable), 0, "" },
+
     { "network_enabled_on_boot", T_USHORT, offsetof(vcan412_settings_object, s.network_enabled_on_boot), 0, "" },
 
     { "iso15765_separation_time_offset", T_USHORT, offsetof(vcan412_settings_object, s.iso15765_separation_time_offset), 0, "" },
