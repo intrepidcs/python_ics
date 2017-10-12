@@ -107,7 +107,7 @@ char* neodevice_to_string(unsigned long type)
     //case NEODEVICE_ECU15: return "neoECU15";
     //case NEODEVICE_ECU25: return "neoECU25";
     case NEODEVICE_OBD2_PRO: return "neoOBD2 Pro";
-    case NEODEVICE_VCAN4_12: return "ValueCAN4";
+    case NEODEVICE_VCAN4_12: return "ValueCAN4 1/2";
     case NEODEVICE_EEVB: return "EEVB";
     case NEODEVICE_VCANRF: return "ValueCAN.rf";
     case NEODEVICE_FIRE2: return "neoVI FIRE2";
