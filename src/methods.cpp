@@ -29,6 +29,7 @@
 #include "setup_module_auto_defines.h"
 #include "object_cm_iso157652_tx_message.h"
 #include "object_cm_iso157652_rx_message.h"
+#include "object_vcan412_settings.h"
 
 extern PyTypeObject spy_message_object_type;
 // __func__, __FUNCTION__ and __PRETTY_FUNCTION__ are not preprocessor macros.
@@ -1208,6 +1209,48 @@ static PyObject* __get_vcan3_settings(ICS_HANDLE handle, char* func_name)
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
+#define _get_vcan412_settings(handle) __get_vcan412_settings(handle, __FUNCTION__);
+static PyObject* __get_vcan412_settings(ICS_HANDLE handle, char* func_name)
+{
+    PyObject* settings = PyObject_CallObject((PyObject*)&vcan412_settings_object_type, NULL);
+    if (!settings) {
+        // This should only happen if we run out of memory (malloc failure)?
+        PyErr_Print();
+        return set_ics_exception(exception_runtime_error(), "Failed to allocate " VCAN412_SETTINGS_OBJECT_NAME);
+    }
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        ice::Function<int __stdcall (ICS_HANDLE, SVCAN412Settings*, int)> icsneoGetVCAN412Settings(lib, "icsneoGetVCAN412Settings");
+        SVCAN412Settings* s = &((vcan412_settings_object*)settings)->s;
+        Py_BEGIN_ALLOW_THREADS
+        if (!icsneoGetVCAN412Settings(handle, s, sizeof(*s))) {
+            Py_BLOCK_THREADS
+            return _set_ics_exception(exception_runtime_error(), "icsneoGetVCAN412Settings() Failed", func_name);
+        }
+        Py_END_ALLOW_THREADS
+        vcan412_settings_object* s_obj = (vcan412_settings_object*)settings;
+        // Since CAN Structures are Python objects, we need to manually update them here.
+        ((can_settings_object*)s_obj->can1)->s = s->can1;
+        ((can_settings_object*)s_obj->can2)->s = s->can2;
+        ((canfd_settings_object*)s_obj->canfd1)->s = s->canfd1;
+        ((canfd_settings_object*)s_obj->canfd2)->s = s->canfd2;
+
+        // Since TextAPI Structures are Python objects, we need to manually update them here.
+        ((textapi_settings_object*)s_obj->textapi)->s = s->text_api;
+        return settings;
+    }
+    catch (ice::Exception& ex)
+    {
+        return _set_ics_exception(exception_runtime_error(), (char*)ex.what(), func_name);
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
+
 #define _get_vcanrf_settings(handle) __get_vcanrf_settings(handle, __FUNCTION__);
 static PyObject* __get_vcanrf_settings(ICS_HANDLE handle, char* func_name)
 {
@@ -1586,6 +1629,8 @@ PyObject* meth_get_device_settings(PyObject* self, PyObject* args)
         device_type = ((neo_device_object*)obj)->dev.DeviceType;
     if (device_type == NEODEVICE_VCAN3) {
         return _get_vcan3_settings(handle);
+    } else if (device_type == NEODEVICE_VCAN4_12) {
+        return _get_vcan412_settings(handle);
     } else if (device_type == NEODEVICE_VCANRF) {
         return _get_vcanrf_settings(handle);
     } else if (device_type == NEODEVICE_FIRE2) {
@@ -1628,6 +1673,42 @@ static PyObject* __set_vcan3_settings(ICS_HANDLE handle, PyObject* settings, int
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 #define _set_vcan3_settings(handle, settings, save) __set_vcan3_settings(handle, settings, save, __FUNCTION__);
+
+static PyObject* __set_vcan412_settings(ICS_HANDLE handle, PyObject* settings, int& save, char* func_name)
+{
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return _set_ics_exception(exception_runtime_error(), dll_get_error(buffer), func_name);
+        }
+        ice::Function<int __stdcall (ICS_HANDLE, SVCAN412Settings*, int, int)> icsneoSetVCAN412Settings(lib, "icsneoSetVCAN412Settings");
+        vcan412_settings_object* s_obj = (vcan412_settings_object*)settings;
+        SVCAN412Settings* s = &s_obj->s;
+        // Since CAN Structures are Python objects, we need to manually update them here.
+        s->can1 = ((can_settings_object*)s_obj->can1)->s;
+        s->can2 = ((can_settings_object*)s_obj->can2)->s;
+        s->canfd1 = ((canfd_settings_object*)s_obj->canfd1)->s;
+        s->canfd2 = ((canfd_settings_object*)s_obj->canfd2)->s;
+        // Since textapi Structures are Python objects, we need to manually update them here.
+        s->text_api = ((textapi_settings_object*)s_obj->textapi)->s;
+
+        Py_BEGIN_ALLOW_THREADS
+        if (!icsneoSetVCAN412Settings(handle, s, sizeof(*s), save)) {
+            Py_BLOCK_THREADS
+            return _set_ics_exception(exception_runtime_error(), "icsneoSetVCAN412Settings() Failed", func_name);
+        }
+        Py_END_ALLOW_THREADS
+        Py_RETURN_NONE;
+    }
+    catch (ice::Exception& ex)
+    {
+        return _set_ics_exception(exception_runtime_error(), (char*)ex.what(), func_name);
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
+#define _set_vcan412_settings(handle, settings, save) __set_vcan412_settings(handle, settings, save, __FUNCTION__);
 
 static PyObject* __set_vcanrf_settings(ICS_HANDLE handle, PyObject* settings, int& save, char* func_name)
 {
@@ -1941,6 +2022,8 @@ PyObject* meth_set_device_settings(PyObject* self, PyObject* args)
         device_type = ((neo_device_object*)obj)->dev.DeviceType;
     if (device_type == NEODEVICE_VCAN3) {
         return _set_vcan3_settings(handle, settings, save_to_eeprom);
+    } else if (device_type == NEODEVICE_VCAN4_12) {
+        return _set_vcan412_settings(handle, settings, save_to_eeprom);
     } else if (device_type == NEODEVICE_VCANRF) {
         return _set_vcanrf_settings(handle, settings, save_to_eeprom);
     } else if (device_type == NEODEVICE_FIRE2) {
