@@ -382,10 +382,6 @@ typedef unsigned __int64 uint64_t;
 #define NEOVI_RED_TIMESTAMP_2_10NS 429.4967296
 #define NEOVI_RED_TIMESTAMP_1_10NS 0.000000010
 
-#define VNET_LOCATION_MAIN 0x1
-#define VNET_LOCATION_SLAVE_A 0x2
-#define VNET_LOCATION_SLAVE_B 0x3
-
 typedef struct
 {
 	uint32_t DeviceType;
@@ -1769,8 +1765,9 @@ typedef struct _VCAN412Settings
 		uint32_t enableLatencyTest : 1;
 		uint32_t reserved : 30;
 	} flags;
-} VCAN412Settings;
+} VCAN412Settings, SVCAN412Settings;
 #define VCAN412Settings_SIZE 148
+#define SVCAN412Settings_SIZE VCAN412Settings_SIZE
 
 #define GS_VERSION 5
 typedef struct _GLOBAL_SETTINGS
@@ -1831,6 +1828,15 @@ typedef struct _SDeviceSettings {
 		// ...
 	} Settings;
 } SDeviceSettings;
+
+
+typedef enum _EPlasmaIonVnetChannel_t {
+	PlasmaIonVnetChannelMain, // PLASMA = SLOT 2, ION = VNET2
+	PlasmaIonVnetChannelA, // PLASMA = SLOT 1, ION = VNET1
+	PlasmaIonVnetChannelB,// PLASMA = SLOT 3, ION = NA
+	eSoftCore,
+	eFpgaStatusResp,
+} EPlasmaIonVnetChannel_t;
 
 typedef struct _stCM_ISO157652_TxMessage
 {
