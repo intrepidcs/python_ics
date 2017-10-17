@@ -302,9 +302,6 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddObject(module, "NEOVI_RED_TIMESTAMP_1_25NS", PyFloat_FromDouble(NEOVI_RED_TIMESTAMP_1_25NS));
 	result += PyModule_AddObject(module, "NEOVI_RED_TIMESTAMP_2_10NS", PyFloat_FromDouble(NEOVI_RED_TIMESTAMP_2_10NS));
 	result += PyModule_AddObject(module, "NEOVI_RED_TIMESTAMP_1_10NS", PyFloat_FromDouble(NEOVI_RED_TIMESTAMP_1_10NS));
-	result += PyModule_AddIntMacro(module, VNET_LOCATION_MAIN);
-	result += PyModule_AddIntMacro(module, VNET_LOCATION_SLAVE_A);
-	result += PyModule_AddIntMacro(module, VNET_LOCATION_SLAVE_B);
 	// enum
 	result += PyModule_AddIntMacro(module, AUTO);
 	result += PyModule_AddIntMacro(module, USE_TQ);
@@ -445,6 +442,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, CmProbeSettings_SIZE);
 	result += PyModule_AddIntMacro(module, OBD2ProSettings_SIZE);
 	result += PyModule_AddIntMacro(module, VCAN412Settings_SIZE);
+	result += PyModule_AddIntMacro(module, SVCAN412Settings_SIZE);
 	result += PyModule_AddIntMacro(module, GS_VERSION);
 	result += PyModule_AddIntMacro(module, GLOBAL_SETTINGS_SIZE);
 	result += PyModule_AddIntMacro(module, NEOVI_3G_MAX_SETTINGS_SIZE);
@@ -459,6 +457,14 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, DeviceVCAN412SettingsType);
 	result += PyModule_AddIntMacro(module, DeviceSettingsTypeMax);
 	// end of enum -  } EDeviceSettingsType;
+
+	// enum
+	result += PyModule_AddIntMacro(module, PlasmaIonVnetChannelMain);
+	result += PyModule_AddIntMacro(module, PlasmaIonVnetChannelA);
+	result += PyModule_AddIntMacro(module, PlasmaIonVnetChannelB);
+	result += PyModule_AddIntMacro(module, eSoftCore);
+	result += PyModule_AddIntMacro(module, eFpgaStatusResp);
+	// end of enum -  } EPlasmaIonVnetChannel_t;
 
 	result += PyModule_AddIntMacro(module, stCM_ISO157652_TxMessage_SIZE);
 	result += PyModule_AddIntMacro(module, ISO15765_2015_TxMessage_SIZE);
