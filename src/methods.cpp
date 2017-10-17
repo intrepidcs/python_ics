@@ -1683,7 +1683,7 @@ static PyObject* __set_vcan412_settings(ICS_HANDLE handle, PyObject* settings, i
             char buffer[512];
             return _set_ics_exception(exception_runtime_error(), dll_get_error(buffer), func_name);
         }
-        ice::Function<int __stdcall (ICS_HANDLE, SVCAN412Settings*, int, int)> icsneoSetVCAN412Settings(lib, "icsneoSetVCAN412Settings");
+        ice::Function<int __stdcall (ICS_HANDLE, SVCAN412Settings*, int, unsigned char)> icsneoSetVCAN412Settings(lib, "icsneoSetVCAN412Settings");
         vcan412_settings_object* s_obj = (vcan412_settings_object*)settings;
         SVCAN412Settings* s = &s_obj->s;
         // Since CAN Structures are Python objects, we need to manually update them here.
