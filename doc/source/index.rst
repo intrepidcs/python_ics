@@ -1,7 +1,3 @@
-.. python_ics documentation master file, created by
-   sphinx-quickstart on Tue Sep  2 15:54:20 2014.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
 
 Documentation
 ======================================
@@ -12,7 +8,7 @@ Documentation
 
 Variables
 ======================================
-.. currentmodule:: ics
+
 .. py:data:: AUTO
 	:annotation: = 0
 .. py:data:: BPS100
@@ -731,6 +727,8 @@ Variables
 	:annotation: = 262144
 .. py:data:: SPY_STATUS_NETWORK_MESSAGE_TYPE
 	:annotation: = 67108864
+.. py:data:: SPY_STATUS_PDU
+	:annotation: = 536870912
 .. py:data:: SPY_STATUS_REMOTE_FRAME
 	:annotation: = 8
 .. py:data:: SPY_STATUS_TEST_TRIGGER
@@ -767,27 +765,3 @@ Variables
 	:annotation: = 1
 .. py:data:: VNETBITS_FEATURE_DISABLE_USB_CHECK
 	:annotation: = 2
-.. py:data:: VNET_LOCATION_MAIN
-	:annotation: = 1
-.. py:data:: VNET_LOCATION_SLAVE_A
-	:annotation: = 2
-.. py:data:: VNET_LOCATION_SLAVE_B
-	:annotation: = 3
-
-
-
-
-
-
-
-
-   
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
-
