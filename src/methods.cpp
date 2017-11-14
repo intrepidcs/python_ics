@@ -30,6 +30,7 @@
 #include "object_cm_iso157652_tx_message.h"
 #include "object_cm_iso157652_rx_message.h"
 #include "object_vcan412_settings.h"
+#include "object_vividcan_settings.h"
 
 extern PyTypeObject spy_message_object_type;
 // __func__, __FUNCTION__ and __PRETTY_FUNCTION__ are not preprocessor macros.
@@ -1613,6 +1614,44 @@ static PyObject* __get_rad_galaxy_settings(ICS_HANDLE handle, char* func_name)
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
+#define _get_vividcan_settings(handle) __get_vividcan_settings(handle, __FUNCTION__);
+static PyObject* __get_vividcan_settings(ICS_HANDLE handle, char* func_name)
+{
+    PyObject* settings = PyObject_CallObject((PyObject*)&vividcan_settings_object_type, NULL);
+    if (!settings) {
+        // This should only happen if we run out of memory (malloc failure)?
+        PyErr_Print();
+        return set_ics_exception(exception_runtime_error(), "Failed to allocate " VIVIDCAN_SETTINGS_OBJECT_NAME);
+    }
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        ice::Function<int __stdcall (ICS_HANDLE, SVividCANSettings*, int)> icsneoGetVividCANSettings(lib, "icsneoGetVividCANSettings");
+        SVividCANSettings* s = &((vividcan_settings_object*)settings)->s;
+        Py_BEGIN_ALLOW_THREADS
+        if (!icsneoGetVividCANSettings(handle, s, sizeof(*s))) {
+            Py_BLOCK_THREADS
+            return _set_ics_exception(exception_runtime_error(), "icsneoGetVividCANSettings() Failed", func_name);
+        }
+        Py_END_ALLOW_THREADS
+        vividcan_settings_object* s_obj = (vividcan_settings_object*)settings;
+        // Since CAN Structures are Python objects, we need to manually update them here.
+        ((can_settings_object*)s_obj->can1)->s = s->can1;
+		((swcan_settings_object*)s_obj->swcan1)->s = s->swcan1;
+		((can_settings_object*)s_obj->lsftcan1)->s = s->lsftcan1;
+        return settings;
+    }
+    catch (ice::Exception& ex)
+    {
+        return _set_ics_exception(exception_runtime_error(), (char*)ex.what(), func_name);
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
+
 PyObject* meth_get_device_settings(PyObject* self, PyObject* args)
 {
     PyObject* obj = NULL;
@@ -1627,19 +1666,30 @@ PyObject* meth_get_device_settings(PyObject* self, PyObject* args)
     // User is overriding the device type here, this is useful for FIRE2 VNET for PLASMA/ION.
     if (!device_type)
         device_type = ((neo_device_object*)obj)->dev.DeviceType;
-    if (device_type == NEODEVICE_VCAN3) {
-        return _get_vcan3_settings(handle);
-    } else if (device_type == NEODEVICE_VCAN4_12) {
-        return _get_vcan412_settings(handle);
-    } else if (device_type == NEODEVICE_VCANRF) {
-        return _get_vcanrf_settings(handle);
-    } else if (device_type == NEODEVICE_FIRE2) {
-        return _get_cyan_settings(handle);
-    } else if (device_type == NEODEVICE_RADGALAXY) {
-        return _get_rad_galaxy_settings(handle);
-    } else {
-        return _get_fire_settings(handle);
-    }
+	switch(device_type)
+	{
+		case NEODEVICE_VCAN3:
+			return _get_vcan3_settings(handle);
+			break;
+		case NEODEVICE_VCAN4_12:
+			return _get_vcan412_settings(handle);
+			break;
+		case NEODEVICE_VCANRF:
+			return _get_vcanrf_settings(handle);
+			break;
+		case NEODEVICE_FIRE2:
+			return _get_cyan_settings(handle);
+			break;
+		case NEODEVICE_RADGALAXY:
+			return _get_rad_galaxy_settings(handle);
+			break;
+		case NEODEVICE_VIVIDCAN:
+			return _get_vividcan_settings(handle);
+			break;
+		default:
+			return _get_fire_settings(handle);
+			break;
+	}
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
@@ -2005,6 +2055,39 @@ static PyObject* __set_rad_galaxy_settings(ICS_HANDLE handle, PyObject* settings
 }
 #define _set_rad_galaxy_settings(handle, settings, save) __set_rad_galaxy_settings(handle, settings, save, __FUNCTION__);
 
+static PyObject* __set_vividcan_settings(ICS_HANDLE handle, PyObject* settings, int& save, char* func_name)
+{
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return _set_ics_exception(exception_runtime_error(), dll_get_error(buffer), func_name);
+        }
+        ice::Function<int __stdcall (ICS_HANDLE, SVividCANSettings*, int, unsigned char)> icsneoSetVividCANSettings(lib, "icsneoSetVividCANSettings");
+        vividcan_settings_object* s_obj = (vividcan_settings_object*)settings;
+        SVividCANSettings* s = &s_obj->s;
+        // Since CAN Structures are Python objects, we need to manually update them here.
+        s->can1 = ((can_settings_object*)s_obj->can1)->s;
+		s->swcan1 = ((swcan_settings_object*)s_obj->swcan1)->s;
+		s->lsftcan1 = ((can_settings_object*)s_obj->lsftcan1)->s;
+
+        Py_BEGIN_ALLOW_THREADS
+        if (!icsneoSetVividCANSettings(handle, s, sizeof(*s), save)) {
+            Py_BLOCK_THREADS
+            return _set_ics_exception(exception_runtime_error(), "icsneoSetVividCANSettings() Failed", func_name);
+        }
+        Py_END_ALLOW_THREADS
+        Py_RETURN_NONE;
+    }
+    catch (ice::Exception& ex)
+    {
+        return _set_ics_exception(exception_runtime_error(), (char*)ex.what(), func_name);
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
+#define _set_vividcan_settings(handle, settings, save) __set_vividcan_settings(handle, settings, save, __FUNCTION__);
+
 PyObject* meth_set_device_settings(PyObject* self, PyObject* args)
 {
     PyObject* obj = NULL;
@@ -2020,19 +2103,30 @@ PyObject* meth_set_device_settings(PyObject* self, PyObject* args)
     ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
     if (!device_type)
         device_type = ((neo_device_object*)obj)->dev.DeviceType;
-    if (device_type == NEODEVICE_VCAN3) {
-        return _set_vcan3_settings(handle, settings, save_to_eeprom);
-    } else if (device_type == NEODEVICE_VCAN4_12) {
-        return _set_vcan412_settings(handle, settings, save_to_eeprom);
-    } else if (device_type == NEODEVICE_VCANRF) {
-        return _set_vcanrf_settings(handle, settings, save_to_eeprom);
-    } else if (device_type == NEODEVICE_FIRE2) {
-        return _set_cyan_settings(handle, settings, save_to_eeprom);
-    } else if (device_type == NEODEVICE_RADGALAXY) {
-        return _set_rad_galaxy_settings(handle, settings, save_to_eeprom);
-    } else {
-        return _set_fire_settings(handle, settings, save_to_eeprom);
-    }
+	switch(device_type)
+	{
+		case NEODEVICE_VCAN3:
+			return _set_vcan3_settings(handle, settings, save_to_eeprom);
+			break;
+		case NEODEVICE_VCAN4_12:
+			return _set_vcan412_settings(handle, settings, save_to_eeprom);
+			break;
+		case NEODEVICE_VCANRF:
+			return _set_vcanrf_settings(handle, settings, save_to_eeprom);
+			break;
+		case NEODEVICE_FIRE2:
+			return _set_cyan_settings(handle, settings, save_to_eeprom);
+			break;
+		case NEODEVICE_RADGALAXY:
+			return _set_rad_galaxy_settings(handle, settings, save_to_eeprom);
+			break;
+		case NEODEVICE_VIVIDCAN:
+			return _set_vividcan_settings(handle, settings, save_to_eeprom);
+			break;
+		default:
+			return _set_fire_settings(handle, settings, save_to_eeprom);
+			break;
+	}
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 

@@ -455,6 +455,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, DeviceRADStar2SettingsType);
 	result += PyModule_AddIntMacro(module, DeviceVCAN4SettingsType);
 	result += PyModule_AddIntMacro(module, DeviceVCAN412SettingsType);
+	result += PyModule_AddIntMacro(module, DeviceVividCANSettingsType);
 	result += PyModule_AddIntMacro(module, DeviceSettingsTypeMax);
 	// end of enum -  } EDeviceSettingsType;
 
