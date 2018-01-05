@@ -1806,6 +1806,7 @@ typedef enum _EDeviceSettingsType {
 	DeviceRADStar2SettingsType,
 	DeviceVCAN4SettingsType,
 	DeviceVCAN412SettingsType,
+	DeviceVividCANSettingsType,
 	//
 	// add new settings type here
 	// ...
@@ -1823,6 +1824,7 @@ typedef struct _SDeviceSettings {
 		SRADStar2Settings radstar2;
 		SVCAN4Settings vcan4;
 		VCAN412Settings vcan4_12;
+		SVividCANSettings vividcan;
 		//
 		// add new settings type for each new settings structure in the union
 		// ...
