@@ -35,6 +35,8 @@ public:
     ~Library();
     bool isLoaded() const;
     std::string name() const { return m_name; }
+    
+    std::string getPath(bool* okay=NULL);
 
     HMODULE const& _library() const;
 };
