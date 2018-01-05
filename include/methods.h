@@ -65,6 +65,8 @@ PyObject* meth_set_backup_power_ready(PyObject* self, PyObject* args);
 PyObject* meth_load_readbin(PyObject* self, PyObject* args);
 PyObject* meth_iso15765_transmit_message(PyObject* self, PyObject* args); // icsneoISO15765_TransmitMessage
 PyObject* meth_iso15765_receive_message(PyObject* self, PyObject* args); // icsneoISO15765_ReceiveMessageMessage
+PyObject* meth_iso15765_enable_networks(PyObject* self, PyObject* args); // icsneoISO15765_EnableNetworks
+PyObject* meth_iso15765_disable_networks(PyObject* self, PyObject* args); // icsneoISO15765_DisableNetworks
 PyObject* meth_get_active_vnet_channel(PyObject* self, PyObject* args);
 PyObject* meth_set_active_vnet_channel(PyObject* self, PyObject* args);
 PyObject* meth_override_library_name(PyObject* self, PyObject* args);
@@ -936,6 +938,36 @@ PyObject* meth_get_library_path(PyObject* self);
     "\tBoolean: True on success, False on failure.\n" \
     "\n"
 
+#define _DOC_ISO15765_ENABLE_NETWORKS \
+    MODULE_NAME".iso15765_enable_networks(device, networks)\n" \
+    "\n" \
+    "Enables ISO15765 networks.\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`): :class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`"MODULE_NAME".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\tNone\n" \
+    "\n"
+
+#define _DOC_ISO15765_DISABLE_NETWORKS \
+    MODULE_NAME".iso15765_disable_networks(device)\n" \
+    "\n" \
+    "Disables ISO15765 networks.\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`): :class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`"MODULE_NAME".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\tNone\n" \
+    "\n"
+
 #define _DOC_GET_ACTIVE_VNET_CHANNEL \
     MODULE_NAME".get_active_vnet_channel(device)\n" \
     "\n" \
@@ -1047,6 +1079,8 @@ static PyMethodDef IcsMethods[] = {
 #endif
     _EZ_ICS_STRUCT_METHOD("iso15765_transmit_message", "icsneoISO15765_TransmitMessage", meth_iso15765_transmit_message, METH_VARARGS, _DOC_ISO15765_TRANSMIT_MESSAGE),
     _EZ_ICS_STRUCT_METHOD("iso15765_receive_message", "icsneoISO15765_ReceiveMessage", meth_iso15765_receive_message, METH_VARARGS, _DOC_ISO15765_RECEIVE_MESSAGE),
+    _EZ_ICS_STRUCT_METHOD("iso15765_enable_networks", "icsneoISO15765_EnableNetworks", meth_iso15765_enable_networks, METH_VARARGS, _DOC_ISO15765_ENABLE_NETWORKS),
+    _EZ_ICS_STRUCT_METHOD("iso15765_disable_networks", "icsneoISO15765_DisableNetworks", meth_iso15765_disable_networks, METH_VARARGS, _DOC_ISO15765_DISABLE_NETWORKS),
 
     _EZ_ICS_STRUCT_METHOD("get_active_vnet_channel", "icsneoGetActiveVNETChannel", meth_get_active_vnet_channel, METH_VARARGS, _DOC_GET_ACTIVE_VNET_CHANNEL),
     _EZ_ICS_STRUCT_METHOD("set_active_vnet_channel", "icsneoSetActiveVNETChannel", meth_set_active_vnet_channel, METH_VARARGS, _DOC_SET_ACTIVE_VNET_CHANNEL),
