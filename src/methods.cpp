@@ -3458,3 +3458,47 @@ PyObject* meth_set_active_vnet_channel(PyObject* self, PyObject* args)
     }
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
+
+PyObject* meth_override_library_name(PyObject* self, PyObject* args)
+{
+    const char* name = NULL;
+    if (!PyArg_ParseTuple(args, arg_parse("s:", __FUNCTION__), &name)) {
+        return NULL;
+    }
+    try
+    {
+        if (!dll_reinitialize((char*)name)) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        Py_RETURN_NONE;
+    }
+    catch (ice::Exception& ex)
+    {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
+
+PyObject* meth_get_library_path(PyObject* self)
+{
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        return Py_BuildValue("s", lib->getPath());
+    }
+    catch (ice::Exception& ex)
+    {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}

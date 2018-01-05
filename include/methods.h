@@ -67,6 +67,8 @@ PyObject* meth_iso15765_transmit_message(PyObject* self, PyObject* args); // ics
 PyObject* meth_iso15765_receive_message(PyObject* self, PyObject* args); // icsneoISO15765_ReceiveMessageMessage
 PyObject* meth_get_active_vnet_channel(PyObject* self, PyObject* args);
 PyObject* meth_set_active_vnet_channel(PyObject* self, PyObject* args);
+PyObject* meth_override_library_name(PyObject* self, PyObject* args);
+PyObject* meth_get_library_path(PyObject* self);
 
 #ifdef _cplusplus
 }
@@ -964,6 +966,29 @@ PyObject* meth_set_active_vnet_channel(PyObject* self, PyObject* args);
     "\tBoolean: True on success, False on failure.\n" \
     "\n"
 
+#define _DOC_OVERRIDE_LIBRARY_NAME \
+    MODULE_NAME".override_library_name(new_name)\n" \
+    "\n" \
+    "Sets active vnet channel for the device.\n" \
+    "\n" \
+    "Args:\n" \
+    "\tname: Absolute path or relative path including filename.\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`"MODULE_NAME".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\tNone\n" \
+    "\n" \
+    "\t>>> import ics\n" \
+    "\t>>> ics.find_devices()\n" \
+    "\tTraceback (most recent call last):\n" \
+    "\t  File \"<stdin>\", line 1, in <module>\n" \
+    "\tics.RuntimeError: Error: find_devices(): Failed to open library: 'icsneo40.dll' with error code: #126\n" \
+    "\t>>> ics.override_library_name(r\"C:\\Windows\\SysWOW64\\icsneo40-different.dll\")\n" \
+    "\t>>> ics.find_devices()\n" \
+    "\t(<ics.NeoDevice object at 0x00284C50>, <ics.NeoDevice object at 0x007C9A10>)\n"
+
 
 static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("find_devices", "FindNeoDevices", (PyCFunction)meth_find_devices, METH_VARARGS | METH_KEYWORDS, _DOC_FIND_DEVICES),
@@ -1025,7 +1050,9 @@ static PyMethodDef IcsMethods[] = {
 
     _EZ_ICS_STRUCT_METHOD("get_active_vnet_channel", "icsneoGetActiveVNETChannel", meth_get_active_vnet_channel, METH_VARARGS, _DOC_GET_ACTIVE_VNET_CHANNEL),
     _EZ_ICS_STRUCT_METHOD("set_active_vnet_channel", "icsneoSetActiveVNETChannel", meth_set_active_vnet_channel, METH_VARARGS, _DOC_SET_ACTIVE_VNET_CHANNEL),
-    
+    {"override_library_name", (PyCFunction)meth_override_library_name, METH_VARARGS, _DOC_OVERRIDE_LIBRARY_NAME},
+    {"get_library_path", (PyCFunction)meth_get_library_path, METH_NOARGS, ""},
+
     { NULL, NULL, 0, NULL }
 };
 

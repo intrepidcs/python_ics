@@ -13,9 +13,10 @@
 extern "C" {
 #endif
 
-bool dll_initialize(void);
+bool dll_initialize(char* name=NULL);
 bool dll_is_initialized(void);
 void dll_uninitialize(void);
+bool dll_reinitialize(char* name=NULL);
 char* dll_get_error(char* error_msg);
 ice::Library* dll_get_library(void);
 
