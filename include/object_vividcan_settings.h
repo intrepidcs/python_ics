@@ -19,6 +19,9 @@
 
 #define VIVIDCAN_SETTINGS_OBJECT_NAME "VividCANSettings"
 
+#if PY_MAJOR_VERSION < 3
+#define PyUnicode_CompareWithASCIIString(uni, string) strcmp(PyString_AsString(uni), string)
+#endif
 
 typedef struct {
     PyObject_HEAD

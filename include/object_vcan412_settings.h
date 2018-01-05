@@ -19,6 +19,10 @@
 
 #define VCAN412_SETTINGS_OBJECT_NAME "Vcan412Settings"
 
+#if PY_MAJOR_VERSION < 3
+#define PyUnicode_CompareWithASCIIString(uni, string) strcmp(PyString_AsString(uni), string)
+#endif
+
 
 typedef struct {
     PyObject_HEAD
