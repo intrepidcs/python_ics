@@ -114,8 +114,10 @@ static int spy_message_object_alloc(spy_message_object* self, PyObject* args, Py
 
 static void spy_message_object_dealloc(spy_message_object* self)
 {
-    if (!self->noExtraDataPtrCleanup && self->msg.ExtraDataPtrEnabled && self->msg.ExtraDataPtr != NULL) {
+    if ((!self->noExtraDataPtrCleanup && self->msg.ExtraDataPtrEnabled && self->msg.ExtraDataPtr != NULL) || 
+		(!self->noExtraDataPtrCleanup && self->msg.Protocol == SPY_PROTOCOL_ETHERNET && self->msg.ExtraDataPtr != NULL)) {
         // Clean up the ExtraDataPtr if we can
+        // Ethernet protocol uses the ExtraDataPtrEnabled reversed internally so do a double check here
         delete[] self->msg.ExtraDataPtr;
         self->msg.ExtraDataPtr = NULL;
         self->msg.ExtraDataPtrEnabled = 0;
@@ -183,7 +185,8 @@ static PyObject* spy_message_object_getattr(PyObject *o, PyObject *attr_name)
         Py_DECREF(attr_name);
         spy_message_j1850_object* obj = (spy_message_j1850_object*)o;
         unsigned char *ExtraDataPtr = (unsigned char*)obj->msg.ExtraDataPtr;
-        if (obj->msg.ExtraDataPtrEnabled && obj->msg.NumberBytesData && obj->msg.ExtraDataPtr) {
+        if ((obj->msg.ExtraDataPtrEnabled && obj->msg.NumberBytesData && obj->msg.ExtraDataPtr) ||
+			(obj->msg.Protocol == SPY_PROTOCOL_ETHERNET && obj->msg.NumberBytesData && obj->msg.ExtraDataPtr)) {
             PyObject *tuple = PyTuple_New(obj->msg.NumberBytesData);
             for (int i=0; i < obj->msg.NumberBytesData; ++i) {
                 PyTuple_SET_ITEM(tuple, i, PyLong_FromLong(ExtraDataPtr[i]));
@@ -260,8 +263,13 @@ static int spy_message_object_setattr(PyObject *o, PyObject *name, PyObject *val
         }
         return 0;
     }
+    else if (PyUnicode_CompareWithASCIIString(name, "Protocol") == 0) {
+        // Ethernet behavior is backward to CAN and will crash if enabled.
+        if (PyLong_AsLong(value) == SPY_PROTOCOL_ETHERNET)
+            obj->msg.ExtraDataPtrEnabled = 0;
+        return PyObject_GenericSetAttr(o, name, value);
+    }
     else if (PyUnicode_CompareWithASCIIString(name, "ExtraDataPtr") == 0) {
-
         // Make sure we are a tuple and len() == 8
         if (!PyTuple_Check(value)) {
             PyErr_Format(PyExc_AttributeError,
@@ -269,14 +277,14 @@ static int spy_message_object_setattr(PyObject *o, PyObject *name, PyObject *val
                 MODULE_NAME "." SPY_MESSAGE_OBJECT_NAME, name);
             return -1;
         }
-
         // Get tuple items and place them in array, set as 0 if error.
         Py_ssize_t length = PyObject_Length(value);
         if (obj->msg.ExtraDataPtr != NULL)
             delete[] obj->msg.ExtraDataPtr;
         obj->msg.ExtraDataPtr = new unsigned char[PyObject_Length(value)];
         obj->msg.NumberBytesData = PyObject_Length(value);
-        obj->msg.ExtraDataPtrEnabled = 1;
+        if (obj->msg.Protocol != SPY_PROTOCOL_ETHERNET)
+            obj->msg.ExtraDataPtrEnabled = 1;
         unsigned char * ExtraDataPtr = (unsigned char*)(obj->msg.ExtraDataPtr);
         for (int i=0; i < PyObject_Length(value); ++i) {
             PyObject* data = PyTuple_GetItem(value, i);
@@ -290,9 +298,15 @@ static int spy_message_object_setattr(PyObject *o, PyObject *name, PyObject *val
     }
     else if (PyUnicode_CompareWithASCIIString(name, "ExtraDataPtrEnabled") == 0) {
         // Make sure we clean up here so we don't memory leak
-        if (!obj->noExtraDataPtrCleanup && PyLong_AsLong(value) != 1 && obj->msg.ExtraDataPtrEnabled == 1) {
+        if ((!obj->noExtraDataPtrCleanup && PyLong_AsLong(value) != 1 && obj->msg.ExtraDataPtrEnabled == 1) ||
+            (!obj->noExtraDataPtrCleanup && PyLong_AsLong(value) != 1 && obj->msg.Protocol == SPY_PROTOCOL_ETHERNET)) {
             if (obj->msg.ExtraDataPtr != NULL)
                 delete[] obj->msg.ExtraDataPtr;
+        }
+        else if (PyLong_AsLong(value) != 0 && obj->msg.Protocol == SPY_PROTOCOL_ETHERNET)
+        {
+            // Ethernet always needs to be set to 0
+            return 0;
         }
         return PyObject_GenericSetAttr(o, name, value);
     }
