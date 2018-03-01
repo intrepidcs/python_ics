@@ -175,6 +175,66 @@ PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
     int count = 255;
     try
     {
+#ifndef USE_LEGACY_FIND_DEVICES
+        // Get the list of device types
+        unsigned int* device_type_list = NULL;
+        unsigned int device_type_list_size = 0;
+        if (device_type && device_type != Py_None)
+        {
+            std::vector<PyObject*> device_type_vector;
+            if (!_convertListOrTupleToArray(device_type, &device_type_vector))
+                return NULL;
+            device_type_list_size = device_type_vector.size();
+            device_type_list = new unsigned int[device_type_list_size];
+            for (unsigned int i=0; i < device_type_list_size; ++i)
+                device_type_list[i] = PyLong_AsLong(device_type_vector[i]);
+        }
+        Py_BEGIN_ALLOW_THREADS
+        try
+        {
+            if (ex_options != -1)
+                throw ice::Exception("Need to use old style find function");
+            //int _stdcall icsneoFindNeoDevicesNewStyle(unsigned int* deviceTypes, unsigned int numDeviceTypes, NeoDevice* pNeoDevice, int* pNumDevices)
+            ice::Function<int __stdcall (unsigned int*, unsigned int, NeoDevice*, int*)> icsneoFindNeoDevicesNewStyle(lib, "icsneoFindNeoDevicesNewStyle");
+            if (!icsneoFindNeoDevicesNewStyle(device_type_list, device_type_list_size, devices, &count))
+            {
+                Py_BLOCK_THREADS
+                if (device_type_list)
+                    delete[] device_type_list;
+                return set_ics_exception(exception_runtime_error(), "icsneoFindNeoDevicesNewStyle() Failed");
+            }
+        }
+        catch (ice::Exception& ex)
+        {
+            // Use the old style, we are using an old DLL
+            if (device_type_list) {
+                delete[] device_type_list;
+                device_type_list = NULL;
+            }
+            if (!PyLong_CheckExact(device_type)) {
+                Py_BLOCK_THREADS
+                return set_ics_exception(exception_runtime_error(), "device_type argument is not of type long");
+            }
+            unsigned long dev_type = PyLong_AsLong(device_type);
+            ice::Function<int __stdcall (unsigned long, NeoDevice*, int*)> icsneoFindNeoDevices(lib, "icsneoFindNeoDevices");
+            if (ex_options == -1 && !icsneoFindNeoDevices(dev_type, devices, &count)) {
+                Py_BLOCK_THREADS
+                return set_ics_exception(exception_runtime_error(), "icsneoFindNeoDevices() Failed");
+            } 
+            if (ex_options != -1) {
+                ice::Function<int __stdcall (unsigned long, NeoDevice*, int*, const POptionsFindNeoEx)> icsneoFindNeoDevicesEx(lib, "icsneoFindNeoDevicesEx");
+                OptionsFindNeoEx opts = {0};
+                opts.CANOptions.iNetworkID = ex_options;
+                if (!icsneoFindNeoDevicesEx(dev_type, devices, &count, &opts)) {
+                    Py_BLOCK_THREADS
+                    return set_ics_exception(exception_runtime_error(), "icsneoFindNeoDevicesEx() Failed");
+                }
+            }
+        }
+        if (device_type_list)
+            delete[] device_type_list;
+        Py_END_ALLOW_THREADS
+#else
         ice::Function<int __stdcall (unsigned long, NeoDevice*, int*)> icsneoFindNeoDevices(lib, "icsneoFindNeoDevices");
         Py_BEGIN_ALLOW_THREADS
         if (ex_options == -1 && !icsneoFindNeoDevices(device_type, devices, &count)) {
@@ -191,6 +251,7 @@ PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
             }
         }
         Py_END_ALLOW_THREADS
+#endif
     }
     catch (ice::Exception& ex)
     {
@@ -269,6 +330,16 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
+        bool use_new_finder = false;
+        try
+        {
+            //int _stdcall icsneoFindNeoDevicesNewStyle(unsigned int* deviceTypes, unsigned int numDeviceTypes, NeoDevice* pNeoDevice, int* pNumDevices)
+            ice::Function<int __stdcall (unsigned int*, unsigned int, NeoDevice*, int*)> icsneoFindNeoDevicesNewStyle(lib, "icsneoFindNeoDevicesNewStyle");
+            use_new_finder = true;
+        } catch (ice::Exception& ex)
+        {
+            use_new_finder = false;
+        }
         ice::Function<int __stdcall (unsigned long, NeoDevice*, int*)> icsneoFindNeoDevices(lib, "icsneoFindNeoDevices");
         ice::Function<int __stdcall (NeoDevice*, ICS_HANDLE*, unsigned char*, int, int)> icsneoOpenNeoDevice(lib, "icsneoOpenNeoDevice");
         if (use_user_neo_device) {
@@ -304,17 +375,27 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
             unsigned long device_type = -1;
             Py_BEGIN_ALLOW_THREADS
             // Get a list of devices to find serial number
-            if (ex_options == -1 && !icsneoFindNeoDevices(device_type, devices, &count)) {
-                Py_BLOCK_THREADS
-                return set_ics_exception(exception_runtime_error(), "icsneoFindNeoDevices() failed");
-            }
-            if (ex_options != -1) {
-                ice::Function<int __stdcall (unsigned long, NeoDevice*, int*, const POptionsFindNeoEx)> icsneoFindNeoDevicesEx(lib, "icsneoFindNeoDevicesEx");
-                OptionsFindNeoEx opts = {0};
-                opts.CANOptions.iNetworkID = ex_options;
-                if (!icsneoFindNeoDevicesEx(device_type, devices, &count, &opts)) {
+            if (use_new_finder && ex_options == -1) {
+                 //int _stdcall icsneoFindNeoDevicesNewStyle(unsigned int* deviceTypes, unsigned int numDeviceTypes, NeoDevice* pNeoDevice, int* pNumDevices)
+                ice::Function<int __stdcall (unsigned int*, unsigned int, NeoDevice*, int*)> icsneoFindNeoDevicesNewStyle(lib, "icsneoFindNeoDevicesNewStyle");
+                if (!icsneoFindNeoDevicesNewStyle(NULL, 0, devices, &count)) {
                     Py_BLOCK_THREADS
-                    return set_ics_exception_dev(exception_runtime_error(), obj, "icsneoFindNeoDevicesEx() failed");
+                    return set_ics_exception(exception_runtime_error(), "icsneoFindNeoDevicesNewStyle() Failed");
+                }
+            } else {
+                // Use old find method
+                if (ex_options == -1 && !icsneoFindNeoDevices(device_type, devices, &count)) {
+                    Py_BLOCK_THREADS
+                    return set_ics_exception(exception_runtime_error(), "icsneoFindNeoDevices() failed");
+                }
+                if (ex_options != -1) {
+                    ice::Function<int __stdcall (unsigned long, NeoDevice*, int*, const POptionsFindNeoEx)> icsneoFindNeoDevicesEx(lib, "icsneoFindNeoDevicesEx");
+                    OptionsFindNeoEx opts = {0};
+                    opts.CANOptions.iNetworkID = ex_options;
+                    if (!icsneoFindNeoDevicesEx(device_type, devices, &count, &opts)) {
+                        Py_BLOCK_THREADS
+                        return set_ics_exception_dev(exception_runtime_error(), obj, "icsneoFindNeoDevicesEx() failed");
+                    }
                 }
             }
             Py_END_ALLOW_THREADS
