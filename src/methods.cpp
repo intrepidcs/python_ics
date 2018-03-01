@@ -31,6 +31,7 @@
 #include "object_cm_iso157652_rx_message.h"
 #include "object_vcan412_settings.h"
 #include "object_vividcan_settings.h"
+//#include "object_vcan4_settings.h" // Not implemented in 802
 
 extern PyTypeObject spy_message_object_type;
 // __func__, __FUNCTION__ and __PRETTY_FUNCTION__ are not preprocessor macros.
@@ -86,6 +87,9 @@ char* neodevice_to_string(unsigned long type)
     case NEODEVICE_BLUE: return "neoVI BLUE";
     case NEODEVICE_SW_VCAN: return "ValueCAN2 SW";
     case NEODEVICE_DW_VCAN: return "ValueCAN2 DW";
+    case NEODEVICE_RADMOON2: return "RAD Moon2";
+    case NEODEVICE_RADGIGALOG: return "RAD Gigalog";
+    case NEODEVICE_VCAN41: return "ValueCAN4-1";
     case NEODEVICE_FIRE: return "neoVI FIRE";
     case NEODEVICE_VCAN3: return "ValueCAN3";
     case NEODEVICE_RED: return "neoVI RED";
@@ -122,12 +126,43 @@ char* neodevice_to_string(unsigned long type)
     return "unknown/unsupported";
 }
 
+bool _convertListOrTupleToArray(PyObject* obj, std::vector<PyObject*>* results)
+{
+    if (!obj || !results)
+    {
+        set_ics_exception(exception_runtime_error(), "_convertListOrTupleToArray() was passed invalid arguments");
+        return false;
+    }
+    results->clear();
+    if (PyList_CheckExact(obj))
+    {
+        Py_ssize_t length = PyList_Size(obj);
+        for (Py_ssize_t i=0; i < length; ++i)
+            results->push_back(PyList_GetItem(obj, i));
+        return true;
+    } 
+    else if (PyTuple_CheckExact(obj))
+    {
+        Py_ssize_t length = PyTuple_Size(obj);
+        for (Py_ssize_t i=0; i < length; ++i)
+            results->push_back(PyTuple_GetItem(obj, i));
+        return true;
+    } 
+    else
+    {
+        set_ics_exception(exception_runtime_error(), "_convertListOrTupleToArray() was passed neither a list or tuple");
+        return false;
+    }
+    set_ics_exception(exception_runtime_error(), "_convertListOrTupleToArray() bug!");
+    return false;
+}
+
 PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
 {
-    unsigned long device_type = NEODEVICE_ALL;
+    PyObject* device_type = NULL;
     int ex_options = -1;
     char* kwords[] = { "type", "stOptionsOpenNeoEx", NULL };
-    if (!PyArg_ParseTupleAndKeywords(args, keywords, arg_parse("|ii:", __FUNCTION__), 
+    if (!PyArg_ParseTupleAndKeywords(args, keywords, arg_parse("|Oi:", __FUNCTION__), 
             kwords, &device_type, &ex_options)) {
         return NULL;
     }
@@ -266,7 +301,7 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
             }
             NeoDevice devices[255];
             int count = 255;
-            unsigned long device_type = NEODEVICE_ALL;
+            unsigned long device_type = -1;
             Py_BEGIN_ALLOW_THREADS
             // Get a list of devices to find serial number
             if (ex_options == -1 && !icsneoFindNeoDevices(device_type, devices, &count)) {
@@ -1252,6 +1287,60 @@ static PyObject* __get_vcan412_settings(ICS_HANDLE handle, char* func_name)
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
+#if 0 // Not implemented in 802
+#define _get_vcan4_settings(handle) __get_vcan4_settings(handle, __FUNCTION__);
+static PyObject* __get_vcan4_settings(ICS_HANDLE handle, char* func_name)
+{
+    PyObject* settings = PyObject_CallObject((PyObject*)&vcan4_settings_object_type, NULL);
+    if (!settings) {
+        // This should only happen if we run out of memory (malloc failure)?
+        PyErr_Print();
+        return set_ics_exception(exception_runtime_error(), "Failed to allocate " VCAN4_SETTINGS_OBJECT_NAME);
+    }
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        ice::Function<int __stdcall (ICS_HANDLE, SVCAN4Settings*, int)> icsneoGetVCAN4Settings(lib, "icsneoGetVCAN4Settings");
+        SVCAN4Settings* s = &((vcan4_settings_object*)settings)->s;
+        Py_BEGIN_ALLOW_THREADS
+        if (!icsneoGetVCAN4Settings(handle, s, sizeof(*s))) {
+            Py_BLOCK_THREADS
+            return _set_ics_exception(exception_runtime_error(), "icsneoGetVCAN4Settings() Failed", func_name);
+        }
+        Py_END_ALLOW_THREADS
+        vcan4_settings_object* s_obj = (vcan4_settings_object*)settings;
+        // Since CAN Structures are Python objects, we need to manually update them here.
+        ((can_settings_object*)s_obj->can1)->s = s->can1;
+        ((can_settings_object*)s_obj->can2)->s = s->can2;
+        ((can_settings_object*)s_obj->can3)->s = s->can3;
+        ((can_settings_object*)s_obj->can4)->s = s->can4;
+        ((canfd_settings_object*)s_obj->canfd1)->s = s->canfd1;
+        ((canfd_settings_object*)s_obj->canfd2)->s = s->canfd2;
+        ((canfd_settings_object*)s_obj->canfd3)->s = s->canfd3;
+        ((canfd_settings_object*)s_obj->canfd4)->s = s->canfd4;
+        // Since LIN Structures are Python objects, we need to manually update them here.
+        ((lin_settings_object*)s_obj->lin1)->s = s->lin1;
+        // Since ETHERNET Structures are Python objects, we need to manually update them here.
+        ((ethernet_settings_object*)s_obj->ethernet)->s = s->ethernet;
+        // Since ISO9141 Structures are Python objects, we need to manually update them here.
+        ((iso9141keyword2000_settings_object*)s_obj->iso9141_kw1)->s = s->iso9141_kwp_settings_1;
+        // Since TextAPI Structures are Python objects, we need to manually update them here.
+        ((textapi_settings_object*)s_obj->textapi)->s = s->text_api;
+
+        return settings;
+    }
+    catch (ice::Exception& ex)
+    {
+        return _set_ics_exception(exception_runtime_error(), (char*)ex.what(), func_name);
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
+#endif // 0
+
 #define _get_vcanrf_settings(handle) __get_vcanrf_settings(handle, __FUNCTION__);
 static PyObject* __get_vcanrf_settings(ICS_HANDLE handle, char* func_name)
 {
@@ -1666,30 +1755,36 @@ PyObject* meth_get_device_settings(PyObject* self, PyObject* args)
     // User is overriding the device type here, this is useful for FIRE2 VNET for PLASMA/ION.
     if (!device_type)
         device_type = ((neo_device_object*)obj)->dev.DeviceType;
-	switch(device_type)
-	{
-		case NEODEVICE_VCAN3:
-			return _get_vcan3_settings(handle);
-			break;
-		case NEODEVICE_VCAN4_12:
-			return _get_vcan412_settings(handle);
-			break;
-		case NEODEVICE_VCANRF:
-			return _get_vcanrf_settings(handle);
-			break;
-		case NEODEVICE_FIRE2:
-			return _get_cyan_settings(handle);
-			break;
-		case NEODEVICE_RADGALAXY:
-			return _get_rad_galaxy_settings(handle);
-			break;
-		case NEODEVICE_VIVIDCAN:
-			return _get_vividcan_settings(handle);
-			break;
-		default:
-			return _get_fire_settings(handle);
-			break;
-	}
+    switch(device_type)
+    {
+        case NEODEVICE_VCAN3:
+            return _get_vcan3_settings(handle);
+            break;
+        case NEODEVICE_VCAN41:
+        case NEODEVICE_VCAN42:
+            return _get_vcan412_settings(handle);
+            break;
+#if 0 // Not implemented in 802
+        case NEODEVICE_VCAN4:
+            return _get_vcan4_settings(handle);
+            break;
+#endif // 0
+        case NEODEVICE_VCANRF:
+            return _get_vcanrf_settings(handle);
+            break;
+        case NEODEVICE_FIRE2:
+            return _get_cyan_settings(handle);
+            break;
+        case NEODEVICE_RADGALAXY:
+            return _get_rad_galaxy_settings(handle);
+            break;
+        case NEODEVICE_VIVIDCAN:
+            return _get_vividcan_settings(handle);
+            break;
+        default:
+            return _get_fire_settings(handle);
+            break;
+    }
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
@@ -1759,6 +1854,54 @@ static PyObject* __set_vcan412_settings(ICS_HANDLE handle, PyObject* settings, i
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 #define _set_vcan412_settings(handle, settings, save) __set_vcan412_settings(handle, settings, save, __FUNCTION__);
+
+#if 0 // not implemented in 802
+static PyObject* __set_vcan4_settings(ICS_HANDLE handle, PyObject* settings, int& save, char* func_name)
+{
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return _set_ics_exception(exception_runtime_error(), dll_get_error(buffer), func_name);
+        }
+        ice::Function<int __stdcall (ICS_HANDLE, SVCAN4Settings*, int, unsigned char)> icsneoSetVCAN4Settings(lib, "icsneoSetVCAN4Settings");
+        vcan4_settings_object* s_obj = (vcan4_settings_object*)settings;
+        SVCAN4Settings* s = &s_obj->s;
+        // Since CAN Structures are Python objects, we need to manually update them here.
+        s->can1 = ((can_settings_object*)s_obj->can1)->s;
+        s->can2 = ((can_settings_object*)s_obj->can2)->s;
+        s->can3 = ((can_settings_object*)s_obj->can3)->s;
+        s->can4 = ((can_settings_object*)s_obj->can4)->s;
+        s->canfd1 = ((canfd_settings_object*)s_obj->canfd1)->s;
+        s->canfd2 = ((canfd_settings_object*)s_obj->canfd2)->s;
+        s->canfd3 = ((canfd_settings_object*)s_obj->canfd3)->s;
+        s->canfd4 = ((canfd_settings_object*)s_obj->canfd4)->s;
+        // Since LIN Structures are Python objects, we need to manually update them here.
+        s->lin1 = ((lin_settings_object*)s_obj->lin1)->s;
+        // Since ETHERNET Structures are Python objects, we need to manually update them here.
+        s->ethernet = ((ethernet_settings_object*)s_obj->ethernet)->s;
+        // Since ISO Structures are Python objects, we need to manually update them here.
+        s->iso9141_kwp_settings_1 = ((iso9141keyword2000_settings_object*)s_obj->iso9141_kw1)->s;
+        // Since textapi Structures are Python objects, we need to manually update them here.
+        s->text_api = ((textapi_settings_object*)s_obj->textapi)->s;
+
+        Py_BEGIN_ALLOW_THREADS
+        if (!icsneoSetVCAN4Settings(handle, s, sizeof(*s), save)) {
+            Py_BLOCK_THREADS
+            return _set_ics_exception(exception_runtime_error(), "icsneoSetVCAN4Settings() Failed", func_name);
+        }
+        Py_END_ALLOW_THREADS
+        Py_RETURN_NONE;
+    }
+    catch (ice::Exception& ex)
+    {
+        return _set_ics_exception(exception_runtime_error(), (char*)ex.what(), func_name);
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
+#define _set_vcan4_settings(handle, settings, save) __set_vcan4_settings(handle, settings, save, __FUNCTION__);
+#endif // 0
 
 static PyObject* __set_vcanrf_settings(ICS_HANDLE handle, PyObject* settings, int& save, char* func_name)
 {
@@ -2103,30 +2246,36 @@ PyObject* meth_set_device_settings(PyObject* self, PyObject* args)
     ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
     if (!device_type)
         device_type = ((neo_device_object*)obj)->dev.DeviceType;
-	switch(device_type)
-	{
-		case NEODEVICE_VCAN3:
-			return _set_vcan3_settings(handle, settings, save_to_eeprom);
-			break;
-		case NEODEVICE_VCAN4_12:
-			return _set_vcan412_settings(handle, settings, save_to_eeprom);
-			break;
-		case NEODEVICE_VCANRF:
-			return _set_vcanrf_settings(handle, settings, save_to_eeprom);
-			break;
-		case NEODEVICE_FIRE2:
-			return _set_cyan_settings(handle, settings, save_to_eeprom);
-			break;
-		case NEODEVICE_RADGALAXY:
-			return _set_rad_galaxy_settings(handle, settings, save_to_eeprom);
-			break;
-		case NEODEVICE_VIVIDCAN:
-			return _set_vividcan_settings(handle, settings, save_to_eeprom);
-			break;
-		default:
-			return _set_fire_settings(handle, settings, save_to_eeprom);
-			break;
-	}
+    switch(device_type)
+    {
+        case NEODEVICE_VCAN3:
+            return _set_vcan3_settings(handle, settings, save_to_eeprom);
+            break;
+        case NEODEVICE_VCAN41:
+        case NEODEVICE_VCAN42:
+            return _set_vcan412_settings(handle, settings, save_to_eeprom);
+            break;
+#if 0 // Not implemented in 802
+        case NEODEVICE_VCAN4:
+            return _set_vcan4_settings(handle, settings, save_to_eeprom);
+            break;
+#endif // 0
+        case NEODEVICE_VCANRF:
+            return _set_vcanrf_settings(handle, settings, save_to_eeprom);
+            break;
+        case NEODEVICE_FIRE2:
+            return _set_cyan_settings(handle, settings, save_to_eeprom);
+            break;
+        case NEODEVICE_RADGALAXY:
+            return _set_rad_galaxy_settings(handle, settings, save_to_eeprom);
+            break;
+        case NEODEVICE_VIVIDCAN:
+            return _set_vividcan_settings(handle, settings, save_to_eeprom);
+            break;
+        default:
+            return _set_fire_settings(handle, settings, save_to_eeprom);
+            break;
+    }
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 

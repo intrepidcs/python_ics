@@ -86,8 +86,12 @@ PyObject* meth_get_library_path(PyObject* self);
 #define _DOC_FIND_DEVICES \
     MODULE_NAME".find_devices(device_type="MODULE_NAME".NEODEVICE_ALL)\n" \
     "\n" \
+    "Finds all connected devices and returns a tuple of :class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"` for use in :func:`"MODULE_NAME".open_device`\n" \
+    "\n" \
     "Args:\n" \
     "\tdevice_type (int): Accepts "MODULE_NAME".NEODEVICE_* Macros\n\n" \
+    "\t*New in 3.0 (803):*\n\n" \
+    "\tdevice_type (List/Tuple): Accepts a Container of "MODULE_NAME".NEODEVICE_* Macros\n\n" \
     "\tstOptionsOpenNeoEx (int): Usually ics.NETID_CAN, if needed\n\n" \
     "\n" \
     "Raises:\n" \
@@ -97,6 +101,11 @@ PyObject* meth_get_library_path(PyObject* self);
     "\tTuple of :class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"` for use in :func:`"MODULE_NAME".open_device`\n" \
     "\n" \
     "\t>>> for device in ics.find_devices():\n" \
+    "\t...     print(device.Name, device.SerialNumber)\n" \
+    "\t...\n" \
+    "\tneoVI FIRE 59886\n" \
+    "\n*New in 3.0 (803):*\n" \
+    "\t>>> for device in ics.find_devices([ics.NEODEVICE_FIRE, ics.NEODEVICE_VCAN3]):\n" \
     "\t...     print(device.Name, device.SerialNumber)\n" \
     "\t...\n" \
     "\tneoVI FIRE 59886\n"
