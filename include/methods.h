@@ -71,6 +71,10 @@ PyObject* meth_get_active_vnet_channel(PyObject* self, PyObject* args);
 PyObject* meth_set_active_vnet_channel(PyObject* self, PyObject* args);
 PyObject* meth_override_library_name(PyObject* self, PyObject* args);
 PyObject* meth_get_library_path(PyObject* self);
+PyObject* meth_set_bit_rate(PyObject* self, PyObject* args);
+PyObject* meth_set_bit_rate(PyObject* self, PyObject* args);
+PyObject* meth_set_fd_bit_rate(PyObject* self, PyObject* args);
+PyObject* meth_set_bit_rate_ex(PyObject* self, PyObject* args);
 
 #ifdef _cplusplus
 }
@@ -1030,6 +1034,50 @@ PyObject* meth_get_library_path(PyObject* self);
     "\t>>> ics.find_devices()\n" \
     "\t(<ics.NeoDevice object at 0x00284C50>, <ics.NeoDevice object at 0x007C9A10>)\n"
 
+#define _DOC_SET_BIT_RATE \
+    MODULE_NAME".set_bit_rate(device, BitRate, NetworkID)\n" \
+    "\n" \
+    "Sets the bitrate for a given Network ID on the device..\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`): :class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`"MODULE_NAME".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\tInt: None.\n" \
+    "\n"
+
+#define _DOC_SET_FD_BIT_RATE \
+    MODULE_NAME".set_fd_bit_rate(device, BitRate, NetworkID)\n" \
+    "\n" \
+    "Sets the FD bitrate for a given Network ID on the device..\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`): :class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`"MODULE_NAME".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\tInt: None.\n" \
+    "\n"
+
+#define _DOC_SET_BIT_RATE_EX \
+    MODULE_NAME".set_fd_bit_rate_ex(device, BitRate, NetworkID, iOptions)\n" \
+    "\n" \
+    "Sets the bitrate for a given Network ID on the device with extended options.\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`): :class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`"MODULE_NAME".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\tInt: None.\n" \
+    "\n"
 
 static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("find_devices", "FindNeoDevices", (PyCFunction)meth_find_devices, METH_VARARGS | METH_KEYWORDS, _DOC_FIND_DEVICES),
@@ -1093,6 +1141,9 @@ static PyMethodDef IcsMethods[] = {
 
     _EZ_ICS_STRUCT_METHOD("get_active_vnet_channel", "icsneoGetActiveVNETChannel", meth_get_active_vnet_channel, METH_VARARGS, _DOC_GET_ACTIVE_VNET_CHANNEL),
     _EZ_ICS_STRUCT_METHOD("set_active_vnet_channel", "icsneoSetActiveVNETChannel", meth_set_active_vnet_channel, METH_VARARGS, _DOC_SET_ACTIVE_VNET_CHANNEL),
+    _EZ_ICS_STRUCT_METHOD("set_bit_rate", "icsneoSetBitRate", meth_set_bit_rate, METH_VARARGS, _DOC_SET_BIT_RATE),
+    _EZ_ICS_STRUCT_METHOD("set_fd_bit_rate", "icsneoSetFDBitRate", meth_set_fd_bit_rate, METH_VARARGS, _DOC_SET_FD_BIT_RATE),
+    _EZ_ICS_STRUCT_METHOD("set_bit_rate_ex", "icsneoSetBitRateEx", meth_set_bit_rate_ex, METH_VARARGS, _DOC_SET_BIT_RATE_EX),
     {"override_library_name", (PyCFunction)meth_override_library_name, METH_VARARGS, _DOC_OVERRIDE_LIBRARY_NAME},
     {"get_library_path", (PyCFunction)meth_get_library_path, METH_NOARGS, ""},
 
