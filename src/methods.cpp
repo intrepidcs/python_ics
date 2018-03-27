@@ -3860,6 +3860,45 @@ PyObject* meth_set_bit_rate_ex(PyObject* self, PyObject* args)
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
+PyObject* meth_get_timestamp_for_msg(PyObject* self, PyObject* args)
+{
+    PyObject* obj = NULL;
+    PyObject* obj_msg = NULL;
+    if (!PyArg_ParseTuple(args, arg_parse("OO:", __FUNCTION__), &obj, &obj_msg)) {
+        return NULL;
+    }
+    if (!PyNeoDevice_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    if (!PySpyMessage_CheckExact(obj_msg) && !PySpyMessageJ1850_CheckExact(obj_msg)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." SPY_MESSAGE_OBJECT_NAME);
+    }
+    ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+    icsSpyMessage* msg = &PySpyMessage_GetObject(obj_msg)->msg;
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        ice::Function<int __stdcall (ICS_HANDLE, icsSpyMessage*, double*)> icsneoGetTimeStampForMsg(lib, "icsneoGetTimeStampForMsg");
+        double timestamp = 0;
+        Py_BEGIN_ALLOW_THREADS
+        if (!icsneoGetTimeStampForMsg(handle, msg, &timestamp)) {
+            Py_BLOCK_THREADS
+            return set_ics_exception(exception_runtime_error(), "icsneoGetTimeStampForMsg() Failed");
+        }
+        Py_END_ALLOW_THREADS
+        return Py_BuildValue("d", timestamp);
+    }
+    catch (ice::Exception& ex)
+    {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
+
 PyObject* meth_override_library_name(PyObject* self, PyObject* args)
 {
     const char* name = NULL;

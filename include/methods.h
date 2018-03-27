@@ -75,6 +75,7 @@ PyObject* meth_set_bit_rate(PyObject* self, PyObject* args);
 PyObject* meth_set_bit_rate(PyObject* self, PyObject* args);
 PyObject* meth_set_fd_bit_rate(PyObject* self, PyObject* args);
 PyObject* meth_set_bit_rate_ex(PyObject* self, PyObject* args);
+PyObject* meth_get_timestamp_for_msg(PyObject* self, PyObject* args);
 
 #ifdef _cplusplus
 }
@@ -1079,6 +1080,28 @@ PyObject* meth_set_bit_rate_ex(PyObject* self, PyObject* args);
     "\tInt: None.\n" \
     "\n"
 
+#define _DOC_GET_TIMESTAMP_FOR_MSG \
+    MODULE_NAME".get_timestamp_for_msg(device, msg)\n" \
+    "\n" \
+    "Calculates the timestamp for a message.\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`): :class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`\n\n" \
+    "\n" \
+    "\tmsg (:class:`"MODULE_NAME"."SPY_MESSAGE_OBJECT_NAME"`): :class:`"MODULE_NAME"."SPY_MESSAGE_OBJECT_NAME"`\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`"MODULE_NAME".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\tFloat: Timestamp for the message.\n" \
+    "\n" \
+    "\t>>> import ics\n" \
+    "\t>>> d = ics.open_device()\n" \
+    "\t>>> msgs, error_count = ics.get_messages(d)\n" \
+    "\t>>> ics.get_timestamp_for_msg(d, msgs[0])\n" \
+    "\t354577568.9145524\n" \
+
 static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("find_devices", "FindNeoDevices", (PyCFunction)meth_find_devices, METH_VARARGS | METH_KEYWORDS, _DOC_FIND_DEVICES),
     _EZ_ICS_STRUCT_METHOD("open_device", "OpenNeoDevice", (PyCFunction)meth_open_device, METH_VARARGS | METH_KEYWORDS, _DOC_OPEN_DEVICES),
@@ -1144,6 +1167,7 @@ static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("set_bit_rate", "icsneoSetBitRate", meth_set_bit_rate, METH_VARARGS, _DOC_SET_BIT_RATE),
     _EZ_ICS_STRUCT_METHOD("set_fd_bit_rate", "icsneoSetFDBitRate", meth_set_fd_bit_rate, METH_VARARGS, _DOC_SET_FD_BIT_RATE),
     _EZ_ICS_STRUCT_METHOD("set_bit_rate_ex", "icsneoSetBitRateEx", meth_set_bit_rate_ex, METH_VARARGS, _DOC_SET_BIT_RATE_EX),
+    _EZ_ICS_STRUCT_METHOD("get_timestamp_for_msg", "icsneoGetTimeStampForMsg", meth_get_timestamp_for_msg, METH_VARARGS, _DOC_GET_TIMESTAMP_FOR_MSG),
     {"override_library_name", (PyCFunction)meth_override_library_name, METH_VARARGS, _DOC_OVERRIDE_LIBRARY_NAME},
     {"get_library_path", (PyCFunction)meth_get_library_path, METH_NOARGS, ""},
 
