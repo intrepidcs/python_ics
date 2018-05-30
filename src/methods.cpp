@@ -174,6 +174,11 @@ PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
     }
     NeoDevice devices[255];
     int count = 255;
+    unsigned long legacy_dev_type = 0xFFFFBFFF;
+    if (device_type && PyLong_Check(device_type))
+    {
+        legacy_dev_type = PyLong_AsLong(device_type);
+    }
     try
     {
 #ifndef USE_LEGACY_FIND_DEVICES
@@ -216,9 +221,8 @@ PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
                 Py_BLOCK_THREADS
                 return set_ics_exception(exception_runtime_error(), "device_type argument is not of type long");
             }
-            unsigned long dev_type = PyLong_AsLong(device_type);
             ice::Function<int __stdcall (unsigned long, NeoDevice*, int*)> icsneoFindNeoDevices(lib, "icsneoFindNeoDevices");
-            if (ex_options == -1 && !icsneoFindNeoDevices(dev_type, devices, &count)) {
+            if (ex_options == -1 && !icsneoFindNeoDevices(legacy_dev_type, devices, &count)) {
                 Py_BLOCK_THREADS
                 return set_ics_exception(exception_runtime_error(), "icsneoFindNeoDevices() Failed");
             } 
@@ -226,7 +230,7 @@ PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
                 ice::Function<int __stdcall (unsigned long, NeoDevice*, int*, const POptionsFindNeoEx)> icsneoFindNeoDevicesEx(lib, "icsneoFindNeoDevicesEx");
                 OptionsFindNeoEx opts = {0};
                 opts.CANOptions.iNetworkID = ex_options;
-                if (!icsneoFindNeoDevicesEx(dev_type, devices, &count, &opts)) {
+                if (!icsneoFindNeoDevicesEx(legacy_dev_type, devices, &count, &opts)) {
                     Py_BLOCK_THREADS
                     return set_ics_exception(exception_runtime_error(), "icsneoFindNeoDevicesEx() Failed");
                 }
@@ -238,7 +242,7 @@ PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
 #else
         ice::Function<int __stdcall (unsigned long, NeoDevice*, int*)> icsneoFindNeoDevices(lib, "icsneoFindNeoDevices");
         Py_BEGIN_ALLOW_THREADS
-        if (ex_options == -1 && !icsneoFindNeoDevices(device_type, devices, &count)) {
+        if (ex_options == -1 && !icsneoFindNeoDevices(legacy_dev_type, devices, &count)) {
             Py_BLOCK_THREADS
             return set_ics_exception(exception_runtime_error(), "icsneoFindNeoDevices() Failed");
         } 
@@ -246,7 +250,7 @@ PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
             ice::Function<int __stdcall (unsigned long, NeoDevice*, int*, const POptionsFindNeoEx)> icsneoFindNeoDevicesEx(lib, "icsneoFindNeoDevicesEx");
             OptionsFindNeoEx opts = {0};
             opts.CANOptions.iNetworkID = ex_options;
-            if (!icsneoFindNeoDevicesEx(device_type, devices, &count, &opts)) {
+            if (!icsneoFindNeoDevicesEx(legacy_dev_type, devices, &count, &opts)) {
                 Py_BLOCK_THREADS
                 return set_ics_exception(exception_runtime_error(), "icsneoFindNeoDevicesEx() Failed");
             }
