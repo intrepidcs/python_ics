@@ -58,7 +58,7 @@ Variables
 .. py:data:: BPS83333
 	:annotation: = 6
 .. py:data:: BUILD_DATETIME
-	:annotation: = Feb 19 2018 11:58:48
+	:annotation: = May 29 2018 16:04:26
 .. py:data:: CANFD_BRS_ENABLED
 	:annotation: = 2
 .. py:data:: CANFD_BRS_ENABLED_ISO
@@ -125,44 +125,40 @@ Variables
 	:annotation: = 3
 .. py:data:: LOOPBACK
 	:annotation: = 2
+.. py:data:: NEODEVICE_ALL
+	:annotation: = -16385
 .. py:data:: NEODEVICE_ANY_ION
-	:annotation: = 262144
+	:annotation: = 1310720
 .. py:data:: NEODEVICE_ANY_PLASMA
-	:annotation: = 4096
+	:annotation: = 208896
 .. py:data:: NEODEVICE_BLUE
 	:annotation: = 1
 .. py:data:: NEODEVICE_CMPROBE
 	:annotation: = 8388608
 .. py:data:: NEODEVICE_CT_OBD
 	:annotation: = 32768
-.. py:data:: NEODEVICE_DONT_REUSE0
-	:annotation: = 8192
-.. py:data:: NEODEVICE_DONT_REUSE1
-	:annotation: = 65536
-.. py:data:: NEODEVICE_DONT_REUSE2
-	:annotation: = 131072
-.. py:data:: NEODEVICE_DONT_REUSE3
-	:annotation: = 1048576
 .. py:data:: NEODEVICE_DW_VCAN
 	:annotation: = 4
 .. py:data:: NEODEVICE_ECU
 	:annotation: = 128
 .. py:data:: NEODEVICE_ECUCHIP_UART
 	:annotation: = 2048
-.. py:data:: NEODEVICE_ECU_AVB
-	:annotation: = 2
 .. py:data:: NEODEVICE_EEVB
 	:annotation: = 16777216
 .. py:data:: NEODEVICE_FIRE
 	:annotation: = 8
 .. py:data:: NEODEVICE_FIRE2
 	:annotation: = 67108864
+.. py:data:: NEODEVICE_FIRE_VNET
+	:annotation: = 8192
 .. py:data:: NEODEVICE_FLEX
 	:annotation: = 134217728
 .. py:data:: NEODEVICE_IEVB
 	:annotation: = 256
-.. py:data:: NEODEVICE_ION
+.. py:data:: NEODEVICE_ION_2
 	:annotation: = 262144
+.. py:data:: NEODEVICE_ION_3
+	:annotation: = 1048576
 .. py:data:: NEODEVICE_NEOANALOG
 	:annotation: = 16384
 .. py:data:: NEODEVICE_NEOECUCHIP
@@ -173,31 +169,29 @@ Variables
 	:annotation: = -2147483648
 .. py:data:: NEODEVICE_PENDANT
 	:annotation: = 512
-.. py:data:: NEODEVICE_PLASMA
+.. py:data:: NEODEVICE_PLASMA_1_11
 	:annotation: = 4096
+.. py:data:: NEODEVICE_PLASMA_1_12
+	:annotation: = 65536
+.. py:data:: NEODEVICE_PLASMA_1_13
+	:annotation: = 131072
 .. py:data:: NEODEVICE_RADGALAXY
 	:annotation: = 268435456
-.. py:data:: NEODEVICE_RADGIGALOG
-	:annotation: = 6
-.. py:data:: NEODEVICE_RADMOON2
-	:annotation: = 5
 .. py:data:: NEODEVICE_RADSTAR
 	:annotation: = 524288
 .. py:data:: NEODEVICE_RADSTAR2
 	:annotation: = 536870912
-.. py:data:: NEODEVICE_RADSUPERMOON
-	:annotation: = 3
 .. py:data:: NEODEVICE_RED
 	:annotation: = 64
+.. py:data:: NEODEVICE_SW_VCAN
+	:annotation: = 2
 .. py:data:: NEODEVICE_UNKNOWN
 	:annotation: = 0
 .. py:data:: NEODEVICE_VCAN3
 	:annotation: = 16
 .. py:data:: NEODEVICE_VCAN4
 	:annotation: = 2097152
-.. py:data:: NEODEVICE_VCAN41
-	:annotation: = 7
-.. py:data:: NEODEVICE_VCAN42
+.. py:data:: NEODEVICE_VCAN4_12
 	:annotation: = 4194304
 .. py:data:: NEODEVICE_VCANRF
 	:annotation: = 33554432
@@ -712,7 +706,7 @@ Variables
 .. py:data:: SPY_STATUS_EXTENDED
 	:annotation: = -2147483648
 .. py:data:: SPY_STATUS_FLEXRAY_PDU
-	:annotation: = 268435456
+	:annotation: = 536870912
 .. py:data:: SPY_STATUS_FLEXRAY_PDU_NO_UPDATE_BIT
 	:annotation: = 8
 .. py:data:: SPY_STATUS_FLEXRAY_PDU_UPDATE_BIT_SET
@@ -738,7 +732,7 @@ Variables
 .. py:data:: SPY_STATUS_NETWORK_MESSAGE_TYPE
 	:annotation: = 67108864
 .. py:data:: SPY_STATUS_PDU
-	:annotation: = 268435456
+	:annotation: = 536870912
 .. py:data:: SPY_STATUS_REMOTE_FRAME
 	:annotation: = 8
 .. py:data:: SPY_STATUS_TEST_TRIGGER
@@ -767,8 +761,6 @@ Variables
 	:annotation: = 2
 .. py:data:: SWCAN_SETTINGS_SIZE
 	:annotation: = 14
-.. py:data:: TIMESYNC_ICSHARDWARE_SETTINGS_SIZE
-	:annotation: = 4
 .. py:data:: UART_SETTINGS_SIZE
 	:annotation: = 16
 .. py:data:: USE_TQ
