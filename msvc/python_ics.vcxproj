@@ -178,6 +178,7 @@
     <ClInclude Include="..\include\object_vcan3_settings.h" />
     <ClInclude Include="..\include\object_vcan412_settings.h" />
     <ClInclude Include="..\include\object_vcan4_device_status.h" />
+    <ClInclude Include="..\include\object_vcan4_settings.h" />
     <ClInclude Include="..\include\object_vcanrf_settings.h" />
     <ClInclude Include="..\include\object_vividcan_settings.h" />
     <ClInclude Include="..\include\setup_module_auto_defines.h" />
@@ -213,6 +214,7 @@
     <ClCompile Include="..\src\object_vcan3_settings.cpp" />
     <ClCompile Include="..\src\object_vcan412_settings.cpp" />
     <ClCompile Include="..\src\object_vcan4_device_status.cpp" />
+    <ClCompile Include="..\src\object_vcan4_settings.cpp" />
     <ClCompile Include="..\src\object_vcanrf_settings.cpp" />
     <ClCompile Include="..\src\object_vividcan_settings.cpp" />
     <ClCompile Include="..\src\setup_module_auto_defines.cpp" />

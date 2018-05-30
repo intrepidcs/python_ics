@@ -31,7 +31,9 @@
 #include "object_cm_iso157652_rx_message.h"
 #include "object_vcan412_settings.h"
 #include "object_vividcan_settings.h"
-//#include "object_vcan4_settings.h" // Not implemented in 802
+#if VSPY3_BUILD_VERSION > 802
+#include "object_vcan4_settings.h" // Not implemented in 802
+#endif // VSPY3_BUILD_VERSION > 802
 
 extern PyTypeObject spy_message_object_type;
 // __func__, __FUNCTION__ and __PRETTY_FUNCTION__ are not preprocessor macros.
@@ -84,47 +86,42 @@ typedef struct
 char* neodevice_to_string(unsigned long type)
 {
     switch (type) {
+    case NEODEVICE_UNKNOWN: return "Unknown";
     case NEODEVICE_BLUE: return "neoVI BLUE";
-    //case NEODEVICE_ECU_AVB: return "neoECU AVB/TSN";
-    //case NEODEVICE_RADSUPERMOON: return "RAD SuperMoon";
-    case NEODEVICE_DW_VCAN: return "ValueCAN2 DW";
-    //case NEODEVICE_RADMOON2: return "RAD Moon2";
-    //case NEODEVICE_RADGIGALOG: return "RAD Gigalog";
-    //case NEODEVICE_VCAN41: return "ValueCAN4-1";
+    case NEODEVICE_ECU_AVB: return "neoECU/AVB TSN";
+    case NEODEVICE_RADSUPERMOON: return "RADSuperMoon";
+    case NEODEVICE_DW_VCAN: return "ValueCAN DW";
+    case NEODEVICE_RADMOON2: return "RADMoon2";
+    case NEODEVICE_RADGIGALOG: return "RADGigalog";
+    case NEODEVICE_VCAN41: return "ValueCAN4-1";
     case NEODEVICE_FIRE: return "neoVI FIRE";
     case NEODEVICE_VCAN3: return "ValueCAN3";
     case NEODEVICE_RED: return "neoVI RED";
-    case NEODEVICE_ECU: return "ECU";
+    case NEODEVICE_ECU: return "neoECU";
     case NEODEVICE_IEVB: return "IEVB";
     case NEODEVICE_PENDANT: return "Pendant";
     case NEODEVICE_OBD2_PRO: return "neoOBD2 Pro";
-    case NEODEVICE_ECUCHIP_UART: return "neoECU Chip";
-    case NEODEVICE_PLASMA_1_11:
-    case NEODEVICE_PLASMA_1_12:
-    case NEODEVICE_PLASMA_1_13: return "neoVI PLASMA";
-    //case NEODEVICE_DONT_REUSE0: return "DONT REUSE0";
+    case NEODEVICE_ECUCHIP_UART: return "ECUCHIP";
+    case NEODEVICE_PLASMA: return "neoVI PLASMA";
     case NEODEVICE_NEOANALOG: return "neoAnalog";
-    //case NEODEVICE_CT_OBD: return "";
-    //case NEODEVICE_DONT_REUSE1: return "DONT REUSE1";
-    //case NEODEVICE_DONT_REUSE2: return "DONT REUSE2";
-    case NEODEVICE_ION_2:
-    case NEODEVICE_ION_3: return "neoVI ION";
-    case NEODEVICE_RADSTAR: return "RAD Star";
-    //case NEODEVICE_DONT_REUSE3: return "DONT REUSE3";
-    case NEODEVICE_VCAN4: return "ValueCAN4";
-	case NEODEVICE_VCAN4_12: return "ValueCAN4-1/2";
-    case NEODEVICE_CMPROBE: return "CMProbe";
+    case NEODEVICE_CT_OBD: return "neoOBD CT";
+    case NEODEVICE_ION: return "neoVI ION";
+    case NEODEVICE_RADSTAR: return "RADStar";
+    case NEODEVICE_VCAN4: return "ValueCAN4-4";
+    case NEODEVICE_VCAN42: return "ValueCAN4-2";
+    case NEODEVICE_CMPROBE: return "CM Probe";
     case NEODEVICE_EEVB: return "EEVB";
-    case NEODEVICE_VCANRF: return "ValueCAN.RF";
+    case NEODEVICE_VCANRF: return "ValueCAN.rf";
     case NEODEVICE_FIRE2: return "neoVI FIRE2";
-    case NEODEVICE_FLEX: return "FLEX";
-    case NEODEVICE_RADGALAXY: return "RAD Galaxy";
-    case NEODEVICE_RADSTAR2: return "RAD Star2";
+    case NEODEVICE_FLEX: return "neoVI FLEX";
+    case NEODEVICE_RADGALAXY: return "RADGalaxy";
+    case NEODEVICE_RADSTAR2: return "RADStar2";
     case NEODEVICE_VIVIDCAN: return "VividCAN";
-    case NEODEVICE_OBD2_SIM: return "OBD2 Sim";
-    default: return "unknown/unsupported";
+    case NEODEVICE_OBD2_SIM: return "neoOBD2 Sim";
+    //case NEODEVICE_ANY_PLASMA: return "neoVI PLASMA";
+    //case NEODEVICE_ANY_ION: return "neoVI ION";
     };
-    return "unknown/unsupported";
+    return "Unknown";
 }
 
 bool _convertListOrTupleToArray(PyObject* obj, std::vector<PyObject*>* results)
@@ -1369,7 +1366,7 @@ static PyObject* __get_vcan412_settings(ICS_HANDLE handle, char* func_name)
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
-#if 0 // Not implemented in 802
+#if VSPY3_BUILD_VERSION > 802 // Not implemented in 802
 #define _get_vcan4_settings(handle) __get_vcan4_settings(handle, __FUNCTION__);
 static PyObject* __get_vcan4_settings(ICS_HANDLE handle, char* func_name)
 {
@@ -1421,7 +1418,7 @@ static PyObject* __get_vcan4_settings(ICS_HANDLE handle, char* func_name)
     }
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
-#endif // 0
+#endif // VSPY3_BUILD_VERSION > 802
 
 #define _get_vcanrf_settings(handle) __get_vcanrf_settings(handle, __FUNCTION__);
 static PyObject* __get_vcanrf_settings(ICS_HANDLE handle, char* func_name)
@@ -1842,7 +1839,8 @@ PyObject* meth_get_device_settings(PyObject* self, PyObject* args)
         case NEODEVICE_VCAN3:
             return _get_vcan3_settings(handle);
             break;
-        case NEODEVICE_VCAN4_12:
+        case NEODEVICE_VCAN41:
+        case NEODEVICE_VCAN42:
             return _get_vcan412_settings(handle);
             break;
 #if VSPY3_BUILD_VERSION > 802 // Not implemented in 802
@@ -1936,7 +1934,7 @@ static PyObject* __set_vcan412_settings(ICS_HANDLE handle, PyObject* settings, i
 }
 #define _set_vcan412_settings(handle, settings, save) __set_vcan412_settings(handle, settings, save, __FUNCTION__);
 
-#if 0 // not implemented in 802
+#if VSPY3_BUILD_VERSION > 802 // not implemented in 802
 static PyObject* __set_vcan4_settings(ICS_HANDLE handle, PyObject* settings, int& save, char* func_name)
 {
     try
@@ -1982,7 +1980,7 @@ static PyObject* __set_vcan4_settings(ICS_HANDLE handle, PyObject* settings, int
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 #define _set_vcan4_settings(handle, settings, save) __set_vcan4_settings(handle, settings, save, __FUNCTION__);
-#endif // 0
+#endif // VSPY3_BUILD_VERSION > 802
 
 static PyObject* __set_vcanrf_settings(ICS_HANDLE handle, PyObject* settings, int& save, char* func_name)
 {
@@ -2332,7 +2330,8 @@ PyObject* meth_set_device_settings(PyObject* self, PyObject* args)
         case NEODEVICE_VCAN3:
             return _set_vcan3_settings(handle, settings, save_to_eeprom);
             break;
-        case NEODEVICE_VCAN4_12:
+        case NEODEVICE_VCAN41:
+        case NEODEVICE_VCAN42:
             return _set_vcan412_settings(handle, settings, save_to_eeprom);
             break;
 #if VSPY3_BUILD_VERSION > 802 // Not implemented in 802

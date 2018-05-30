@@ -99,8 +99,12 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, NETID_INVALID);
 	result += PyModule_AddIntMacro(module, NEODEVICE_UNKNOWN);
 	result += PyModule_AddIntMacro(module, NEODEVICE_BLUE);
-	result += PyModule_AddIntMacro(module, NEODEVICE_SW_VCAN);
+	result += PyModule_AddIntMacro(module, NEODEVICE_ECU_AVB);
+	result += PyModule_AddIntMacro(module, NEODEVICE_RADSUPERMOON);
 	result += PyModule_AddIntMacro(module, NEODEVICE_DW_VCAN);
+	result += PyModule_AddIntMacro(module, NEODEVICE_RADMOON2);
+	result += PyModule_AddIntMacro(module, NEODEVICE_RADGIGALOG);
+	result += PyModule_AddIntMacro(module, NEODEVICE_VCAN41);
 	result += PyModule_AddIntMacro(module, NEODEVICE_FIRE);
 	result += PyModule_AddIntMacro(module, NEODEVICE_VCAN3);
 	result += PyModule_AddIntMacro(module, NEODEVICE_RED);
@@ -109,17 +113,17 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, NEODEVICE_PENDANT);
 	result += PyModule_AddIntMacro(module, NEODEVICE_OBD2_PRO);
 	result += PyModule_AddIntMacro(module, NEODEVICE_ECUCHIP_UART);
-	result += PyModule_AddIntMacro(module, NEODEVICE_PLASMA_1_11);
-	result += PyModule_AddIntMacro(module, NEODEVICE_FIRE_VNET);
+	result += PyModule_AddIntMacro(module, NEODEVICE_PLASMA);
+	result += PyModule_AddIntMacro(module, NEODEVICE_DONT_REUSE0);
 	result += PyModule_AddIntMacro(module, NEODEVICE_NEOANALOG);
 	result += PyModule_AddIntMacro(module, NEODEVICE_CT_OBD);
-	result += PyModule_AddIntMacro(module, NEODEVICE_PLASMA_1_12);
-	result += PyModule_AddIntMacro(module, NEODEVICE_PLASMA_1_13);
-	result += PyModule_AddIntMacro(module, NEODEVICE_ION_2);
+	result += PyModule_AddIntMacro(module, NEODEVICE_DONT_REUSE1);
+	result += PyModule_AddIntMacro(module, NEODEVICE_DONT_REUSE2);
+	result += PyModule_AddIntMacro(module, NEODEVICE_ION);
 	result += PyModule_AddIntMacro(module, NEODEVICE_RADSTAR);
-	result += PyModule_AddIntMacro(module, NEODEVICE_ION_3);
+	result += PyModule_AddIntMacro(module, NEODEVICE_DONT_REUSE3);
 	result += PyModule_AddIntMacro(module, NEODEVICE_VCAN4);
-	result += PyModule_AddIntMacro(module, NEODEVICE_VCAN4_12);
+	result += PyModule_AddIntMacro(module, NEODEVICE_VCAN42);
 	result += PyModule_AddIntMacro(module, NEODEVICE_CMPROBE);
 	result += PyModule_AddIntMacro(module, NEODEVICE_EEVB);
 	result += PyModule_AddIntMacro(module, NEODEVICE_VCANRF);
@@ -131,7 +135,6 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, NEODEVICE_OBD2_SIM);
 	result += PyModule_AddIntMacro(module, NEODEVICE_ANY_PLASMA);
 	result += PyModule_AddIntMacro(module, NEODEVICE_ANY_ION);
-	result += PyModule_AddIntMacro(module, NEODEVICE_ALL);
 	result += PyModule_AddIntMacro(module, NEODEVICE_NEOECUCHIP);
 	result += PyModule_AddIntMacro(module, ISO15765_2_NETWORK_HSCAN);
 	result += PyModule_AddIntMacro(module, ISO15765_2_NETWORK_MSCAN);
@@ -221,8 +224,8 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, SPY_STATUS_INIT_MESSAGE);
 	result += PyModule_AddIntMacro(module, SPY_STATUS_LIN_MASTER);
 	result += PyModule_AddIntMacro(module, SPY_STATUS_CANFD);
-	result += PyModule_AddIntMacro(module, SPY_STATUS_FLEXRAY_PDU);
 	result += PyModule_AddIntMacro(module, SPY_STATUS_PDU);
+	result += PyModule_AddIntMacro(module, SPY_STATUS_FLEXRAY_PDU);
 	result += PyModule_AddIntMacro(module, SPY_STATUS_HIGH_SPEED);
 	result += PyModule_AddIntMacro(module, SPY_STATUS_EXTENDED);
 	result += PyModule_AddIntMacro(module, SPY_STATUS_FLEXRAY_PDU_UPDATE_BIT_SET);
@@ -408,6 +411,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, OP_ETH_SETTINGS_SIZE);
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS_SIZE);
 	result += PyModule_AddIntMacro(module, CANTERM_SETTINGS_SIZE);
+	result += PyModule_AddIntMacro(module, TIMESYNC_ICSHARDWARE_SETTINGS_SIZE);
 	// enum
 	result += PyModule_AddIntMacro(module, REPORT_ON_PERIODIC);
 	result += PyModule_AddIntMacro(module, REPORT_ON_MISC1);
@@ -442,12 +446,15 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, SEEVBSettings_SIZE);
 	result += PyModule_AddIntMacro(module, SRADGalaxySettings_SIZE);
 	result += PyModule_AddIntMacro(module, SRADStar2Settings_SIZE);
+	result += PyModule_AddIntMacro(module, SRADSuperMoonSettings_SIZE);
+	result += PyModule_AddIntMacro(module, SRADMoon2Settings_SIZE);
 	result += PyModule_AddIntMacro(module, SVividCANSettings_SIZE);
 	result += PyModule_AddIntMacro(module, SOBD2SimSettings_SIZE);
 	result += PyModule_AddIntMacro(module, CmProbeSettings_SIZE);
 	result += PyModule_AddIntMacro(module, OBD2ProSettings_SIZE);
 	result += PyModule_AddIntMacro(module, VCAN412Settings_SIZE);
 	result += PyModule_AddIntMacro(module, SVCAN412Settings_SIZE);
+	result += PyModule_AddIntMacro(module, ECU_AVBSettings_SIZE);
 	result += PyModule_AddIntMacro(module, GS_VERSION);
 	result += PyModule_AddIntMacro(module, GLOBAL_SETTINGS_SIZE);
 	result += PyModule_AddIntMacro(module, NEOVI_3G_MAX_SETTINGS_SIZE);
@@ -461,6 +468,9 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, DeviceVCAN4SettingsType);
 	result += PyModule_AddIntMacro(module, DeviceVCAN412SettingsType);
 	result += PyModule_AddIntMacro(module, DeviceVividCANSettingsType);
+	result += PyModule_AddIntMacro(module, DeviceECU_AVBSettingsType);
+	result += PyModule_AddIntMacro(module, DeviceRADSuperMoonSettingsType);
+	result += PyModule_AddIntMacro(module, DeviceRADMoon2SettingsType);
 	result += PyModule_AddIntMacro(module, DeviceSettingsTypeMax);
 	// end of enum -  } EDeviceSettingsType;
 
