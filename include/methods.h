@@ -83,12 +83,14 @@ PyObject* meth_get_device_status(PyObject* self, PyObject* args);
 }
 #endif
 
-#define _EZ_ICS_STRUCT_METHOD(name, icsname, meth, flags, doc) \
+#define _EZ_ICS_STRUCT_METHOD(name, icsname, icsname_no_icsneo, meth, flags, doc) \
     {name, (PyCFunction)meth, flags, doc}, \
-    {icsname, (PyCFunction)meth, flags, "\n.. note::\n\tIdentical to PEP8 compliant :func:`" MODULE_NAME "." name "` method.\n\n"}
+    {icsname, (PyCFunction)meth, flags, "\n.. note::\n\tIdentical to PEP8 compliant :func:`" MODULE_NAME "." name "` method.\n\n"}, \
+    {icsname_no_icsneo, (PyCFunction)meth, flags, "\n.. note::\n\tIdentical to PEP8 compliant :func:`" MODULE_NAME "." name "` method.\n\n"}
 
-#define _EZ_ICS_STRUCT_METHOD_MULTIPLE(name, icsname, meth, flags, doc) \
-    {icsname, (PyCFunction)meth, flags, "\n.. note::\n\tIdentical to PEP8 compliant :func:`" MODULE_NAME "." name "` method.\n\n"}
+#define _EZ_ICS_STRUCT_METHOD_MULTIPLE(name, icsname, icsname_no_icsneo, meth, flags, doc) \
+    {icsname, (PyCFunction)meth, flags, "\n.. note::\n\tIdentical to PEP8 compliant :func:`" MODULE_NAME "." name "` method.\n\n"}, \
+    {icsname_no_icsneo, (PyCFunction)meth, flags, "\n.. note::\n\tIdentical to PEP8 compliant :func:`" MODULE_NAME "." name "` method.\n\n"}
 
 #define _DOC_FIND_DEVICES \
     MODULE_NAME".find_devices(device_type="MODULE_NAME".NEODEVICE_ALL)\n" \
@@ -1125,72 +1127,72 @@ PyObject* meth_get_device_status(PyObject* self, PyObject* args);
     "\t0\n" \
 
 static PyMethodDef IcsMethods[] = {
-    _EZ_ICS_STRUCT_METHOD("find_devices", "FindNeoDevices", (PyCFunction)meth_find_devices, METH_VARARGS | METH_KEYWORDS, _DOC_FIND_DEVICES),
-    _EZ_ICS_STRUCT_METHOD("open_device", "OpenNeoDevice", (PyCFunction)meth_open_device, METH_VARARGS | METH_KEYWORDS, _DOC_OPEN_DEVICES),
-    _EZ_ICS_STRUCT_METHOD("close_device", "ClosePort", meth_close_device, METH_VARARGS, _DOC_CLOSE_DEVICES),
-    _EZ_ICS_STRUCT_METHOD("get_rtc", "GetRTC", meth_get_rtc, METH_VARARGS, _DOC_GET_RTC),
-    _EZ_ICS_STRUCT_METHOD("set_rtc", "SetRTC", meth_set_rtc, METH_VARARGS, _DOC_SET_RTC),
-    _EZ_ICS_STRUCT_METHOD("coremini_load", "ScriptLoad", meth_coremini_load, METH_VARARGS, _DOC_COREMINI_LOAD),
-    _EZ_ICS_STRUCT_METHOD("coremini_start", "ScriptStart", meth_coremini_start, METH_VARARGS, _DOC_COREMINI_START),
-    _EZ_ICS_STRUCT_METHOD("coremini_stop", "ScriptStop", meth_coremini_stop, METH_VARARGS, _DOC_COREMINI_STOP),
-    _EZ_ICS_STRUCT_METHOD("coremini_clear", "ScriptClear", meth_coremini_clear, METH_VARARGS, _DOC_COREMINI_CLEAR),
-    _EZ_ICS_STRUCT_METHOD("coremini_get_status", "ScriptGetScriptStatus", meth_coremini_get_status, METH_VARARGS, _DOC_COREMINI_GET_STATUS),
-    _EZ_ICS_STRUCT_METHOD("transmit_messages", "TxMessages", meth_transmit_messages, METH_VARARGS, _DOC_TRANSMIT_MESSAGES),
-    _EZ_ICS_STRUCT_METHOD("get_messages", "GetMessages", meth_get_messages, METH_VARARGS, _DOC_GET_MESSAGES),
-    _EZ_ICS_STRUCT_METHOD("get_script_status", "icsneoScriptGetScriptStatusEx", meth_get_script_status, METH_VARARGS, "Accepts a " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME ", exception on error. Returns a list of values of what ulParameters would hold"),
-    _EZ_ICS_STRUCT_METHOD("get_error_messages", "GetErrorMessages", meth_get_error_messages, METH_VARARGS, _DOC_GET_ERROR_MESSAGES),
+    _EZ_ICS_STRUCT_METHOD("find_devices", "icsneoFindNeoDevices", "FindNeoDevices", (PyCFunction)meth_find_devices, METH_VARARGS | METH_KEYWORDS, _DOC_FIND_DEVICES),
+    _EZ_ICS_STRUCT_METHOD("open_device", "icsneoOpenNeoDevice", "OpenNeoDevice", (PyCFunction)meth_open_device, METH_VARARGS | METH_KEYWORDS, _DOC_OPEN_DEVICES),
+    _EZ_ICS_STRUCT_METHOD("close_device", "icsneoClosePort", "ClosePort", meth_close_device, METH_VARARGS, _DOC_CLOSE_DEVICES),
+    _EZ_ICS_STRUCT_METHOD("get_rtc", "icsneoGetRTC", "GetRTC", meth_get_rtc, METH_VARARGS, _DOC_GET_RTC),
+    _EZ_ICS_STRUCT_METHOD("set_rtc", "icsneoSetRTC", "SetRTC", meth_set_rtc, METH_VARARGS, _DOC_SET_RTC),
+    _EZ_ICS_STRUCT_METHOD("coremini_load", "icsneoScriptLoad", "ScriptLoad", meth_coremini_load, METH_VARARGS, _DOC_COREMINI_LOAD),
+    _EZ_ICS_STRUCT_METHOD("coremini_start", "icsneoScriptStart", "ScriptStart", meth_coremini_start, METH_VARARGS, _DOC_COREMINI_START),
+    _EZ_ICS_STRUCT_METHOD("coremini_stop", "icsneoScriptStop", "ScriptStop", meth_coremini_stop, METH_VARARGS, _DOC_COREMINI_STOP),
+    _EZ_ICS_STRUCT_METHOD("coremini_clear", "icsneoScriptClear", "ScriptClear", meth_coremini_clear, METH_VARARGS, _DOC_COREMINI_CLEAR),
+    _EZ_ICS_STRUCT_METHOD("coremini_get_status", "icsneoScriptGetScriptStatus", "ScriptGetScriptStatus", meth_coremini_get_status, METH_VARARGS, _DOC_COREMINI_GET_STATUS),
+    _EZ_ICS_STRUCT_METHOD("transmit_messages", "icsneoTxMessages", "TxMessages", meth_transmit_messages, METH_VARARGS, _DOC_TRANSMIT_MESSAGES),
+    _EZ_ICS_STRUCT_METHOD("get_messages", "icsneoGetMessages", "GetMessages", meth_get_messages, METH_VARARGS, _DOC_GET_MESSAGES),
+    _EZ_ICS_STRUCT_METHOD("get_script_status", "icsneoScriptGetScriptStatusEx", "ScriptGetScriptStatusEx", meth_get_script_status, METH_VARARGS, "Accepts a " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME ", exception on error. Returns a list of values of what ulParameters would hold"),
+    _EZ_ICS_STRUCT_METHOD("get_error_messages", "icsneoGetErrorMessages", "GetErrorMessages", meth_get_error_messages, METH_VARARGS, _DOC_GET_ERROR_MESSAGES),
 #ifdef _USE_INTERNAL_HEADER_
     _EZ_ICS_STRUCT_METHOD("flash_devices", "FlashDevice2", meth_flash_devices, METH_VARARGS, "int _stdcall FlashDevice2()"),
 #endif
-    _EZ_ICS_STRUCT_METHOD("set_reflash_callback", "SetReflashDisplayCallback", meth_set_reflash_callback, METH_VARARGS, _DOC_SET_REFLASH_CALLBACK),
-    _EZ_ICS_STRUCT_METHOD("get_device_settings", "icsneoGetFireSettings", meth_get_device_settings, METH_VARARGS, _DOC_GET_DEVICE_SETTINGS),
-    _EZ_ICS_STRUCT_METHOD_MULTIPLE("get_device_settings", "icsneoGetVCAN3Settings", meth_get_device_settings, METH_VARARGS, _DOC_GET_DEVICE_SETTINGS),
-    _EZ_ICS_STRUCT_METHOD("set_device_settings", "icsneoSetFireSettings", meth_set_device_settings, METH_VARARGS, _DOC_SET_DEVICE_SETTINGS),
-    _EZ_ICS_STRUCT_METHOD_MULTIPLE("set_device_settings", "icsneoSetVCAN3Settings", meth_set_device_settings, METH_VARARGS, _DOC_SET_DEVICE_SETTINGS),
-    _EZ_ICS_STRUCT_METHOD("load_default_settings", "icsneoLoadDefaultSettings", meth_load_default_settings, METH_VARARGS, _DOC_LOAD_DEFAULT_SETTINGS),
+    _EZ_ICS_STRUCT_METHOD("set_reflash_callback", "icsneoSetReflashDisplayCallbacks", "SetReflashDisplayCallback", meth_set_reflash_callback, METH_VARARGS, _DOC_SET_REFLASH_CALLBACK),
+    _EZ_ICS_STRUCT_METHOD("get_device_settings", "icsneoGetFireSettings", "GetFireSettings", meth_get_device_settings, METH_VARARGS, _DOC_GET_DEVICE_SETTINGS),
+    _EZ_ICS_STRUCT_METHOD_MULTIPLE("get_device_settings", "icsneoGetVCAN3Settings", "GetVCAN3Settings", meth_get_device_settings, METH_VARARGS, _DOC_GET_DEVICE_SETTINGS),
+    _EZ_ICS_STRUCT_METHOD("set_device_settings", "icsneoSetFireSettings", "SetFireSettings", meth_set_device_settings, METH_VARARGS, _DOC_SET_DEVICE_SETTINGS),
+    _EZ_ICS_STRUCT_METHOD_MULTIPLE("set_device_settings", "icsneoSetVCAN3Settings", "SetVCAN3Settings", meth_set_device_settings, METH_VARARGS, _DOC_SET_DEVICE_SETTINGS),
+    _EZ_ICS_STRUCT_METHOD("load_default_settings", "icsneoLoadDefaultSettings", "LoadDefaultSettings", meth_load_default_settings, METH_VARARGS, _DOC_LOAD_DEFAULT_SETTINGS),
     //_EZ_ICS_STRUCT_METHOD("spy_message_to_j1850", METH_spy_message_to_j1850, METH_VARARGS, "Accepts a " MODULE_NAME "." SPY_MESSAGE_OBJECT_NAME ", and returns a " MODULE_NAME "." SPY_MESSAGE_J1850_OBJECT_NAME ". Exception on error."),
-    _EZ_ICS_STRUCT_METHOD("read_sdcard", "icsneoReadSDCard", meth_read_sdcard, METH_VARARGS, "icsneoReadSDCard(), Accepts a " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME " and sector index. Returns a bytearray of 512 bytes max. Exception on error."),
-    _EZ_ICS_STRUCT_METHOD("write_sdcard", "icsneoWriteSDCard", meth_write_sdcard, METH_VARARGS, "icsneoReadSDCard(), Accepts a " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME ", sector index, and a bytearray of 512 bytes. Exception on error."),
+    _EZ_ICS_STRUCT_METHOD("read_sdcard", "icsneoReadSDCard", "ReadSDCard", meth_read_sdcard, METH_VARARGS, "icsneoReadSDCard(), Accepts a " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME " and sector index. Returns a bytearray of 512 bytes max. Exception on error."),
+    _EZ_ICS_STRUCT_METHOD("write_sdcard", "icsneoWriteSDCard", "WriteSDCard", meth_write_sdcard, METH_VARARGS, "icsneoReadSDCard(), Accepts a " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME ", sector index, and a bytearray of 512 bytes. Exception on error."),
     {"create_neovi_radio_message", (PyCFunction)meth_create_neovi_radio_message, METH_VARARGS | METH_KEYWORDS, _DOC_CREATE_NEOVI_RADIO_MESSAGE},
-    _EZ_ICS_STRUCT_METHOD("coremini_start_fblock", "ScriptStartFBlock", meth_coremini_start_fblock, METH_VARARGS, _DOC_COREMINI_START_FBLOCK),
-    _EZ_ICS_STRUCT_METHOD("coremini_stop_fblock", "ScriptStopFBlock", meth_coremini_stop_fblock, METH_VARARGS, _DOC_COREMINI_STOP_FBLOCK),
-    _EZ_ICS_STRUCT_METHOD("coremini_get_fblock_status", "ScriptGetFBlockStatus", meth_coremini_get_fblock_status, METH_VARARGS, _DOC_COREMINI_GET_FBLOCK_STATUS),
-    _EZ_ICS_STRUCT_METHOD("coremini_read_app_signal", "ScriptReadAppSignal", meth_coremini_read_app_signal, METH_VARARGS, _DOC_COREMINI_READ_APP_SIGNAL),
-    _EZ_ICS_STRUCT_METHOD("coremini_write_app_signal", "ScriptWriteAppSignal", meth_coremini_write_app_signal, METH_VARARGS, _DOC_COREMINI_WRITE_APP_SIGNAL),
-    _EZ_ICS_STRUCT_METHOD("coremini_read_tx_message", "ScriptReadTxMessage", meth_coremini_read_tx_message, METH_VARARGS, _DOC_COREMINI_READ_TX_MESSAGE),
-    _EZ_ICS_STRUCT_METHOD("coremini_read_rx_message", "ScriptReadRxMessage", meth_coremini_read_rx_message, METH_VARARGS, _DOC_COREMINI_READ_RX_MESSAGE),
-    _EZ_ICS_STRUCT_METHOD("coremini_write_tx_message", "ScriptWriteTxMessage", meth_coremini_write_tx_message, METH_VARARGS, _DOC_COREMINI_WRITE_TX_MESSAGE),
-    _EZ_ICS_STRUCT_METHOD("coremini_write_rx_message", "ScriptWriteRxMessage", meth_coremini_write_rx_message, METH_VARARGS, _DOC_COREMINI_WRITE_RX_MESSAGE),
-    _EZ_ICS_STRUCT_METHOD("get_performance_parameters", "GetPerformanceParameters", meth_get_performance_parameters, METH_VARARGS, _DOC_GET_PERFORMANCE_PARAMETERS),
-    _EZ_ICS_STRUCT_METHOD("validate_hobject", "ValidateHObject", meth_validate_hobject, METH_VARARGS, _DOC_VALIDATE_HOBJECT),
-    _EZ_ICS_STRUCT_METHOD("get_last_api_error", "GetLastAPIError", meth_get_last_api_error, METH_VARARGS, _DOC_GET_LAST_API_ERROR),
-    _EZ_ICS_STRUCT_METHOD("get_dll_version", "GetDLLVersion", meth_get_dll_version, METH_NOARGS, _DOC_GET_DLL_VERSION),
-    _EZ_ICS_STRUCT_METHOD("get_serial_number", "GetSerialNumber", meth_get_serial_number, METH_VARARGS, _DOC_GET_SERIAL_NUMBER),
-    _EZ_ICS_STRUCT_METHOD("get_hw_firmware_info", "GetHWFirmwareInfo", meth_get_hw_firmware_info, METH_VARARGS, _DOC_GET_HW_FIRMWARE_INFO),
-    _EZ_ICS_STRUCT_METHOD("request_enter_sleep_mode", "RequestEnterSleepMode", meth_request_enter_sleep_mode, METH_VARARGS, _DOC_REQUEST_ENTER_SLEEP_MODE),
+    _EZ_ICS_STRUCT_METHOD("coremini_start_fblock", "icsneoScriptStartFBlock", "ScriptStartFBlock", meth_coremini_start_fblock, METH_VARARGS, _DOC_COREMINI_START_FBLOCK),
+    _EZ_ICS_STRUCT_METHOD("coremini_stop_fblock", "icsneoScriptStopFBlock", "ScriptStopFBlock", meth_coremini_stop_fblock, METH_VARARGS, _DOC_COREMINI_STOP_FBLOCK),
+    _EZ_ICS_STRUCT_METHOD("coremini_get_fblock_status", "icsneoScriptGetFBlockStatus", "ScriptGetFBlockStatus", meth_coremini_get_fblock_status, METH_VARARGS, _DOC_COREMINI_GET_FBLOCK_STATUS),
+    _EZ_ICS_STRUCT_METHOD("coremini_read_app_signal", "icsneoScriptReadAppSignal", "ScriptReadAppSignal", meth_coremini_read_app_signal, METH_VARARGS, _DOC_COREMINI_READ_APP_SIGNAL),
+    _EZ_ICS_STRUCT_METHOD("coremini_write_app_signal", "icsneoScriptWriteAppSignal", "ScriptWriteAppSignal", meth_coremini_write_app_signal, METH_VARARGS, _DOC_COREMINI_WRITE_APP_SIGNAL),
+    _EZ_ICS_STRUCT_METHOD("coremini_read_tx_message", "icsneoScriptReadTxMessage", "ScriptReadTxMessage", meth_coremini_read_tx_message, METH_VARARGS, _DOC_COREMINI_READ_TX_MESSAGE),
+    _EZ_ICS_STRUCT_METHOD("coremini_read_rx_message", "icsneoScriptReadRxMessage", "ScriptReadRxMessage", meth_coremini_read_rx_message, METH_VARARGS, _DOC_COREMINI_READ_RX_MESSAGE),
+    _EZ_ICS_STRUCT_METHOD("coremini_write_tx_message", "icsneoScriptWriteTxMessage", "ScriptWriteTxMessage", meth_coremini_write_tx_message, METH_VARARGS, _DOC_COREMINI_WRITE_TX_MESSAGE),
+    _EZ_ICS_STRUCT_METHOD("coremini_write_rx_message", "icsneoScriptWriteRxMessage", "ScriptWriteRxMessage", meth_coremini_write_rx_message, METH_VARARGS, _DOC_COREMINI_WRITE_RX_MESSAGE),
+    _EZ_ICS_STRUCT_METHOD("get_performance_parameters", "icsneoGetPerformanceParameters", "GetPerformanceParameters", meth_get_performance_parameters, METH_VARARGS, _DOC_GET_PERFORMANCE_PARAMETERS),
+    _EZ_ICS_STRUCT_METHOD("validate_hobject", "icsneoValidateHObject", "ValidateHObject", meth_validate_hobject, METH_VARARGS, _DOC_VALIDATE_HOBJECT),
+    _EZ_ICS_STRUCT_METHOD("get_last_api_error", "icsneoGetLastAPIError", "GetLastAPIError", meth_get_last_api_error, METH_VARARGS, _DOC_GET_LAST_API_ERROR),
+    _EZ_ICS_STRUCT_METHOD("get_dll_version", "icsneoGetDLLVersion", "GetDLLVersion", meth_get_dll_version, METH_NOARGS, _DOC_GET_DLL_VERSION),
+    _EZ_ICS_STRUCT_METHOD("get_serial_number", "icsneoGetSerialNumber", "GetSerialNumber", meth_get_serial_number, METH_VARARGS, _DOC_GET_SERIAL_NUMBER),
+    _EZ_ICS_STRUCT_METHOD("get_hw_firmware_info", "icsneoGetHWFirmwareInfo", "GetHWFirmwareInfo", meth_get_hw_firmware_info, METH_VARARGS, _DOC_GET_HW_FIRMWARE_INFO),
+    _EZ_ICS_STRUCT_METHOD("request_enter_sleep_mode", "icsneoRequestEnterSleepMode", "RequestEnterSleepMode", meth_request_enter_sleep_mode, METH_VARARGS, _DOC_REQUEST_ENTER_SLEEP_MODE),
     {"base36enc", (PyCFunction)meth_base36enc, METH_VARARGS | METH_KEYWORDS, _DOC_BASE36ENC},
-    _EZ_ICS_STRUCT_METHOD("set_context", "icsneoSetContext", meth_set_context, METH_VARARGS, _DOC_SET_CONTEXT),
-    _EZ_ICS_STRUCT_METHOD("force_firmware_update", "icsneoForceFirmwareUpdate", meth_force_firmware_update, METH_VARARGS, _DOC_FORCE_FIRMWARE_UPDATE),
-    _EZ_ICS_STRUCT_METHOD("firmware_update_required", "icsneoFirmwareUpdateRequired", meth_firmware_update_required, METH_VARARGS, _DOC_FIRMWARE_UPDATE_REQUIRED),
-    _EZ_ICS_STRUCT_METHOD("get_dll_firmware_info", "icsneoGetDLLFirmwareInfo", meth_get_dll_firmware_info, METH_VARARGS, _DOC_GET_DLL_FIRMWARE_INFO),
-    _EZ_ICS_STRUCT_METHOD("get_backup_power_enabled", "icsneoGetBackupPowerEnabled", meth_get_backup_power_enabled, METH_VARARGS, _DOC_GET_BACKUP_POWER_ENABLED),
-    _EZ_ICS_STRUCT_METHOD("set_backup_power_enabled", "icsneoSetBackupPowerEnabled", meth_set_backup_power_enabled, METH_VARARGS, _DOC_SET_BACKUP_POWER_ENABLED),
-    _EZ_ICS_STRUCT_METHOD("get_backup_power_ready", "icsneoGetBackupPowerReady", meth_set_backup_power_ready, METH_VARARGS, _DOC_GET_BACKUP_POWER_READY),
+    _EZ_ICS_STRUCT_METHOD("set_context", "icsneoSetContext", "SetContext", meth_set_context, METH_VARARGS, _DOC_SET_CONTEXT),
+    _EZ_ICS_STRUCT_METHOD("force_firmware_update", "icsneoForceFirmwareUpdate", "ForceFirmwareUpdate", meth_force_firmware_update, METH_VARARGS, _DOC_FORCE_FIRMWARE_UPDATE),
+    _EZ_ICS_STRUCT_METHOD("firmware_update_required", "icsneoFirmwareUpdateRequired", "FirmwareUpdateRequired", meth_firmware_update_required, METH_VARARGS, _DOC_FIRMWARE_UPDATE_REQUIRED),
+    _EZ_ICS_STRUCT_METHOD("get_dll_firmware_info", "icsneoGetDLLFirmwareInfo", "GetDLLFirmwareInfo", meth_get_dll_firmware_info, METH_VARARGS, _DOC_GET_DLL_FIRMWARE_INFO),
+    _EZ_ICS_STRUCT_METHOD("get_backup_power_enabled", "icsneoGetBackupPowerEnabled", "GetBackupPowerEnabled", meth_get_backup_power_enabled, METH_VARARGS, _DOC_GET_BACKUP_POWER_ENABLED),
+    _EZ_ICS_STRUCT_METHOD("set_backup_power_enabled", "icsneoSetBackupPowerEnabled", "SetBackupPowerEnabled", meth_set_backup_power_enabled, METH_VARARGS, _DOC_SET_BACKUP_POWER_ENABLED),
+    _EZ_ICS_STRUCT_METHOD("get_backup_power_ready", "icsneoGetBackupPowerReady", "GetBackupPowerReady", meth_set_backup_power_ready, METH_VARARGS, _DOC_GET_BACKUP_POWER_READY),
 #ifdef _USE_INTERNAL_HEADER_
     _EZ_ICS_STRUCT_METHOD("load_readbin", "icsneoScriptLoadReadBin", meth_load_readbin, METH_VARARGS, _DOC_LOAD_READBIN),
 #endif
-    _EZ_ICS_STRUCT_METHOD("iso15765_transmit_message", "icsneoISO15765_TransmitMessage", meth_iso15765_transmit_message, METH_VARARGS, _DOC_ISO15765_TRANSMIT_MESSAGE),
-    _EZ_ICS_STRUCT_METHOD("iso15765_receive_message", "icsneoISO15765_ReceiveMessage", meth_iso15765_receive_message, METH_VARARGS, _DOC_ISO15765_RECEIVE_MESSAGE),
-    _EZ_ICS_STRUCT_METHOD("iso15765_enable_networks", "icsneoISO15765_EnableNetworks", meth_iso15765_enable_networks, METH_VARARGS, _DOC_ISO15765_ENABLE_NETWORKS),
-    _EZ_ICS_STRUCT_METHOD("iso15765_disable_networks", "icsneoISO15765_DisableNetworks", meth_iso15765_disable_networks, METH_VARARGS, _DOC_ISO15765_DISABLE_NETWORKS),
+    _EZ_ICS_STRUCT_METHOD("iso15765_transmit_message", "icsneoISO15765_TransmitMessage", "ISO15765_TransmitMessage", meth_iso15765_transmit_message, METH_VARARGS, _DOC_ISO15765_TRANSMIT_MESSAGE),
+    _EZ_ICS_STRUCT_METHOD("iso15765_receive_message", "icsneoISO15765_ReceiveMessage", "ISO15765_ReceiveMessage", meth_iso15765_receive_message, METH_VARARGS, _DOC_ISO15765_RECEIVE_MESSAGE),
+    _EZ_ICS_STRUCT_METHOD("iso15765_enable_networks", "icsneoISO15765_EnableNetworks", "ISO15765_EnableNetworks", meth_iso15765_enable_networks, METH_VARARGS, _DOC_ISO15765_ENABLE_NETWORKS),
+    _EZ_ICS_STRUCT_METHOD("iso15765_disable_networks", "icsneoISO15765_DisableNetworks", "ISO15765_DisableNetworks", meth_iso15765_disable_networks, METH_VARARGS, _DOC_ISO15765_DISABLE_NETWORKS),
 
-    _EZ_ICS_STRUCT_METHOD("get_active_vnet_channel", "icsneoGetActiveVNETChannel", meth_get_active_vnet_channel, METH_VARARGS, _DOC_GET_ACTIVE_VNET_CHANNEL),
-    _EZ_ICS_STRUCT_METHOD("set_active_vnet_channel", "icsneoSetActiveVNETChannel", meth_set_active_vnet_channel, METH_VARARGS, _DOC_SET_ACTIVE_VNET_CHANNEL),
-    _EZ_ICS_STRUCT_METHOD("set_bit_rate", "icsneoSetBitRate", meth_set_bit_rate, METH_VARARGS, _DOC_SET_BIT_RATE),
-    _EZ_ICS_STRUCT_METHOD("set_fd_bit_rate", "icsneoSetFDBitRate", meth_set_fd_bit_rate, METH_VARARGS, _DOC_SET_FD_BIT_RATE),
-    _EZ_ICS_STRUCT_METHOD("set_bit_rate_ex", "icsneoSetBitRateEx", meth_set_bit_rate_ex, METH_VARARGS, _DOC_SET_BIT_RATE_EX),
-    _EZ_ICS_STRUCT_METHOD("get_timestamp_for_msg", "icsneoGetTimeStampForMsg", meth_get_timestamp_for_msg, METH_VARARGS, _DOC_GET_TIMESTAMP_FOR_MSG),
-    _EZ_ICS_STRUCT_METHOD("get_device_status", "icsneoGetDeviceStatus", meth_get_device_status, METH_VARARGS, _DOC_GET_DEVICE_STATUS),
+    _EZ_ICS_STRUCT_METHOD("get_active_vnet_channel", "icsneoGetActiveVNETChannel", "GetActiveVNETChannel", meth_get_active_vnet_channel, METH_VARARGS, _DOC_GET_ACTIVE_VNET_CHANNEL),
+    _EZ_ICS_STRUCT_METHOD("set_active_vnet_channel", "icsneoSetActiveVNETChannel", "SetActiveVNETChannel", meth_set_active_vnet_channel, METH_VARARGS, _DOC_SET_ACTIVE_VNET_CHANNEL),
+    _EZ_ICS_STRUCT_METHOD("set_bit_rate", "icsneoSetBitRate", "SetBitRate", meth_set_bit_rate, METH_VARARGS, _DOC_SET_BIT_RATE),
+    _EZ_ICS_STRUCT_METHOD("set_fd_bit_rate", "icsneoSetFDBitRate", "SetFDBitRate", meth_set_fd_bit_rate, METH_VARARGS, _DOC_SET_FD_BIT_RATE),
+    _EZ_ICS_STRUCT_METHOD("set_bit_rate_ex", "icsneoSetBitRateEx", "SetBitRateEx", meth_set_bit_rate_ex, METH_VARARGS, _DOC_SET_BIT_RATE_EX),
+    _EZ_ICS_STRUCT_METHOD("get_timestamp_for_msg", "icsneoGetTimeStampForMsg", "GetTimeStampForMsg", meth_get_timestamp_for_msg, METH_VARARGS, _DOC_GET_TIMESTAMP_FOR_MSG),
+    _EZ_ICS_STRUCT_METHOD("get_device_status", "icsneoGetDeviceStatus", "GetDeviceStatus", meth_get_device_status, METH_VARARGS, _DOC_GET_DEVICE_STATUS),
 
     {"override_library_name", (PyCFunction)meth_override_library_name, METH_VARARGS, _DOC_OVERRIDE_LIBRARY_NAME},
     {"get_library_path", (PyCFunction)meth_get_library_path, METH_NOARGS, ""},
