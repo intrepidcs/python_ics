@@ -85,12 +85,12 @@ char* neodevice_to_string(unsigned long type)
 {
     switch (type) {
     case NEODEVICE_BLUE: return "neoVI BLUE";
-    case NEODEVICE_ECU_AVB: return "neoECU AVB/TSN";
-    case NEODEVICE_RADSUPERMOON: return "RAD SuperMoon";
+    //case NEODEVICE_ECU_AVB: return "neoECU AVB/TSN";
+    //case NEODEVICE_RADSUPERMOON: return "RAD SuperMoon";
     case NEODEVICE_DW_VCAN: return "ValueCAN2 DW";
-    case NEODEVICE_RADMOON2: return "RAD Moon2";
-    case NEODEVICE_RADGIGALOG: return "RAD Gigalog";
-    case NEODEVICE_VCAN41: return "ValueCAN4-1";
+    //case NEODEVICE_RADMOON2: return "RAD Moon2";
+    //case NEODEVICE_RADGIGALOG: return "RAD Gigalog";
+    //case NEODEVICE_VCAN41: return "ValueCAN4-1";
     case NEODEVICE_FIRE: return "neoVI FIRE";
     case NEODEVICE_VCAN3: return "ValueCAN3";
     case NEODEVICE_RED: return "neoVI RED";
@@ -99,17 +99,20 @@ char* neodevice_to_string(unsigned long type)
     case NEODEVICE_PENDANT: return "Pendant";
     case NEODEVICE_OBD2_PRO: return "neoOBD2 Pro";
     case NEODEVICE_ECUCHIP_UART: return "neoECU Chip";
-    case NEODEVICE_PLASMA: return "neoVI PLASMA";
+    case NEODEVICE_PLASMA_1_11:
+    case NEODEVICE_PLASMA_1_12:
+    case NEODEVICE_PLASMA_1_13: return "neoVI PLASMA";
     //case NEODEVICE_DONT_REUSE0: return "DONT REUSE0";
     case NEODEVICE_NEOANALOG: return "neoAnalog";
     //case NEODEVICE_CT_OBD: return "";
     //case NEODEVICE_DONT_REUSE1: return "DONT REUSE1";
     //case NEODEVICE_DONT_REUSE2: return "DONT REUSE2";
-    case NEODEVICE_ION: return "neoVI ION";
+    case NEODEVICE_ION_2:
+    case NEODEVICE_ION_3: return "neoVI ION";
     case NEODEVICE_RADSTAR: return "RAD Star";
     //case NEODEVICE_DONT_REUSE3: return "DONT REUSE3";
     case NEODEVICE_VCAN4: return "ValueCAN4";
-    case NEODEVICE_VCAN42: return "ValueCAN4-2";
+	case NEODEVICE_VCAN4_12: return "ValueCAN4-1/2";
     case NEODEVICE_CMPROBE: return "CMProbe";
     case NEODEVICE_EEVB: return "EEVB";
     case NEODEVICE_VCANRF: return "ValueCAN.RF";
@@ -1839,15 +1842,14 @@ PyObject* meth_get_device_settings(PyObject* self, PyObject* args)
         case NEODEVICE_VCAN3:
             return _get_vcan3_settings(handle);
             break;
-        case NEODEVICE_VCAN41:
-        case NEODEVICE_VCAN42:
+        case NEODEVICE_VCAN4_12:
             return _get_vcan412_settings(handle);
             break;
-#if 0 // Not implemented in 802
+#if VSPY3_BUILD_VERSION > 802 // Not implemented in 802
         case NEODEVICE_VCAN4:
             return _get_vcan4_settings(handle);
             break;
-#endif // 0
+#endif // VSPY3_BUILD_VERSION > 802
         case NEODEVICE_VCANRF:
             return _get_vcanrf_settings(handle);
             break;
@@ -2291,8 +2293,8 @@ static PyObject* __set_vividcan_settings(ICS_HANDLE handle, PyObject* settings, 
         SVividCANSettings* s = &s_obj->s;
         // Since CAN Structures are Python objects, we need to manually update them here.
         s->can1 = ((can_settings_object*)s_obj->can1)->s;
-		s->swcan1 = ((swcan_settings_object*)s_obj->swcan1)->s;
-		s->lsftcan1 = ((can_settings_object*)s_obj->lsftcan1)->s;
+        s->swcan1 = ((swcan_settings_object*)s_obj->swcan1)->s;
+        s->lsftcan1 = ((can_settings_object*)s_obj->lsftcan1)->s;
 
         Py_BEGIN_ALLOW_THREADS
         if (!icsneoSetVividCANSettings(handle, s, sizeof(*s), save)) {
@@ -2330,15 +2332,14 @@ PyObject* meth_set_device_settings(PyObject* self, PyObject* args)
         case NEODEVICE_VCAN3:
             return _set_vcan3_settings(handle, settings, save_to_eeprom);
             break;
-        case NEODEVICE_VCAN41:
-        case NEODEVICE_VCAN42:
+        case NEODEVICE_VCAN4_12:
             return _set_vcan412_settings(handle, settings, save_to_eeprom);
             break;
-#if 0 // Not implemented in 802
+#if VSPY3_BUILD_VERSION > 802 // Not implemented in 802
         case NEODEVICE_VCAN4:
             return _set_vcan4_settings(handle, settings, save_to_eeprom);
             break;
-#endif // 0
+#endif // VSPY3_BUILD_VERSION > 802
         case NEODEVICE_VCANRF:
             return _set_vcanrf_settings(handle, settings, save_to_eeprom);
             break;
