@@ -161,7 +161,9 @@
     <ClInclude Include="..\include\object_cm_iso157652_tx_message.h" />
     <ClInclude Include="..\include\object_cyan_settings.h" />
     <ClInclude Include="..\include\object_ethernet_settings.h" />
+    <ClInclude Include="..\include\object_fire2_device_status.h" />
     <ClInclude Include="..\include\object_fire_settings.h" />
+    <ClInclude Include="..\include\object_ics_device_status.h" />
     <ClInclude Include="..\include\object_iso9141_keyword2000_init_steps.h" />
     <ClInclude Include="..\include\object_iso9141_keyword2000_settings.h" />
     <ClInclude Include="..\include\object_lin_settings.h" />
@@ -175,6 +177,7 @@
     <ClInclude Include="..\include\object_uart_settings.h" />
     <ClInclude Include="..\include\object_vcan3_settings.h" />
     <ClInclude Include="..\include\object_vcan412_settings.h" />
+    <ClInclude Include="..\include\object_vcan4_device_status.h" />
     <ClInclude Include="..\include\object_vcanrf_settings.h" />
     <ClInclude Include="..\include\object_vividcan_settings.h" />
     <ClInclude Include="..\include\setup_module_auto_defines.h" />
@@ -193,7 +196,9 @@
     <ClCompile Include="..\src\object_cm_iso157652_tx_message.cpp" />
     <ClCompile Include="..\src\object_cyan_settings.cpp" />
     <ClCompile Include="..\src\object_ethernet_settings.cpp" />
+    <ClCompile Include="..\src\object_fire2_device_status.cpp" />
     <ClCompile Include="..\src\object_fire_settings.cpp" />
+    <ClCompile Include="..\src\object_ics_device_status.cpp" />
     <ClCompile Include="..\src\object_iso9141_keyword2000_init_steps.cpp" />
     <ClCompile Include="..\src\object_iso9141_keyword2000_settings.cpp" />
     <ClCompile Include="..\src\object_lin_settings.cpp" />
@@ -207,6 +212,7 @@
     <ClCompile Include="..\src\object_uart_settings.cpp" />
     <ClCompile Include="..\src\object_vcan3_settings.cpp" />
     <ClCompile Include="..\src\object_vcan412_settings.cpp" />
+    <ClCompile Include="..\src\object_vcan4_device_status.cpp" />
     <ClCompile Include="..\src\object_vcanrf_settings.cpp" />
     <ClCompile Include="..\src\object_vividcan_settings.cpp" />
     <ClCompile Include="..\src\setup_module_auto_defines.cpp" />

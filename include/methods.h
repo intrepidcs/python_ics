@@ -8,6 +8,7 @@
 #include "setup_module_auto_defines.h"
 #include "object_cm_iso157652_tx_message.h"
 #include "object_cm_iso157652_rx_message.h"
+#include "object_ics_device_status.h"
 
 #ifdef _cplusplus
 extern "C" {
@@ -76,6 +77,7 @@ PyObject* meth_set_bit_rate(PyObject* self, PyObject* args);
 PyObject* meth_set_fd_bit_rate(PyObject* self, PyObject* args);
 PyObject* meth_set_bit_rate_ex(PyObject* self, PyObject* args);
 PyObject* meth_get_timestamp_for_msg(PyObject* self, PyObject* args);
+PyObject* meth_get_device_status(PyObject* self, PyObject* args);
 
 #ifdef _cplusplus
 }
@@ -1102,6 +1104,26 @@ PyObject* meth_get_timestamp_for_msg(PyObject* self, PyObject* args);
     "\t>>> ics.get_timestamp_for_msg(d, msgs[0])\n" \
     "\t354577568.9145524\n" \
 
+#define _DOC_GET_DEVICE_STATUS \
+    MODULE_NAME".get_device_status(device)\n" \
+    "\n" \
+    "Returns the device status.\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`): :class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`"MODULE_NAME".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\t(:class:`"MODULE_NAME"."ICS_DEVICE_STATUS_OBJECT_NAME"`).\n" \
+    "\n" \
+    "\t>>> import ics\n" \
+    "\t>>> d = ics.open_device()\n" \
+    "\t>>> status = ics.get_device_status(d)\n" \
+    "\t>>> status.fire2Status.ethernetActivationLineEnabled\n" \
+    "\t0\n" \
+
 static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("find_devices", "FindNeoDevices", (PyCFunction)meth_find_devices, METH_VARARGS | METH_KEYWORDS, _DOC_FIND_DEVICES),
     _EZ_ICS_STRUCT_METHOD("open_device", "OpenNeoDevice", (PyCFunction)meth_open_device, METH_VARARGS | METH_KEYWORDS, _DOC_OPEN_DEVICES),
@@ -1168,6 +1190,8 @@ static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("set_fd_bit_rate", "icsneoSetFDBitRate", meth_set_fd_bit_rate, METH_VARARGS, _DOC_SET_FD_BIT_RATE),
     _EZ_ICS_STRUCT_METHOD("set_bit_rate_ex", "icsneoSetBitRateEx", meth_set_bit_rate_ex, METH_VARARGS, _DOC_SET_BIT_RATE_EX),
     _EZ_ICS_STRUCT_METHOD("get_timestamp_for_msg", "icsneoGetTimeStampForMsg", meth_get_timestamp_for_msg, METH_VARARGS, _DOC_GET_TIMESTAMP_FOR_MSG),
+    _EZ_ICS_STRUCT_METHOD("get_device_status", "icsneoGetDeviceStatus", meth_get_device_status, METH_VARARGS, _DOC_GET_DEVICE_STATUS),
+
     {"override_library_name", (PyCFunction)meth_override_library_name, METH_VARARGS, _DOC_OVERRIDE_LIBRARY_NAME},
     {"get_library_path", (PyCFunction)meth_get_library_path, METH_NOARGS, ""},
 

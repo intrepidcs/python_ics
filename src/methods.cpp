@@ -3899,6 +3899,52 @@ PyObject* meth_get_timestamp_for_msg(PyObject* self, PyObject* args)
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
+PyObject* meth_get_device_status(PyObject* self, PyObject* args)
+{
+    PyObject* obj = NULL;
+    int throw_exception_on_size_mismatch = 0;
+    if (!PyArg_ParseTuple(args, arg_parse("O|b:", __FUNCTION__), &obj, &throw_exception_on_size_mismatch)) {
+        return NULL;
+    }
+    if (!PyNeoDevice_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        PyObject* ds = PyObject_CallObject((PyObject*)&ics_device_status_object_type, NULL);
+        icsDeviceStatus* device_status = &((ics_device_status_object*)ds)->s;
+        size_t device_status_size = sizeof(*device_status);
+        ice::Function<int __stdcall (ICS_HANDLE, icsDeviceStatus*, size_t*)> icsneoGetDeviceStatus(lib, "icsneoGetDeviceStatus");
+        double timestamp = 0;
+        Py_BEGIN_ALLOW_THREADS
+        if (!icsneoGetDeviceStatus(handle, device_status, &device_status_size)) {
+            Py_BLOCK_THREADS
+            return set_ics_exception(exception_runtime_error(), "icsneoGetDeviceStatus() Failed");
+        }
+        if (throw_exception_on_size_mismatch)
+        {
+                if (device_status_size != sizeof(*device_status))
+                {
+                     Py_BLOCK_THREADS
+                     return set_ics_exception(exception_runtime_error(), "icsneoGetDeviceStatus() API mismatch detected!");
+                }
+        }
+        Py_END_ALLOW_THREADS
+        return ds;
+    }
+    catch (ice::Exception& ex)
+    {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
+
 PyObject* meth_override_library_name(PyObject* self, PyObject* args)
 {
     const char* name = NULL;
