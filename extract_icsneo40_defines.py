@@ -67,6 +67,8 @@ with open('src/setup_module_auto_defines.cpp', 'w') as f:
                         if ',' in sline[0]:
                             # This removes anything after the comma as we don't need it
                             sline[0] = sline[0].split(',')[0]
+                            # This removes anything after the equal sign as we don't need it
+                            sline[0] = sline[0].split('=')[0]
                         print('\tresult += PyModule_AddIntMacro(module, %s);' % sline[0].replace(',', ''), file=f)
                     continue
                 if '#define' in line:
