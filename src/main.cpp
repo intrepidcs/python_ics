@@ -39,9 +39,16 @@
     "name acts as the namespace (icsneo portion of the function) and function names\n" \
     "are suppose to be lowercase with underscores instead of mixedCase like icsneo API.\n" \
     "\n" \
-    "C API can be mimiced almost identically by doing the following:\n" \
+    "C API can be mimiced in two ways:\n" \
     "\t>>> import ics as icsneo\n" \
     "\t>>> devices = icsneo.FindNeoDevices()\n" \
+    "\t>>> for device in devices:\n" \
+    "\t...     print(device.Name, device.SerialNumber)\n" \
+    "\t...\n" \
+    "\tneoVI FIRE 59886\n" \
+    "\nor:\n" \
+    "\t>>> from ics import *\n" \
+    "\t>>> devices = icsneoFindNeoDevices()\n" \
     "\t>>> for device in devices:\n" \
     "\t...     print(device.Name, device.SerialNumber)\n" \
     "\t...\n" \

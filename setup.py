@@ -4,8 +4,8 @@ from distutils.command import build as build_module
 import os
 import platform
 
-MAJOR_VERSION = 2
-MINOR_VERSION = 9
+MAJOR_VERSION = 3
+MINOR_VERSION = 0
 
 class build(build_module.build):
     def run(self):
