@@ -49,6 +49,7 @@ void dll_uninitialize(void)
         return;
     }
     delete LIBRARY;
+    LIBRARY = NULL;
 }
 
 bool dll_reinitialize(char* name)
