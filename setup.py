@@ -5,7 +5,7 @@ import os
 import platform
 
 MAJOR_VERSION = 2
-MINOR_VERSION = 9
+MINOR_VERSION = 10
 
 class build(build_module.build):
     def run(self):
