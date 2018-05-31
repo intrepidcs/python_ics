@@ -1,6 +1,7 @@
 #include "methods.h"
 #include "exceptions.h"
 #include "dll.h"
+#include "defines.h"
 #ifndef USING_STUDIO_8
     #define USING_STUDIO_8 1
 #endif
@@ -3941,7 +3942,7 @@ PyObject* meth_get_device_status(PyObject* self, PyObject* args)
         Py_END_ALLOW_THREADS
         fire2_device_status_object* f2s = (fire2_device_status_object*)ds->fire2_status;
         memcpy(&f2s->s, &ds->s, sizeof(f2s->s));
-#ifdef (VSPY3_BUILD_VERSION > 802)
+#if (VSPY3_BUILD_VERSION > 802)
         vcan4_device_status_object* v4s = (vcan4_device_status_object*)ds->vcan4_status;
         memcpy(&v4s->s, &ds->s, sizeof(v4s->s));
 #endif
