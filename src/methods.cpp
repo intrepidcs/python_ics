@@ -215,10 +215,6 @@ PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
                 delete[] device_type_list;
                 device_type_list = NULL;
             }
-            if (!PyLong_CheckExact(device_type)) {
-                Py_BLOCK_THREADS
-                return set_ics_exception(exception_runtime_error(), "device_type argument is not of type long");
-            }
             ice::Function<int __stdcall (unsigned long, NeoDevice*, int*)> icsneoFindNeoDevices(lib, "icsneoFindNeoDevices");
             if (ex_options == -1 && !icsneoFindNeoDevices(legacy_dev_type, devices, &count)) {
                 Py_BLOCK_THREADS
