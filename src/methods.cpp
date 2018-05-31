@@ -173,9 +173,11 @@ PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
     NeoDevice devices[255];
     int count = 255;
     unsigned long legacy_dev_type = 0xFFFFBFFF;
+    bool use_legacy_device_type = false;
     if (device_type && PyLong_Check(device_type))
     {
         legacy_dev_type = PyLong_AsLong(device_type);
+        use_legacy_device_type = true;
     }
     try
     {
@@ -183,7 +185,7 @@ PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
         // Get the list of device types
         unsigned int* device_type_list = NULL;
         unsigned int device_type_list_size = 0;
-        if (device_type && device_type != Py_None)
+        if (!use_legacy_device_type && device_type && device_type != Py_None)
         {
             std::vector<PyObject*> device_type_vector;
             if (!_convertListOrTupleToArray(device_type, &device_type_vector))
@@ -196,6 +198,8 @@ PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
         Py_BEGIN_ALLOW_THREADS
         try
         {
+            if (use_legacy_device_type)
+                throw ice::Exception("Use Legacy Function!");
             if (ex_options != -1)
                 throw ice::Exception("Need to use old style find function");
             //int _stdcall icsneoFindNeoDevicesNewStyle(unsigned int* deviceTypes, unsigned int numDeviceTypes, NeoDevice* pNeoDevice, int* pNumDevices)
