@@ -3921,26 +3921,31 @@ PyObject* meth_get_device_status(PyObject* self, PyObject* args)
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
-        PyObject* ds = PyObject_CallObject((PyObject*)&ics_device_status_object_type, NULL);
-        icsDeviceStatus* device_status = &((ics_device_status_object*)ds)->s;
-        size_t device_status_size = sizeof(*device_status);
+        ics_device_status_object* ds = (ics_device_status_object*)PyObject_CallObject((PyObject*)&ics_device_status_object_type, NULL);
+        size_t device_status_size = sizeof(ds->s);
         ice::Function<int __stdcall (ICS_HANDLE, icsDeviceStatus*, size_t*)> icsneoGetDeviceStatus(lib, "icsneoGetDeviceStatus");
         double timestamp = 0;
         Py_BEGIN_ALLOW_THREADS
-        if (!icsneoGetDeviceStatus(handle, device_status, &device_status_size)) {
+        if (!icsneoGetDeviceStatus(handle, &ds->s, &device_status_size)) {
             Py_BLOCK_THREADS
             return set_ics_exception(exception_runtime_error(), "icsneoGetDeviceStatus() Failed");
         }
         if (throw_exception_on_size_mismatch)
         {
-                if (device_status_size != sizeof(*device_status))
+                if (device_status_size != sizeof(ds->s))
                 {
                      Py_BLOCK_THREADS
                      return set_ics_exception(exception_runtime_error(), "icsneoGetDeviceStatus() API mismatch detected!");
                 }
         }
         Py_END_ALLOW_THREADS
-        return ds;
+        fire2_device_status_object* f2s = (fire2_device_status_object*)ds->fire2_status;
+        memcpy(&f2s->s, &ds->s, sizeof(f2s->s));
+#ifdef VSPY3_BUILD_VERSION > 802
+        vcan4_device_status_object* v4s = (vcan4_device_status_object*)ds->vcan4_status;
+        memcpy(&v4s->s, &ds->s, sizeof(v4s->s));
+#endif
+        return (PyObject*)ds;
     }
     catch (ice::Exception& ex)
     {
