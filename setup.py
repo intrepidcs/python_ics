@@ -1,11 +1,48 @@
 #!/usr/bin/env python3
 from setuptools import setup, Extension
+
 from distutils.command import build as build_module
 import os
 import platform
+import sys
+import unittest
 
 MAJOR_VERSION = 3
 MINOR_VERSION = 0
+
+def _run_tests():
+    directory = os.path.abspath(os.path.dirname(sys.modules['__main__'].__file__))
+    loader = unittest.defaultTestLoader
+    runner = unittest.TextTestRunner()
+    suite = loader.discover(os.path.join(directory, 'test'))
+    runner.run(suite)
+
+try:
+    from setuptools.command.test import test
+    
+    
+    class UnitTests(test):
+        def finalize_options(self):
+            test.finalize_options(self)
+            self.test_args = []
+            self.test_suite = True
+        
+        def run_tests(self):
+            _run_tests()
+except ImportError:
+    from distutils.core import Command
+    
+    class UnitTests(Command):
+        user_options = []
+        def initialize_options(self):
+                pass
+                
+        def finalize_options(self):
+            pass
+        
+        def run(self):
+            _run_tests()
+
 
 class build(build_module.build):
     def run(self):
@@ -54,7 +91,7 @@ are suppose to be lowercase with underscores instead of mixedCase like icsneo AP
        maintainer = 'David Rebbe',
        maintainer_email='drebbe@intrepidcs.com',
        url='https://github.com/intrepidcs/python_ics/',
-       cmdclass = { 'build': build, },
+       cmdclass = { 'build': build, 'test': UnitTests, },
        download_url = 'https://github.com/intrepidcs/python_ics/releases',
        ext_modules = [module],
        classifiers = [

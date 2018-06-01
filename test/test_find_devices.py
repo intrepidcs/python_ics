@@ -8,7 +8,7 @@ _DEBUG = False
 class TestFindDevicesLegacy(unittest.TestCase):
     @classmethod
     def setUpClass(self):
-        ics.override_library_name(r"C:\Windows\SysWOW64\icsneo40-legacy.dll")
+        ics.override_library_name(r"icsneo40-legacy.dll")
         if _DEBUG:
             import os
             input("Pause... " + str(os.getpid()))
@@ -36,7 +36,7 @@ class TestFindDevicesLegacy(unittest.TestCase):
 class TestFindDevicesNewStyle(unittest.TestCase):
     @classmethod
     def setUpClass(self):
-        ics.override_library_name(r"C:\Windows\SysWOW64\icsneo40.dll")
+        ics.override_library_name(r"icsneo40.dll")
         if _DEBUG:
             import os
             input("Pause... " + str(os.getpid()))
@@ -65,8 +65,7 @@ class TestFindDevicesNewStyle(unittest.TestCase):
 class TestFindDevicesNewStyleWithLegacyDLL(unittest.TestCase):
     @classmethod
     def setUpClass(self):
-        import ics
-        ics.override_library_name(r"C:\Windows\SysWOW64\icsneo40-legacy.dll")
+        ics.override_library_name(r"icsneo40-legacy.dll")
         if _DEBUG:
             import os
             input("Pause... " + str(os.getpid()))
