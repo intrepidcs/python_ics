@@ -177,7 +177,11 @@ PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
     int count = 255;
     unsigned long legacy_dev_type = 0xFFFFBFFF;
     bool use_legacy_device_type = false;
+#if PY_MAJOR_VERSION >= 3
     if (device_type && PyLong_Check(device_type))
+#else
+    if (device_type && PyInt_Check(device_type))
+#endif PY_MAJOR_VERSION >= 3
     {
         legacy_dev_type = PyLong_AsLong(device_type);
         use_legacy_device_type = true;
