@@ -31,9 +31,7 @@
 #include "object_fire2_device_status.h"
 #include "object_vcan4_device_status.h"
 #include "object_ics_device_status.h"
-#if VSPY3_BUILD_VERSION > 802
-#include "object_vcan4_settings.h"
-#endif VSPY3_BUILD_VERSION > 802
+#include "object_device_settings.h"
 
 #define _DOC_ICS_MODULE \
     "Python C Code module for interfacing to the icsneo40 dynamic library. Code tries\n" \
@@ -42,17 +40,9 @@
     "name acts as the namespace (icsneo portion of the function) and function names\n" \
     "are suppose to be lowercase with underscores instead of mixedCase like icsneo API.\n" \
     "\n" \
-    "C API can be mimiced in two ways:\n" \
+    "C API can be mimiced almost identically by doing the following:\n" \
     "\t>>> import ics as icsneo\n" \
     "\t>>> devices = icsneo.FindNeoDevices()\n" \
-    "\t>>> for device in devices:\n" \
-    "\t...     print(device.Name, device.SerialNumber)\n" \
-    "\t...\n" \
-    "\tneoVI FIRE 59886\n" \
-    "\n" \
-    "Or:\n" \
-    "\t>>> from ics import *\n" \
-    "\t>>> devices = icsneoFindNeoDevices()\n" \
     "\t>>> for device in devices:\n" \
     "\t...     print(device.Name, device.SerialNumber)\n" \
     "\t...\n" \
@@ -151,9 +141,7 @@ void initics(void)
     setup_fire2_device_status_object(module);
     setup_vcan4_device_status_object(module); // 803+
     setup_ics_device_status_object(module);
-#ifdef VSPY3_BUILD_VERSION > 802
-    setup_vcan4_settings_object(module);
-#endif VSPY3_BUILD_VERSION > 802
+    setup_device_settings_object(module);
 
 #if PY_MAJOR_VERSION >= 3
     return module;

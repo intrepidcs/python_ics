@@ -9,6 +9,7 @@
 #include "object_cm_iso157652_tx_message.h"
 #include "object_cm_iso157652_rx_message.h"
 #include "object_ics_device_status.h"
+#include "object_device_settings.h"
 
 #ifdef _cplusplus
 extern "C" {
@@ -386,7 +387,41 @@ PyObject* meth_get_device_status(PyObject* self, PyObject* args);
     "\t>>> ics.set_reflash_callback(callback)\n" \
     "\t>>> \n" 
 
-// _DOC_GET_DEVICE_SETTINGS), meth_get_device_settings, METH_VARARGS, "Accepts a " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME " and a " VCAN3_SETTINGS_OBJECT_NAME "/" FIRE_SETTINGS_OBJECT_NAME ", exception on error."),
+#if defined(USE_GENERIC_DEVICE_SETTINGS)
+#define _DOC_GET_DEVICE_SETTINGS \
+    MODULE_NAME".get_device_settings(device, vnet_slot)\n" \
+    "\n" \
+    "Gets the settings in the device. vnet_slot defaults to "MODULE_NAME".PlasmaIonVnetChannelMain\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`): :class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`"MODULE_NAME".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\t:class:`"MODULE_NAME"."DEVICE_SETTINGS_OBJECT_NAME"`\n" \
+    "\n" \
+    "\t>>> d = ics.open_device()\n" \
+    "\t>>> d.Name\n" \
+    "\t'neoVI ION'\n" \
+    "\t>>> d.SerialNumber\n" \
+    "\t404444\n" \
+    "\t>>> s = ics.get_device_settings(d)\n" \
+    "\t>>> s.DeviceSettingType\n" \
+    "\t2\n" \
+    "\t>>> s.cyan\n" \
+    "\t<ics.CyanSettings object at 0x01E61B40>\n" \
+    "\t>>> s.cyan.canfd1.FDMode\n" \
+    "\t4\n" \
+    "\t>>> s2.cyan\n" \
+    "\t<ics.CyanSettings object at 0x02B113C8>\n" \
+    "\t>>> s2 = ics.get_device_settings(d, ics.PlasmaIonVnetChannelA)\n" \
+    "\t>>> s2.DeviceSettingType\n" \
+    "\t2\n" \
+    "\t>>> s2.cyan.canfd1.FDMode\n" \
+    "\t4\n"
+#else
 #define _DOC_GET_DEVICE_SETTINGS \
     MODULE_NAME".get_device_settings(device, device_type)\n" \
     "\n" \
@@ -406,10 +441,40 @@ PyObject* meth_get_device_status(PyObject* self, PyObject* args);
     "\t>>> type(settings)\n" \
     "\t<class 'ics.FireSettings'>\n" \
     "\t>>> \n" 
+#endif
 
-//_DOC_SET_DEVICE_SETTINGS), "Accepts a " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME ", " VCAN3_SETTINGS_OBJECT_NAME "/" FIRE_SETTINGS_OBJECT_NAME ", and save to eeprom bool, exception on error."),
+#if defined(USE_GENERIC_DEVICE_SETTINGS)
+    #define _DOC_SET_DEVICE_SETTINGS \
+    MODULE_NAME".set_device_settings(device, settings, save_to_eeprom, vnet_slot)\n" \
+    "\n" \
+    "Sets the settings in the device. vnet_slot defaults to "MODULE_NAME".PlasmaIonVnetChannelMain\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`): :class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`\n\n" \
+    "\tsettings (:class:`"MODULE_NAME"."DEVICE_SETTINGS_OBJECT_NAME"`): :class:`"MODULE_NAME"."DEVICE_SETTINGS_OBJECT_NAME"`\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`"MODULE_NAME".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\tNone.\n" \
+    "\n" \
+    "\t>>> d = ics.open_device()\n" \
+    "\t>>> d.Name\n" \
+    "\t'neoVI ION'\n" \
+    "\t>>> d.SerialNumber\n" \
+    "\t404444\n" \
+    "\t>>> s = ics.get_device_settings(d, ics.PlasmaIonVnetChannelA) # Get Slave settings, channel selection not needed if not a Plasma/Ion\n" \
+    "\t>>> s.DeviceSettingType\n" \
+    "\t2\n" \
+    "\t>>> s.cyan.can_switch_mode\n" \
+    "\t1\n" \
+    "\t>>> s.cyan.can_switch_mode = 2\n" \
+    "\t>>> ics.set_device_settings(d, s, True, ics.PlasmaIonVnetChannelA)\n" \
+    "\t>>> \n"
+#else // #if defined(USE_GENERIC_DEVICE_SETTINGS)
 #define _DOC_SET_DEVICE_SETTINGS \
-    MODULE_NAME".set_device_settings(device, settings)\n" \
+    MODULE_NAME".set_device_settings(device, settings, device_type, save_to_eeprom)\n" \
     "\n" \
     "Sets the settings in the device.\n" \
     "\n" \
@@ -434,6 +499,7 @@ PyObject* meth_get_device_status(PyObject* self, PyObject* args);
     "\t>>> settings.can1.Mode = 3\n" \
     "\t>>> ics.set_device_settings(device, settings)\n" \
     "\t>>> \n"
+#endif
 
 //"Accepts a " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME ", exception on error."
 #define _DOC_LOAD_DEFAULT_SETTINGS \

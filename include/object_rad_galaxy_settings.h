@@ -196,4 +196,7 @@ extern PyTypeObject rad_galaxy_settings_object_type;
 
 bool setup_rad_galaxy_settings_object(PyObject* module);
 
+void rad_galaxy_settings_object_update_from_struct(PyObject* settings);
+void rad_galaxy_settings_object_update_from_objects(PyObject* settings);
+
 #endif // _OBJECT_RADGALAXY_SETTINGS_H_

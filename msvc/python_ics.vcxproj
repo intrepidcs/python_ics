@@ -160,6 +160,7 @@
     <ClInclude Include="..\include\object_cm_iso157652_rx_message.h" />
     <ClInclude Include="..\include\object_cm_iso157652_tx_message.h" />
     <ClInclude Include="..\include\object_cyan_settings.h" />
+    <ClInclude Include="..\include\object_device_settings.h" />
     <ClInclude Include="..\include\object_ethernet_settings.h" />
     <ClInclude Include="..\include\object_fire2_device_status.h" />
     <ClInclude Include="..\include\object_fire_settings.h" />
@@ -196,6 +197,7 @@
     <ClCompile Include="..\src\object_cm_iso157652_rx_message.cpp" />
     <ClCompile Include="..\src\object_cm_iso157652_tx_message.cpp" />
     <ClCompile Include="..\src\object_cyan_settings.cpp" />
+    <ClCompile Include="..\src\object_device_settings.cpp" />
     <ClCompile Include="..\src\object_ethernet_settings.cpp" />
     <ClCompile Include="..\src\object_fire2_device_status.cpp" />
     <ClCompile Include="..\src\object_fire_settings.cpp" />

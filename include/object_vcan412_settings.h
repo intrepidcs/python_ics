@@ -189,4 +189,7 @@ extern PyTypeObject vcan412_settings_object_type;
 
 bool setup_vcan412_settings_object(PyObject* module);
 
+void vcan412_settings_object_update_from_struct(PyObject* settings);
+void vcan412_settings_object_update_from_objects(PyObject* settings);
+
 #endif // _OBJECT_VCAN412_SETTINGS_H_

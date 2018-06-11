@@ -52,3 +52,28 @@ bool setup_vividcan_settings_object(PyObject* module)
     PyModule_AddObject(module, VIVIDCAN_SETTINGS_OBJECT_NAME, (PyObject*)&vividcan_settings_object_type);
     return true;
 }
+
+void vividcan_settings_object_update_from_struct(PyObject* settings)
+{
+    assert(PyVividCANSettings_CheckExact(settings));
+    SVividCANSettings* s = &((vividcan_settings_object*)settings)->s;
+    vividcan_settings_object* s_obj = (vividcan_settings_object*)settings;
+
+    // Since CAN Structures are Python objects, we need to manually update them here.
+    ((can_settings_object*)s_obj->can1)->s = s->can1;
+    ((swcan_settings_object*)s_obj->swcan1)->s = s->swcan1;
+    ((can_settings_object*)s_obj->lsftcan1)->s = s->lsftcan1;
+}
+
+
+void vividcan_settings_object_update_from_objects(PyObject* settings)
+{
+    assert(PyVividCANSettings_CheckExact(settings));
+    vividcan_settings_object* s_obj = (vividcan_settings_object*)settings;
+    SVividCANSettings* s = &s_obj->s;
+
+    // Since CAN Structures are Python objects, we need to manually update them here.
+    s->can1 = ((can_settings_object*)s_obj->can1)->s;
+    s->swcan1 = ((swcan_settings_object*)s_obj->swcan1)->s;
+    s->lsftcan1 = ((can_settings_object*)s_obj->lsftcan1)->s;
+}

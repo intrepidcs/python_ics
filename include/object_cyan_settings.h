@@ -277,4 +277,8 @@ extern PyTypeObject cyan_settings_object_type;
 
 bool setup_cyan_settings_object(PyObject* module);
 
+void cyan_settings_object_update_from_struct(PyObject* settings);
+void cyan_settings_object_update_from_objects(PyObject* settings);
+
+
 #endif // _OBJECT_CYAN_SETTINGS_H_

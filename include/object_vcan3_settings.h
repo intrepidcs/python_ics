@@ -60,4 +60,7 @@ extern PyTypeObject vcan3_settings_object_type;
 
 bool setup_vcan3_settings_object(PyObject* module);
 
+void vcan3_settings_object_update_from_struct(PyObject* settings);
+void vcan3_settings_object_update_from_objects(PyObject* settings);
+
 #endif // _OBJECT_VCAN3_SETTINGS_H_
