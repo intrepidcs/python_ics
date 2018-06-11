@@ -86,10 +86,10 @@ PyObject* meth_get_device_status(PyObject* self, PyObject* args);
 
 #define _EZ_ICS_STRUCT_METHOD(name, icsname, meth, flags, doc) \
     {name, (PyCFunction)meth, flags, doc}, \
-    {icsname, (PyCFunction)meth, flags, "\n.. note::\n\tIdentical to PEP8 compliant :func:`" MODULE_NAME "." name "` method.\n\n"}
+    {icsname, (PyCFunction)meth, flags, "\n.. note:: Compatibility Function\n\tIdentical to PEP8 compliant :func:`" MODULE_NAME "." name "` method.\n\n"}
 
 #define _EZ_ICS_STRUCT_METHOD_MULTIPLE(name, icsname, meth, flags, doc) \
-    {icsname, (PyCFunction)meth, flags, "\n.. note::\n\tIdentical to PEP8 compliant :func:`" MODULE_NAME "." name "` method.\n\n"}
+    {icsname, (PyCFunction)meth, flags, "\n.. note:: Compatibility Function\n\tIdentical to PEP8 compliant :func:`" MODULE_NAME "." name "` method.\n\n"}
 
 #define _DOC_FIND_DEVICES \
     MODULE_NAME".find_devices(device_type="MODULE_NAME".NEODEVICE_ALL)\n" \
