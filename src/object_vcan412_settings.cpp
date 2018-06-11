@@ -52,3 +52,34 @@ bool setup_vcan412_settings_object(PyObject* module)
     PyModule_AddObject(module, VCAN412_SETTINGS_OBJECT_NAME, (PyObject*)&vcan412_settings_object_type);
     return true;
 }
+
+void vcan412_settings_object_update_from_struct(PyObject* settings)
+{
+    assert(PyVcan412Settings_CheckExact(settings));
+    SVCAN412Settings* s = &((vcan412_settings_object*)settings)->s;
+    vcan412_settings_object* s_obj = (vcan412_settings_object*)settings;
+
+    // Since CAN Structures are Python objects, we need to manually update them here.
+    ((can_settings_object*)s_obj->can1)->s = s->can1;
+    ((can_settings_object*)s_obj->can2)->s = s->can2;
+    ((canfd_settings_object*)s_obj->canfd1)->s = s->canfd1;
+    ((canfd_settings_object*)s_obj->canfd2)->s = s->canfd2;
+
+    // Since TextAPI Structures are Python objects, we need to manually update them here.
+    ((textapi_settings_object*)s_obj->textapi)->s = s->text_api;
+}
+
+void vcan412_settings_object_update_from_objects(PyObject* settings)
+{
+    assert(PyVcan412Settings_CheckExact(settings));
+    vcan412_settings_object* s_obj = (vcan412_settings_object*)settings;
+    SVCAN412Settings* s = &s_obj->s;
+
+    // Since CAN Structures are Python objects, we need to manually update them here.
+    s->can1 = ((can_settings_object*)s_obj->can1)->s;
+    s->can2 = ((can_settings_object*)s_obj->can2)->s;
+    s->canfd1 = ((canfd_settings_object*)s_obj->canfd1)->s;
+    s->canfd2 = ((canfd_settings_object*)s_obj->canfd2)->s;
+    // Since textapi Structures are Python objects, we need to manually update them here.
+    s->text_api = ((textapi_settings_object*)s_obj->textapi)->s;
+}

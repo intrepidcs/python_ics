@@ -149,4 +149,7 @@ extern PyTypeObject fire_settings_object_type;
 
 bool setup_fire_settings_object(PyObject* module);
 
+void fire_settings_object_update_from_struct(PyObject* settings);
+void fire_settings_object_update_from_objects(PyObject* settings);
+
 #endif // _OBJECT_FIRE_SETTINGS_H_

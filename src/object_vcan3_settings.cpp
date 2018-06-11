@@ -52,3 +52,25 @@ bool setup_vcan3_settings_object(PyObject* module)
     PyModule_AddObject(module, VCAN3_SETTINGS_OBJECT_NAME, (PyObject*)&vcan3_settings_object_type);
     return true;
 }
+
+void vcan3_settings_object_update_from_struct(PyObject* settings)
+{
+    assert(PyVcan3Settings_CheckExact(settings));
+    SVCAN3Settings* s = &((vcan3_settings_object*)settings)->s;
+    vcan3_settings_object* s_obj = (vcan3_settings_object*)settings;
+
+    // Since CAN Structures are Python objects, we need to manually update them here.
+    ((can_settings_object*)s_obj->can1)->s = s->can1;
+    ((can_settings_object*)s_obj->can2)->s = s->can2;
+}
+
+void vcan3_settings_object_update_from_objects(PyObject* settings)
+{
+    assert(PyVcan3Settings_CheckExact(settings));
+    vcan3_settings_object* s_obj = (vcan3_settings_object*)settings;
+    SVCAN3Settings* s = &s_obj->s;
+
+    // Since CAN Structures are Python objects, we need to manually update them here.
+    s->can1 = ((can_settings_object*)s_obj->can1)->s;
+    s->can2 = ((can_settings_object*)s_obj->can2)->s;
+}

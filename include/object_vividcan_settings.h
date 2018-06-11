@@ -16,6 +16,7 @@
 #include "object_can_settings.h"
 #include "object_canfd_settings.h"
 #include "object_textapi_settings.h"
+#include "object_swcan_settings.h"
 
 #define VIVIDCAN_SETTINGS_OBJECT_NAME "VividCANSettings"
 
@@ -178,5 +179,9 @@ extern PyTypeObject vividcan_settings_object_type;
 #define PyVividCANSettings_CheckExact(op) (Py_TYPE(op) == &vividcan_settings_object_type)
 
 bool setup_vividcan_settings_object(PyObject* module);
+
+void vividcan_settings_object_update_from_struct(PyObject* settings);
+void vividcan_settings_object_update_from_objects(PyObject* settings);
+
 
 #endif // _OBJECT_VIVIDCAN_SETTINGS_H_

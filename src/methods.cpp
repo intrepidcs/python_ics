@@ -33,6 +33,7 @@
 #include "object_vcan412_settings.h"
 #include "object_vividcan_settings.h"
 //#include "object_vcan4_settings.h" // Not implemented in 802
+#include "object_device_settings.h"
 
 extern PyTypeObject spy_message_object_type;
 // __func__, __FUNCTION__ and __PRETTY_FUNCTION__ are not preprocessor macros.
@@ -1835,7 +1836,11 @@ static PyObject* __get_vividcan_settings(ICS_HANDLE handle, char* func_name)
 PyObject* meth_get_device_settings(PyObject* self, PyObject* args)
 {
     PyObject* obj = NULL;
+#if !defined(USE_GENERIC_DEVICE_SETTINGS)
     unsigned long device_type = 0;
+#else
+    unsigned long device_type = PlasmaIonVnetChannelMain;
+#endif
     if (!PyArg_ParseTuple(args, arg_parse("O|k:", __FUNCTION__), &obj, &device_type)) {
         return NULL;
     }
@@ -1843,7 +1848,9 @@ PyObject* meth_get_device_settings(PyObject* self, PyObject* args)
         return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
     }
     ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
-    // User is overriding the device type here, this is useful for FIRE2 VNET for PLASMA/ION.
+
+#if !defined(USE_GENERIC_DEVICE_SETTINGS)
+        // User is overriding the device type here, this is useful for FIRE2 VNET for PLASMA/ION.
     if (!device_type)
         device_type = ((neo_device_object*)obj)->dev.DeviceType;
     switch(device_type)
@@ -1854,11 +1861,6 @@ PyObject* meth_get_device_settings(PyObject* self, PyObject* args)
         case NEODEVICE_VCAN4_12:
             return _get_vcan412_settings(handle);
             break;
-#if VSPY3_BUILD_VERSION > 802 // Not implemented in 802
-        case NEODEVICE_VCAN4:
-            return _get_vcan4_settings(handle);
-            break;
-#endif // VSPY3_BUILD_VERSION > 802
         case NEODEVICE_VCANRF:
             return _get_vcanrf_settings(handle);
             break;
@@ -1875,6 +1877,44 @@ PyObject* meth_get_device_settings(PyObject* self, PyObject* args)
             return _get_fire_settings(handle);
             break;
     }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+#else // !defined(USE_GENERIC_DEVICE_SETTINGS)
+    try
+    {
+        // rename legacy option
+        EPlasmaIonVnetChannel_t vnet_slot = (EPlasmaIonVnetChannel_t)device_type;
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        // int _stdcall icsneoGetDeviceSettingsType(void* hObject, EPlasmaIonVnetChannel_t vnetSlot, EDeviceSettingsType* pDeviceSettingsType)
+        ice::Function<int __stdcall (ICS_HANDLE, EPlasmaIonVnetChannel_t, EDeviceSettingsType*)> icsneoGetDeviceSettingsType(lib, "icsneoGetDeviceSettingsType");
+        // int _stdcall icsneoGetDeviceSettings(void* hObject, SDeviceSettings* pSettings, EPlasmaIonVnetChannel_t vnetSlot)
+        ice::Function<int __stdcall (ICS_HANDLE, SDeviceSettings*, EPlasmaIonVnetChannel_t)> icsneoGetDeviceSettings(lib, "icsneoGetDeviceSettings");
+        PyObject* settings = PyObject_CallObject((PyObject*)&device_settings_object_type, NULL);
+        SDeviceSettings* s = &((device_settings_object*)settings)->s;
+        Py_BEGIN_ALLOW_THREADS
+        if (!icsneoGetDeviceSettingsType(handle, vnet_slot, &s->DeviceSettingType))
+        {
+            Py_BLOCK_THREADS
+            return set_ics_exception(exception_runtime_error(), "icsneoGetDeviceSettingsType() Failed");
+        }
+        if (!icsneoGetDeviceSettings(handle, s, vnet_slot))
+        {
+            Py_BLOCK_THREADS
+            return set_ics_exception(exception_runtime_error(), "icsneoGetDeviceSettings() Failed");
+        }
+        Py_END_ALLOW_THREADS
+
+        device_settings_object_update_from_struct(settings);
+        return settings;
+    }
+    catch (ice::Exception& ex)
+    {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+#endif // !defined(USE_GENERIC_DEVICE_SETTINGS)
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
@@ -2323,10 +2363,49 @@ static PyObject* __set_vividcan_settings(ICS_HANDLE handle, PyObject* settings, 
 
 PyObject* meth_set_device_settings(PyObject* self, PyObject* args)
 {
+
+#if defined(USE_GENERIC_DEVICE_SETTINGS)
     PyObject* obj = NULL;
     PyObject* settings = NULL;
-    unsigned long device_type = 0;
     int save_to_eeprom = 1;
+    EPlasmaIonVnetChannel_t vnet_slot = PlasmaIonVnetChannelMain;
+    if (!PyArg_ParseTuple(args, arg_parse("OO|ik:", __FUNCTION__), &obj, &settings, &save_to_eeprom, &vnet_slot)) {
+        return NULL;
+    }
+    if (!PyNeoDevice_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        // int _stdcall icsneoSetDeviceSettings(void* hObject, SDeviceSettings* pSettings, int bSaveToEEPROM, EPlasmaIonVnetChannel_t vnetSlot)
+        ice::Function<int __stdcall (ICS_HANDLE, SDeviceSettings*, int, EPlasmaIonVnetChannel_t)> icsneoSetDeviceSettings(lib, "icsneoSetDeviceSettings");
+        device_settings_object_update_from_objects(settings);
+        SDeviceSettings* s = &((device_settings_object*)settings)->s;
+        Py_BEGIN_ALLOW_THREADS
+        if (!icsneoSetDeviceSettings(handle, s, save_to_eeprom, vnet_slot)) {
+            Py_BLOCK_THREADS
+            return set_ics_exception_dev(exception_runtime_error(), obj, "icsneoSetDeviceSettings() Failed");
+        }
+        Py_END_ALLOW_THREADS
+        Py_RETURN_NONE;
+    }
+    catch (ice::Exception& ex)
+    {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+#else // #if defined(USE_GENERIC_DEVICE_SETTINGS)
+    PyObject* obj = NULL;
+    PyObject* settings = NULL;
+    int save_to_eeprom = 1;
+    unsigned long device_type = 0;
     if (!PyArg_ParseTuple(args, arg_parse("OO|ki:", __FUNCTION__), &obj, &settings, &device_type, &save_to_eeprom)) {
         return NULL;
     }
@@ -2366,6 +2445,7 @@ PyObject* meth_set_device_settings(PyObject* self, PyObject* args)
             break;
     }
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
+#endif
 }
 
 PyObject* meth_load_default_settings(PyObject* self, PyObject* args) // icsneoLoadDefaultSettings
