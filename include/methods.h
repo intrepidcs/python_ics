@@ -79,6 +79,7 @@ PyObject* meth_set_fd_bit_rate(PyObject* self, PyObject* args);
 PyObject* meth_set_bit_rate_ex(PyObject* self, PyObject* args);
 PyObject* meth_get_timestamp_for_msg(PyObject* self, PyObject* args);
 PyObject* meth_get_device_status(PyObject* self, PyObject* args);
+PyObject* meth_enable_network_com(PyObject* self, PyObject* args); //icsneoEnableNetworkCom
 
 #ifdef _cplusplus
 }
@@ -1192,6 +1193,31 @@ PyObject* meth_get_device_status(PyObject* self, PyObject* args);
     "\t>>> status.fire2Status.ethernetActivationLineEnabled\n" \
     "\t0\n" \
 
+#define _DOC_ENABLE_NETWORK_COM \
+    MODULE_NAME".enable_network_com(device, enable, net_id)\n" \
+    "\n" \
+    "Enable or disable network communication.\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`): :class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`\n\n" \
+    "\n" \
+    "\tenable (:class:`bool`): :class:`bool`\n\n" \
+    "\n" \
+    "\tnet_id (:class:`int`): :class:`int`: Optional. If left blank, disables/enables all networks.\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`"MODULE_NAME".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\tNone.\n" \
+    "\n" \
+    "\t>>> import ics\n" \
+    "\t>>> d = ics.open_device()\n" \
+    "\t>>> status = ics.enable_network_com(d, True)\n" \
+    "\t>>> \n"
+
+
+
 static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("find_devices", "icsneoFindNeoDevices", "FindNeoDevices", (PyCFunction)meth_find_devices, METH_VARARGS | METH_KEYWORDS, _DOC_FIND_DEVICES),
     _EZ_ICS_STRUCT_METHOD("open_device", "icsneoOpenNeoDevice", "OpenNeoDevice", (PyCFunction)meth_open_device, METH_VARARGS | METH_KEYWORDS, _DOC_OPEN_DEVICES),
@@ -1259,7 +1285,8 @@ static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("set_bit_rate_ex", "icsneoSetBitRateEx", "SetBitRateEx", meth_set_bit_rate_ex, METH_VARARGS, _DOC_SET_BIT_RATE_EX),
     _EZ_ICS_STRUCT_METHOD("get_timestamp_for_msg", "icsneoGetTimeStampForMsg", "GetTimeStampForMsg", meth_get_timestamp_for_msg, METH_VARARGS, _DOC_GET_TIMESTAMP_FOR_MSG),
     _EZ_ICS_STRUCT_METHOD("get_device_status", "icsneoGetDeviceStatus", "GetDeviceStatus", meth_get_device_status, METH_VARARGS, _DOC_GET_DEVICE_STATUS),
-
+    
+    _EZ_ICS_STRUCT_METHOD("enable_network_com", "icsneoEnableNetworkCom", "EnableNetworkCom", meth_enable_network_com, METH_VARARGS, _DOC_ENABLE_NETWORK_COM),
     {"override_library_name", (PyCFunction)meth_override_library_name, METH_VARARGS, _DOC_OVERRIDE_LIBRARY_NAME},
     {"get_library_path", (PyCFunction)meth_get_library_path, METH_NOARGS, ""},
 
