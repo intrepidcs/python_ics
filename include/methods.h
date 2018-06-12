@@ -1208,7 +1208,7 @@ static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("get_script_status", "icsneoScriptGetScriptStatusEx", "ScriptGetScriptStatusEx", meth_get_script_status, METH_VARARGS, "Accepts a " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME ", exception on error. Returns a list of values of what ulParameters would hold"),
     _EZ_ICS_STRUCT_METHOD("get_error_messages", "icsneoGetErrorMessages", "GetErrorMessages", meth_get_error_messages, METH_VARARGS, _DOC_GET_ERROR_MESSAGES),
 #ifdef _USE_INTERNAL_HEADER_
-    _EZ_ICS_STRUCT_METHOD("flash_devices", "FlashDevice2", meth_flash_devices, METH_VARARGS, "int _stdcall FlashDevice2()"),
+    _EZ_ICS_STRUCT_METHOD("flash_devices", "FlashDevice2", "FlashDevice2", meth_flash_devices, METH_VARARGS, "int _stdcall FlashDevice2()"),
 #endif
     _EZ_ICS_STRUCT_METHOD("set_reflash_callback", "icsneoSetReflashDisplayCallbacks", "SetReflashDisplayCallback", meth_set_reflash_callback, METH_VARARGS, _DOC_SET_REFLASH_CALLBACK),
     _EZ_ICS_STRUCT_METHOD("get_device_settings", "icsneoGetFireSettings", "GetFireSettings", meth_get_device_settings, METH_VARARGS, _DOC_GET_DEVICE_SETTINGS),
@@ -1245,7 +1245,7 @@ static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("set_backup_power_enabled", "icsneoSetBackupPowerEnabled", "SetBackupPowerEnabled", meth_set_backup_power_enabled, METH_VARARGS, _DOC_SET_BACKUP_POWER_ENABLED),
     _EZ_ICS_STRUCT_METHOD("get_backup_power_ready", "icsneoGetBackupPowerReady", "GetBackupPowerReady", meth_set_backup_power_ready, METH_VARARGS, _DOC_GET_BACKUP_POWER_READY),
 #ifdef _USE_INTERNAL_HEADER_
-    _EZ_ICS_STRUCT_METHOD("load_readbin", "icsneoScriptLoadReadBin", meth_load_readbin, METH_VARARGS, _DOC_LOAD_READBIN),
+    _EZ_ICS_STRUCT_METHOD("load_readbin", "icsneoScriptLoadReadBin", "ScriptLoadReadBin", meth_load_readbin, METH_VARARGS, _DOC_LOAD_READBIN),
 #endif
     _EZ_ICS_STRUCT_METHOD("iso15765_transmit_message", "icsneoISO15765_TransmitMessage", "ISO15765_TransmitMessage", meth_iso15765_transmit_message, METH_VARARGS, _DOC_ISO15765_TRANSMIT_MESSAGE),
     _EZ_ICS_STRUCT_METHOD("iso15765_receive_message", "icsneoISO15765_ReceiveMessage", "ISO15765_ReceiveMessage", meth_iso15765_receive_message, METH_VARARGS, _DOC_ISO15765_RECEIVE_MESSAGE),
