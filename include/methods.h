@@ -87,12 +87,12 @@ PyObject* meth_enable_network_com(PyObject* self, PyObject* args); //icsneoEnabl
 
 #define _EZ_ICS_STRUCT_METHOD(name, icsname, icsname_no_icsneo, meth, flags, doc) \
     {name, (PyCFunction)meth, flags, doc}, \
-    {icsname, (PyCFunction)meth, flags, "\n.. note::\n\tIdentical to PEP8 compliant :func:`" MODULE_NAME "." name "` method.\n\n"}, \
-    {icsname_no_icsneo, (PyCFunction)meth, flags, "\n.. note::\n\tIdentical to PEP8 compliant :func:`" MODULE_NAME "." name "` method.\n\n"}
+    {icsname, (PyCFunction)meth, flags, "\n.. note:: Compatibility Function\n\tIdentical to PEP8 compliant :func:`" MODULE_NAME "." name "` method.\n\n"}, \
+    {icsname_no_icsneo, (PyCFunction)meth, flags, "\n.. note:: Compatibility Function\n\tIdentical to PEP8 compliant :func:`" MODULE_NAME "." name "` method.\n\n"}
 
 #define _EZ_ICS_STRUCT_METHOD_MULTIPLE(name, icsname, icsname_no_icsneo, meth, flags, doc) \
-    {icsname, (PyCFunction)meth, flags, "\n.. note::\n\tIdentical to PEP8 compliant :func:`" MODULE_NAME "." name "` method.\n\n"}, \
-    {icsname_no_icsneo, (PyCFunction)meth, flags, "\n.. note::\n\tIdentical to PEP8 compliant :func:`" MODULE_NAME "." name "` method.\n\n"}
+    {icsname, (PyCFunction)meth, flags, "\n.. note:: Compatibility Function\n\tIdentical to PEP8 compliant :func:`" MODULE_NAME "." name "` method.\n\n"}, \
+    {icsname_no_icsneo, (PyCFunction)meth, flags, "\n.. note:: Compatibility Function\n\tIdentical to PEP8 compliant :func:`" MODULE_NAME "." name "` method.\n\n"}
 
 #define _DOC_FIND_DEVICES \
     MODULE_NAME".find_devices(device_type="MODULE_NAME".NEODEVICE_ALL)\n" \
