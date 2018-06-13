@@ -4040,6 +4040,51 @@ PyObject* meth_get_device_status(PyObject* self, PyObject* args)
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
+PyObject* meth_enable_network_com(PyObject* self, PyObject* args)
+{
+    PyObject* obj = NULL;
+    bool enable = true; 
+    long net_id = -1;
+    if (!PyArg_ParseTuple(args, arg_parse("O|bk:", __FUNCTION__), &obj, &enable, &net_id)) {
+        return NULL;
+    }
+    if (!PyNeoDevice_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        // int _stdcall icsneoEnableNetworkCom(void* hObject, int iEnable)
+        // int _stdcall icsneoEnableNetworkComEx(void* hObject, int iEnable, int iNetId)
+        ice::Function<int __stdcall (ICS_HANDLE, int)> icsneoEnableNetworkCom(lib, "icsneoEnableNetworkCom");
+        ice::Function<int __stdcall (ICS_HANDLE, int, int)> icsneoEnableNetworkComEx(lib, "icsneoEnableNetworkComEx");
+        Py_BEGIN_ALLOW_THREADS
+        if (net_id == -1) {
+            if (!icsneoEnableNetworkCom(handle, enable)) {
+                Py_BLOCK_THREADS
+                return set_ics_exception(exception_runtime_error(), "icsneoEnableNetworkCom() Failed");
+            }
+        } else {
+            if (!icsneoEnableNetworkComEx(handle, enable, net_id)) {
+                Py_BLOCK_THREADS
+                return set_ics_exception(exception_runtime_error(), "icsneoEnableNetworkComEx() Failed");
+            }
+        }
+        Py_END_ALLOW_THREADS
+        Py_RETURN_NONE;
+    }
+    catch (ice::Exception& ex)
+    {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
+
 PyObject* meth_override_library_name(PyObject* self, PyObject* args)
 {
     const char* name = NULL;
