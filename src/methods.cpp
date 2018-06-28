@@ -3673,17 +3673,19 @@ PyObject* obj = NULL;
 PyObject* meth_iso15765_receive_message(PyObject* self, PyObject* args)
 {
     PyObject* obj = NULL;
+    PyObject* obj_rx_msg = NULL;
     unsigned int iIndex = 0;
-    PyObject* obj_rx_msg = PyObject_CallObject((PyObject*)&cm_iso157652_rx_message_object_type, NULL);
-    if (!PyArg_ParseTuple(args, arg_parse("Oi:", __FUNCTION__), &obj, &iIndex)) {
+    //PyObject* obj_rx_msg = PyObject_CallObject((PyObject*)&cm_iso157652_rx_message_object_type, NULL);
+    if (!PyArg_ParseTuple(args, arg_parse("OiO:", __FUNCTION__), &obj, &iIndex, &obj_rx_msg)) {
         return NULL;
     }
     if (!PyNeoDevice_CheckExact(obj)) {
         return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
     }
-    if (!PyCmISO157652TxMessage_Check(obj_rx_msg)) {
+    if (!PyCmISO157652RxMessage_Check(obj_rx_msg)) {
         return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." CM_ISO157652_RX_MESSAGE_OBJECT_NAME);
     }
+    Py_XINCREF(obj_rx_msg);
     cm_iso157652_rx_message_object *temp = (cm_iso157652_rx_message_object*)obj_rx_msg;
     ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
     try
@@ -3691,19 +3693,25 @@ PyObject* meth_iso15765_receive_message(PyObject* self, PyObject* args)
         ice::Library* lib = dll_get_library();
         if (!lib) {
             char buffer[512];
+            Py_DECREF(obj_rx_msg);
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
+        //stCM_ISO157652_RxMessage rx_msg_temp = {0};
+        //memcpy(&rx_msg_temp, &(temp->s), sizeof(temp->s));
         ice::Function<int __stdcall (ICS_HANDLE, unsigned int, stCM_ISO157652_RxMessage*)> icsneoISO15765_ReceiveMessage(lib, "icsneoISO15765_ReceiveMessage");
         Py_BEGIN_ALLOW_THREADS
         if (!icsneoISO15765_ReceiveMessage(handle, iIndex, &temp->s)) {
             Py_BLOCK_THREADS
+            Py_DECREF(obj_rx_msg);
             return set_ics_exception(exception_runtime_error(), "icsneoISO15765_ReceiveMessage() Failed");
         }
         Py_END_ALLOW_THREADS
-        return obj_rx_msg;
+        Py_DECREF(obj_rx_msg);
+        Py_RETURN_NONE;
     }
     catch (ice::Exception& ex)
     {
+        Py_DECREF(obj_rx_msg);
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
     return set_ics_exception(exception_runtime_error(), "This is a bug!");

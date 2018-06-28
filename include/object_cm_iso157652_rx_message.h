@@ -48,7 +48,7 @@ static PyMemberDef cm_iso157652_rx_message_object_members[] = {
     { "stMin", T_UBYTE, offsetof(cm_iso157652_rx_message_object, s.stMin), 0, "Minimum seperation time (between consecutive frames) to report in flow control response"},
     { "cf_timeout", T_USHORT, offsetof(cm_iso157652_rx_message_object, s.cf_timeout), 0, "max timeout (ms) for waiting on consecutive frame.  Set this to N_CR_MAX's value in J2534"},
     // TODO: Support bit fields here
-    { "flags", T_UBYTE, offsetof(cm_iso157652_rx_message_object, s.flags), 0, ""},
+    { "flags", T_UINT, offsetof(cm_iso157652_rx_message_object, s.flags), 0, ""},
     { "reserved", T_OBJECT_EX, offsetof(cm_iso157652_rx_message_object, s.reserved), 0, ""},
     { NULL, 0, 0, 0, 0 },
 };
