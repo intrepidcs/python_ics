@@ -52,7 +52,7 @@ static PyMemberDef cm_iso157652_tx_message_object_members[] = {
     { "data", T_OBJECT_EX, offsetof(cm_iso157652_tx_message_object, s.data), 0, "The data"},
     { "num_bytes", T_UINT, offsetof(cm_iso157652_tx_message_object, s.num_bytes), 0, "Number of data bytes"},
     // TODO: Support bit fields here
-    { "flags", T_UBYTE, offsetof(cm_iso157652_tx_message_object, s.flags), 0, ""},
+    { "flags", T_UINT, offsetof(cm_iso157652_tx_message_object, s.flags), 0, ""},
     { NULL, 0, 0, 0, 0 },
 };
 
@@ -97,7 +97,7 @@ static int cm_iso157652_tx_message_object_setattr(PyObject *o, PyObject *name, P
     cm_iso157652_tx_message_object* obj = (cm_iso157652_tx_message_object*)o;
     if (PyUnicode_CompareWithASCIIString(name, "data") == 0) {
         // Make sure we are a tuple and len() == 8
-        if (!PyTuple_Check(value) || !PyList_Check(value)) {
+        if (!PyTuple_Check(value) && !PyList_Check(value)) {
             PyErr_Format(PyExc_AttributeError,
                 "'%.50s' object attribute '%.400s' needs to be a tuple or list",
                 MODULE_NAME "." CM_ISO157652_TX_MESSAGE_OBJECT_NAME, name);

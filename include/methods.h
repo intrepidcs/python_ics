@@ -1009,12 +1009,14 @@ PyObject* meth_enable_network_com(PyObject* self, PyObject* args); //icsneoEnabl
 
 // (void* hObject, unsigned int iIndex, const stCM_ISO157652_RxMessage * pRxMessage)
 #define _DOC_ISO15765_RECEIVE_MESSAGE \
-    MODULE_NAME".iso15765_receive_message(device, iIndex)\n" \
+    MODULE_NAME".iso15765_receive_message(device, netid, rx_msg)\n" \
     "\n" \
-    "Receives an ISO15765 Message.\n" \
+    "Setup rx ISO15765 Message.\n" \
     "\n" \
     "Args:\n" \
     "\tdevice (:class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`): :class:`"MODULE_NAME"."NEO_DEVICE_OBJECT_NAME"`\n\n" \
+    "\n" \
+    "\tprx_msg (:class:`"MODULE_NAME"."CM_ISO157652_RX_MESSAGE_OBJECT_NAME"`): :class:`"MODULE_NAME"."CM_ISO157652_RX_MESSAGE_OBJECT_NAME"`\n\n" \
     "\n" \
     "Raises:\n" \
     "\t:class:`"MODULE_NAME".RuntimeError`\n" \
