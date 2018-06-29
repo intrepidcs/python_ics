@@ -114,6 +114,34 @@ static int neo_device_object_setattr(PyObject *o, PyObject *name, PyObject *valu
     return PyObject_GenericSetAttr(o, name, value);
 }
 
+// Shamelessly copied from base36enc
+static PyObject* convert_to_base36(unsigned long value)
+{
+    char base36[37] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    /* log(2**64) / log(36) = 12.38 => max 13 char + '\0' */
+    char buffer[100];
+    unsigned int offset = sizeof(buffer);
+
+    buffer[--offset] = '\0';
+    do {
+        buffer[--offset] = base36[value % 36];
+    } while (value /= 36);
+    return Py_BuildValue("s", &buffer[offset]);
+}
+
+static PyObject* neo_device_object_tp_repr(PyObject* o)
+{
+    // example output: <ics.NeoDevice neoVI FIRE2 CY1234>
+    neo_device_object* nd = (neo_device_object*)(o);
+    // Check range is AA0000-ZZZZZZ
+    PyObject* sn = NULL;
+    if (621457920 <= nd->dev.SerialNumber && nd->dev.SerialNumber <= 2176782335)
+        sn = convert_to_base36(nd->dev.SerialNumber);
+    else
+        sn = PyUnicode_FromFormat("%lu", nd->dev.SerialNumber);
+    return PyUnicode_FromFormat("<" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME " %U %U>", nd->name, sn);
+}
+
 extern PyTypeObject neo_device_object_type;
 
 // Copied from tupleobject.h
