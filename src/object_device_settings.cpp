@@ -80,10 +80,11 @@ void device_settings_object_update_from_struct(PyObject* settings)
     // Update radstar2 object
     ((radstar2_settings_object*)s_obj->radstar2)->s = s->Settings.radstar2;
     radstar2_settings_object_update_from_struct(s_obj->radstar2);
+#endif
     // Update vcan4 object
     ((vcan4_settings_object*)s_obj->vcan4)->s = s->Settings.vcan4;
     vcan4_settings_object_update_from_struct(s_obj->vcan4);
-#endif
+
     // Update vcan4_12 object
     ((vcan412_settings_object*)s_obj->vcan4_12)->s = s->Settings.vcan4_12;
     vcan412_settings_object_update_from_struct(s_obj->vcan4_12);
@@ -139,13 +140,13 @@ void device_settings_object_update_from_objects(PyObject* settings)
         s->Settings.radstar2 = ((rad_star2_settings_object*)s_obj->radstar2)->s;
         break;
     }
+#endif
     case DeviceVCAN4SettingsType:
     {
         vcan4_settings_object_update_from_objects(s_obj->vcan4);
         s->Settings.vcan4 = ((vcan4_settings_object*)s_obj->vcan4)->s;
         break;
     }
-#endif
     case DeviceVCAN412SettingsType:
     {
         vcan412_settings_object_update_from_objects(s_obj->vcan4_12);

@@ -19,7 +19,7 @@
 #include "object_vcan3_settings.h"
 #include "object_rad_galaxy_settings.h"
 //#include "object_rad_star2_settings.h"
-//#include "object_vcan4_settings.h"
+#include "object_vcan4_settings.h"
 #include "object_vcan412_settings.h"
 //#include "object_neoecu_avb_settings.h"
 //#include "object_rad_supermoon_settings.h"
@@ -80,7 +80,7 @@ static PyMemberDef device_settings_object_members[] = {
     { "vcan3", T_OBJECT_EX, offsetof(device_settings_object, vcan3), 0, MODULE_NAME "." VCAN3_SETTINGS_OBJECT_NAME" Object" },
     { "radgalaxy", T_OBJECT_EX, offsetof(device_settings_object, radgalaxy), 0, MODULE_NAME "." RADGALAXY_SETTINGS_OBJECT_NAME" Object" },
     //{ "radstar2", T_OBJECT_EX, offsetof(device_settings_object, radstar2), 0, MODULE_NAME "." RADSTAR2_SETTINGS_OBJECT_NAME" Object" },
-    //{ "vcan4", T_OBJECT_EX, offsetof(device_settings_object, vcan4), 0, MODULE_NAME "." VCAN4_SETTINGS_OBJECT_NAME" Object" },
+    { "vcan4", T_OBJECT_EX, offsetof(device_settings_object, vcan4), 0, MODULE_NAME "." VCAN4_SETTINGS_OBJECT_NAME" Object" },
     { "vcan4_12", T_OBJECT_EX, offsetof(device_settings_object, vcan4_12), 0, MODULE_NAME "." VCAN412_SETTINGS_OBJECT_NAME" Object" },
     { "vividcan", T_OBJECT_EX, offsetof(device_settings_object, vividcan), 0, MODULE_NAME "." VIVIDCAN_SETTINGS_OBJECT_NAME" Object" },
 
@@ -98,7 +98,7 @@ static int device_settings_object_init(device_settings_object* self, PyObject* a
     self->vcan3 = PyObject_CallObject((PyObject*)&vcan3_settings_object_type, NULL);
     self->radgalaxy = PyObject_CallObject((PyObject*)&rad_galaxy_settings_object_type, NULL);
     //self->radstar2 = PyObject_CallObject((PyObject*)&rad_star2_settings_object_type, NULL);
-    //self->vcan4 = PyObject_CallObject((PyObject*)&vcan4_settings_object_type, NULL);
+    self->vcan4 = PyObject_CallObject((PyObject*)&vcan4_settings_object_type, NULL);
     self->vcan4_12 = PyObject_CallObject((PyObject*)&vcan412_settings_object_type, NULL);
     self->vividcan = PyObject_CallObject((PyObject*)&vividcan_settings_object_type, NULL);
 
