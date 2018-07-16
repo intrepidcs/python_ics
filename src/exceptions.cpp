@@ -27,11 +27,7 @@ char *pyics_base36enc(int sn)
             Py_DECREF(name);
             return NULL;
         } else {
-#if PY_MAJOR_VERSION >= 3
-            return PyUnicode_AsUTF8(return_value);
-#else
-            return PyString_AsString(return_value);
-#endif
+            PyUniStr_AsStrOrUTF8(return_value);
         }
     }
     Py_DECREF(module);
@@ -90,11 +86,7 @@ PyObject* _set_ics_exception_dev(PyObject* exception, PyObject* obj, char* msg, 
     if (obj && PyNeoDevice_CheckExact(obj)) {
         ss << " (";
         // Grab the String "name" out of the NeoDeviceObject
-#if PY_MAJOR_VERSION >= 3
-        char* name = PyUnicode_AsUTF8(PyNeoDevice_GetNeoDevice(obj)->name);
-#else
-        char* name = PyString_AsString(PyNeoDevice_GetNeoDevice(obj)->name);
-#endif
+        char* name = PyUniStr_AsStrOrUTF8(PyNeoDevice_GetNeoDevice(obj)->name);
         if (name) {
             ss << name << " ";
         }

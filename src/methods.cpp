@@ -673,10 +673,10 @@ PyObject* meth_coremini_load(PyObject* self, PyObject* args)
     int data_size = 0;
 #if PY_MAJOR_VERSION >= 3
     if (PyUnicode_CheckExact(arg_data)) {
-        char* file_name = PyUnicode_AsUTF8(arg_data);
+        char* file_name = PyUniStr_AsStrOrUTF8(arg_data);
 #else
     if (PyString_Check(arg_data)) {
-        char* file_name = PyString_AsString(arg_data);
+        char* file_name = PyUniStr_AsStrOrUTF8(arg_data);
 #endif
         if (!file_name) {
             return set_ics_exception_dev(exception_runtime_error(), obj, "Failed to convert file path to string");
@@ -1190,11 +1190,7 @@ PyObject* meth_flash_devices(PyObject* self, PyObject* args)
     PyObject* key, * value;
     while (PyDict_Next(dict, &pos, &key, &value)) {
         unsigned long id = PyLong_AsUnsignedLong(key);
-#if PY_MAJOR_VERSION >= 3
-        char* path = PyUnicode_AsUTF8(value);
-#else
-        char* path = PyString_AsString(value);
-#endif
+        char* path = PyUniStr_AsStrOrUTF8(value);
         if (!path) {
             return NULL;
         }
@@ -3555,10 +3551,10 @@ PyObject* meth_load_readbin(PyObject* self, PyObject* args)
     int data_size = 0;
 #if PY_MAJOR_VERSION >= 3
     if (PyUnicode_CheckExact(arg_data)) {
-        char* file_name = PyUnicode_AsUTF8(arg_data);
+        char* file_name = PyUniStr_AsStrOrUTF8(arg_data);
 #else
     if (PyString_Check(arg_data)) {
-        char* file_name = PyString_AsString(arg_data);
+        char* file_name = PyUniStr_AsStrOrUTF8(arg_data);
 #endif
         if (!file_name) {
             return set_ics_exception_dev(exception_runtime_error(), obj, "Failed to convert file path to string");
