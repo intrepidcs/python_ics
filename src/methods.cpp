@@ -1191,7 +1191,7 @@ PyObject* meth_flash_devices(PyObject* self, PyObject* args)
     while (PyDict_Next(dict, &pos, &key, &value)) {
         unsigned long id = PyLong_AsUnsignedLong(key);
 #if PY_MAJOR_VERSION >= 3
-        char* path = (char*)PyUnicode_AsUTF8(value);
+        char* path = PyUnicode_AsUTF8(value);
 #else
         char* path = PyString_AsString(value);
 #endif
@@ -3555,7 +3555,7 @@ PyObject* meth_load_readbin(PyObject* self, PyObject* args)
     int data_size = 0;
 #if PY_MAJOR_VERSION >= 3
     if (PyUnicode_CheckExact(arg_data)) {
-        char* file_name = (char*)PyUnicode_AsUTF8(arg_data);
+        char* file_name = PyUnicode_AsUTF8(arg_data);
 #else
     if (PyString_Check(arg_data)) {
         char* file_name = PyString_AsString(arg_data);
