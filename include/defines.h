@@ -15,8 +15,10 @@
 #define PyUniStr_AsStrOrUTF8(obj) (char*)PyUnicode_AsUTF8(obj)
 #elif (PY_MAJOR_VERSION >= 3)
 #define PyUniStr_AsStrOrUTF8(obj) PyUnicode_AsUTF8(obj)
+#elif (PY_MAJOR_VERSION == 2)
+#define PyUniStr_AsStrOrUTF8(obj) PyString_AsString(obj)
 #else
-#define PyStrOrUni_AsStrOrUTF8(obj) PyString_AsString(obj)
+#error Failed to suppport PyUnicode_AsUTF8
 #endif
 
 // Enable use of generic device settings object in 803 or newer.
