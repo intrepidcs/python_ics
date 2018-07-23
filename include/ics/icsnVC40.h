@@ -150,6 +150,8 @@ typedef unsigned __int64 uint64_t;
 #define NEODEVICE_RADGIGALOG (0x00000006)
 #define NEODEVICE_VCAN41 (0x00000007)
 #define NEODEVICE_FIRE (0x00000008)
+//#define NEODEVICE_RADPLUTO (0x00000009)
+#define NEODEVICE_VCAN42_EL (0x0000000a)
 #define NEODEVICE_VCAN3 (0x00000010)
 #define NEODEVICE_RED (0x00000040)
 #define NEODEVICE_ECU (0x00000080)
@@ -166,7 +168,7 @@ typedef unsigned __int64 uint64_t;
 #define NEODEVICE_ION (0x00040000)
 #define NEODEVICE_RADSTAR (0x00080000)
 #define NEODEVICE_DONT_REUSE3 (0x00100000)//NEODEVICE_ION3
-#define NEODEVICE_VCAN4 (0x00200000)
+#define NEODEVICE_VCAN44 (0x00200000)
 #define NEODEVICE_VCAN42 (0x00400000)
 #define NEODEVICE_CMPROBE (0x00800000)
 #define NEODEVICE_EEVB (0x01000000)
@@ -1804,8 +1806,9 @@ typedef struct _OBD2ProSettings
 		uint32_t enableLatencyTest : 1;
 		uint32_t reserved : 30;
 	} flags;
+	uint16_t can_switch_mode;
 } OBD2ProSettings;
-#define OBD2ProSettings_SIZE 462
+#define OBD2ProSettings_SIZE 464
 
 typedef struct _VCAN412Settings
 {
@@ -1901,7 +1904,8 @@ typedef struct _GLOBAL_SETTINGS
 
 #define NEOVI_3G_MAX_SETTINGS_SIZE sizeof(GLOBAL_SETTINGS)
 
-typedef enum _EDeviceSettingsType {
+typedef enum _EDeviceSettingsType
+{
 	DeviceFireSettingsType,
 	DeviceFireVnetSettingsType,
 	DeviceFire2SettingsType,
@@ -1944,7 +1948,8 @@ typedef struct _SDeviceSettings
 } SDeviceSettings;
 
 
-typedef enum _EPlasmaIonVnetChannel_t {
+typedef enum _EPlasmaIonVnetChannel_t
+{
 	PlasmaIonVnetChannelMain,// PLASMA = SLOT 2, ION = VNET2
 	PlasmaIonVnetChannelA,// PLASMA = SLOT 1, ION = VNET1
 	PlasmaIonVnetChannelB,// PLASMA = SLOT 3, ION = NA

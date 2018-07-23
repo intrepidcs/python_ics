@@ -106,6 +106,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, NEODEVICE_RADGIGALOG);
 	result += PyModule_AddIntMacro(module, NEODEVICE_VCAN41);
 	result += PyModule_AddIntMacro(module, NEODEVICE_FIRE);
+	result += PyModule_AddIntMacro(module, NEODEVICE_VCAN42_EL);
 	result += PyModule_AddIntMacro(module, NEODEVICE_VCAN3);
 	result += PyModule_AddIntMacro(module, NEODEVICE_RED);
 	result += PyModule_AddIntMacro(module, NEODEVICE_ECU);
@@ -122,7 +123,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, NEODEVICE_ION);
 	result += PyModule_AddIntMacro(module, NEODEVICE_RADSTAR);
 	result += PyModule_AddIntMacro(module, NEODEVICE_DONT_REUSE3);
-	result += PyModule_AddIntMacro(module, NEODEVICE_VCAN4);
+	result += PyModule_AddIntMacro(module, NEODEVICE_VCAN44);
 	result += PyModule_AddIntMacro(module, NEODEVICE_VCAN42);
 	result += PyModule_AddIntMacro(module, NEODEVICE_CMPROBE);
 	result += PyModule_AddIntMacro(module, NEODEVICE_EEVB);
