@@ -48,12 +48,11 @@ if __name__ == "__main__":
     # Lets figure out how many are connected to the PC and display it
     connected_count = len(ics.find_devices())
     print("Found {} connected device(s)...".format(connected_count))
-    for i in range(connected_count):
-        # Lets open the device
-        device = open_device(i)
-        transmit_can(device)
-        receive_can(device)
-        # the device will automatically close here
-        # because the device object is going out of
-        # scope.
+    
+    tx_dev = open_device(0)
+    rx_dev = open_device(1)
+    
+    transmit_can(tx_dev)
+    receive_can(rx_dev)
+    
     print("Finished.")
