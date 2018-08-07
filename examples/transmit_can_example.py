@@ -28,8 +28,8 @@ def open_device(index=0):
     
 def transmit_can(device):
     msg = ics.SpyMessage()
-    msg.ArbIdOrHeader = 0x01 # CAN Arbitration ID
-    msg.Data = [1,2,3,4,5,6,7,8] # Data Bytes go here
+    msg.ArbIDOrHeader = 0x01 # CAN Arbitration ID
+    msg.Data = (1,2,3,4,5,6,7,8) # Data Bytes go here
     msg.NetworkID = ics.NETID_HSCAN # First channel of CAN on the device
     
     # msg parameter here can also be a tuple of messages
