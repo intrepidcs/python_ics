@@ -4124,7 +4124,7 @@ PyObject* meth_get_library_path(PyObject* self)
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
-        return Py_BuildValue("s", lib->getPath());
+        return Py_BuildValue("s", lib->getPath().c_str());
     }
     catch (ice::Exception& ex)
     {
