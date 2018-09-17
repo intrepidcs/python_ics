@@ -59,7 +59,7 @@ typedef struct {
 
 static PyMemberDef neo_device_object_members[] = {
     { "Name", T_OBJECT_EX, offsetof(neo_device_object, name), 0, "String describing DeviceType, extension to Python api only." },
-    { "DeviceType", T_ULONG, offsetof(neo_device_object, dev.DeviceType), 0, "" },
+    { "DeviceType", T_UINT, offsetof(neo_device_object, dev.DeviceType), 0, "" },
     { "Handle", T_INT, offsetof(neo_device_object, dev.Handle), 0, "" },
     { "NumberOfClients", T_INT, offsetof(neo_device_object, dev.NumberOfClients), 0, "" },
     { "SerialNumber", T_INT, offsetof(neo_device_object, dev.SerialNumber), 0, "" },
