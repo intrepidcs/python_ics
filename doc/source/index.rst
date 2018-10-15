@@ -1,13 +1,74 @@
+============================================================
+Installation on Windows
+============================================================
 
-Documentation
-======================================
-.. automodule:: ics
-   :members:
-   :show-inheritance:
-   :undoc-members:
+PyPi provides binary packages for Windows. You can simply install the python_ics module by running the following command:
 
-Function List
-======================================
+``pip install python_ics``
+
+    **Note:** pip.exe is usually located under the Scripts directory under the Python
+    installation directory.
+
+    
+Building from source
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Building from source on windows is not usually need so it won't really be covered here in detail. As a starting point you'll need to match the compiler version used to build the official Python binaries (MSVC). If the build environment is setup correctly, you should be able to run ``python setup.py build`` like usual. 
+
+Intrepid icsneo40 Library
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python_ics module looks for ``icsneo40.dll`` in the normal windows DLL search paths. The module will throw an exception if its not found.
+
+
+
+============================================================
+Installation on Linux
+============================================================
+python_ics does not provide binaries for linux distributions so we will have to compile from source. This can be easily achieved by utilzing Python's PIP. First we need to make sure we have some base packages installed.
+
+Fedora Dependencies (FC28)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+``sudo dnf install redhat-rpm-config gcc g++ python3-devel``
+
+Debian/Ubuntu Dependencies
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+``sudo apt install build-essential python-dev``
+
+Others (Required dependencies)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+- GCC
+- G++
+- Python Development packages (We Need to link to Python.h)
+
+
+Installation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+After dependencies are installed we can run the following pip command:
+
+``pip install python_ics``
+
+    **Note:** A lot of distributions have Python 2 and 3 installed side by side. As of this writing without a version suffix the commands still default to version 2 of the Python binaries. In order to utilize the Python 3 binaries you must append a 3 after the binary names (python3 and pip3 instead of just python and pip).
+
+Intrepid libicsneoapi.so Library
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Please see https://github.com/intrepidcs/icsneoapi for more details.
+
+
+============================================================
+Getting Started
+============================================================
+
+Please see https://github.com/intrepidcs/python_ics/tree/master/examples for simple examples on how to use this module. Most function documentation has a simple example on how its intended to be used. Every function was designed to be as close as possible to it's C counterpart unless it was deemed to make the function more pythonic in nature. 
+
+For those experienced with the C API ``ics.open_device`` (``icsneoOpenNeoDevice()``) behavior has been changed the most (no parameters makes it auto utilize ``ics.find_devices`` (``icsneoFindNeoDevices()``) and open the first device). Also since python is a object oriented language the module utilizes this and auto cleans up device handles when going out of scope so there is usually no need to call ``ics.close_device()``.
+
+
+============================================================
+Module Function List
+============================================================
 
 
 .. autosummary::
@@ -128,8 +189,17 @@ Function List
 	ics.icsneoSetVCAN3Settings
 	ics.icsneoWriteSDCard
 
-Variables
-======================================
+============================================================
+Module Documentation
+============================================================
+.. automodule:: ics
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+============================================================
+Module Variables
+============================================================
 
 .. py:data:: AUTO
 	:annotation: = 0
