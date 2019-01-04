@@ -43,11 +43,11 @@ extern PyTypeObject spy_message_object_type;
 #else
 const char* arg_parse(const char* args, const char* func)
 {
-    static const char buffer[128];
+    static char buffer[128];
     memset(buffer, '\0', sizeof(buffer)/sizeof(buffer[0]));
     strcpy(buffer, args);
     strcat(buffer, func);
-    return buffer;
+    return (const char*)buffer;
 }
 #endif
 
