@@ -1105,7 +1105,7 @@ PyObject* meth_get_error_messages(PyObject* self, PyObject* args)
     ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
     int errors[600] = {0};
     int error_count = 600;
-    PyObject* list = PyList_New(0);
+    
     try
     {
         ice::Library* lib = dll_get_library();
@@ -1121,6 +1121,7 @@ PyObject* meth_get_error_messages(PyObject* self, PyObject* args)
         }
         Py_END_ALLOW_THREADS
         ice::Function<int __stdcall (int, char*, char*, int*, int*, int*, int*)> icsneoGetErrorInfo(lib, "icsneoGetErrorInfo");
+        PyObject* list = PyList_New(0);
         for (int i=0; i < error_count; ++i) {
             char description_short[255] = {0};
             char description_long[255] = {0};
@@ -1131,11 +1132,14 @@ PyObject* meth_get_error_messages(PyObject* self, PyObject* args)
             if (!icsneoGetErrorInfo(errors[i], description_short, description_long, 
                 &description_short_length, &description_long_length, &severity, &restart_needed)) {
                 Py_BLOCK_THREADS
+                Py_XDECREF(list);
                 return set_ics_exception(exception_runtime_error(), "icsneoGetErrorInfo() Failed");
             }
             Py_END_ALLOW_THREADS
             PyObject* tuple = Py_BuildValue("i, s, s, i, i", errors[i], description_short, description_long, severity, restart_needed);
+            
             PyList_Append(list, tuple);
+            Py_XDECREF(tuple);
         }
         return list;
     }
