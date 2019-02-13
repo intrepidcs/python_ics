@@ -126,7 +126,7 @@ static PyObject* convert_to_base36(unsigned long value)
     do {
         buffer[--offset] = base36[value % 36];
     } while (value /= 36);
-    return Py_BuildValue("s", &buffer[offset]);
+    return PyUnicode_FromString(&buffer[offset]);
 }
 
 static PyObject* neo_device_object_tp_repr(PyObject* o)
