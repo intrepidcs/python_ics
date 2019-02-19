@@ -86,43 +86,47 @@ typedef struct
 char* neodevice_to_string(unsigned long type)
 {
     switch (type) {
-    case NEODEVICE_UNKNOWN: return "Unknown";
     case NEODEVICE_BLUE: return "neoVI BLUE";
-    case NEODEVICE_ECU_AVB: return "neoECU/AVB TSN";
-    case NEODEVICE_RADSUPERMOON: return "RADSuperMoon";
-    case NEODEVICE_DW_VCAN: return "ValueCAN DW";
-    case NEODEVICE_RADMOON2: return "RADMoon2";
-    case NEODEVICE_RADGIGALOG: return "RADGigalog";
-    case NEODEVICE_VCAN41: return "ValueCAN4-1";
+    //case NEODEVICE_ECU_AVB: return "neoECU AVB/TSN";
+    //case NEODEVICE_RADSUPERMOON: return "RAD SuperMoon";
+    case NEODEVICE_DW_VCAN: return "ValueCAN2 DW";
+    //case NEODEVICE_RADMOON2: return "RAD Moon2";
+    //case NEODEVICE_RADGIGALOG: return "RAD Gigalog";
+    //case NEODEVICE_VCAN41: return "ValueCAN4-1";
     case NEODEVICE_FIRE: return "neoVI FIRE";
-    case NEODEVICE_VCAN42_EL: return "ValueCAN4-1";
     case NEODEVICE_VCAN3: return "ValueCAN3";
     case NEODEVICE_RED: return "neoVI RED";
-    case NEODEVICE_ECU: return "neoECU";
+    case NEODEVICE_ECU: return "ECU";
     case NEODEVICE_IEVB: return "IEVB";
     case NEODEVICE_PENDANT: return "Pendant";
     case NEODEVICE_OBD2_PRO: return "neoOBD2 Pro";
-    case NEODEVICE_ECUCHIP_UART: return "ECUCHIP";
-    case NEODEVICE_PLASMA: return "neoVI PLASMA";
+    case NEODEVICE_ECUCHIP_UART: return "neoECU Chip";
+    case NEODEVICE_PLASMA_1_11:
+    case NEODEVICE_PLASMA_1_12:
+    case NEODEVICE_PLASMA_1_13: return "neoVI PLASMA";
+    //case NEODEVICE_DONT_REUSE0: return "DONT REUSE0";
     case NEODEVICE_NEOANALOG: return "neoAnalog";
-    case NEODEVICE_CT_OBD: return "neoOBD CT";
-    case NEODEVICE_ION: return "neoVI ION";
-    case NEODEVICE_RADSTAR: return "RADStar";
-    case NEODEVICE_VCAN44: return "ValueCAN4-4";
-    case NEODEVICE_VCAN42: return "ValueCAN4-2";
-    case NEODEVICE_CMPROBE: return "CM Probe";
+    //case NEODEVICE_CT_OBD: return "";
+    //case NEODEVICE_DONT_REUSE1: return "DONT REUSE1";
+    //case NEODEVICE_DONT_REUSE2: return "DONT REUSE2";
+    case NEODEVICE_ION_2:
+    case NEODEVICE_ION_3: return "neoVI ION";
+    case NEODEVICE_RADSTAR: return "RAD Star";
+    //case NEODEVICE_DONT_REUSE3: return "DONT REUSE3";
+    case NEODEVICE_VCAN4: return "ValueCAN4";
+	case NEODEVICE_VCAN4_12: return "ValueCAN4-1/2";
+    case NEODEVICE_CMPROBE: return "CMProbe";
     case NEODEVICE_EEVB: return "EEVB";
-    case NEODEVICE_VCANRF: return "ValueCAN.rf";
+    case NEODEVICE_VCANRF: return "ValueCAN.RF";
     case NEODEVICE_FIRE2: return "neoVI FIRE2";
-    case NEODEVICE_FLEX: return "neoVI FLEX";
-    case NEODEVICE_RADGALAXY: return "RADGalaxy";
-    case NEODEVICE_RADSTAR2: return "RADStar2";
+    case NEODEVICE_FLEX: return "FLEX";
+    case NEODEVICE_RADGALAXY: return "RAD Galaxy";
+    case NEODEVICE_RADSTAR2: return "RAD Star2";
     case NEODEVICE_VIVIDCAN: return "VividCAN";
-    case NEODEVICE_OBD2_SIM: return "neoOBD2 Sim";
-    //case NEODEVICE_ANY_PLASMA: return "neoVI PLASMA";
-    //case NEODEVICE_ANY_ION: return "neoVI ION";
+    case NEODEVICE_OBD2_SIM: return "OBD2 Sim";
+    default: return "unknown/unsupported";
     };
-    return "Unknown";
+    return "unknown/unsupported";
 }
 
 bool _convertListOrTupleToArray(PyObject* obj, std::vector<PyObject*>* results)
@@ -1133,7 +1137,6 @@ PyObject* meth_get_error_messages(PyObject* self, PyObject* args)
             }
             Py_END_ALLOW_THREADS
             PyObject* tuple = Py_BuildValue("i, s, s, i, i", errors[i], description_short, description_long, severity, restart_needed);
-            
             PyList_Append(list, tuple);
             Py_XDECREF(tuple);
         }
@@ -1857,11 +1860,6 @@ PyObject* meth_get_device_settings(PyObject* self, PyObject* args)
         case NEODEVICE_VCAN4_12:
             return _get_vcan412_settings(handle);
             break;
-#if VSPY3_BUILD_VERSION > 802 // Not implemented in 802
-        case NEODEVICE_VCAN4:
-            return _get_vcan4_settings(handle);
-            break;
-#endif // VSPY3_BUILD_VERSION > 802
         case NEODEVICE_VCANRF:
             return _get_vcanrf_settings(handle);
             break;
@@ -4129,7 +4127,7 @@ PyObject* meth_get_library_path(PyObject* self)
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
-        return Py_BuildValue("s", lib->getPath());
+        return Py_BuildValue("s", lib->getPath().c_str());
     }
     catch (ice::Exception& ex)
     {
