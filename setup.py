@@ -68,6 +68,10 @@ if 'LINUX' in platform.system().upper():
 else:
 	compile_args = []
 
+    
+def read(fname):
+    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+    
 module = Extension('ics',
   define_macros = [('MAJOR_VERSION', MAJOR_VERSION), ('MINOR_VERSION', MINOR_VERSION)],
   include_dirs=['include', 'include/ics', 'include/ice'],
@@ -78,13 +82,8 @@ module = Extension('ics',
 
 setup (name = 'python_ics',
        version = '%d.%d' % (MAJOR_VERSION, MINOR_VERSION),
-       description = 'Intrepidcs icsneo40 Python 3 API/Wrapper',
-       long_description = 
-       """Python C Code module for interfacing to the icsneo40 dynamic library. Code tries 
-to respect PEP 8 (https://www.python.org/dev/peps/pep-0008/). Function naming convention does 
-not follow the tradition c style icsneo40 naming convention as the python_ics module 
-name acts as the namespace (icsneo portion of the function) and function names 
-are suppose to be lowercase with underscores instead of mixedCase like icsneo API.""",
+       description = 'Library for interfacing with Intrepid devices in Python',
+       long_description = read('README.md'),
        license = "MIT",
        author = 'David Rebbe',
        author_email='drebbe@intrepidcs.com',
@@ -102,4 +101,5 @@ are suppose to be lowercase with underscores instead of mixedCase like icsneo AP
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
         ],)
