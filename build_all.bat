@@ -1,6 +1,10 @@
 @ECHO OFF
 mode con cols=140 lines=70
 
+rmdir /s /q build
+
+mkdir old_dist
+move dist\* old_dist\
 
 C:\Python27\scripts\pip install wheel twine --upgrade
 C:\Python33\scripts\pip install wheel twine --upgrade
