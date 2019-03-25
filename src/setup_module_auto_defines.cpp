@@ -306,6 +306,12 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddObject(module, "NEOVI_RED_TIMESTAMP_1_25NS", PyFloat_FromDouble(NEOVI_RED_TIMESTAMP_1_25NS));
 	result += PyModule_AddObject(module, "NEOVI_RED_TIMESTAMP_2_10NS", PyFloat_FromDouble(NEOVI_RED_TIMESTAMP_2_10NS));
 	result += PyModule_AddObject(module, "NEOVI_RED_TIMESTAMP_1_10NS", PyFloat_FromDouble(NEOVI_RED_TIMESTAMP_1_10NS));
+	result += PyModule_AddIntMacro(module, CANNODE_STATUS_COREMINI_IS_RUNNING);
+	result += PyModule_AddIntMacro(module, CANNODE_STATUS_IN_BOOTLOADER);
+	result += PyModule_AddIntMacro(module, MAIN_VNET);
+	result += PyModule_AddIntMacro(module, SLAVE_VNET_A);
+	result += PyModule_AddIntMacro(module, SLAVE_VNET_B);
+	result += PyModule_AddIntMacro(module, WIFI_CONNECTION);
 	// enum
 	result += PyModule_AddIntMacro(module, AUTO);
 	result += PyModule_AddIntMacro(module, USE_TQ);
