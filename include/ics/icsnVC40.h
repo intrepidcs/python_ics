@@ -403,6 +403,36 @@ typedef struct
 
 } NeoDevice;
 
+typedef struct _NeoDeviceEx
+{
+	NeoDevice neoDevice;
+
+	uint32_t FirmwareMajor;
+	uint32_t FirmwareMinor;
+
+#define CANNODE_STATUS_COREMINI_IS_RUNNING (0x1)
+#define CANNODE_STATUS_IN_BOOTLOADER (0x2)
+	uint32_t Status;// Bitfield, see defs above
+
+// Option bit flags
+#define MAIN_VNET (0x01)
+#define SLAVE_VNET_A (0x02)
+#define SLAVE_VNET_B (0x04)
+#define WIFI_CONNECTION (0x08)
+	uint32_t Options;
+
+	void* pAvailWIFINetwork;
+	void* pWIFIInterfaceInfo;
+
+	int isEthernetDevice;
+
+	uint8_t MACAddress[6];
+	uint16_t hardwareRev;
+	uint16_t revReserved;
+	uint32_t Reserved[6];// may be expanded in future revisions
+
+} NeoDeviceEx;
+
 typedef union tagOptionsOpenNeoEx {
 	struct
 	{
