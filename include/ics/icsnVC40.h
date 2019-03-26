@@ -41,6 +41,11 @@ typedef unsigned __int64 uint64_t;
 #include <stdint.h>
 #endif
 
+// MSVC++ 10.0 _MSC_VER == 1600 64-bit version doesn't allow multi-line #if directives...
+#if defined(_WIN64) || defined(__x86_64__) || defined(__aarch64__) || defined(__x86_64__) || defined(__LP64__) || defined(_M_AMD64) || 	defined(_M_IA64) || defined(__PPC64__)
+#define IS_64BIT_SYSTEM
+#endif
+
 /* OpenPort "OpenType" Argument Constants -- deprecated, use OpenNeoDevice */
 #define NEOVI_COMMTYPE_RS232 0
 #define NEOVI_COMMTYPE_USB_BULK 1
@@ -2250,19 +2255,23 @@ typedef struct _icsSpyMessageFlexRay
 	uint8_t Reserved[3];
 } icsSpyMessageFlexRay;
 
-#if defined(_WIN64) || defined(__x86_64__)
-#ifdef VSPY3_GUI
+#if defined(VSPY3_GUI)
+#if defined(IS_64BIT_SYSTEM)
+// 64-bit
 #define icsSpyMessage_SIZE 80
 #else
+// 32-bit
 #define icsSpyMessage_SIZE 72
 #endif
 #else
-#ifdef VSPY3_GUI
-#define icsSpyMessage_SIZE 68
+#if defined(IS_64BIT_SYSTEM)
+// 64-bit
+#define icsSpyMessage_SIZE 72
 #else
+// 32-bit
 #define icsSpyMessage_SIZE 64
 #endif
-#endif
+#endif// VSPY3_GUI
 
 typedef struct _icsSpyMessageLong
 {
