@@ -46,7 +46,9 @@ with open('src/setup_module_auto_defines.cpp', 'w') as f:
                 print("\n#ifdef _USE_INTERNAL_HEADER_ /* ALL THESE DEFINES ARE SPECIFIED IN THE INTERNAL HEADER */\n", file=f)
             inside_enum = False
             inside_comment = False
+            line_number = 0
             for line in fname:
+                line_number += 1
                 if line.lstrip().startswith('//'):
                     continue
                 if inside_enum and '}' in line:
@@ -73,10 +75,10 @@ with open('src/setup_module_auto_defines.cpp', 'w') as f:
                     continue
                 if '#define' in line:
                     sline = line.split()
-                    #print('\t\t' + str(sline))
+                    # DEBUG: print('\t\t' + str(line_number) + '\t' + str(sline))
                     if any(x in sline[1] for x in ignores):
                         continue
-                    if re.match("^\d+?\.\d+?$", sline[2]) is not None:
+                    if len(sline) >= 3 and re.match("^\d+?\.\d+?$", sline[2]) is not None:
                         # Value is a float
                         print('\tresult += PyModule_AddObject(module, "{0}", PyFloat_FromDouble({0}));'.format(sline[1]), file=f)
                     else:
