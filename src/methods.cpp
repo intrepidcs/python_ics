@@ -95,7 +95,10 @@ char* neodevice_to_string(unsigned long type)
     case NEODEVICE_RADGIGALOG: return "RADGigalog";
     case NEODEVICE_VCAN41: return "ValueCAN4-1";
     case NEODEVICE_FIRE: return "neoVI FIRE";
+    case NEODEVICE_RADPLUTO: return "RAD-Pluto";
     case NEODEVICE_VCAN42_EL: return "ValueCAN4-1";
+    case NEODEVICE_RADIO_CANHUB: return "neoRAD-IO2 CANHUB";
+    case NEODEVICE_NEOECU12: return "neoECU12";
     case NEODEVICE_VCAN3: return "ValueCAN3";
     case NEODEVICE_RED: return "neoVI RED";
     case NEODEVICE_ECU: return "neoECU";
