@@ -25,7 +25,7 @@ with open('include/setup_module_auto_defines.h', 'w') as f:
     print("\nint setup_module_auto_defines(PyObject * module);\n", file=f)
     print("#endif // __SETUP_MODULE_AUTO_DEFINES_H__", file=f)
 
-ignores = ('(', '#endif', '#define', 'icscm_', 'GCC_MODIFIER', 'VS_MODIFIER', '{', 'ICSNVC40_H', 'ICSNVC40INTERNAL__H_', 'SYellowSettings_SIZE')
+ignores = ('(', '#endif', '#define', 'icscm_', 'GCC_MODIFIER', 'VS_MODIFIER', '{', 'ICSNVC40_H', 'ICSNVC40INTERNAL__H_', 'SYellowSettings_SIZE', 'IS_64BIT_SYSTEM')
 use_enums = True
 with open('src/setup_module_auto_defines.cpp', 'w') as f:
     print(boiler_plate, file=f)
