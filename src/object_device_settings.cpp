@@ -76,10 +76,10 @@ void device_settings_object_update_from_struct(PyObject* settings)
     // Update radgalaxy object
     ((rad_galaxy_settings_object*)s_obj->radgalaxy)->s = s->Settings.radgalaxy;
     rad_galaxy_settings_object_update_from_struct(s_obj->radgalaxy);
-#if 0
+#if VSPY3_BUILD_VERSION >= 803
     // Update radstar2 object
-    ((radstar2_settings_object*)s_obj->radstar2)->s = s->Settings.radstar2;
-    radstar2_settings_object_update_from_struct(s_obj->radstar2);
+    ((rad_star2_settings_object*)s_obj->radstar2)->s = s->Settings.radstar2;
+    rad_star2_settings_object_update_from_struct(s_obj->radstar2);
 #endif
     // Update vcan4 object
     ((vcan4_settings_object*)s_obj->vcan4)->s = s->Settings.vcan4;
