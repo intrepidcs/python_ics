@@ -41,6 +41,11 @@ typedef unsigned __int64 uint64_t;
 #include <stdint.h>
 #endif
 
+// MSVC++ 10.0 _MSC_VER == 1600 64-bit version doesn't allow multi-line #if directives...
+#if defined(_WIN64) || defined(__x86_64__) || defined(__aarch64__) || defined(__x86_64__) || defined(__LP64__) || defined(_M_AMD64) || 	defined(_M_IA64) || defined(__PPC64__)
+#define IS_64BIT_SYSTEM
+#endif
+
 /* OpenPort "OpenType" Argument Constants -- deprecated, use OpenNeoDevice */
 #define NEOVI_COMMTYPE_RS232 0
 #define NEOVI_COMMTYPE_USB_BULK 1
@@ -150,8 +155,10 @@ typedef unsigned __int64 uint64_t;
 #define NEODEVICE_RADGIGALOG (0x00000006)
 #define NEODEVICE_VCAN41 (0x00000007)
 #define NEODEVICE_FIRE (0x00000008)
-//#define NEODEVICE_RADPLUTO (0x00000009)
+#define NEODEVICE_RADPLUTO (0x00000009)
 #define NEODEVICE_VCAN42_EL (0x0000000a)
+#define NEODEVICE_RADIO_CANHUB (0x0000000b)
+#define NEODEVICE_NEOECU12 (0x0000000c)
 #define NEODEVICE_VCAN3 (0x00000010)
 #define NEODEVICE_RED (0x00000040)
 #define NEODEVICE_ECU (0x00000080)
@@ -393,6 +400,19 @@ typedef unsigned __int64 uint64_t;
 #define NEOVI_RED_TIMESTAMP_2_10NS 429.4967296
 #define NEOVI_RED_TIMESTAMP_1_10NS 0.000000010
 
+#define HARDWARE_TIMESTAMP_ID_NONE (unsigned char)0
+#define HARDWARE_TIMESTAMP_ID_VSI (unsigned char)1
+#define HARDWARE_TIMESTAMP_ID_AVT_716 (unsigned char)2
+#define HARDWARE_TIMESTAMP_ID_NI_CAN (unsigned char)3
+#define HARDWARE_TIMESTAMP_ID_NEOVI (unsigned char)4
+#define HARDWARE_TIMESTAMP_ID_AVT_717 (unsigned char)5
+#define HARDWARE_TIMESTAMP_ID_NEOv6_VCAN (unsigned char)6
+#define HARDWARE_TIMESTAMP_ID_DOUBLE_SEC (unsigned char)7
+#define HARDWARE_TIMESTAMP_ID_NEORED_10US (unsigned char)8
+#define HARDWARE_TIMESTAMP_ID_NEORED_25NS (unsigned char)9
+#define HARDWARE_TIMESTAMP_ID_NEORED_10NS (unsigned char)10
+
+
 typedef struct
 {
 	uint32_t DeviceType;
@@ -402,6 +422,36 @@ typedef struct
 	int32_t MaxAllowedClients;
 
 } NeoDevice;
+
+typedef struct _NeoDeviceEx
+{
+	NeoDevice neoDevice;
+
+	uint32_t FirmwareMajor;
+	uint32_t FirmwareMinor;
+
+#define CANNODE_STATUS_COREMINI_IS_RUNNING (0x1)
+#define CANNODE_STATUS_IN_BOOTLOADER (0x2)
+	uint32_t Status;// Bitfield, see defs above
+
+// Option bit flags
+#define MAIN_VNET (0x01)
+#define SLAVE_VNET_A (0x02)
+#define SLAVE_VNET_B (0x04)
+#define WIFI_CONNECTION (0x08)
+	uint32_t Options;
+
+	void* pAvailWIFINetwork;
+	void* pWIFIInterfaceInfo;
+
+	int isEthernetDevice;
+
+	uint8_t MACAddress[6];
+	uint16_t hardwareRev;
+	uint16_t revReserved;
+	uint32_t Reserved[6];// may be expanded in future revisions
+
+} NeoDeviceEx;
 
 typedef union tagOptionsOpenNeoEx {
 	struct
@@ -823,6 +873,16 @@ typedef union _stChipVersions {
 		uint8_t zynq_core_major;
 		uint8_t zynq_core_minor;
 	} radmoon2_versions;
+	struct
+	{
+		uint8_t mchip_major;
+		uint8_t mchip_minor;
+	} pluto_versions;
+	struct
+	{
+		uint8_t zynq_core_major;
+		uint8_t zynq_core_minor;
+	} radgigalog_versions;
 } stChipVersions;
 
 #define stChipVersions_SIZE 8
@@ -908,6 +968,47 @@ typedef struct ETHERNET_SETTINGS_t
 } ETHERNET_SETTINGS;
 #define ETHERNET_SETTINGS_SIZE 8
 
+typedef struct ETHERNET_SETTINGS2_t
+{
+	/* bit0: 0=half duplex, 1=full duplex
+	 * bit1: auto negot
+	 * bit2: enable tcp/ip stack
+	 * bit3: enable rtsp server
+	 */
+	uint8_t flags;
+	uint8_t link_speed;//0=10, 1=100, 2=1000
+	uint32_t ip_addr;
+	uint32_t netmask;
+	uint32_t gateway;
+	uint8_t rsvd[2];
+} ETHERNET_SETTINGS2;
+#define ETHERNET_SETTINGS2_SIZE 16
+
+typedef struct ETHERNET10G_SETTINGS_t
+{
+	/* bit0: 0=half duplex, 1=full duplex
+	 * bit1: auto negot
+	 * bit2: enable tcp/ip stack
+	 * bit3: enable rtsp server
+	 * bit31: comm in use
+	 */
+	uint32_t flags;
+	uint32_t ip_addr;
+	uint32_t netmask;
+	uint32_t gateway;
+	uint8_t link_speed;//0=10, 1=100, 2=1000, 3=2500, 4=5000, 5=10000
+	uint8_t rsvd2[7];
+} ETHERNET10G_SETTINGS;
+#define ETHERNET10G_SETTINGS_SIZE 24
+
+typedef struct DISK_SETTINGS_t
+{
+	uint8_t disk_layout;// RAID0, spanned, etc
+	uint8_t disk_format;// FAT32
+	uint32_t disk_enables;// mask of enabled disks in this layout
+	uint8_t rsvd[8];
+} DISK_SETTINGS;
+#define DISK_SETTINGS_SIZE 14
 typedef struct
 {
 	uint8_t term_enabled;
@@ -924,6 +1025,125 @@ typedef struct
 	uint8_t SlaveNetwork;
 } TIMESYNC_ICSHARDWARE_SETTINGS;
 #define TIMESYNC_ICSHARDWARE_SETTINGS_SIZE 4
+
+typedef enum _ERADGigalogDiskFormat
+{
+	RADGigalogDiskFormatUnknown = 0,
+	RADGigalogDiskFormatFAT32,
+	RADGigalogDiskFormatexFAT,
+} ERADGigalogDiskFormat;
+
+typedef enum _ERADGigalogDiskLayout
+{
+	RADGigalogDiskLayoutSpanned = 0,
+	RADGigalogDiskLayoutRAID0,
+	RADGigalogDiskLayoutRAID1,
+	RADGigalogDiskLayoutRAID5,
+	RADGigalogDiskLayoutIndividual,
+} ERADGigalogDiskLayout;
+
+typedef struct _SRADGigalogDiskStatus
+{
+	uint16_t status;// 0x1 = present, 0x2 = initialized, 0x04 included in formatting
+	uint8_t sectors[8];
+	uint8_t bytesPerSector[4];
+} SRADGigalogDiskStatus;
+#define SRADGigalogDiskStatus_SIZE 14
+
+typedef struct _SRADGigalogDiskStructure
+{
+	DISK_SETTINGS settings;
+	uint16_t options;// 0x01 full format
+} SRADGigalogDiskStructure;
+#define SRADGigalogDiskStructure_SIZE 16
+
+typedef struct _SRADGigalogDiskDetails
+{
+	SRADGigalogDiskStructure structure;
+	SRADGigalogDiskStatus status[12];
+} SRADGigalogDiskDetails;
+#define SRADGigalogDiskDetails_SIZE 184
+
+typedef struct _SRADGigalogDiskFormatProgress
+{
+	uint16_t state;// state of formatting (not started, writing file system, formatting, writing VSAs, finished)
+	uint8_t sectorsRemaining[8];
+} SRADGigalogDiskFormatProgress;
+#define SRADGigalogDiskFormatProgress_SIZE 10
+
+typedef struct _SRadGigalogSubCmdHdr
+{
+	uint16_t cmd;
+	uint16_t length;
+} SRadGigalogSubCmdHdr;
+#define SRadGigalogSubCmdHdr_SIZE 4
+
+typedef struct _SRadGigalogComm
+{
+	SRadGigalogSubCmdHdr hdr;
+	union {
+		SRADGigalogDiskStructure structure;
+		SRADGigalogDiskDetails details;
+		SRADGigalogDiskFormatProgress progress;
+	};
+} SRadGigalogComm;
+#define SRadGigalogComm_SIZE 188
+
+/* mode in SERDESCAM_SETTINGS */
+enum
+{
+	SERDESCAM_MODE_PASSTHROUGH = 0,
+	SERDESCAM_MODE_TAP,
+	SERDESCAM_MODE_PLAYBACK,
+};
+
+/* ucCamConfigMode in SERDESCAM_SETTINGS */
+enum
+{
+	SERDESCAM_CONFIG_MODE_EXTERNAL_OVER_TAP = 0,
+	SERDESCAM_CONFIG_MODE_LOCAL_SCRIPT,
+};
+
+/* bitsPerPixel in SERDESCAM_SETTINGS */
+enum
+{
+	SERDESCAM_BITS_PER_PIXEL_8 = 0,
+	SERDESCAM_BITS_PER_PIXEL_10,
+	SERDESCAM_BITS_PER_PIXEL_12,
+};
+
+/* bitPos in SERDESCAM_SETTINGS */
+enum
+{
+	SERDESCAM_PIXEL_BIT_POS_0 = 0,
+	SERDESCAM_PIXEL_BIT_POS_1,
+	SERDESCAM_PIXEL_BIT_POS_2,
+	SERDESCAM_PIXEL_BIT_POS_3,
+};
+
+/* videoFormat in SERDESCAM_SETTINGS */
+enum
+{
+	SERDESCAM_VIDEO_FORMAT_YCBCR_422 = 0,
+};
+
+typedef struct SERDESCAM_SETTINGS_t
+{
+	/* bit0: enable
+	 * bit1: RTSP stream enable
+	 * bit2: auto detect resolution
+	 */
+	uint32_t flags;
+	uint8_t mode;// passthrough, tap, etc
+	uint8_t bitsPerPixel;
+	uint8_t bitPos;
+	uint8_t videoFormat;// bytes per pixel
+	uint16_t resWidth;
+	uint16_t resHeight;
+	uint8_t frameSkip;// skip every nth frame
+	uint8_t rsvd[18];
+} SERDESCAM_SETTINGS;
+#define SERDESCAM_SETTINGS_SIZE 32
 
 /* These are bit positions for misc_io_on_report_eventsin SFireSettings */
 enum
@@ -1210,12 +1430,15 @@ typedef struct _SCyanSettings
 		uint32_t enableLatencyTest : 1;
 		uint32_t busMessagesToAndroid : 1;
 		uint32_t enablePcEthernetComm : 1;
-		uint32_t reserved : 28;
+		uint32_t enableDefaultLogger : 1;
+		uint32_t enableDefaultUpload : 1;
+		uint32_t reserved : 26;
 	} flags;
 	uint16_t digitalIoThresholdTicks;
 	uint16_t digitalIoThresholdEnable;
+	TIMESYNC_ICSHARDWARE_SETTINGS timeSync;
 } SCyanSettings;
-#define SCyanSettings_SIZE 902
+#define SCyanSettings_SIZE 906
 
 typedef SCyanSettings SFire2Settings;
 
@@ -1669,6 +1892,69 @@ typedef struct _SRADMoon2Settings
 
 #define SRADMoon2Settings_SIZE 126
 
+typedef struct _SRADGigalogSettings
+{
+	uint32_t ecu_id;
+
+	uint16_t perf_en;
+
+	CAN_SETTINGS can1;
+	CANFD_SETTINGS canfd1;
+	CAN_SETTINGS can2;
+	CANFD_SETTINGS canfd2;
+	CAN_SETTINGS can3;
+	CANFD_SETTINGS canfd3;
+	CAN_SETTINGS can4;
+	CANFD_SETTINGS canfd4;
+	CAN_SETTINGS can5;
+	CANFD_SETTINGS canfd5;
+	CAN_SETTINGS can6;
+	CANFD_SETTINGS canfd6;
+	CAN_SETTINGS can7;
+	CANFD_SETTINGS canfd7;
+	CAN_SETTINGS can8;
+	CANFD_SETTINGS canfd8;
+
+	uint16_t network_enables;
+	uint16_t network_enables_2;
+
+	uint32_t pwr_man_timeout;
+	uint16_t pwr_man_enable;
+
+	uint16_t network_enabled_on_boot;
+
+	uint16_t iso15765_separation_time_offset;
+
+	uint16_t iso_9141_kwp_enable_reserved;
+	ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings_1;
+	uint16_t iso_parity_1;
+
+	uint16_t iso_msg_termination_1;
+
+	uint16_t idle_wakeup_network_enables_1;
+	uint16_t idle_wakeup_network_enables_2;
+
+	uint16_t network_enables_3;
+	uint16_t idle_wakeup_network_enables_3;
+
+	STextAPISettings text_api;
+	uint64_t termination_enables;
+	uint8_t rsvd1[8];// previously ETHERNET_SETTINGS
+	uint8_t rsvd2[8];// previously ETHERNET10G_SETTINGS
+
+	DISK_SETTINGS disk;
+
+	TIMESYNC_ICSHARDWARE_SETTINGS timeSyncSettings;
+	uint16_t hwComLatencyTestEn;
+	ETHERNET_SETTINGS2 ethernet;
+
+	SERDESCAM_SETTINGS serdescam1;
+	ETHERNET10G_SETTINGS ethernet10g;
+
+} SRADGigalogSettings;
+
+#define SRADGigalogSettings_SIZE sizeof(SRADGigalogSettings)
+
 typedef struct _SVividCANSettings
 {
 	uint32_t ecu_id;
@@ -1873,6 +2159,210 @@ typedef struct _neoECU_AVBSettings
 } ECU_AVBSettings;
 #define ECU_AVBSettings_SIZE 148
 
+#define SJA1105_NUM_PRIORITY 8
+#define SJA1105_NUM_PORTS 5
+#define SJA1105_PORT_ENABLE_INGRESS//allow input on port
+#define SJA1105_PORT_ENABLE_EGRESS//allow output on port
+#define SJA1105_PORT_DYN_LEARN//enable dynamic learning
+#define SJA1105_PORT_RETAG//retag all packets with VLANID
+#define SJA1105_PORT_ING_MIRR//forward to ingress mirror
+#define SJA1105_PORT_EGR_MIRR//forward to egress mirror
+#define SJA1105_PORT_DROP_UNTAGGED//drop all packets with no tag
+#define SJA1105_PORT_DROP_DOUBLE_TAG//drop double tag packets
+#define SJA1105_PORT_DROPA664//only Ethertype 0x800 is accepted all others dropped
+
+#define SJA1105_GEN_IGNORE_2_STEP
+#define SJA1105_GEN_MIRROR_PORT_DYNAMIC//if set mirror port can be changed dynamically
+#define SJA1105_GEN_VLLUPFORMAT
+
+typedef struct _SJA1105PortSettings
+{
+	uint8_t enable;
+	uint8_t mode;
+	uint8_t vlanid;
+	uint8_t vlanPriority;
+	uint8_t enablePriority;
+	uint8_t padding1;
+	uint16_t portFlags;// all in mac config
+} SJA1105PortSettings;//8 bytes
+
+typedef struct _SPlutSwitchSettings
+{
+	//general params
+	uint8_t mirrorPort;
+	uint8_t hostPort;
+	uint8_t cascPort;//forward this port to host
+	uint8_t switchID;//the ID for this switch
+	uint16_t tpid;//ethernet type to identify vlan traffic
+	uint16_t tpid2;//ethernet type to identify double tag
+	uint16_t genFlags;
+	uint16_t padding1;
+	uint32_t padding2;
+	//per port settings
+	SJA1105PortSettings portSettings[SJA1105_NUM_PORTS];//40
+} SPlutoSwitchSettings;//56
+
+typedef struct _RADPlutoSettings
+{
+	/* Performance Test */
+	uint16_t perf_en;//2
+
+	CAN_SETTINGS can1;//12
+	CANFD_SETTINGS canfd1;//10
+	CAN_SETTINGS can2;//12
+	CANFD_SETTINGS canfd2;//10
+	LIN_SETTINGS lin1;//10
+
+	uint16_t network_enables;//2
+	uint16_t network_enables_2;//2
+	uint16_t network_enables_3;//2
+	uint64_t termination_enables;//8
+	uint16_t misc_io_analog_enable;//2
+
+	uint32_t pwr_man_timeout;//4
+	uint16_t pwr_man_enable;//2
+
+	uint16_t network_enabled_on_boot;//2
+
+	/* ISO15765-2 Transport Layer */
+	int16_t iso15765_separation_time_offset;//2
+	uint16_t iso9141_kwp_enable_reserved;//2
+	uint16_t iso_tester_pullup_enable;//2
+	uint16_t iso_parity;//2
+	uint16_t iso_msg_termination;//2
+	ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings;//114
+	ETHERNET_SETTINGS ethernet;//8
+
+	STextAPISettings text_api;//72
+	SPlutoSwitchSettings switchSettings;//56
+	struct
+	{
+		uint32_t disableUsbCheckOnBoot : 1;
+		uint32_t enableLatencyTest : 1;
+		uint32_t reserved : 30;
+	} flags;//4
+
+} SRADPlutoSettings;
+#define SRADPlutoSettings_SIZE 344
+typedef struct
+{
+	CAN_SETTINGS can1;
+	CANFD_SETTINGS canfd1;
+	uint64_t network_enables;
+	uint64_t termination_enables;
+	uint32_t pwr_man_timeout;
+	uint16_t pwr_man_enable;
+	uint16_t network_enabled_on_boot;
+	int16_t iso15765_separation_time_offset;
+	uint32_t ecu_id;
+} CANHubSettings;
+#define CANHubSettings_SIZE 52
+
+typedef struct _SFlexVnetzSettings
+{
+	uint16_t perf_en;
+	uint16_t network_enabled_on_boot;
+	uint16_t misc_io_on_report_events;
+	uint16_t pwr_man_enable;
+	int16_t iso15765_separation_time_offset;
+	uint16_t flex_mode;
+	uint16_t flex_termination;
+	uint16_t slaveVnetA;
+	uint64_t termination_enables;
+	union {
+		uint64_t word;
+		struct
+		{
+			uint16_t network_enables;
+			uint16_t network_enables_2;
+			uint16_t network_enables_3;
+		};
+	} network_enables;
+	uint32_t pwr_man_timeout;
+	uint16_t slaveVnetB;
+	CAN_SETTINGS can1;
+	CANFD_SETTINGS canfd1;
+	CAN_SETTINGS can2;
+	CANFD_SETTINGS canfd2;
+	CAN_SETTINGS can3;
+	CANFD_SETTINGS canfd3;
+	CAN_SETTINGS can4;
+	CANFD_SETTINGS canfd4;
+	CAN_SETTINGS can5;
+	CANFD_SETTINGS canfd5;
+	CAN_SETTINGS can6;
+	CANFD_SETTINGS canfd6;
+	CAN_SETTINGS can7;
+	CANFD_SETTINGS canfd7;
+	ETHERNET_SETTINGS ethernet;
+	TIMESYNC_ICSHARDWARE_SETTINGS timeSync;
+	STextAPISettings text_api;
+	struct
+	{
+		uint32_t disableUsbCheckOnBoot : 1;
+		uint32_t enableLatencyTest : 1;
+		uint32_t busMessagesToAndroid : 1;
+		uint32_t enablePcEthernetComm : 1;
+		uint32_t reserved : 28;
+	} flags;
+} SFlexVnetzSettings;
+#define SFlexVnetzSettings_Size (208)
+
+typedef enum _flexVnetMode
+{
+	flexVnetModeDisabled,
+	flexVnetModeOneSingle,
+	flexVnetModeOneDual,
+	flexVnetModeTwoSingle,
+	flexVnetModeColdStart
+} flexVnetMode;
+
+typedef struct _NeoECU12Settings
+{
+	uint32_t ecu_id;
+	CAN_SETTINGS can1;
+	CANFD_SETTINGS canfd1;
+	CAN_SETTINGS can2;
+	CANFD_SETTINGS canfd2;
+	SWCAN_SETTINGS swcan1;
+	SWCAN_SETTINGS swcan2;
+	CAN_SETTINGS lsftcan1;
+	CAN_SETTINGS lsftcan2;
+	LIN_SETTINGS lin1;
+
+	uint64_t network_enables;
+	uint16_t network_enabled_on_boot;
+
+	uint64_t termination_enables;
+	uint16_t can_switch_mode;
+
+	/* ISO9141 - Keyword */
+	uint16_t iso_9141_kwp_enable_reserved;
+	ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings;
+	uint16_t iso_parity;
+	uint16_t iso_msg_termination;
+
+	uint32_t pwr_man_timeout;
+	uint16_t pwr_man_enable;
+	uint16_t perf_en;
+	uint16_t misc_io_initial_ddr;
+	uint16_t misc_io_initial_latch;
+	uint16_t misc_io_analog_enable;
+	uint16_t misc_io_report_period;
+	uint16_t misc_io_on_report_events;
+	uint16_t ain_sample_period;
+	uint16_t ain_threshold;
+	int16_t iso15765_separation_time_offset;
+	STextAPISettings text_api;
+	struct
+	{
+		uint32_t disableUsbCheckOnBoot : 1;
+		uint32_t enableLatencyTest : 1;
+		uint32_t reserved : 30;
+	} flags;
+} SNeoECU12Settings;
+#define SNeoECU12Settings_SIZE 350
+
 #define GS_VERSION 5
 typedef struct _GLOBAL_SETTINGS
 {
@@ -1898,6 +2388,10 @@ typedef struct _GLOBAL_SETTINGS
 		ECU_AVBSettings neoecu_avb;
 		SRADSuperMoonSettings radsupermoon;
 		SRADMoon2Settings radmoon2;
+		SRADPlutoSettings pluto;
+		SRADGigalogSettings radgigalog;
+		CANHubSettings canhub;
+		SNeoECU12Settings neoecu12;
 	};
 } GLOBAL_SETTINGS;
 #define GLOBAL_SETTINGS_SIZE (SCyanSettings_SIZE + 6)
@@ -1918,6 +2412,8 @@ typedef enum _EDeviceSettingsType
 	DeviceECU_AVBSettingsType,
 	DeviceRADSuperMoonSettingsType,
 	DeviceRADMoon2SettingsType,
+	DeviceRADPlutoSettingsType,
+	DeviceRADGigalogSettingsType,
 	//
 	// add new settings type here
 	// ...
@@ -1940,6 +2436,9 @@ typedef struct _SDeviceSettings
 		SVividCANSettings vividcan;
 		SRADSuperMoonSettings radsupermoon;
 		SRADMoon2Settings radmoon2;
+		SRADPlutoSettings pluto;
+		SRADGigalogSettings radgigalog;
+		SNeoECU12Settings neoecu12;
 
 		//
 		// add new settings type for each new settings structure in the union
@@ -2220,19 +2719,23 @@ typedef struct _icsSpyMessageFlexRay
 	uint8_t Reserved[3];
 } icsSpyMessageFlexRay;
 
-#if defined(_WIN64) || defined(__x86_64__)
-#ifdef VSPY3_GUI
+#if defined(VSPY3_GUI)
+#if defined(IS_64BIT_SYSTEM)
+// 64-bit
 #define icsSpyMessage_SIZE 80
 #else
+// 32-bit
 #define icsSpyMessage_SIZE 72
 #endif
 #else
-#ifdef VSPY3_GUI
-#define icsSpyMessage_SIZE 68
+#if defined(IS_64BIT_SYSTEM)
+// 64-bit
+#define icsSpyMessage_SIZE 72
 #else
+// 32-bit
 #define icsSpyMessage_SIZE 64
 #endif
-#endif
+#endif// VSPY3_GUI
 
 typedef struct _icsSpyMessageLong
 {
@@ -2366,10 +2869,30 @@ typedef struct
 	uint8_t ethernetActivationLineEnabled;
 } icsVcan4DeviceStatus;
 
+typedef struct
+{
+	uint8_t ethernetActivationLineEnabled;
+} icsFlexVnetzDeviceStatus;
+
 typedef union {
 	icsFire2DeviceStatus fire2Status;
 	icsVcan4DeviceStatus vcan4Status;
+	icsFlexVnetzDeviceStatus flexVnetzStatus;
 } icsDeviceStatus;
+
+
+typedef struct//GM Ethernet Protocol in J2534 V04040
+{
+	char szName[128];//Adaptor name -  ASCII Null terminated
+	char szDeviceName[64];//Device name	- ASCII Null terminated
+	unsigned long Status;//Adaptor Status, 0 for disabled, 1 for enabled
+	unsigned char
+		bMAC_Address[6];// The Media Access Control (MAC) Address  of the Network interface in the PC that is to be connected to the vehicle.
+	unsigned char bIPV6_Address
+		[16];//The Ipv6 address assigned to the Network interface. No compressed or short form notation// If not available, all bytes are set to zero to imply the absence of an address.
+	unsigned char bIPV4_Address[4];// The Ipv4 address assigned to the Network interface. If not available, all bytes are set to zero.
+} J2534_ADAPTER_INFORMATION;
+
 #ifndef INTREPID_NO_CHECK_STRUCT_SIZE
 
 #if defined(__cplusplus) && (__cplusplus > 199711L)
@@ -2401,6 +2924,9 @@ CHECK_STRUCT_SIZE(SNeoMostGatewaySettings);
 CHECK_STRUCT_SIZE(OP_ETH_GENERAL_SETTINGS);
 CHECK_STRUCT_SIZE(OP_ETH_SETTINGS);
 CHECK_STRUCT_SIZE(ETHERNET_SETTINGS);
+CHECK_STRUCT_SIZE(ETHERNET_SETTINGS2);
+CHECK_STRUCT_SIZE(ETHERNET10G_SETTINGS);
+CHECK_STRUCT_SIZE(DISK_SETTINGS);
 CHECK_STRUCT_SIZE(CANTERM_SETTINGS);
 CHECK_STRUCT_SIZE(SFireSettings);
 CHECK_STRUCT_SIZE(SFireVnetSettings);
@@ -2429,7 +2955,15 @@ CHECK_STRUCT_SIZE(ISO15765_2015_TxMessage);
 CHECK_STRUCT_SIZE(TIMESYNC_ICSHARDWARE_SETTINGS);
 CHECK_STRUCT_SIZE(SRADSuperMoonSettings);
 CHECK_STRUCT_SIZE(SRADMoon2Settings);
-
+CHECK_STRUCT_SIZE(SRADGigalogSettings);
+CHECK_STRUCT_SIZE(SRadGigalogSubCmdHdr);
+CHECK_STRUCT_SIZE(SRADGigalogDiskStructure);
+CHECK_STRUCT_SIZE(SRADGigalogDiskFormatProgress);
+CHECK_STRUCT_SIZE(SRADGigalogDiskStatus);
+CHECK_STRUCT_SIZE(SRadGigalogComm);
+CHECK_STRUCT_SIZE(SRADPlutoSettings);
+CHECK_STRUCT_SIZE(CANHubSettings);
+CHECK_STRUCT_SIZE(SNeoECU12Settings);
 #endif /* INTREPID_NO_CHECK_STRUCT_SIZE */
 
 #endif /* _ICSNVC40_H */

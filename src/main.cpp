@@ -33,6 +33,8 @@
 #include "object_ics_device_status.h"
 #include "object_device_settings.h"
 #include "object_vcan4_settings.h"
+#include "object_timesync_settings.h"
+#include "object_rad_star2_settings.h"
 
 #define _DOC_ICS_MODULE \
     "Python C Code module for interfacing to the icsneo40 dynamic library. Code tries\n" \
@@ -144,6 +146,8 @@ void initics(void)
     setup_ics_device_status_object(module);
     setup_device_settings_object(module);
     setup_vcan4_settings_object(module); // 803+
+    setup_timesync_settings_object(module);
+    setup_rad_star2_settings_object(module);
 
 #if PY_MAJOR_VERSION >= 3
     return module;

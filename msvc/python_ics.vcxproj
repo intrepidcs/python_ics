@@ -209,9 +209,11 @@
     <ClCompile Include="..\src\object_op_eth_general_settings.cpp" />
     <ClCompile Include="..\src\object_op_eth_settings.cpp" />
     <ClCompile Include="..\src\object_rad_galaxy_settings.cpp" />
+    <ClCompile Include="..\src\object_rad_star2_settings.cpp" />
     <ClCompile Include="..\src\object_spy_message.cpp" />
     <ClCompile Include="..\src\object_swcan_settings.cpp" />
     <ClCompile Include="..\src\object_textapi_settings.cpp" />
+    <ClCompile Include="..\src\object_timesync_settings.cpp" />
     <ClCompile Include="..\src\object_uart_settings.cpp" />
     <ClCompile Include="..\src\object_vcan3_settings.cpp" />
     <ClCompile Include="..\src\object_vcan412_settings.cpp" />

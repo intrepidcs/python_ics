@@ -1,4 +1,29 @@
 ============================================================
+Versioning Information
+============================================================
+
+Minor differences can occur between different icsnVC40.h versions. These differences are usually just structures and constant differences. Below is a list of how the python_ics version correlates to the icsnVC40.h version:
+
+v802
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``pip install 'python_ics>=2.0,<3.0' --force-reinstall``
+
+    **Note:** Refer to platform specific installation if not on Windows
+
+v803
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``pip install 'python_ics>=3.0,<4.0' --force-reinstall``
+
+    **Note:** Refer to platform specific installation if not on Windows
+
+v900
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``pip install 'python_ics>=4.0,<5.0' --force-reinstall``
+
+    **Note:** Refer to platform specific installation if not on Windows
+
+
+============================================================
 Installation on Windows
 ============================================================
 

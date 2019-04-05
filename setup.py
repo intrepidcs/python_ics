@@ -7,7 +7,7 @@ import platform
 import sys
 import unittest
 
-MAJOR_VERSION = 3
+MAJOR_VERSION = 4
 MINOR_VERSION = 0
 
 def _run_tests():
