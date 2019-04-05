@@ -1894,8 +1894,13 @@ PyObject* meth_get_device_settings(PyObject* self, PyObject* args)
         }
         // int _stdcall icsneoGetDeviceSettingsType(void* hObject, EPlasmaIonVnetChannel_t vnetSlot, EDeviceSettingsType* pDeviceSettingsType)
         ice::Function<int __stdcall (ICS_HANDLE, EPlasmaIonVnetChannel_t, EDeviceSettingsType*)> icsneoGetDeviceSettingsType(lib, "icsneoGetDeviceSettingsType");
+#if VSPY3_BUILD_VERSION <= 803
         // int _stdcall icsneoGetDeviceSettings(void* hObject, SDeviceSettings* pSettings, EPlasmaIonVnetChannel_t vnetSlot)
         ice::Function<int __stdcall (ICS_HANDLE, SDeviceSettings*, EPlasmaIonVnetChannel_t)> icsneoGetDeviceSettings(lib, "icsneoGetDeviceSettings");
+#else
+        // int _stdcall icsneoGetDeviceSettings(void* hObject, SDeviceSettings* pSettings, int iNumBytes, EPlasmaIonVnetChannel_t vnetSlot)
+        ice::Function<int __stdcall (ICS_HANDLE, SDeviceSettings*, int, EPlasmaIonVnetChannel_t)> icsneoGetDeviceSettings(lib, "icsneoGetDeviceSettings");
+#endif
         PyObject* settings = PyObject_CallObject((PyObject*)&device_settings_object_type, NULL);
         SDeviceSettings* s = &((device_settings_object*)settings)->s;
         Py_BEGIN_ALLOW_THREADS
@@ -1904,7 +1909,11 @@ PyObject* meth_get_device_settings(PyObject* self, PyObject* args)
             Py_BLOCK_THREADS
             return set_ics_exception(exception_runtime_error(), "icsneoGetDeviceSettingsType() Failed");
         }
+#if VSPY3_BUILD_VERSION <= 803
         if (!icsneoGetDeviceSettings(handle, s, vnet_slot))
+#else
+        if (!icsneoGetDeviceSettings(handle, s, sizeof(s), vnet_slot))
+#endif
         {
             Py_BLOCK_THREADS
             return set_ics_exception(exception_runtime_error(), "icsneoGetDeviceSettings() Failed");
