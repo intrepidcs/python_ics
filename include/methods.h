@@ -1087,7 +1087,7 @@ PyObject* meth_enable_network_com(PyObject* self, PyObject* args); //icsneoEnabl
 #define _DOC_OVERRIDE_LIBRARY_NAME \
     MODULE_NAME ".override_library_name(new_name)\n" \
     "\n" \
-    "Sets active vnet channel for the device.\n" \
+    "Overrides the default search for loading the icsneo40 library\n" \
     "\n" \
     "Args:\n" \
     "\tname: Absolute path or relative path including filename.\n\n" \
