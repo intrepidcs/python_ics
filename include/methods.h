@@ -74,7 +74,6 @@ PyObject* meth_set_active_vnet_channel(PyObject* self, PyObject* args);
 PyObject* meth_override_library_name(PyObject* self, PyObject* args);
 PyObject* meth_get_library_path(PyObject* self);
 PyObject* meth_set_bit_rate(PyObject* self, PyObject* args);
-PyObject* meth_set_bit_rate(PyObject* self, PyObject* args);
 PyObject* meth_set_fd_bit_rate(PyObject* self, PyObject* args);
 PyObject* meth_set_bit_rate_ex(PyObject* self, PyObject* args);
 PyObject* meth_get_timestamp_for_msg(PyObject* self, PyObject* args);
