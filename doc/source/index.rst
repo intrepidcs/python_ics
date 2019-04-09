@@ -1,3 +1,10 @@
+
+============================================================
+python_ics
+============================================================
+
+Intrepid Control Systems, Inc. open source Python module for interfacing to Intrepid hardware. Basic knowledge of using and installing Python modules is assumed. Please see https://docs.python.org/3/installing/index.html for documentation on how to install Python modules.
+
 ============================================================
 Versioning Information
 ============================================================
