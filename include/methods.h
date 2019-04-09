@@ -1110,7 +1110,15 @@ PyObject* meth_enable_network_com(PyObject* self, PyObject* args); //icsneoEnabl
 #define _DOC_SET_BIT_RATE \
     MODULE_NAME ".set_bit_rate(device, BitRate, NetworkID)\n" \
     "\n" \
-    "Sets the bitrate for a given Network ID on the device..\n" \
+    "Specifies bit rate setting. Valid values depend on the network specified.\n" \
+    "\n" \
+    "For the networks NETID_HSCAN, NETID_MSCAN, NETID_SWCAN, NETID_FIRE_HSCAN2, NETID_HSCAN3, NETID_LSFTCAN,\n" \
+    "valid bit rates are 2000, 33333, 50000, 62500, 83333, 100000, 125000, 250000, 500000, 800000, 1000000\n" \
+    "\n" \
+    "For the networks NETID_LIN, NETID_ISO2, NETID_FIRE_LIN2, NETID_FIRE_LIN3, NETID_FIRE_LIN4,\n" \
+    "valid bit rates are\n" \
+    "\n" \
+    "For the network NETID_FIRE_CGI valid bit rates are 625000 and 115200\n" \
     "\n" \
     "Args:\n" \
     "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
@@ -1138,7 +1146,7 @@ PyObject* meth_enable_network_com(PyObject* self, PyObject* args); //icsneoEnabl
     "\n"
 
 #define _DOC_SET_BIT_RATE_EX \
-    MODULE_NAME ".set_fd_bit_rate_ex(device, BitRate, NetworkID, iOptions)\n" \
+    MODULE_NAME ".set_bit_rate_ex(device, BitRate, NetworkID, iOptions)\n" \
     "\n" \
     "Sets the bitrate for a given Network ID on the device with extended options.\n" \
     "\n" \
