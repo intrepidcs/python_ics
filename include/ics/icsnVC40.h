@@ -159,7 +159,13 @@ typedef unsigned __int64 uint64_t;
 #define NEODEVICE_VCAN42_EL (0x0000000a)
 #define NEODEVICE_RADIO_CANHUB (0x0000000b)
 #define NEODEVICE_NEOECU12 (0x0000000c)
+#define NEODEVICE_OBD2_LCBADGE (0x0000000d)
+#define NEODEVICE_RAD_MOON_DUO (0x0000000e)
+#define NEODEVICE_ONYX (0x0000000f)
 #define NEODEVICE_VCAN3 (0x00000010)
+#define NEODEVICE_JUPITER (0x00000011)
+#define NEODEVICE_VCAN4_IND (0x00000012)
+#define NEODEVICE_GIGASTAR (0x00000013)
 #define NEODEVICE_RED (0x00000040)
 #define NEODEVICE_ECU (0x00000080)
 #define NEODEVICE_IEVB (0x00000100)
@@ -2618,7 +2624,7 @@ typedef struct
 } spyFilterLong;
 #define spyFilterLong_SIZE 72
 
-#if !defined(VSPY3_GUI) && !defined(WIVI_EXPORT) && !defined(VS4A)
+#if !defined(VSPY3_GUI) && !defined(WIVI_EXPORT) && !defined(VS4A) && !defined(CORELIB_CMAKE)
 typedef int16_t descIdType;
 #else
 typedef uint32_t descIdType;
@@ -2719,23 +2725,19 @@ typedef struct _icsSpyMessageFlexRay
 	uint8_t Reserved[3];
 } icsSpyMessageFlexRay;
 
-#if defined(VSPY3_GUI)
-#if defined(IS_64BIT_SYSTEM)
-// 64-bit
-#define icsSpyMessage_SIZE 80
+#if defined(VSPY3_GUI) || defined(WIVI_EXPORT) || defined(VS4A) || defined(CORELIB_CMAKE)
+	#if defined(IS_64BIT_SYSTEM)
+		#define icsSpyMessage_SIZE 80
+	#else
+		#define icsSpyMessage_SIZE 68
+	#endif
 #else
-// 32-bit
-#define icsSpyMessage_SIZE 72
+	#if defined(IS_64BIT_SYSTEM)
+		#define icsSpyMessage_SIZE 72
+	#else
+		#define icsSpyMessage_SIZE 64
+	#endif
 #endif
-#else
-#if defined(IS_64BIT_SYSTEM)
-// 64-bit
-#define icsSpyMessage_SIZE 72
-#else
-// 32-bit
-#define icsSpyMessage_SIZE 64
-#endif
-#endif// VSPY3_GUI
 
 typedef struct _icsSpyMessageLong
 {
