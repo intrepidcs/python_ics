@@ -25,7 +25,7 @@ with open('include/setup_module_auto_defines.h', 'w') as f:
     print("\nint setup_module_auto_defines(PyObject * module);\n", file=f)
     print("#endif // __SETUP_MODULE_AUTO_DEFINES_H__", file=f)
 
-ignores = ('(', '#endif', '#define', 'icscm_', 'GCC_MODIFIER', 'VS_MODIFIER', '{', 'ICSNVC40_H', 'ICSNVC40INTERNAL__H_', 'SYellowSettings_SIZE')
+ignores = ('(', '#endif', '#define', 'icscm_', 'GCC_MODIFIER', 'VS_MODIFIER', '{', 'ICSNVC40_H', 'ICSNVC40INTERNAL__H_', 'SYellowSettings_SIZE', 'IS_64BIT_SYSTEM')
 use_enums = True
 with open('src/setup_module_auto_defines.cpp', 'w') as f:
     print(boiler_plate, file=f)
@@ -74,13 +74,17 @@ with open('src/setup_module_auto_defines.cpp', 'w') as f:
                         print('\tresult += PyModule_AddIntMacro(module, %s);' % sline[0].replace(',', ''), file=f)
                     continue
                 if '#define' in line:
-                    sline = line.split()
+                    sline = line.split('//')[0].split()
                     # DEBUG: print('\t\t' + str(line_number) + '\t' + str(sline))
                     if any(x in sline[1] for x in ignores):
                         continue
                     if len(sline) >= 3 and re.match("^\d+?\.\d+?$", sline[2]) is not None:
                         # Value is a float
                         print('\tresult += PyModule_AddObject(module, "{0}", PyFloat_FromDouble({0}));'.format(sline[1]), file=f)
+                    elif len(sline) == 2:
+                        # There is no value, this is used for preprocessor only 
+                        # and really shouldn't care about it in python. Going to set it as 0 "just in case"
+                        print('\tresult += PyModule_AddObject(module, "{}", PyLong_FromLong(0));'.format(sline[1]), file=f)
                     else:
                         print('\tresult += PyModule_AddIntMacro(module, %s);' % sline[1], file=f)
 

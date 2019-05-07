@@ -12,7 +12,6 @@ int setup_module_auto_defines(PyObject * module)
 {
 	int result = 0;
 
-	result += PyModule_AddIntMacro(module, IS_64BIT_SYSTEM);
 	result += PyModule_AddIntMacro(module, NEOVI_COMMTYPE_RS232);
 	result += PyModule_AddIntMacro(module, NEOVI_COMMTYPE_USB_BULK);
 	result += PyModule_AddIntMacro(module, NEOVI_COMMTYPE_TCPIP);
@@ -531,18 +530,18 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, ECU_AVBSettings_SIZE);
 	result += PyModule_AddIntMacro(module, SJA1105_NUM_PRIORITY);
 	result += PyModule_AddIntMacro(module, SJA1105_NUM_PORTS);
-	result += PyModule_AddIntMacro(module, SJA1105_PORT_ENABLE_INGRESS//allow);
-	result += PyModule_AddIntMacro(module, SJA1105_PORT_ENABLE_EGRESS//allow);
-	result += PyModule_AddIntMacro(module, SJA1105_PORT_DYN_LEARN//enable);
-	result += PyModule_AddIntMacro(module, SJA1105_PORT_RETAG//retag);
-	result += PyModule_AddIntMacro(module, SJA1105_PORT_ING_MIRR//forward);
-	result += PyModule_AddIntMacro(module, SJA1105_PORT_EGR_MIRR//forward);
-	result += PyModule_AddIntMacro(module, SJA1105_PORT_DROP_UNTAGGED//drop);
-	result += PyModule_AddIntMacro(module, SJA1105_PORT_DROP_DOUBLE_TAG//drop);
-	result += PyModule_AddIntMacro(module, SJA1105_PORT_DROPA664//only);
-	result += PyModule_AddIntMacro(module, SJA1105_GEN_IGNORE_2_STEP);
-	result += PyModule_AddIntMacro(module, SJA1105_GEN_MIRROR_PORT_DYNAMIC//if);
-	result += PyModule_AddIntMacro(module, SJA1105_GEN_VLLUPFORMAT);
+	result += PyModule_AddObject(module, "SJA1105_PORT_ENABLE_INGRESS", PyLong_FromLong(0));
+	result += PyModule_AddObject(module, "SJA1105_PORT_ENABLE_EGRESS", PyLong_FromLong(0));
+	result += PyModule_AddObject(module, "SJA1105_PORT_DYN_LEARN", PyLong_FromLong(0));
+	result += PyModule_AddObject(module, "SJA1105_PORT_RETAG", PyLong_FromLong(0));
+	result += PyModule_AddObject(module, "SJA1105_PORT_ING_MIRR", PyLong_FromLong(0));
+	result += PyModule_AddObject(module, "SJA1105_PORT_EGR_MIRR", PyLong_FromLong(0));
+	result += PyModule_AddObject(module, "SJA1105_PORT_DROP_UNTAGGED", PyLong_FromLong(0));
+	result += PyModule_AddObject(module, "SJA1105_PORT_DROP_DOUBLE_TAG", PyLong_FromLong(0));
+	result += PyModule_AddObject(module, "SJA1105_PORT_DROPA664", PyLong_FromLong(0));
+	result += PyModule_AddObject(module, "SJA1105_GEN_IGNORE_2_STEP", PyLong_FromLong(0));
+	result += PyModule_AddObject(module, "SJA1105_GEN_MIRROR_PORT_DYNAMIC", PyLong_FromLong(0));
+	result += PyModule_AddObject(module, "SJA1105_GEN_VLLUPFORMAT", PyLong_FromLong(0));
 	result += PyModule_AddIntMacro(module, SRADPlutoSettings_SIZE);
 	result += PyModule_AddIntMacro(module, CANHubSettings_SIZE);
 	result += PyModule_AddIntMacro(module, SFlexVnetzSettings_Size);
