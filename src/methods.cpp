@@ -103,7 +103,7 @@ char* neodevice_to_string(unsigned long type)
     case NEODEVICE_VCAN3: return "ValueCAN3";
     case NEODEVICE_ONYX: return "neoVI FIRE3";
     case NEODEVICE_JUPITER: return "RAD-Jupiter";
-    case NEODEVICE_VCAN4_IND: return "nValueCAN4 Industrial";
+    case NEODEVICE_VCAN4_IND: return "ValueCAN4 Industrial";
     case NEODEVICE_GIGASTAR: return "RAD-GIGAStar";
     case NEODEVICE_RED: return "neoVI RED";
     case NEODEVICE_ECU: return "neoECU";
