@@ -42,7 +42,8 @@ typedef unsigned __int64 uint64_t;
 #endif
 
 // MSVC++ 10.0 _MSC_VER == 1600 64-bit version doesn't allow multi-line #if directives...
-#if defined(_WIN64) || defined(__x86_64__) || defined(__aarch64__) || defined(__x86_64__) || defined(__LP64__) || defined(_M_AMD64) || 	defined(_M_IA64) || defined(__PPC64__)
+#if defined(_WIN64) || defined(__x86_64__) || defined(__aarch64__) || defined(__x86_64__) || defined(__LP64__) || defined(_M_AMD64) || \
+	defined(_M_IA64) || defined(__PPC64__)
 #define IS_64BIT_SYSTEM
 #endif
 
@@ -418,6 +419,12 @@ typedef unsigned __int64 uint64_t;
 #define HARDWARE_TIMESTAMP_ID_NEORED_25NS (unsigned char)9
 #define HARDWARE_TIMESTAMP_ID_NEORED_10NS (unsigned char)10
 
+typedef struct SExtendedDataFlashHeader
+{
+	uint16_t version;
+	uint16_t chksum;
+	uint32_t len;
+} ExtendedDataFlashHeader_t;
 
 typedef struct
 {
@@ -2165,48 +2172,268 @@ typedef struct _neoECU_AVBSettings
 } ECU_AVBSettings;
 #define ECU_AVBSettings_SIZE 148
 
-#define SJA1105_NUM_PRIORITY 8
-#define SJA1105_NUM_PORTS 5
-#define SJA1105_PORT_ENABLE_INGRESS//allow input on port
-#define SJA1105_PORT_ENABLE_EGRESS//allow output on port
-#define SJA1105_PORT_DYN_LEARN//enable dynamic learning
-#define SJA1105_PORT_RETAG//retag all packets with VLANID
-#define SJA1105_PORT_ING_MIRR//forward to ingress mirror
-#define SJA1105_PORT_EGR_MIRR//forward to egress mirror
-#define SJA1105_PORT_DROP_UNTAGGED//drop all packets with no tag
-#define SJA1105_PORT_DROP_DOUBLE_TAG//drop double tag packets
-#define SJA1105_PORT_DROPA664//only Ethertype 0x800 is accepted all others dropped
+#define PLUTO_NUM_PRIORITY 8
+#define PLUTO_MAX_L2_POLICING 45
+#define PLUTO_MAX_L2_ADDRESS_LOOKUP 1024
+#define PLUTO_MAX_VLAN_LOOKUP 4096
+#define PLUTO_MAX_FORWARDING_ENTRIES 13
+#define PLUTO_MAX_MAC_CONFIG_ENTRIES 5
+#define PLUTO_MAX_RETAGGING_ENTRIES 32
+#define MAX_VL_POLICING_ENTRIES 1024
+#define MAX_VL_FORWARDING_ENTRIES 1024
 
-#define SJA1105_GEN_IGNORE_2_STEP
-#define SJA1105_GEN_MIRROR_PORT_DYNAMIC//if set mirror port can be changed dynamically
-#define SJA1105_GEN_VLLUPFORMAT
-
-typedef struct _SJA1105PortSettings
+typedef struct SPluto_L2AddressLookupEntry_s
 {
-	uint8_t enable;
-	uint8_t mode;
-	uint8_t vlanid;
-	uint8_t vlanPriority;
-	uint8_t enablePriority;
-	uint8_t padding1;
-	uint16_t portFlags;// all in mac config
-} SJA1105PortSettings;//8 bytes
+	uint16_t index;
+	uint16_t vlanID;
+	uint8_t macaddr[6];
+	uint8_t destports;
+	uint8_t enfport;
+	uint8_t learnedEntry;
+	uint8_t pad1;
+	uint8_t pad2;
+	uint8_t pad3;
+} SPluto_L2AddressLookupEntry;//16
 
-typedef struct _SPlutSwitchSettings
+typedef struct SPluto_L2AddressLookupParams_s
 {
-	//general params
-	uint8_t mirrorPort;
-	uint8_t hostPort;
-	uint8_t cascPort;//forward this port to host
-	uint8_t switchID;//the ID for this switch
-	uint16_t tpid;//ethernet type to identify vlan traffic
-	uint16_t tpid2;//ethernet type to identify double tag
-	uint16_t genFlags;
-	uint16_t padding1;
-	uint32_t padding2;
-	//per port settings
-	SJA1105PortSettings portSettings[SJA1105_NUM_PORTS];//40
-} SPlutoSwitchSettings;//56
+	uint16_t maxage;
+	uint8_t dyn_tbsz;
+	uint8_t poly;
+	uint8_t shared_learn;
+	uint8_t no_enf_hostprt;
+	uint8_t no_mgmt_learn;
+	uint8_t pad;
+} SPluto_L2AddressLookupParams;//8
+
+typedef struct SPluto_L2ForwardingParams_s
+{
+	uint16_t part_spc[PLUTO_NUM_PRIORITY];
+	uint8_t max_dynp;
+	uint8_t pad;
+} SPluto_L2ForwardingParams;//18
+
+typedef struct SPluto_L2ForwardingEntry_s
+{
+	uint8_t vlan_pmap[PLUTO_NUM_PRIORITY];
+	uint8_t bc_domain;
+	uint8_t reach_port;
+	uint8_t fl_domain;
+	uint8_t pad;
+} SPluto_L2ForwardingEntry;//12
+
+typedef struct SPluto_L2Policing_s
+{
+	uint16_t smax;
+	uint16_t rate;
+	uint16_t maxlen;
+	uint8_t sharindx;
+	uint8_t partition;
+} SPluto_L2Policing;//8
+
+typedef struct SPluto_VlanLookup_s
+{
+	uint16_t vlanid;
+	uint8_t ving_mirr;
+	uint8_t vegr_mirr;
+	uint8_t vmemb_port;
+	uint8_t vlan_bc;
+	uint8_t tag_port;
+	uint8_t pad;
+} SPluto_VlanLookup;//8
+
+typedef struct SPluto_MacConfig_s
+{
+	uint16_t top[PLUTO_NUM_PRIORITY];
+	uint16_t base[PLUTO_NUM_PRIORITY];
+	uint16_t tp_delin;
+	uint16_t tp_delout;
+	uint16_t vlanid;
+	uint8_t enabled[PLUTO_NUM_PRIORITY];
+	uint8_t ifg;
+	uint8_t speed;
+	uint8_t maxage;
+	uint8_t vlanprio;
+	uint8_t ing_mirr;
+	uint8_t egr_mirr;
+	uint8_t drpnona664;
+	uint8_t drpdtag;
+	uint8_t drpuntag;
+	uint8_t retag;
+	uint8_t dyn_learn;
+	uint8_t egress;
+	uint8_t ingress;
+	uint8_t pad;
+} SPluto_MacConfig;//60
+
+typedef struct SPluto_RetaggingEntry_s
+{
+	uint16_t vlan_egr;
+	uint16_t vlan_ing;
+	uint8_t egr_port;
+	uint8_t ing_port;
+	uint8_t do_not_learn;
+	uint8_t use_dest_ports;
+	uint8_t destports;
+	uint8_t pad;
+} SPluto_RetaggingEntry;//10
+
+typedef struct SPluto_GeneralParams_s
+{
+	uint64_t mac_fltres1;
+	uint64_t mac_fltres0;
+	uint64_t mac_flt1;
+	uint64_t mac_flt0;
+	uint32_t vlmarker;
+	uint32_t vlmask;
+	uint16_t tpid;
+	uint16_t tpid2;
+	uint8_t vllupformat;
+	uint8_t mirr_ptacu;
+	uint8_t switchid;
+	uint8_t hostprio;
+	uint8_t incl_srcpt1;
+	uint8_t incl_srcpt0;
+	uint8_t send_meta1;
+	uint8_t send_meta0;
+	uint8_t casc_port;
+	uint8_t host_port;
+	uint8_t mirr_port;
+	uint8_t ignore2stf;
+} SPluto_GeneralParams;//56
+
+typedef struct SPluto_VlLookupEntry_s
+{
+	union {
+		/* format == 0 */
+		struct
+		{
+			uint64_t macaddr;
+			uint16_t vlanid;
+			uint8_t destports;
+			uint8_t iscritical;
+			uint8_t port;
+			uint8_t vlanprior;
+		} vllupformat0;//14
+		/* format == 1 */
+		struct
+		{
+			uint16_t vlid;
+			uint8_t egrmirr;
+			uint8_t ingrmirr;
+			uint8_t port;
+		} vllupformat1;//5
+	};
+} SPluto_VlLookupEntry;//14
+
+typedef struct SPluto_VlPolicingEntry_s
+{
+	uint64_t type;
+	uint64_t maxlen;
+	uint64_t sharindx;
+	uint64_t bag;
+	uint64_t jitter;
+} SPluto_VlPolicingEntry;//40
+
+typedef struct SPluto_VlForwardingParams_s
+{
+	uint16_t partspc[PLUTO_NUM_PRIORITY];
+	uint8_t debugen;
+	uint8_t pad;
+} SPluto_VlForwardingParams;//18
+
+typedef struct SPluto_VlForwardingEntry_s
+{
+	uint8_t type;
+	uint8_t priority;
+	uint8_t partition;
+	uint8_t destports;
+} SPluto_VlForwardingEntry;//4
+
+typedef struct SPluto_AVBParams_s
+{
+	uint64_t destmeta;
+	uint64_t srcmeta;
+} SPluto_AVBParams;//16
+
+typedef struct SPluto_ClockSyncParams_s
+{
+	uint64_t etssrcpcf;
+	uint32_t wfintmout;
+	uint32_t maxtranspclk;
+	uint32_t listentmout;
+	uint32_t intcydur;
+	uint32_t caentmout;
+	uint16_t pcfsze;
+	uint16_t obvwinsz;
+	uint16_t vlidout;
+	uint16_t vlidimnmin;
+	uint16_t vlidinmax;
+	uint16_t accdevwin;
+	uint8_t srcport[8];
+	uint8_t waitthsync;
+	uint8_t unsytotsyth;
+	uint8_t unsytosyth;
+	uint8_t tsytosyth;
+	uint8_t tsyth;
+	uint8_t tsytousyth;
+	uint8_t syth;
+	uint8_t sytousyth;
+	uint8_t sypriority;
+	uint8_t sydomain;
+	uint8_t stth;
+	uint8_t sttointth;
+	uint8_t pcfpriority;
+	uint8_t numunstbcy;
+	uint8_t numstbcy;
+	uint8_t maxintegcy;
+	uint8_t inttotentth;
+	uint8_t inttosyncth;
+	uint8_t vlidselect;
+	uint8_t tentsyrelen;
+	uint8_t asytensyen;
+	uint8_t sytostben;
+	uint8_t syrelen;
+	uint8_t sysyen;
+	uint8_t syasyen;
+	uint8_t ipcframesy;
+	uint8_t stabasyen;
+	uint8_t swmaster;
+	uint8_t fullcbg;
+	uint8_t pad1;
+	uint8_t pad2;
+	uint8_t pad3;
+} SPluto_ClockSyncParams;//80
+
+typedef struct SPluto_CustomParams_s
+{
+	uint8_t mode[PLUTO_MAX_MAC_CONFIG_ENTRIES];
+	uint8_t speed[PLUTO_MAX_MAC_CONFIG_ENTRIES];
+	uint8_t ae1Select;
+	uint8_t usbSelect;
+} SPluto_CustomParams;//12
+
+typedef struct SPlutoSwitchSettings
+{
+	ExtendedDataFlashHeader_t flashHeader;//all extended data must start with this header
+	SPluto_L2AddressLookupParams l2_addressLookupParams;
+	SPluto_L2AddressLookupEntry l2_addressLookupEntries[PLUTO_MAX_L2_ADDRESS_LOOKUP];
+	SPluto_L2Policing l2_policing[PLUTO_MAX_L2_POLICING];
+	SPluto_L2ForwardingParams l2_forwardingParams;
+	SPluto_L2ForwardingEntry l2_ForwardingEntries[PLUTO_MAX_FORWARDING_ENTRIES];
+	SPluto_VlanLookup vlan_LookupEntries[PLUTO_MAX_VLAN_LOOKUP];
+	SPluto_MacConfig macConfig[PLUTO_MAX_MAC_CONFIG_ENTRIES];
+	SPluto_GeneralParams generalParams;
+	SPluto_RetaggingEntry retagging[PLUTO_MAX_RETAGGING_ENTRIES];
+#if 0
+	SPluto_VlPolicingEntry vl_policing[MAX_VL_POLICING_ENTRIES];
+	SPluto_VlForwardingParams vl_forwardingParams;
+	SPluto_VlForwardingEntry vl_forwardingEntries[MAX_VL_FORWARDING_ENTRIES];
+	SPluto_AVBParams avbParams;
+	SPluto_ClockSyncParams clkSyncParams;
+#endif
+	SPluto_CustomParams custom;
+} SPlutoSwitchSettings;
 
 typedef struct _RADPlutoSettings
 {
@@ -2240,7 +2467,6 @@ typedef struct _RADPlutoSettings
 	ETHERNET_SETTINGS ethernet;//8
 
 	STextAPISettings text_api;//72
-	SPlutoSwitchSettings switchSettings;//56
 	struct
 	{
 		uint32_t disableUsbCheckOnBoot : 1;
@@ -2249,7 +2475,7 @@ typedef struct _RADPlutoSettings
 	} flags;//4
 
 } SRADPlutoSettings;
-#define SRADPlutoSettings_SIZE 344
+#define SRADPlutoSettings_SIZE 288
 typedef struct
 {
 	CAN_SETTINGS can1;
@@ -2726,17 +2952,17 @@ typedef struct _icsSpyMessageFlexRay
 } icsSpyMessageFlexRay;
 
 #if defined(VSPY3_GUI) || defined(WIVI_EXPORT) || defined(VS4A) || defined(CORELIB_CMAKE)
-	#if defined(IS_64BIT_SYSTEM)
-		#define icsSpyMessage_SIZE 80
-	#else
-		#define icsSpyMessage_SIZE 68
-	#endif
+#if defined(IS_64BIT_SYSTEM)
+#define icsSpyMessage_SIZE 80
 #else
-	#if defined(IS_64BIT_SYSTEM)
-		#define icsSpyMessage_SIZE 72
-	#else
-		#define icsSpyMessage_SIZE 64
-	#endif
+#define icsSpyMessage_SIZE 68
+#endif
+#else
+#if defined(IS_64BIT_SYSTEM)
+#define icsSpyMessage_SIZE 72
+#else
+#define icsSpyMessage_SIZE 64
+#endif
 #endif
 
 typedef struct _icsSpyMessageLong
