@@ -95,8 +95,16 @@ char* neodevice_to_string(unsigned long type)
     case NEODEVICE_RADGIGALOG: return "RADGigalog";
     case NEODEVICE_VCAN41: return "ValueCAN4-1";
     case NEODEVICE_FIRE: return "neoVI FIRE";
+    case NEODEVICE_RADPLUTO: return "RAD-Pluto";
     case NEODEVICE_VCAN42_EL: return "ValueCAN4-1";
+    case NEODEVICE_RADIO_CANHUB: return "neoRAD-IO2-CANHUB";
+    case NEODEVICE_OBD2_LCBADGE: return "neoOBD2-LC BADGE";
+    case NEODEVICE_RAD_MOON_DUO: return "RAD-Moon-Duo";
     case NEODEVICE_VCAN3: return "ValueCAN3";
+    case NEODEVICE_ONYX: return "neoVI FIRE3";
+    case NEODEVICE_JUPITER: return "RAD-Jupiter";
+    case NEODEVICE_VCAN4_IND: return "nValueCAN4 Industrial";
+    case NEODEVICE_GIGASTAR: return "RAD-GIGAStar";
     case NEODEVICE_RED: return "neoVI RED";
     case NEODEVICE_ECU: return "neoECU";
     case NEODEVICE_IEVB: return "IEVB";
@@ -119,13 +127,6 @@ char* neodevice_to_string(unsigned long type)
     case NEODEVICE_RADSTAR2: return "RADStar2";
     case NEODEVICE_VIVIDCAN: return "VividCAN";
     case NEODEVICE_OBD2_SIM: return "neoOBD2 Sim";
-    case NEODEVICE_OBD2_LCBADGE: return "neoOBD2-LC BADGE";
-    case NEODEVICE_ONYX: return "neoVI FIRE3";
-    case NEODEVICE_JUPITER: return "RAD-Jupiter";
-    case NEODEVICE_VCAN4_IND: return "nValueCAN4 Industrial";
-    case NEODEVICE_GIGASTAR: return "RAD-GIGAStar";
-    //case NEODEVICE_ANY_PLASMA: return "neoVI PLASMA";
-    //case NEODEVICE_ANY_ION: return "neoVI ION";
     };
     return "Unknown";
 }
