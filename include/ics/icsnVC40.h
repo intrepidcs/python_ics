@@ -964,7 +964,9 @@ typedef struct OP_ETH_SETTINGS_t
 			unsigned char mac_addr2[6];// Target Addr for spoofing
 			unsigned short mac_spoofing_en : 1;
 			unsigned short mac_spoofing_isDstOrSrc : 1;
-			unsigned short reserved : 14;
+			unsigned short link_spd : 2;
+			unsigned short q2112_phy_mode : 1;
+			unsigned short reserved : 11;
 		};
 		unsigned char reserved0[14];
 	};
@@ -2055,7 +2057,7 @@ typedef struct _CmProbeSettings
 	//
 	//	uint16_t        idle_wakeup_network_enables_1;
 
-} CmProbeSettings;
+} CmProbeSettings, SCmProbeSettings;
 #define CmProbeSettings_SIZE 4
 
 typedef struct _OBD2ProSettings
@@ -2106,7 +2108,7 @@ typedef struct _OBD2ProSettings
 		uint32_t reserved : 30;
 	} flags;
 	uint16_t can_switch_mode;
-} OBD2ProSettings;
+} OBD2ProSettings, SOBD2ProSettings;
 #define OBD2ProSettings_SIZE 464
 
 typedef struct _VCAN412Settings
@@ -2169,7 +2171,7 @@ typedef struct _neoECU_AVBSettings
 		uint32_t enableLatencyTest : 1;
 		uint32_t reserved : 30;
 	} flags;
-} ECU_AVBSettings;
+} ECU_AVBSettings, SECU_AVBSettings;
 #define ECU_AVBSettings_SIZE 148
 
 #define PLUTO_NUM_PRIORITY 8
@@ -2409,9 +2411,11 @@ typedef struct SPluto_CustomParams_s
 {
 	uint8_t mode[PLUTO_MAX_MAC_CONFIG_ENTRIES];
 	uint8_t speed[PLUTO_MAX_MAC_CONFIG_ENTRIES];
+	uint8_t enablePhy[PLUTO_MAX_MAC_CONFIG_ENTRIES];
 	uint8_t ae1Select;
 	uint8_t usbSelect;
-} SPluto_CustomParams;//12
+	uint8_t pad;
+} SPluto_CustomParams;//18
 
 typedef struct SPlutoSwitchSettings
 {
@@ -2432,7 +2436,6 @@ typedef struct SPlutoSwitchSettings
 	SPluto_AVBParams avbParams;
 	SPluto_ClockSyncParams clkSyncParams;
 #endif
-	SPluto_CustomParams custom;
 } SPlutoSwitchSettings;
 
 typedef struct _RADPlutoSettings
@@ -2471,11 +2474,14 @@ typedef struct _RADPlutoSettings
 	{
 		uint32_t disableUsbCheckOnBoot : 1;
 		uint32_t enableLatencyTest : 1;
-		uint32_t reserved : 30;
+		uint32_t enablePcEthernetComm : 1;
+		uint32_t reserved : 29;
 	} flags;//4
 
+	SPluto_CustomParams custom; //18
 } SRADPlutoSettings;
-#define SRADPlutoSettings_SIZE 288
+#define SRADPlutoSettings_SIZE 306
+
 typedef struct
 {
 	CAN_SETTINGS can1;
@@ -2487,7 +2493,7 @@ typedef struct
 	uint16_t network_enabled_on_boot;
 	int16_t iso15765_separation_time_offset;
 	uint32_t ecu_id;
-} CANHubSettings;
+} CANHubSettings, SCANHubSettings;
 #define CANHubSettings_SIZE 52
 
 typedef struct _SFlexVnetzSettings
@@ -2595,6 +2601,45 @@ typedef struct _NeoECU12Settings
 } SNeoECU12Settings;
 #define SNeoECU12Settings_SIZE 350
 
+typedef struct _VCAN4IndSettings
+{
+	CAN_SETTINGS can1;
+	CANFD_SETTINGS canfd1;
+	CAN_SETTINGS can2;
+	CANFD_SETTINGS canfd2;
+    ETHERNET_SETTINGS ethernet;
+	LIN_SETTINGS lin1;
+	ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings;
+	uint16_t iso_parity;
+	uint16_t iso_msg_termination;
+
+	uint32_t pwr_man_timeout;
+	uint16_t pwr_man_enable;
+	uint16_t perf_en;
+	int16_t iso15765_separation_time_offset;
+	uint16_t network_enabled_on_boot;
+
+	union {
+		uint64_t word;
+		struct
+		{
+			uint16_t network_enables;
+			uint16_t network_enables_2;
+			uint16_t network_enables_3;
+		};
+	} network_enables;
+	uint64_t termination_enables;
+	struct
+	{
+		uint32_t disableUsbCheckOnBoot : 1;
+		uint32_t enableLatencyTest : 1;
+		uint32_t busMessagesToAndroid : 1;
+		uint32_t enablePcEthernetComm : 1;
+		uint32_t reserved : 28;
+	} flags;
+} VCAN4IndSettings, SVCAN4IndSettings;
+#define VCAN4IndSettings_SIZE (212)
+
 #define GS_VERSION 5
 typedef struct _GLOBAL_SETTINGS
 {
@@ -2614,16 +2659,23 @@ typedef struct _GLOBAL_SETTINGS
 		SRADGalaxySettings radgalaxy;
 		SRADStar2Settings radstar2;
 		SOBD2SimSettings neoobd2_sim;
-		CmProbeSettings cmprobe;
-		OBD2ProSettings obd2pro;
-		VCAN412Settings vcan412;
-		ECU_AVBSettings neoecu_avb;
+		SCmProbeSettings cmprobe;
+		SOBD2ProSettings obd2pro;
+		SVCAN412Settings vcan412;
+		SVCAN412Settings vcan4_12; // backwards compatibility with older code
+		SECU_AVBSettings neoecu_avb;
 		SRADSuperMoonSettings radsupermoon;
 		SRADMoon2Settings radmoon2;
 		SRADPlutoSettings pluto;
 		SRADGigalogSettings radgigalog;
-		CANHubSettings canhub;
+		SCANHubSettings canhub;
 		SNeoECU12Settings neoecu12;
+		SVCANRFSettings vcanrf;
+		SEEVBSettings eevb;
+		SFlexVnetzSettings flexvnetz;
+		SVividCANSettings vividcan;
+		VCAN4IndSettings vcan4_ind;
+		// Make sure SDeviceSettings matches this
 	};
 } GLOBAL_SETTINGS;
 #define GLOBAL_SETTINGS_SIZE (SCyanSettings_SIZE + 6)
@@ -2646,9 +2698,19 @@ typedef enum _EDeviceSettingsType
 	DeviceRADMoon2SettingsType,
 	DeviceRADPlutoSettingsType,
 	DeviceRADGigalogSettingsType,
-	//
+	DeviceVCANRFSettingsType,
+	DeviceEEVBSettingsType,
+	DeviceVCAN4IndSettingsType,
+	DeviceNeoECU12SettingsType,
+	DeviceFlexVnetzSettingsType,
+	DeviceCANHUBSettingsType,
+	DeviceIEVBSettingsType,
+	DeviceOBD2SimSettingsType,
+	DeviceCMProbeSettingsType,
+	DeviceOBD2ProSettingsType,
+	DeviceRedSettingsType,
 	// add new settings type here
-	// ...
+	// Also add to map inside cicsneoVI::Init()
 	DeviceSettingsTypeMax
 } EDeviceSettingsType;
 
@@ -2656,25 +2718,36 @@ typedef struct _SDeviceSettings
 {
 	EDeviceSettingsType DeviceSettingType;
 	union {
+		SRedSettings red;
 		SFireSettings fire;
 		SFireVnetSettings firevnet;
 		SCyanSettings cyan;
 		SVCAN3Settings vcan3;
+		SVCAN4Settings vcan4;
+		SECUSettings ecu;
+		SIEVBSettings ievb;
+		SPendantSettings pendant;
 		SRADGalaxySettings radgalaxy;
 		SRADStar2Settings radstar2;
-		SVCAN4Settings vcan4;
-		VCAN412Settings vcan4_12;
-		ECU_AVBSettings neoecu_avb;
-		SVividCANSettings vividcan;
+		SOBD2SimSettings neoobd2_sim;
+		SCmProbeSettings cmprobe;
+		SOBD2ProSettings obd2pro;
+		SVCAN412Settings vcan412;
+		SVCAN412Settings vcan4_12; // backwards compatibility with older code
+		SECU_AVBSettings neoecu_avb;
 		SRADSuperMoonSettings radsupermoon;
 		SRADMoon2Settings radmoon2;
 		SRADPlutoSettings pluto;
 		SRADGigalogSettings radgigalog;
+		SCANHubSettings canhub;
 		SNeoECU12Settings neoecu12;
-
-		//
-		// add new settings type for each new settings structure in the union
-		// ...
+		SVCANRFSettings vcanrf;
+		SEEVBSettings eevb;
+		SFlexVnetzSettings flexvnetz;
+		SVividCANSettings vividcan;
+		SVCAN4IndSettings vcan4_ind;
+		// Make sure GLOBAL_SETTINGS matches this
+		// NOTE: When adding new structures here implement inside icsneoGetDeviceSettings and icsneoSetDeviceSettings also.
 	} Settings;
 } SDeviceSettings;
 
@@ -3192,6 +3265,7 @@ CHECK_STRUCT_SIZE(SRadGigalogComm);
 CHECK_STRUCT_SIZE(SRADPlutoSettings);
 CHECK_STRUCT_SIZE(CANHubSettings);
 CHECK_STRUCT_SIZE(SNeoECU12Settings);
+CHECK_STRUCT_SIZE(VCAN4IndSettings);
 #endif /* INTREPID_NO_CHECK_STRUCT_SIZE */
 
 #endif /* _ICSNVC40_H */

@@ -1,0 +1,213 @@
+{
+    "_ERADGigalogDiskFormat": {
+        "members": {
+            "RADGigalogDiskFormatUnknown ": [
+                0,
+                ""
+            ],
+            "RADGigalogDiskFormatFAT32": [
+                1,
+                ""
+            ],
+            "RADGigalogDiskFormatexFAT": [
+                2,
+                ""
+            ]
+        },
+        "names": [
+            "ERADGigalogDiskFormat"
+        ]
+    },
+    "_ERADGigalogDiskLayout": {
+        "members": {
+            "RADGigalogDiskLayoutSpanned ": [
+                0,
+                ""
+            ],
+            "RADGigalogDiskLayoutRAID0": [
+                1,
+                ""
+            ],
+            "RADGigalogDiskLayoutRAID1": [
+                2,
+                ""
+            ],
+            "RADGigalogDiskLayoutRAID5": [
+                3,
+                ""
+            ],
+            "RADGigalogDiskLayoutIndividual": [
+                4,
+                ""
+            ]
+        },
+        "names": [
+            "ERADGigalogDiskLayout"
+        ]
+    },
+    "_flexVnetMode": {
+        "members": {
+            "flexVnetModeDisabled": [
+                0,
+                ""
+            ],
+            "flexVnetModeOneSingle": [
+                1,
+                ""
+            ],
+            "flexVnetModeOneDual": [
+                2,
+                ""
+            ],
+            "flexVnetModeTwoSingle": [
+                3,
+                ""
+            ],
+            "flexVnetModeColdStart": [
+                4,
+                ""
+            ]
+        },
+        "names": [
+            "flexVnetMode"
+        ]
+    },
+    "_EDeviceSettingsType": {
+        "members": {
+            "DeviceFireSettingsType": [
+                0,
+                ""
+            ],
+            "DeviceFireVnetSettingsType": [
+                1,
+                ""
+            ],
+            "DeviceFire2SettingsType": [
+                2,
+                ""
+            ],
+            "DeviceVCAN3SettingsType": [
+                3,
+                ""
+            ],
+            "DeviceRADGalaxySettingsType": [
+                4,
+                ""
+            ],
+            "DeviceRADStar2SettingsType": [
+                5,
+                ""
+            ],
+            "DeviceVCAN4SettingsType": [
+                6,
+                ""
+            ],
+            "DeviceVCAN412SettingsType": [
+                7,
+                ""
+            ],
+            "DeviceVividCANSettingsType": [
+                8,
+                ""
+            ],
+            "DeviceECU_AVBSettingsType": [
+                9,
+                ""
+            ],
+            "DeviceRADSuperMoonSettingsType": [
+                10,
+                ""
+            ],
+            "DeviceRADMoon2SettingsType": [
+                11,
+                ""
+            ],
+            "DeviceRADPlutoSettingsType": [
+                12,
+                ""
+            ],
+            "DeviceRADGigalogSettingsType": [
+                13,
+                ""
+            ],
+            "DeviceVCANRFSettingsType": [
+                14,
+                ""
+            ],
+            "DeviceEEVBSettingsType": [
+                15,
+                ""
+            ],
+            "DeviceVCAN4IndSettingsType": [
+                16,
+                ""
+            ],
+            "DeviceNeoECU12SettingsType": [
+                17,
+                ""
+            ],
+            "DeviceFlexVnetzSettingsType": [
+                18,
+                ""
+            ],
+            "DeviceCANHUBSettingsType": [
+                19,
+                ""
+            ],
+            "DeviceIEVBSettingsType": [
+                20,
+                ""
+            ],
+            "DeviceOBD2SimSettingsType": [
+                21,
+                ""
+            ],
+            "DeviceCMProbeSettingsType": [
+                22,
+                ""
+            ],
+            "DeviceOBD2ProSettingsType": [
+                23,
+                ""
+            ],
+            "DeviceRedSettingsType": [
+                24,
+                ""
+            ],
+            "DeviceSettingsTypeMax": [
+                25,
+                ""
+            ]
+        },
+        "names": [
+            "EDeviceSettingsType"
+        ]
+    },
+    "_EPlasmaIonVnetChannel_t": {
+        "members": {
+            "PlasmaIonVnetChannelMain": [
+                0,
+                "PLASMA = SLOT 2, ION = VNET2"
+            ],
+            "PlasmaIonVnetChannelA": [
+                1,
+                "PLASMA = SLOT 1, ION = VNET1"
+            ],
+            "PlasmaIonVnetChannelB": [
+                2,
+                "PLASMA = SLOT 3, ION = NA"
+            ],
+            "eSoftCore": [
+                3,
+                ""
+            ],
+            "eFpgaStatusResp": [
+                4,
+                ""
+            ]
+        },
+        "names": [
+            "EPlasmaIonVnetChannel_t"
+        ]
+    }
+}
