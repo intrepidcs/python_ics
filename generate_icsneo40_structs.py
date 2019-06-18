@@ -95,8 +95,11 @@ def parse_enum_member(buffered_line):
     return name, value
 
 def get_struct_name_from_header(line):
-    struct_name = re.sub('typedef|struct|enum|\s*', '', line) #line.split('struct ')[-1]
+    struct_name = re.sub('typedef|struct|enum|union|\s*', '', line) #line.split('struct ')[-1]
     if not struct_name: # == 'typedef struct':
+        anonomous_struct = True
+        struct_name = 'Anonomous'
+    elif '{' == struct_name:
         anonomous_struct = True
         struct_name = 'Anonomous'
     else:
@@ -249,7 +252,14 @@ def generate_ctype_struct_pyfile_from_dict(name, data, struct_data, path='.', is
             return
         
         # Class definition
-        f.write('class {}(ctypes.Structure):\n'.format(class_name))
+        if 'union' in data:
+            if data['union']:
+                f.write('class {}(ctypes.Union):\n'.format(class_name))
+            else:
+                f.write('class {}(ctypes.Structure):\n'.format(class_name))
+        else:
+            f.write('class {}(ctypes.Structure):\n'.format(class_name))
+
         # Structure pack size
         try:
             pack_size = data['pack']
@@ -379,11 +389,18 @@ def parse_header_file(filename='include/ics/icsnVC40.h'):
         struct_data_member = OrderedDict()
         last_comment = ''
         inside_inner_union = False
+        inner_union_data_member = OrderedDict()
+        inner_union_name = ''
+        inner_anonomous_union = False
+        inner_union_data = OrderedDict()
         inside_inner_struct = False
         inner_anonomous_struct = False
         inner_struct_data_member = OrderedDict()
         inner_struct_name = ''
         inner_struct_data = OrderedDict()
+        inner_struct_inside_anonomous_union = False
+        inner_union_has_structs = False
+        
         pack_size = 0
         for line in f:
             line_count += 1
@@ -509,9 +526,13 @@ def parse_header_file(filename='include/ics/icsnVC40.h'):
                     struct_data[struct_name]['members'].update(struct_data_member)
                     struct_data[struct_name]['pack'] = pack_size
                     struct_data_member = OrderedDict()
-                    if inner_struct_data:
+                    if inner_struct_data and not inner_union_has_structs:
                         struct_data[struct_name]['members'].update(inner_struct_data)
                         inner_struct_data = OrderedDict()
+                    if inner_union_data:
+                        struct_data[struct_name]['members'].update(inner_union_data)
+                        inner_union_data = OrderedDict()
+                    inner_union_has_structs = False
                     if debug_print:
                         print('------- Extra Names: {} -------------------------\n'.format(' '.join(extra_names)))
                     continue
@@ -535,10 +556,40 @@ def parse_header_file(filename='include/ics/icsnVC40.h'):
                             inner_struct_data[inner_struct_name]['names'] = inner_extra_names
                             inner_struct_data[inner_struct_name]['members'] = inner_struct_data_member
                             inner_struct_data[inner_struct_name]['pack'] = pack_size
+                            inner_struct_data[inner_struct_name]['union'] = False
                         inner_struct_data_member = OrderedDict()
                         inner_struct_name = ''
                         continue
-
+                # inner union
+                if re.match(r'\bunion\b', line): #'struct' in line:
+                    inner_union_has_structs = inside_inner_struct
+                    inside_inner_union = True
+                    inner_union_name, inner_anonomous_union = get_struct_name_from_header(line)
+                    if inner_union_name == '':
+                        print('asdfasdf')
+                    continue
+                if inside_inner_union:
+                    if re.match('}.*;', line):
+                        # We are at the end of the inner struct
+                        inside_inner_union = False
+                        inner_extra_names = ''.join(line.split()).strip('};').split(',')
+                        if inner_anonomous_union and inner_extra_names[0]:
+                            inner_union_name = inner_extra_names[0]
+                            inner_anonomous_union = False
+                        if inner_anonomous_union and not inner_extra_names[0]:
+                            inner_union_data.update(inner_union_data_member)
+                        else:
+                            inner_union_data[inner_union_name] = OrderedDict()
+                            inner_union_data[inner_union_name]['names'] = inner_extra_names
+                            inner_union_data[inner_union_name]['members'] = inner_union_data_member
+                            inner_union_data[inner_union_name]['pack'] = pack_size
+                            inner_union_data[inner_union_name]['union'] = True
+                        inner_union_data_member = OrderedDict()
+                        inner_union_name = ''
+                        if inner_union_has_structs and inner_anonomous_union:
+                            inner_struct_inside_anonomous_union = True
+                        continue
+                
                 # some lines are spaced out between multiple lines for no reason, lets merge them here and parse on the next loop around
                 # make sure the newline is still in there since the for loop removes it
                 buffered_line += '\n' + line
@@ -554,7 +605,9 @@ def parse_header_file(filename='include/ics/icsnVC40.h'):
                 if bitwise_length:
                     last_comment = '[Bitfield] ' + last_comment
                 if data_name:
-                    if inside_inner_struct:
+                    if inside_inner_union:
+                        inner_union_data_member[data_name] = [data_type, array_length, bitwise_length, last_comment]
+                    elif inside_inner_struct:
                         inner_struct_data_member[data_name] = [data_type, array_length, bitwise_length, last_comment]
                     else: #if data_name not in struct_data_member:
                         struct_data_member[data_name] = [data_type, array_length, bitwise_length, last_comment]

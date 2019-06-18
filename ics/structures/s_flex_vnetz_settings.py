@@ -28,6 +28,19 @@ class flags(ctypes.Structure):
 # Extra names go here:
 # End of extra names
 
+# network_enables
+class network_enables(ctypes.Union):
+    _pack_ = 2
+    _fields_ = [
+        ('word', ctypes.c_uint64), 
+        ('network_enables', ctypes.c_uint16), 
+        ('network_enables_2', ctypes.c_uint16), 
+        ('network_enables_3', ctypes.c_uint16), 
+    ]
+
+# Extra names go here:
+# End of extra names
+
 class s_flex_vnetz_settings(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
@@ -40,7 +53,6 @@ class s_flex_vnetz_settings(ctypes.Structure):
         ('flex_termination', ctypes.c_uint16), 
         ('slaveVnetA', ctypes.c_uint16), 
         ('termination_enables', ctypes.c_uint64), 
-        ('word', ctypes.c_uint64), 
         ('pwr_man_timeout', ctypes.c_uint32), 
         ('slaveVnetB', ctypes.c_uint16), 
         ('can1', can_settings), 
@@ -60,10 +72,8 @@ class s_flex_vnetz_settings(ctypes.Structure):
         ('ethernet', ethernet_settings), 
         ('timeSync', timesync_icshardware_settings), 
         ('text_api', s_text_api_settings), 
-        ('network_enables', ctypes.c_uint16), 
-        ('network_enables_2', ctypes.c_uint16), 
-        ('network_enables_3', ctypes.c_uint16), 
         ('flags', flags), 
+        ('network_enables', network_enables), 
     ]
 
 # Extra names go here:

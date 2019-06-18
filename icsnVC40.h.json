@@ -678,31 +678,31 @@
     },
     "OP_ETH_GENERAL_SETTINGS_t": {
         "members": {
+            "bEnReportLinkQuality": [
+                "unsigned",
+                0,
+                1,
+                "[Bitfield] "
+            ],
+            "bTapEnPtp": [
+                "unsigned",
+                0,
+                1,
+                "[Bitfield] "
+            ],
+            "bTapEnSwitch": [
+                "unsigned",
+                0,
+                1,
+                "[Bitfield] "
+            ],
             "flags": {
-                "members": {
-                    "bEnReportLinkQuality": [
-                        "unsigned",
-                        0,
-                        1,
-                        "[Bitfield] "
-                    ],
-                    "bTapEnPtp": [
-                        "unsigned",
-                        0,
-                        1,
-                        "[Bitfield] "
-                    ],
-                    "bTapEnSwitch": [
-                        "unsigned",
-                        0,
-                        1,
-                        "[Bitfield] "
-                    ]
-                },
+                "members": {},
                 "names": [
                     "flags"
                 ],
-                "pack": 2
+                "pack": 2,
+                "union": false
             },
             "reserved0": [
                 "uint8_t",
@@ -1946,81 +1946,75 @@
     },
     "SPluto_VlLookupEntry_s": {
         "members": {
+            "destports": [
+                "uint8_t",
+                0,
+                0,
+                ""
+            ],
+            "egrmirr": [
+                "uint8_t",
+                0,
+                0,
+                ""
+            ],
+            "ingrmirr": [
+                "uint8_t",
+                0,
+                0,
+                ""
+            ],
+            "iscritical": [
+                "uint8_t",
+                0,
+                0,
+                ""
+            ],
+            "macaddr": [
+                "uint64_t",
+                0,
+                0,
+                ""
+            ],
+            "port": [
+                "uint8_t",
+                0,
+                0,
+                ""
+            ],
+            "vlanid": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "vlanprior": [
+                "uint8_t",
+                0,
+                0,
+                ""
+            ],
+            "vlid": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
             "vllupformat0": {
-                "members": {
-                    "destports": [
-                        "uint8_t",
-                        0,
-                        0,
-                        ""
-                    ],
-                    "iscritical": [
-                        "uint8_t",
-                        0,
-                        0,
-                        ""
-                    ],
-                    "macaddr": [
-                        "uint64_t",
-                        0,
-                        0,
-                        ""
-                    ],
-                    "port": [
-                        "uint8_t",
-                        0,
-                        0,
-                        ""
-                    ],
-                    "vlanid": [
-                        "uint16_t",
-                        0,
-                        0,
-                        ""
-                    ],
-                    "vlanprior": [
-                        "uint8_t",
-                        0,
-                        0,
-                        ""
-                    ]
-                },
+                "members": {},
                 "names": [
                     "vllupformat0"
                 ],
-                "pack": 2
+                "pack": 2,
+                "union": false
             },
             "vllupformat1": {
-                "members": {
-                    "egrmirr": [
-                        "uint8_t",
-                        0,
-                        0,
-                        ""
-                    ],
-                    "ingrmirr": [
-                        "uint8_t",
-                        0,
-                        0,
-                        ""
-                    ],
-                    "port": [
-                        "uint8_t",
-                        0,
-                        0,
-                        ""
-                    ],
-                    "vlid": [
-                        "uint16_t",
-                        0,
-                        0,
-                        ""
-                    ]
-                },
+                "members": {},
                 "names": [
                     "vllupformat1"
                 ],
-                "pack": 2
+                "pack": 2,
+                "union": false
             }
         },
         "names": [
@@ -2703,7 +2697,8 @@
                 "names": [
                     "flags"
                 ],
-                "pack": 2
+                "pack": 2,
+                "union": false
             },
             "iso15765_separation_time_offset": [
                 "int16_t",
@@ -2929,7 +2924,8 @@
                 "names": [
                     "flags"
                 ],
-                "pack": 2
+                "pack": 2,
+                "union": false
             },
             "iso15765_separation_time_offset": [
                 "int16_t",
@@ -3102,7 +3098,8 @@
                 "names": [
                     "flags"
                 ],
-                "pack": 2
+                "pack": 2,
+                "union": false
             },
             "iso15765_separation_time_offset": [
                 "int16_t",
@@ -3394,7 +3391,8 @@
                 "names": [
                     "flags"
                 ],
-                "pack": 2
+                "pack": 2,
+                "union": false
             },
             "idle_wakeup_network_enables_1": [
                 "uint16_t",
@@ -3674,174 +3672,183 @@
                 0,
                 ""
             ],
-            "canhub": [
-                "SCANHubSettings",
-                0,
-                0,
-                ""
-            ],
-            "cmprobe": [
-                "SCmProbeSettings",
-                0,
-                0,
-                ""
-            ],
-            "cyan": [
-                "SCyanSettings",
-                0,
-                0,
-                ""
-            ],
-            "ecu": [
-                "SECUSettings",
-                0,
-                0,
-                ""
-            ],
-            "eevb": [
-                "SEEVBSettings",
-                0,
-                0,
-                ""
-            ],
-            "fire": [
-                "SFireSettings",
-                0,
-                0,
-                ""
-            ],
-            "firevnet": [
-                "SFireVnetSettings",
-                0,
-                0,
-                ""
-            ],
-            "flexvnetz": [
-                "SFlexVnetzSettings",
-                0,
-                0,
-                ""
-            ],
-            "ievb": [
-                "SIEVBSettings",
-                0,
-                0,
-                ""
-            ],
-            "neoecu12": [
-                "SNeoECU12Settings",
-                0,
-                0,
-                ""
-            ],
-            "neoecu_avb": [
-                "SECU_AVBSettings",
-                0,
-                0,
-                ""
-            ],
-            "neoobd2_sim": [
-                "SOBD2SimSettings",
-                0,
-                0,
-                ""
-            ],
-            "obd2pro": [
-                "SOBD2ProSettings",
-                0,
-                0,
-                ""
-            ],
-            "pendant": [
-                "SPendantSettings",
-                0,
-                0,
-                ""
-            ],
-            "pluto": [
-                "SRADPlutoSettings",
-                0,
-                0,
-                ""
-            ],
-            "radgalaxy": [
-                "SRADGalaxySettings",
-                0,
-                0,
-                ""
-            ],
-            "radgigalog": [
-                "SRADGigalogSettings",
-                0,
-                0,
-                ""
-            ],
-            "radmoon2": [
-                "SRADMoon2Settings",
-                0,
-                0,
-                ""
-            ],
-            "radstar2": [
-                "SRADStar2Settings",
-                0,
-                0,
-                ""
-            ],
-            "radsupermoon": [
-                "SRADSuperMoonSettings",
-                0,
-                0,
-                ""
-            ],
-            "red": [
-                "SRedSettings",
-                0,
-                0,
-                ""
-            ],
-            "vcan3": [
-                "SVCAN3Settings",
-                0,
-                0,
-                ""
-            ],
-            "vcan4": [
-                "SVCAN4Settings",
-                0,
-                0,
-                ""
-            ],
-            "vcan412": [
-                "SVCAN412Settings",
-                0,
-                0,
-                ""
-            ],
-            "vcan4_12": [
-                "SVCAN412Settings",
-                0,
-                0,
-                "backwards compatibility with older code"
-            ],
-            "vcan4_ind": [
-                "SVCAN4IndSettings",
-                0,
-                0,
-                ""
-            ],
-            "vcanrf": [
-                "SVCANRFSettings",
-                0,
-                0,
-                ""
-            ],
-            "vividcan": [
-                "SVividCANSettings",
-                0,
-                0,
-                ""
-            ]
+            "Settings": {
+                "members": {
+                    "canhub": [
+                        "SCANHubSettings",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "cmprobe": [
+                        "SCmProbeSettings",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "cyan": [
+                        "SCyanSettings",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "ecu": [
+                        "SECUSettings",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "eevb": [
+                        "SEEVBSettings",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "fire": [
+                        "SFireSettings",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "firevnet": [
+                        "SFireVnetSettings",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "flexvnetz": [
+                        "SFlexVnetzSettings",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "ievb": [
+                        "SIEVBSettings",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "neoecu12": [
+                        "SNeoECU12Settings",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "neoecu_avb": [
+                        "SECU_AVBSettings",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "neoobd2_sim": [
+                        "SOBD2SimSettings",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "obd2pro": [
+                        "SOBD2ProSettings",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "pendant": [
+                        "SPendantSettings",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "pluto": [
+                        "SRADPlutoSettings",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "radgalaxy": [
+                        "SRADGalaxySettings",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "radgigalog": [
+                        "SRADGigalogSettings",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "radmoon2": [
+                        "SRADMoon2Settings",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "radstar2": [
+                        "SRADStar2Settings",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "radsupermoon": [
+                        "SRADSuperMoonSettings",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "red": [
+                        "SRedSettings",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "vcan3": [
+                        "SVCAN3Settings",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "vcan4": [
+                        "SVCAN4Settings",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "vcan412": [
+                        "SVCAN412Settings",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "vcan4_12": [
+                        "SVCAN412Settings",
+                        0,
+                        0,
+                        "backwards compatibility with older code"
+                    ],
+                    "vcan4_ind": [
+                        "SVCAN4IndSettings",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "vcanrf": [
+                        "SVCANRFSettings",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "vividcan": [
+                        "SVividCANSettings",
+                        0,
+                        0,
+                        ""
+                    ]
+                },
+                "names": [
+                    "Settings"
+                ],
+                "pack": 2,
+                "union": true
+            }
         },
         "names": [
             "SDeviceSettings"
@@ -4878,7 +4885,8 @@
                 "names": [
                     "flags"
                 ],
-                "pack": 2
+                "pack": 2,
+                "union": false
             },
             "flex_mode": [
                 "uint16_t",
@@ -4910,24 +4918,39 @@
                 0,
                 ""
             ],
-            "network_enables": [
-                "uint16_t",
-                0,
-                0,
-                ""
-            ],
-            "network_enables_2": [
-                "uint16_t",
-                0,
-                0,
-                ""
-            ],
-            "network_enables_3": [
-                "uint16_t",
-                0,
-                0,
-                ""
-            ],
+            "network_enables": {
+                "members": {
+                    "network_enables": [
+                        "uint16_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "network_enables_2": [
+                        "uint16_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "network_enables_3": [
+                        "uint16_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "word": [
+                        "uint64_t",
+                        0,
+                        0,
+                        ""
+                    ]
+                },
+                "names": [
+                    "network_enables"
+                ],
+                "pack": 2,
+                "union": true
+            },
             "perf_en": [
                 "uint16_t",
                 0,
@@ -4972,12 +4995,6 @@
             ],
             "timeSync": [
                 "TIMESYNC_ICSHARDWARE_SETTINGS",
-                0,
-                0,
-                ""
-            ],
-            "word": [
-                "uint64_t",
                 0,
                 0,
                 ""
@@ -5282,7 +5299,8 @@
                 "names": [
                     "flags"
                 ],
-                "pack": 2
+                "pack": 2,
+                "union": false
             },
             "iso15765_separation_time_offset": [
                 "int16_t",
@@ -6704,18 +6722,27 @@
     },
     "_STextAPISettings": {
         "members": {
-            "DWord": [
-                "uint32_t",
-                0,
-                0,
-                ""
-            ],
-            "bExtended": [
-                "unsigned",
-                0,
-                1,
-                "[Bitfield] "
-            ],
+            "can1_options": {
+                "members": {
+                    "DWord": [
+                        "uint32_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "bExtended": [
+                        "unsigned",
+                        0,
+                        1,
+                        "[Bitfield] "
+                    ]
+                },
+                "names": [
+                    "can1_options"
+                ],
+                "pack": 2,
+                "union": true
+            },
             "can1_rx_id": [
                 "uint32_t",
                 0,
@@ -6728,6 +6755,27 @@
                 0,
                 ""
             ],
+            "can2_options": {
+                "members": {
+                    "DWord": [
+                        "uint32_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "bExtended": [
+                        "unsigned",
+                        0,
+                        1,
+                        "[Bitfield] "
+                    ]
+                },
+                "names": [
+                    "can2_options"
+                ],
+                "pack": 2,
+                "union": true
+            },
             "can2_rx_id": [
                 "uint32_t",
                 0,
@@ -6740,6 +6788,27 @@
                 0,
                 ""
             ],
+            "can3_options": {
+                "members": {
+                    "DWord": [
+                        "uint32_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "bExtended": [
+                        "unsigned",
+                        0,
+                        1,
+                        "[Bitfield] "
+                    ]
+                },
+                "names": [
+                    "can3_options"
+                ],
+                "pack": 2,
+                "union": true
+            },
             "can3_rx_id": [
                 "uint32_t",
                 0,
@@ -6752,6 +6821,27 @@
                 0,
                 ""
             ],
+            "can4_options": {
+                "members": {
+                    "DWord": [
+                        "uint32_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "bExtended": [
+                        "unsigned",
+                        0,
+                        1,
+                        "[Bitfield] "
+                    ]
+                },
+                "names": [
+                    "can4_options"
+                ],
+                "pack": 2,
+                "union": true
+            },
             "can4_rx_id": [
                 "uint32_t",
                 0,
@@ -6930,7 +7020,8 @@
                 "names": [
                     "flags"
                 ],
-                "pack": 2
+                "pack": 2,
+                "union": false
             },
             "iso15765_separation_time_offset": [
                 "int16_t",
@@ -7260,7 +7351,8 @@
                 "names": [
                     "flags"
                 ],
-                "pack": 2
+                "pack": 2,
+                "union": false
             },
             "iso15765_separation_time_offset": [
                 "uint16_t",
@@ -7458,7 +7550,8 @@
                 "names": [
                     "flags"
                 ],
-                "pack": 2
+                "pack": 2,
+                "union": false
             },
             "iso15765_separation_time_offset": [
                 "int16_t",
@@ -7583,7 +7676,8 @@
                 "names": [
                     "flags"
                 ],
-                "pack": 2
+                "pack": 2,
+                "union": false
             },
             "iso15765_separation_time_offset": [
                 "int16_t",
@@ -7621,24 +7715,39 @@
                 0,
                 ""
             ],
-            "network_enables": [
-                "uint16_t",
-                0,
-                0,
-                ""
-            ],
-            "network_enables_2": [
-                "uint16_t",
-                0,
-                0,
-                ""
-            ],
-            "network_enables_3": [
-                "uint16_t",
-                0,
-                0,
-                ""
-            ],
+            "network_enables": {
+                "members": {
+                    "network_enables": [
+                        "uint16_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "network_enables_2": [
+                        "uint16_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "network_enables_3": [
+                        "uint16_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "word": [
+                        "uint64_t",
+                        0,
+                        0,
+                        ""
+                    ]
+                },
+                "names": [
+                    "network_enables"
+                ],
+                "pack": 2,
+                "union": true
+            },
             "perf_en": [
                 "uint16_t",
                 0,
@@ -7658,12 +7767,6 @@
                 ""
             ],
             "termination_enables": [
-                "uint64_t",
-                0,
-                0,
-                ""
-            ],
-            "word": [
                 "uint64_t",
                 0,
                 0,
@@ -8636,7 +8739,8 @@
                 "names": [
                     "flags"
                 ],
-                "pack": 2
+                "pack": 2,
+                "union": false
             },
             "iso15765_separation_time_offset": [
                 "int16_t",

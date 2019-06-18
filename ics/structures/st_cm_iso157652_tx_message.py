@@ -18,7 +18,6 @@ class st_cm_iso157652_tx_message(ctypes.Structure):
         ('fs_wait', ctypes.c_uint16), 
         ('data', ctypes.c_uint8 * 4096), 
         ('num_bytes', ctypes.c_uint32), 
-        ('flags', ctypes.c_uint32), 
         ('id_29_bit_enable', ctypes.c_uint32, 1), # [Bitfield] 
         ('fc_id_29_bit_enable', ctypes.c_uint32, 1), # [Bitfield] 
         ('ext_address_enable', ctypes.c_uint32, 1), # [Bitfield] 
@@ -29,6 +28,7 @@ class st_cm_iso157652_tx_message(ctypes.Structure):
         ('iscanFD', ctypes.c_uint32, 1), # [Bitfield] 
         ('isBRSEnabled', ctypes.c_uint32, 1), # [Bitfield] 
         ('tx_dl', ctypes.c_uint32, 8), # [Bitfield] 
+        ('flags', ctypes.c_uint32), 
     ]
 
 # Extra names go here:

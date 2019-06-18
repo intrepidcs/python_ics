@@ -19,7 +19,6 @@ class iso15765_2015_tx_message(ctypes.Structure):
         ('data', ctypes.POINTER(ctypes.c_uint8)), 
         ('num_bytes', ctypes.c_uint32), 
         ('tx_dl', ctypes.c_uint8), 
-        ('flags', ctypes.c_uint16), 
         ('id_29_bit_enable', ctypes.c_uint16, 1), # [Bitfield] 
         ('fc_id_29_bit_enable', ctypes.c_uint16, 1), # [Bitfield] 
         ('ext_address_enable', ctypes.c_uint16, 1), # [Bitfield] 
@@ -29,6 +28,7 @@ class iso15765_2015_tx_message(ctypes.Structure):
         ('paddingEnable', ctypes.c_uint16, 1), # [Bitfield] 
         ('iscanFD', ctypes.c_uint16, 1), # [Bitfield] 
         ('isBRSEnabled', ctypes.c_uint16, 1), # [Bitfield] 
+        ('flags', ctypes.c_uint16), 
     ]
 
 # Extra names go here:

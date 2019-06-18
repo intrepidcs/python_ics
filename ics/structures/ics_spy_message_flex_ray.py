@@ -20,12 +20,11 @@ class ics_spy_message_flex_ray(ctypes.Structure):
         ('NumberBytesData', ctypes.c_uint8), 
         ('NetworkID2', ctypes.c_uint8), 
         ('DescriptionID', ctypes.c_int16), 
-        ('ArbIDOrHeader', ctypes.c_uint32), 
         ('Data', ctypes.c_uint8 * 8), 
-        ('AckBytes', ctypes.c_uint8 * 8), 
         ('ExtraDataPtr', ctypes.c_voidp), 
         ('MiscData', ctypes.c_uint8), 
         ('Reserved', ctypes.c_uint8 * 3), 
+        ('ArbIDOrHeader', ctypes.c_uint32), 
         ('id', ctypes.c_uint32, 12), # [Bitfield] 
         ('res1', ctypes.c_uint32, 4), # [Bitfield] 
         ('cycle', ctypes.c_uint32, 6), # [Bitfield] 
@@ -39,6 +38,7 @@ class ics_spy_message_flex_ray(ctypes.Structure):
         ('dynamic', ctypes.c_uint32, 1), # [Bitfield] 
         ('StatusBitField3', ctypes.c_uint32), 
         ('StatusBitField4', ctypes.c_uint32), 
+        ('AckBytes', ctypes.c_uint8 * 8), 
         ('hcrc_msbs', ctypes.c_uint32, 3), # [Bitfield] 
         ('res2', ctypes.c_uint32, 5), # [Bitfield] 
         ('hcrc_lsbs', ctypes.c_uint32, 8), # [Bitfield] 

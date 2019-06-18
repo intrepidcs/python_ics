@@ -14,7 +14,6 @@ class st_cm_iso157652_rx_message(ctypes.Structure):
         ('blockSize', ctypes.c_uint8), 
         ('stMin', ctypes.c_uint8), 
         ('cf_timeout', ctypes.c_uint16), 
-        ('flags', ctypes.c_uint32), 
         ('reserved', ctypes.c_uint8 * 16), 
         ('id_29_bit_enable', ctypes.c_uint32, 1), # [Bitfield] 
         ('fc_id_29_bit_enable', ctypes.c_uint32, 1), # [Bitfield] 
@@ -24,6 +23,7 @@ class st_cm_iso157652_rx_message(ctypes.Structure):
         ('paddingEnable', ctypes.c_uint32, 1), # [Bitfield] 
         ('iscanFD', ctypes.c_uint32, 1), # [Bitfield] 
         ('isBRSEnabled', ctypes.c_uint32, 1), # [Bitfield] 
+        ('flags', ctypes.c_uint32), 
     ]
 
 # Extra names go here:

@@ -22,12 +22,12 @@ class ics_spy_message_j1850(ctypes.Structure):
         ('DescriptionID', ctypes.c_int16), 
         ('Header', ctypes.c_uint8 * 4), 
         ('Data', ctypes.c_uint8 * 8), 
-        ('AckBytes', ctypes.c_uint8 * 8), 
         ('ExtraDataPtr', ctypes.c_voidp), 
         ('MiscData', ctypes.c_uint8), 
         ('Reserved', ctypes.c_uint8 * 3), 
         ('StatusBitField3', ctypes.c_uint32), 
         ('StatusBitField4', ctypes.c_uint32), 
+        ('AckBytes', ctypes.c_uint8 * 8), 
     ]
 
 # Extra names go here:

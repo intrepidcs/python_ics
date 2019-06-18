@@ -60,10 +60,10 @@ except:
     from ics.structures.s_vivid_can_settings import s_vivid_can_settings
     from ics.structures.svcan4_ind_settings import svcan4_ind_settings
 
-class s_device_settings(ctypes.Structure):
+# Settings
+class Settings(ctypes.Union):
     _pack_ = 2
     _fields_ = [
-        ('DeviceSettingType', ctypes.c_int), 
         ('red', s_red_settings), 
         ('fire', s_fire_settings), 
         ('firevnet', s_fire_vnet_settings), 
@@ -92,6 +92,16 @@ class s_device_settings(ctypes.Structure):
         ('flexvnetz', s_flex_vnetz_settings), 
         ('vividcan', s_vivid_can_settings), 
         ('vcan4_ind', svcan4_ind_settings), 
+    ]
+
+# Extra names go here:
+# End of extra names
+
+class s_device_settings(ctypes.Structure):
+    _pack_ = 2
+    _fields_ = [
+        ('DeviceSettingType', ctypes.c_int), 
+        ('Settings', Settings), 
     ]
 
 # Extra names go here:

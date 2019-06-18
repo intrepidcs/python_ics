@@ -23,12 +23,12 @@ class ics_spy_message_long(ctypes.Structure):
         ('ArbIDOrHeader', ctypes.c_uint32), 
         ('DataMsb', ctypes.c_uint32), 
         ('DataLsb', ctypes.c_uint32), 
-        ('AckBytes', ctypes.c_uint8 * 8), 
         ('ExtraDataPtr', ctypes.c_voidp), 
         ('MiscData', ctypes.c_uint8), 
         ('Reserved', ctypes.c_uint8 * 3), 
         ('StatusBitField3', ctypes.c_uint32), 
         ('StatusBitField4', ctypes.c_uint32), 
+        ('AckBytes', ctypes.c_uint8 * 8), 
     ]
 
 # Extra names go here:
