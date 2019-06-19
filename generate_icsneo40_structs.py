@@ -95,7 +95,7 @@ def parse_enum_member(buffered_line):
     return name, value
 
 def get_struct_name_from_header(line):
-    struct_name = re.sub('typedef|struct|enum|union|\s*', '', line) #line.split('struct ')[-1]
+    struct_name = re.sub('typedef|struct|enum|union|\{|\s*', '', line) #line.split('struct ')[-1]
     if not struct_name: # == 'typedef struct':
         anonomous_struct = True
         struct_name = 'Anonomous'
@@ -242,7 +242,7 @@ def generate_ctype_struct_pyfile_from_dict(name, data, struct_data, path='.', is
         for name in data['names']:
             if name == class_name:
                 continue
-            f.write('{} = {}\n'.format(name, class_name))
+            f.write('{} = {}\n'.format(re.sub('^\*', '', name), class_name))
         f.write("# End of extra names\n")
         f.write('\n')
 
@@ -319,7 +319,7 @@ def generate_ctype_struct_pyfile_from_dict(name, data, struct_data, path='.', is
         for name in data['names']:
             if name == class_name:
                 continue
-            f.write('{} = {}\n'.format(name, class_name))
+            f.write('{} = {}\n'.format(re.sub('^\*', '', name), class_name))
         f.write("# End of extra names\n")
         f.write('\n')
         
@@ -381,6 +381,7 @@ def parse_header_file(filename='include/ics/icsnVC40.h'):
         enum_data_member = OrderedDict()
         anonomous_enum = False
         inside_struct = False
+        struct_is_union = False
         inside_comment = False
         opening_bracket_count = 0
         struct_name = 'None'
@@ -500,8 +501,9 @@ def parse_header_file(filename='include/ics/icsnVC40.h'):
                 continue
 
             # Finally determine if we are inside a struct and get the name
-            if 'struct' in line and not inside_struct:
+            if ('struct' in line or 'union' in line) and not inside_struct:
                 inside_struct = True
+                struct_is_union = 'union' in line
                 opening_bracket_count = line.count('{')
                 struct_name, anonomous_struct = get_struct_name_from_header(line)
                 if debug_print:
@@ -525,6 +527,7 @@ def parse_header_file(filename='include/ics/icsnVC40.h'):
                         struct_data[struct_name]['members'] = OrderedDict()
                     struct_data[struct_name]['members'].update(struct_data_member)
                     struct_data[struct_name]['pack'] = pack_size
+                    struct_data[struct_name]['union'] = struct_is_union
                     struct_data_member = OrderedDict()
                     if inner_struct_data and not inner_union_has_structs:
                         struct_data[struct_name]['members'].update(inner_struct_data)

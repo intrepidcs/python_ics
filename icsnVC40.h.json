@@ -60,21 +60,8 @@
             "CANHubSettings",
             "SCANHubSettings"
         ],
-        "pack": 2
-    },
-    "CANOptions": {
-        "members": {
-            "iNetworkID": [
-                "int32_t",
-                0,
-                0,
-                ""
-            ]
-        },
-        "names": [
-            "CANOptions"
-        ],
-        "pack": 0
+        "pack": 2,
+        "union": false
     },
     "CANTERM_SETTINGS": {
         "members": {
@@ -100,7 +87,8 @@
         "names": [
             "CANTERM_SETTINGS"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "CAN_SETTINGS": {
         "members": {
@@ -174,7 +162,8 @@
         "names": [
             "CAN_SETTINGS"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "DISK_SETTINGS_t": {
         "members": {
@@ -206,7 +195,8 @@
         "names": [
             "DISK_SETTINGS"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "ETHERNET10G_SETTINGS_t": {
         "members": {
@@ -250,7 +240,8 @@
         "names": [
             "ETHERNET10G_SETTINGS"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "ETHERNET_SETTINGS2_t": {
         "members": {
@@ -294,7 +285,8 @@
         "names": [
             "ETHERNET_SETTINGS2"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "ETHERNET_SETTINGS_t": {
         "members": {
@@ -332,7 +324,8 @@
         "names": [
             "ETHERNET_SETTINGS"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "ISO15765_2015_TxMessage": {
         "members": {
@@ -490,7 +483,8 @@
         "names": [
             "ISO15765_2015_TxMessage"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "ISO9141_KEYWORD2000_SETTINGS": {
         "members": {
@@ -552,7 +546,8 @@
         "names": [
             "ISO9141_KEYWORD2000_SETTINGS"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "ISO9141_KEYWORD2000__INIT_STEP": {
         "members": {
@@ -578,7 +573,8 @@
         "names": [
             "ISO9141_KEYWORD2000__INIT_STEP"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "J1708_SETTINGS": {
         "members": {
@@ -592,7 +588,8 @@
         "names": [
             "J1708_SETTINGS"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "J2534_ADAPTER_INFORMATION": {
         "members": {
@@ -636,7 +633,8 @@
         "names": [
             "J2534_ADAPTER_INFORMATION"
         ],
-        "pack": 0
+        "pack": 0,
+        "union": false
     },
     "NeoDevice": {
         "members": {
@@ -674,7 +672,8 @@
         "names": [
             "NeoDevice"
         ],
-        "pack": 0
+        "pack": 0,
+        "union": false
     },
     "OP_ETH_GENERAL_SETTINGS_t": {
         "members": {
@@ -762,7 +761,8 @@
         "names": [
             "OP_ETH_GENERAL_SETTINGS"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "OP_ETH_SETTINGS_t": {
         "members": {
@@ -830,7 +830,8 @@
         "names": [
             "OP_ETH_SETTINGS"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "SERDESCAM_SETTINGS_t": {
         "members": {
@@ -892,7 +893,8 @@
         "names": [
             "SERDESCAM_SETTINGS"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "SExtendedDataFlashHeader": {
         "members": {
@@ -918,7 +920,8 @@
         "names": [
             "ExtendedDataFlashHeader_t"
         ],
-        "pack": 0
+        "pack": 0,
+        "union": false
     },
     "SPlutoSwitchSettings": {
         "members": {
@@ -1016,7 +1019,8 @@
         "names": [
             "SPlutoSwitchSettings"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "SPluto_AVBParams_s": {
         "members": {
@@ -1036,7 +1040,8 @@
         "names": [
             "SPluto_AVBParams"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "SPluto_ClockSyncParams_s": {
         "members": {
@@ -1314,7 +1319,8 @@
         "names": [
             "SPluto_ClockSyncParams"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "SPluto_CustomParams_s": {
         "members": {
@@ -1358,7 +1364,8 @@
         "names": [
             "SPluto_CustomParams"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "SPluto_GeneralParams_s": {
         "members": {
@@ -1486,7 +1493,8 @@
         "names": [
             "SPluto_GeneralParams"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "SPluto_L2AddressLookupEntry_s": {
         "members": {
@@ -1548,7 +1556,8 @@
         "names": [
             "SPluto_L2AddressLookupEntry"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "SPluto_L2AddressLookupParams_s": {
         "members": {
@@ -1598,7 +1607,8 @@
         "names": [
             "SPluto_L2AddressLookupParams"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "SPluto_L2ForwardingEntry_s": {
         "members": {
@@ -1636,7 +1646,8 @@
         "names": [
             "SPluto_L2ForwardingEntry"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "SPluto_L2ForwardingParams_s": {
         "members": {
@@ -1662,7 +1673,8 @@
         "names": [
             "SPluto_L2ForwardingParams"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "SPluto_L2Policing_s": {
         "members": {
@@ -1700,7 +1712,8 @@
         "names": [
             "SPluto_L2Policing"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "SPluto_MacConfig_s": {
         "members": {
@@ -1828,7 +1841,8 @@
         "names": [
             "SPluto_MacConfig"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "SPluto_RetaggingEntry_s": {
         "members": {
@@ -1884,7 +1898,8 @@
         "names": [
             "SPluto_RetaggingEntry"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "SPluto_VlForwardingEntry_s": {
         "members": {
@@ -1916,7 +1931,8 @@
         "names": [
             "SPluto_VlForwardingEntry"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "SPluto_VlForwardingParams_s": {
         "members": {
@@ -1942,7 +1958,8 @@
         "names": [
             "SPluto_VlForwardingParams"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "SPluto_VlLookupEntry_s": {
         "members": {
@@ -2020,7 +2037,8 @@
         "names": [
             "SPluto_VlLookupEntry"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "SPluto_VlPolicingEntry_s": {
         "members": {
@@ -2058,7 +2076,8 @@
         "names": [
             "SPluto_VlPolicingEntry"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "SPluto_VlanLookup_s": {
         "members": {
@@ -2108,7 +2127,8 @@
         "names": [
             "SPluto_VlanLookup"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "SWCAN_SETTINGS": {
         "members": {
@@ -2188,7 +2208,8 @@
         "names": [
             "SWCAN_SETTINGS"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "TIMESYNC_ICSHARDWARE_SETTINGS": {
         "members": {
@@ -2220,7 +2241,8 @@
         "names": [
             "TIMESYNC_ICSHARDWARE_SETTINGS"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_CANFD_SETTINGS": {
         "members": {
@@ -2282,7 +2304,8 @@
         "names": [
             "CANFD_SETTINGS"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_CmProbeSettings": {
         "members": {
@@ -2303,7 +2326,8 @@
             "CmProbeSettings",
             "SCmProbeSettings"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_GLOBAL_SETTINGS": {
         "members": {
@@ -2497,7 +2521,8 @@
         "names": [
             "GLOBAL_SETTINGS"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_LIN_SETTINGS": {
         "members": {
@@ -2541,7 +2566,8 @@
         "names": [
             "LIN_SETTINGS"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_NeoDeviceEx": {
         "members": {
@@ -2621,7 +2647,8 @@
         "names": [
             "NeoDeviceEx"
         ],
-        "pack": 0
+        "pack": 0,
+        "union": false
     },
     "_NeoECU12Settings": {
         "members": {
@@ -2836,7 +2863,8 @@
         "names": [
             "SNeoECU12Settings"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_OBD2ProSettings": {
         "members": {
@@ -3028,7 +3056,8 @@
             "OBD2ProSettings",
             "SOBD2ProSettings"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_RADPlutoSettings": {
         "members": {
@@ -3207,7 +3236,8 @@
         "names": [
             "SRADPlutoSettings"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_SCyanSettings": {
         "members": {
@@ -3662,7 +3692,8 @@
         "names": [
             "SCyanSettings"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_SDeviceSettings": {
         "members": {
@@ -3853,7 +3884,8 @@
         "names": [
             "SDeviceSettings"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_SECUSettings": {
         "members": {
@@ -4053,7 +4085,8 @@
         "names": [
             "SECUSettings"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_SEEVBSettings": {
         "members": {
@@ -4115,7 +4148,8 @@
         "names": [
             "SEEVBSettings"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_SFireSettings": {
         "members": {
@@ -4423,7 +4457,8 @@
         "names": [
             "SFireSettings"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_SFireVnetSettings": {
         "members": {
@@ -4755,7 +4790,8 @@
         "names": [
             "SFireVnetSettings"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_SFlexVnetzSettings": {
         "members": {
@@ -5003,7 +5039,8 @@
         "names": [
             "SFlexVnetzSettings"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_SIEVBSettings": {
         "members": {
@@ -5215,7 +5252,8 @@
         "names": [
             "SIEVBSettings"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_SNeoMostGatewaySettings": {
         "members": {
@@ -5241,7 +5279,8 @@
         "names": [
             "SNeoMostGatewaySettings"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_SOBD2SimSettings": {
         "members": {
@@ -5366,7 +5405,8 @@
         "names": [
             "SOBD2SimSettings"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_SPendantSettings": {
         "members": {
@@ -5566,7 +5606,8 @@
         "names": [
             "SPendantSettings"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_SRADGalaxySettings": {
         "members": {
@@ -5922,7 +5963,8 @@
         "names": [
             "SRADGalaxySettings"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_SRADGigalogDiskDetails": {
         "members": {
@@ -5942,7 +5984,8 @@
         "names": [
             "SRADGigalogDiskDetails"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_SRADGigalogDiskFormatProgress": {
         "members": {
@@ -5962,7 +6005,8 @@
         "names": [
             "SRADGigalogDiskFormatProgress"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_SRADGigalogDiskStatus": {
         "members": {
@@ -5988,7 +6032,8 @@
         "names": [
             "SRADGigalogDiskStatus"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_SRADGigalogDiskStructure": {
         "members": {
@@ -6008,7 +6053,8 @@
         "names": [
             "SRADGigalogDiskStructure"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_SRADGigalogSettings": {
         "members": {
@@ -6268,7 +6314,8 @@
         "names": [
             "SRADGigalogSettings"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_SRADMoon2Settings": {
         "members": {
@@ -6342,7 +6389,8 @@
         "names": [
             "SRADMoon2Settings"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_SRADStar2Settings": {
         "members": {
@@ -6560,7 +6608,8 @@
         "names": [
             "SRADStar2Settings"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_SRADSuperMoonSettings": {
         "members": {
@@ -6634,7 +6683,8 @@
         "names": [
             "SRADSuperMoonSettings"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_SRadGigalogComm": {
         "members": {
@@ -6666,7 +6716,8 @@
         "names": [
             "SRadGigalogComm"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_SRadGigalogSubCmdHdr": {
         "members": {
@@ -6686,7 +6737,8 @@
         "names": [
             "SRadGigalogSubCmdHdr"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_SRedSettings": {
         "members": {
@@ -6718,7 +6770,8 @@
         "names": [
             "SRedSettings"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_STextAPISettings": {
         "members": {
@@ -6870,7 +6923,8 @@
         "names": [
             "STextAPISettings"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_SVCAN3Settings": {
         "members": {
@@ -6938,7 +6992,8 @@
         "names": [
             "SVCAN3Settings"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_SVCAN4Settings": {
         "members": {
@@ -7117,7 +7172,8 @@
         "names": [
             "SVCAN4Settings"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_SVCANRFSettings": {
         "members": {
@@ -7305,7 +7361,8 @@
         "names": [
             "SVCANRFSettings"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_SVividCANSettings": {
         "members": {
@@ -7412,7 +7469,8 @@
         "names": [
             "SVividCANSettings"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_UART_SETTINGS": {
         "members": {
@@ -7498,7 +7556,8 @@
         "names": [
             "UART_SETTINGS"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_VCAN412Settings": {
         "members": {
@@ -7606,7 +7665,8 @@
             "VCAN412Settings",
             "SVCAN412Settings"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_VCAN4IndSettings": {
         "members": {
@@ -7777,7 +7837,8 @@
             "VCAN4IndSettings",
             "SVCAN4IndSettings"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_icsSpyMessage": {
         "members": {
@@ -7935,7 +7996,8 @@
         "names": [
             "icsSpyMessage"
         ],
-        "pack": 0
+        "pack": 0,
+        "union": false
     },
     "_icsSpyMessageFlexRay": {
         "members": {
@@ -8207,7 +8269,8 @@
         "names": [
             "icsSpyMessageFlexRay"
         ],
-        "pack": 0
+        "pack": 0,
+        "union": false
     },
     "_icsSpyMessageJ1850": {
         "members": {
@@ -8365,7 +8428,8 @@
         "names": [
             "icsSpyMessageJ1850"
         ],
-        "pack": 0
+        "pack": 0,
+        "union": false
     },
     "_icsSpyMessageLong": {
         "members": {
@@ -8529,7 +8593,8 @@
         "names": [
             "icsSpyMessageLong"
         ],
-        "pack": 0
+        "pack": 0,
+        "union": false
     },
     "_icsSpyMessageVSB": {
         "members": {
@@ -8687,7 +8752,8 @@
         "names": [
             "icsSpyMessageVSB"
         ],
-        "pack": 0
+        "pack": 0,
+        "union": false
     },
     "_neoECU_AVBSettings": {
         "members": {
@@ -8795,7 +8861,8 @@
             "ECU_AVBSettings",
             "SECU_AVBSettings"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_stAPIFirmwareInfo": {
         "members": {
@@ -8923,7 +8990,8 @@
         "names": [
             "stAPIFirmwareInfo"
         ],
-        "pack": 1
+        "pack": 1,
+        "union": false
     },
     "_stCM_ISO157652_RxMessage": {
         "members": {
@@ -9051,7 +9119,8 @@
         "names": [
             "stCM_ISO157652_RxMessage"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
     "_stCM_ISO157652_TxMessage": {
         "members": {
@@ -9209,83 +9278,476 @@
         "names": [
             "stCM_ISO157652_TxMessage"
         ],
-        "pack": 2
+        "pack": 2,
+        "union": false
     },
-    "cmprobe_versions": {
+    "_stChipVersions": {
         "members": {
-            "zynq_core_major": [
-                "uint8_t",
+            "cmprobe_versions": {
+                "members": {
+                    "zynq_core_major": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "zynq_core_minor": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ]
+                },
+                "names": [
+                    "cmprobe_versions"
+                ],
+                "pack": 2,
+                "union": false
+            },
+            "fire_versions": {
+                "members": {
+                    "jpic_maj": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "jpic_min": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "lpic_maj": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "lpic_min": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "mpic_maj": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "mpic_min": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "upic_maj": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "upic_min": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ]
+                },
+                "names": [
+                    "fire_versions"
+                ],
+                "pack": 2,
+                "union": false
+            },
+            "neoecu_avb_versions": {
+                "members": {
+                    "mchip_major": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "mchip_minor": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ]
+                },
+                "names": [
+                    "neoecu_avb_versions"
+                ],
+                "pack": 2,
+                "union": false
+            },
+            "obd2pro_versions": {
+                "members": {
+                    "mchip_major": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "mchip_minor": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ]
+                },
+                "names": [
+                    "obd2pro_versions"
+                ],
+                "pack": 2,
+                "union": false
+            },
+            "plasma_fire_vnet": {
+                "members": {
+                    "core_maj": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "core_min": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "hid_maj": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "hid_min": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "lpic_maj": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "lpic_min": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "mpic_maj": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "mpic_min": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ]
+                },
+                "names": [
+                    "plasma_fire_vnet"
+                ],
+                "pack": 2,
+                "union": false
+            },
+            "pluto_versions": {
+                "members": {
+                    "mchip_major": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "mchip_minor": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ]
+                },
+                "names": [
+                    "pluto_versions"
+                ],
+                "pack": 2,
+                "union": false
+            },
+            "radgalaxy_versions": {
+                "members": {
+                    "zynq_core_major": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "zynq_core_minor": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ]
+                },
+                "names": [
+                    "radgalaxy_versions"
+                ],
+                "pack": 2,
+                "union": false
+            },
+            "radgigalog_versions": {
+                "members": {
+                    "zynq_core_major": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "zynq_core_minor": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ]
+                },
+                "names": [
+                    "radgigalog_versions"
+                ],
+                "pack": 2,
+                "union": false
+            },
+            "radmoon2_versions": {
+                "members": {
+                    "zynq_core_major": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "zynq_core_minor": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ]
+                },
+                "names": [
+                    "radmoon2_versions"
+                ],
+                "pack": 2,
+                "union": false
+            },
+            "radstar2_versions": {
+                "members": {
+                    "zynq_core_major": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "zynq_core_minor": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ]
+                },
+                "names": [
+                    "radstar2_versions"
+                ],
+                "pack": 2,
+                "union": false
+            },
+            "radsupermoon_versions": {
+                "members": {
+                    "zynq_core_major": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "zynq_core_minor": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ]
+                },
+                "names": [
+                    "radsupermoon_versions"
+                ],
+                "pack": 2,
+                "union": false
+            },
+            "vcan3_versions": {
+                "members": {
+                    "mpic_maj": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "mpic_min": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ]
+                },
+                "names": [
+                    "vcan3_versions"
+                ],
+                "pack": 2,
+                "union": false
+            },
+            "vcan41_versions": {
+                "members": {
+                    "mchip_major": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "mchip_minor": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ]
+                },
+                "names": [
+                    "vcan41_versions"
+                ],
+                "pack": 2,
+                "union": false
+            },
+            "vcan42_versions": {
+                "members": {
+                    "mchip_major": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "mchip_minor": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ]
+                },
+                "names": [
+                    "vcan42_versions"
+                ],
+                "pack": 2,
+                "union": false
+            },
+            "vcanrf_versions": {
+                "members": {
+                    "mpic_maj": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "mpic_min": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ]
+                },
+                "names": [
+                    "vcanrf_versions"
+                ],
+                "pack": 2,
+                "union": false
+            },
+            "vividcan_versions": {
+                "members": {
+                    "ext_flash_maj": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "ext_flash_min": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "mpic_maj": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "mpic_min": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "nrf52_maj": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "nrf52_min": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ]
+                },
+                "names": [
+                    "vividcan_versions"
+                ],
+                "pack": 2,
+                "union": false
+            }
+        },
+        "names": [
+            "stChipVersions"
+        ],
+        "pack": 2,
+        "union": true
+    },
+    "icsDeviceStatus": {
+        "members": {
+            "fire2Status": [
+                "icsFire2DeviceStatus",
                 0,
                 0,
                 ""
             ],
-            "zynq_core_minor": [
-                "uint8_t",
+            "flexVnetzStatus": [
+                "icsFlexVnetzDeviceStatus",
+                0,
+                0,
+                ""
+            ],
+            "vcan4Status": [
+                "icsVcan4DeviceStatus",
                 0,
                 0,
                 ""
             ]
         },
         "names": [
-            "cmprobe_versions"
+            "icsDeviceStatus"
         ],
-        "pack": 2
-    },
-    "fire_versions": {
-        "members": {
-            "jpic_maj": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ],
-            "jpic_min": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ],
-            "lpic_maj": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ],
-            "lpic_min": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ],
-            "mpic_maj": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ],
-            "mpic_min": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ],
-            "upic_maj": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ],
-            "upic_min": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ]
-        },
-        "names": [
-            "fire_versions"
-        ],
-        "pack": 2
+        "pack": 0,
+        "union": true
     },
     "icsFire2DeviceStatus": {
         "members": {
@@ -9317,7 +9779,8 @@
         "names": [
             "icsFire2DeviceStatus"
         ],
-        "pack": 0
+        "pack": 0,
+        "union": false
     },
     "icsFlexVnetzDeviceStatus": {
         "members": {
@@ -9331,7 +9794,8 @@
         "names": [
             "icsFlexVnetzDeviceStatus"
         ],
-        "pack": 0
+        "pack": 0,
+        "union": false
     },
     "icsVcan4DeviceStatus": {
         "members": {
@@ -9345,223 +9809,8 @@
         "names": [
             "icsVcan4DeviceStatus"
         ],
-        "pack": 0
-    },
-    "neoecu_avb_versions": {
-        "members": {
-            "mchip_major": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ],
-            "mchip_minor": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ]
-        },
-        "names": [
-            "neoecu_avb_versions"
-        ],
-        "pack": 2
-    },
-    "obd2pro_versions": {
-        "members": {
-            "mchip_major": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ],
-            "mchip_minor": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ]
-        },
-        "names": [
-            "obd2pro_versions"
-        ],
-        "pack": 2
-    },
-    "plasma_fire_vnet": {
-        "members": {
-            "core_maj": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ],
-            "core_min": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ],
-            "hid_maj": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ],
-            "hid_min": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ],
-            "lpic_maj": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ],
-            "lpic_min": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ],
-            "mpic_maj": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ],
-            "mpic_min": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ]
-        },
-        "names": [
-            "plasma_fire_vnet"
-        ],
-        "pack": 2
-    },
-    "pluto_versions": {
-        "members": {
-            "mchip_major": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ],
-            "mchip_minor": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ]
-        },
-        "names": [
-            "pluto_versions"
-        ],
-        "pack": 2
-    },
-    "radgalaxy_versions": {
-        "members": {
-            "zynq_core_major": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ],
-            "zynq_core_minor": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ]
-        },
-        "names": [
-            "radgalaxy_versions"
-        ],
-        "pack": 2
-    },
-    "radgigalog_versions": {
-        "members": {
-            "zynq_core_major": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ],
-            "zynq_core_minor": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ]
-        },
-        "names": [
-            "radgigalog_versions"
-        ],
-        "pack": 2
-    },
-    "radmoon2_versions": {
-        "members": {
-            "zynq_core_major": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ],
-            "zynq_core_minor": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ]
-        },
-        "names": [
-            "radmoon2_versions"
-        ],
-        "pack": 2
-    },
-    "radstar2_versions": {
-        "members": {
-            "zynq_core_major": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ],
-            "zynq_core_minor": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ]
-        },
-        "names": [
-            "radstar2_versions"
-        ],
-        "pack": 2
-    },
-    "radsupermoon_versions": {
-        "members": {
-            "zynq_core_major": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ],
-            "zynq_core_minor": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ]
-        },
-        "names": [
-            "radsupermoon_versions"
-        ],
-        "pack": 2
+        "pack": 0,
+        "union": false
     },
     "spyFilterLong": {
         "members": {
@@ -9689,7 +9938,70 @@
         "names": [
             "spyFilterLong"
         ],
-        "pack": 0
+        "pack": 0,
+        "union": false
+    },
+    "tagOptionsFindNeoEx": {
+        "members": {
+            "CANOptions": {
+                "members": {
+                    "iNetworkID": [
+                        "int32_t",
+                        0,
+                        0,
+                        ""
+                    ]
+                },
+                "names": [
+                    "CANOptions"
+                ],
+                "pack": 0,
+                "union": false
+            },
+            "Reserved": [
+                "uint32_t",
+                16,
+                0,
+                ""
+            ]
+        },
+        "names": [
+            "OptionsFindNeoEx",
+            "*POptionsFindNeoEx"
+        ],
+        "pack": 0,
+        "union": true
+    },
+    "tagOptionsOpenNeoEx": {
+        "members": {
+            "CANOptions": {
+                "members": {
+                    "iNetworkID": [
+                        "int32_t",
+                        0,
+                        0,
+                        ""
+                    ]
+                },
+                "names": [
+                    "CANOptions"
+                ],
+                "pack": 0,
+                "union": false
+            },
+            "Reserved": [
+                "uint32_t",
+                16,
+                0,
+                ""
+            ]
+        },
+        "names": [
+            "OptionsOpenNeoEx",
+            "*POptionsOpenNeoEx"
+        ],
+        "pack": 0,
+        "union": true
     },
     "tagicsneoVICommand": {
         "members": {
@@ -9715,130 +10027,7 @@
         "names": [
             "icsneoVICommand"
         ],
-        "pack": 0
-    },
-    "vcan3_versions": {
-        "members": {
-            "mpic_maj": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ],
-            "mpic_min": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ]
-        },
-        "names": [
-            "vcan3_versions"
-        ],
-        "pack": 2
-    },
-    "vcan41_versions": {
-        "members": {
-            "mchip_major": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ],
-            "mchip_minor": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ]
-        },
-        "names": [
-            "vcan41_versions"
-        ],
-        "pack": 2
-    },
-    "vcan42_versions": {
-        "members": {
-            "mchip_major": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ],
-            "mchip_minor": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ]
-        },
-        "names": [
-            "vcan42_versions"
-        ],
-        "pack": 2
-    },
-    "vcanrf_versions": {
-        "members": {
-            "mpic_maj": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ],
-            "mpic_min": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ]
-        },
-        "names": [
-            "vcanrf_versions"
-        ],
-        "pack": 2
-    },
-    "vividcan_versions": {
-        "members": {
-            "ext_flash_maj": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ],
-            "ext_flash_min": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ],
-            "mpic_maj": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ],
-            "mpic_min": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ],
-            "nrf52_maj": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ],
-            "nrf52_min": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ]
-        },
-        "names": [
-            "vividcan_versions"
-        ],
-        "pack": 2
+        "pack": 0,
+        "union": false
     }
 }
