@@ -154,34 +154,8 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\include\methods.h" />
-    <ClInclude Include="..\include\object_api_firmware_info.h" />
-    <ClInclude Include="..\include\object_canfd_settings.h" />
-    <ClInclude Include="..\include\object_can_settings.h" />
-    <ClInclude Include="..\include\object_cm_iso157652_rx_message.h" />
-    <ClInclude Include="..\include\object_cm_iso157652_tx_message.h" />
-    <ClInclude Include="..\include\object_cyan_settings.h" />
-    <ClInclude Include="..\include\object_device_settings.h" />
-    <ClInclude Include="..\include\object_ethernet_settings.h" />
-    <ClInclude Include="..\include\object_fire2_device_status.h" />
-    <ClInclude Include="..\include\object_fire_settings.h" />
-    <ClInclude Include="..\include\object_ics_device_status.h" />
-    <ClInclude Include="..\include\object_iso9141_keyword2000_init_steps.h" />
-    <ClInclude Include="..\include\object_iso9141_keyword2000_settings.h" />
-    <ClInclude Include="..\include\object_lin_settings.h" />
     <ClInclude Include="..\include\object_neo_device.h" />
-    <ClInclude Include="..\include\object_op_eth_general_settings.h" />
-    <ClInclude Include="..\include\object_op_eth_settings.h" />
-    <ClInclude Include="..\include\object_rad_galaxy_settings.h" />
     <ClInclude Include="..\include\object_spy_message.h" />
-    <ClInclude Include="..\include\object_swcan_settings.h" />
-    <ClInclude Include="..\include\object_textapi_settings.h" />
-    <ClInclude Include="..\include\object_uart_settings.h" />
-    <ClInclude Include="..\include\object_vcan3_settings.h" />
-    <ClInclude Include="..\include\object_vcan412_settings.h" />
-    <ClInclude Include="..\include\object_vcan4_device_status.h" />
-    <ClInclude Include="..\include\object_vcan4_settings.h" />
-    <ClInclude Include="..\include\object_vcanrf_settings.h" />
-    <ClInclude Include="..\include\object_vividcan_settings.h" />
     <ClInclude Include="..\include\setup_module_auto_defines.h" />
   </ItemGroup>
   <ItemGroup>
@@ -191,36 +165,8 @@
     <ClCompile Include="..\src\ice\ice_library.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\methods.cpp" />
-    <ClCompile Include="..\src\object_api_firmware_info.cpp" />
-    <ClCompile Include="..\src\object_canfd_settings.cpp" />
-    <ClCompile Include="..\src\object_can_settings.cpp" />
-    <ClCompile Include="..\src\object_cm_iso157652_rx_message.cpp" />
-    <ClCompile Include="..\src\object_cm_iso157652_tx_message.cpp" />
-    <ClCompile Include="..\src\object_cyan_settings.cpp" />
-    <ClCompile Include="..\src\object_device_settings.cpp" />
-    <ClCompile Include="..\src\object_ethernet_settings.cpp" />
-    <ClCompile Include="..\src\object_fire2_device_status.cpp" />
-    <ClCompile Include="..\src\object_fire_settings.cpp" />
-    <ClCompile Include="..\src\object_ics_device_status.cpp" />
-    <ClCompile Include="..\src\object_iso9141_keyword2000_init_steps.cpp" />
-    <ClCompile Include="..\src\object_iso9141_keyword2000_settings.cpp" />
-    <ClCompile Include="..\src\object_lin_settings.cpp" />
     <ClCompile Include="..\src\object_neo_device.cpp" />
-    <ClCompile Include="..\src\object_op_eth_general_settings.cpp" />
-    <ClCompile Include="..\src\object_op_eth_settings.cpp" />
-    <ClCompile Include="..\src\object_rad_galaxy_settings.cpp" />
-    <ClCompile Include="..\src\object_rad_star2_settings.cpp" />
     <ClCompile Include="..\src\object_spy_message.cpp" />
-    <ClCompile Include="..\src\object_swcan_settings.cpp" />
-    <ClCompile Include="..\src\object_textapi_settings.cpp" />
-    <ClCompile Include="..\src\object_timesync_settings.cpp" />
-    <ClCompile Include="..\src\object_uart_settings.cpp" />
-    <ClCompile Include="..\src\object_vcan3_settings.cpp" />
-    <ClCompile Include="..\src\object_vcan412_settings.cpp" />
-    <ClCompile Include="..\src\object_vcan4_device_status.cpp" />
-    <ClCompile Include="..\src\object_vcan4_settings.cpp" />
-    <ClCompile Include="..\src\object_vcanrf_settings.cpp" />
-    <ClCompile Include="..\src\object_vividcan_settings.cpp" />
     <ClCompile Include="..\src\setup_module_auto_defines.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

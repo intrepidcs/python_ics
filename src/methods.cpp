@@ -12,28 +12,7 @@
 #include <datetime.h>
 #include "object_spy_message.h"
 #include "object_neo_device.h"
-#include "object_vcan3_settings.h"
-#include "object_fire_settings.h"
-#include "object_can_settings.h"
-#include "object_iso9141_keyword2000_settings.h"
-#include "object_iso9141_keyword2000_init_steps.h"
-#include "object_lin_settings.h"
-#include "object_swcan_settings.h"
-#include "object_textapi_settings.h"
-#include "object_uart_settings.h"
-#include "object_vcanrf_settings.h"
-#include "object_cyan_settings.h"
-#include "object_api_firmware_info.h"
-#include "object_op_eth_general_settings.h"
-#include "object_op_eth_settings.h"
-#include "object_rad_galaxy_settings.h"
 #include "setup_module_auto_defines.h"
-#include "object_cm_iso157652_tx_message.h"
-#include "object_cm_iso157652_rx_message.h"
-#include "object_vcan412_settings.h"
-#include "object_vividcan_settings.h"
-//#include "object_vcan4_settings.h" // Not implemented in 802
-#include "object_device_settings.h"
 
 extern PyTypeObject spy_message_object_type;
 // __func__, __FUNCTION__ and __PRETTY_FUNCTION__ are not preprocessor macros.
@@ -160,6 +139,63 @@ bool _convertListOrTupleToArray(PyObject* obj, std::vector<PyObject*>* results)
     }
     set_ics_exception(exception_runtime_error(), "_convertListOrTupleToArray() bug!");
     return false;
+}
+
+// Returns a PyObject from PyObject_CallObject() on success, sets exception and NULL on failure.
+PyObject* _getPythonModuleObject(const char* module_name, const char* module_object_name)
+{
+    // Before we do anything, we need to grab the python s_device_settings ctype.Structure.
+    PyObject* module = PyImport_ImportModule(module_name);
+    if (!module) 
+    {
+        return set_ics_exception(exception_runtime_error(), "_getPythonModuleObject(): Failed to import module");
+    }
+    // Grab the module Dictionary
+    PyObject* module_dict = PyModule_GetDict(module);
+    if (!module_dict) 
+    {
+        return set_ics_exception(exception_runtime_error(), "_getPythonModuleObject(): Failed to grab module dict from module");
+    }
+    // Grab the actual object
+    PyObject* module_object = PyDict_GetItemString(module_dict, module_object_name);
+    if (!module_object) 
+    {
+        return set_ics_exception(exception_runtime_error(), "_getPythonModuleObject(): Failed to grab object s_device_settings from module");
+    }
+    // Call the object so we have our own reference - we are going to return this
+    PyObject* object = PyObject_CallObject(module_object, NULL);
+    if (!object) 
+    {
+        return set_ics_exception(exception_runtime_error(), "_getPythonModuleObject(): Failed to call object from module");
+    }
+    return object;
+}
+
+// Returns same as PyObject_IsInstance()
+int _isPythonModuleObject_IsInstance(PyObject* object, const char* module_name, const char* module_object_name)
+{
+    // Before we do anything, we need to grab the python s_device_settings ctype.Structure.
+    PyObject* module = PyImport_ImportModule(module_name);
+    if (!module) 
+    {
+        set_ics_exception(exception_runtime_error(), "_isPythonModuleObjectInstanceOf(): Failed to import module");
+        return -1;
+    }
+    // Grab the module Dictionary
+    PyObject* module_dict = PyModule_GetDict(module);
+    if (!module_dict) 
+    {
+        set_ics_exception(exception_runtime_error(), "_isPythonModuleObjectInstanceOf(): Failed to grab module dict from module");
+        return -1;
+    }
+    // Grab the actual object
+    PyObject* module_object = PyDict_GetItemString(module_dict, module_object_name);
+    if (!module_object) 
+    {
+        set_ics_exception(exception_runtime_error(), "_isPythonModuleObjectInstanceOf(): Failed to grab object s_device_settings from module");
+        return -1;
+    }
+    return PyObject_IsInstance(object, module_object);
 }
 
 PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
@@ -1312,24 +1348,10 @@ PyObject* meth_get_device_settings(PyObject* self, PyObject* args)
     }
 
     // Before we do anything, we need to grab the python s_device_settings ctype.Structure.
-    PyObject* module = PyImport_ImportModule("ics.structures.s_device_settings");
-    if (!module) {
-        return set_ics_exception(exception_runtime_error(), "Failed to import module ics.structures.s_device_settings");
-    }
-    // Grab the module Dictionary
-    PyObject* module_dict = PyModule_GetDict(module);
-    if (!module_dict) {
-        return set_ics_exception(exception_runtime_error(), "Failed to grab module dict from ics.structures.s_device_settings");
-    }
-    // Grab the actual object
-    PyObject* s_device_settings = PyDict_GetItemString(module_dict, "s_device_settings");
-    if (!s_device_settings) {
-        return set_ics_exception(exception_runtime_error(), "Failed to grab object s_device_settings from module ics.structures.s_device_settings");
-    }
-    // Call the object so we have our own reference - we are going to return this
-    PyObject* settings = PyObject_CallObject(s_device_settings, NULL);
-    if (!s_device_settings) {
-        return set_ics_exception(exception_runtime_error(), "Failed to call object s_device_settings from module ics.structures.s_device_settings");
+    PyObject* settings = _getPythonModuleObject("ics.structures.s_device_settings", "s_device_settings");
+    if (!settings)
+    {
+        return NULL;
     }
     // Grab the buffer out of the newly created object - make sure to call PyBuffer_Release(&settings_buffer) when done.
     Py_buffer settings_buffer = {};
@@ -2192,15 +2214,19 @@ PyObject* meth_get_hw_firmware_info(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         ice::Function<int __stdcall (ICS_HANDLE, stAPIFirmwareInfo*)> icsneoGetHWFirmwareInfo(lib, "icsneoGetHWFirmwareInfo");
-        PyObject* info = PyObject_CallObject((PyObject*)&api_firmware_info_object_type, NULL);
-        if (!info) {
-            // This should only happen if we run out of memory (malloc failure)?
-            PyErr_Print();
-            return set_ics_exception(exception_runtime_error(), "Failed to allocate " API_FIRMWARE_INFO_OBJECT_NAME);
+        PyObject* info = _getPythonModuleObject("ics.structures.st_api_firmware_info", "st_api_firmware_info");
+        if (!info)
+        {
+            return NULL;
         }
+        Py_buffer info_buffer = {};
+        PyObject_GetBuffer(info, &info_buffer, PyBUF_SIMPLE);
+
+        
         Py_BEGIN_ALLOW_THREADS
-        if (!icsneoGetHWFirmwareInfo(handle, &PyApiFirmwareInfo_GetApiFirmwareInfo(info)->s)) {
+        if (!icsneoGetHWFirmwareInfo(handle, (stAPIFirmwareInfo*)info_buffer.buf)) {
             Py_BLOCK_THREADS
+            PyBuffer_Release(&info_buffer);
             return set_ics_exception(exception_runtime_error(), "icsneoGetHWFirmwareInfo() Failed");
         }
         Py_END_ALLOW_THREADS
@@ -2391,14 +2417,15 @@ PyObject* meth_get_dll_firmware_info(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         ice::Function<int __stdcall (ICS_HANDLE, stAPIFirmwareInfo*)> icsneoGetDLLFirmwareInfo(lib, "icsneoGetDLLFirmwareInfo");
-        PyObject* info = PyObject_CallObject((PyObject*)&api_firmware_info_object_type, NULL);
-        if (!info) {
-            // This should only happen if we run out of memory (malloc failure)?
-            PyErr_Print();
-            return set_ics_exception(exception_runtime_error(), "Failed to allocate " API_FIRMWARE_INFO_OBJECT_NAME);
+        PyObject* info = _getPythonModuleObject("ics.structures.st_api_firmware_info", "st_api_firmware_info");
+        if (!info)
+        {
+            return NULL;
         }
+        Py_buffer info_buffer = {};
+        PyObject_GetBuffer(info, &info_buffer, PyBUF_SIMPLE);
         Py_BEGIN_ALLOW_THREADS
-        if (!icsneoGetDLLFirmwareInfo(handle, &PyApiFirmwareInfo_GetApiFirmwareInfo(info)->s)) {
+        if (!icsneoGetDLLFirmwareInfo(handle, (stAPIFirmwareInfo*)info_buffer.buf)) {
             Py_BLOCK_THREADS
             return set_ics_exception(exception_runtime_error(), "icsneoGetDLLFirmwareInfo() Failed");
         }
@@ -2609,10 +2636,13 @@ PyObject* meth_iso15765_transmit_message(PyObject* self, PyObject* args)
     if (!PyNeoDevice_CheckExact(obj)) {
         return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
     }
-    if (!PyCmISO157652TxMessage_Check(obj_tx_msg)) {
-        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." CM_ISO157652_TX_MESSAGE_OBJECT_NAME);
+    if (_isPythonModuleObject_IsInstance(obj_tx_msg, "ics.structures.st_cm_iso157652_tx_message", "st_cm_iso157652_tx_message") != 1)
+    {
+        return NULL;
     }
-    cm_iso157652_tx_message_object *temp = (cm_iso157652_tx_message_object*)obj_tx_msg;
+    Py_buffer obj_tx_msg_buffer = {};
+    PyObject_GetBuffer(obj_tx_msg, &obj_tx_msg_buffer, PyBUF_SIMPLE);
+
     ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
     try
     {
@@ -2623,11 +2653,13 @@ PyObject* meth_iso15765_transmit_message(PyObject* self, PyObject* args)
         }
         ice::Function<int __stdcall (ICS_HANDLE, unsigned long, stCM_ISO157652_TxMessage*, unsigned long)> icsneoISO15765_TransmitMessage(lib, "icsneoISO15765_TransmitMessage");
         Py_BEGIN_ALLOW_THREADS
-        if (!icsneoISO15765_TransmitMessage(handle, ulNetworkID, &temp->s, ulBlockingTimeout)) {
+        if (!icsneoISO15765_TransmitMessage(handle, ulNetworkID, (stCM_ISO157652_TxMessage*)obj_tx_msg_buffer.buf, ulBlockingTimeout)) {
             Py_BLOCK_THREADS
+            PyBuffer_Release(&obj_tx_msg_buffer);
             return set_ics_exception(exception_runtime_error(), "icsneoISO15765_TransmitMessage() Failed");
         }
         Py_END_ALLOW_THREADS
+        PyBuffer_Release(&obj_tx_msg_buffer);
         return Py_BuildValue("b", true);
     }
     catch (ice::Exception& ex)
@@ -2637,17 +2669,6 @@ PyObject* meth_iso15765_transmit_message(PyObject* self, PyObject* args)
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
-/*
-
-PyObject* obj = NULL;
-            if (use_j1850) {
-                obj = PyObject_CallObject((PyObject*)&spy_message_j1850_object_type, NULL);
-            } else {
-                obj = PyObject_CallObject((PyObject*)&spy_message_object_type, NULL);
-            }
-
-*/
-// (void* hObject, unsigned int iIndex, const stCM_ISO157652_RxMessage * pRxMessage)
 PyObject* meth_iso15765_receive_message(PyObject* self, PyObject* args)
 {
     PyObject* obj = NULL;
@@ -2660,36 +2681,38 @@ PyObject* meth_iso15765_receive_message(PyObject* self, PyObject* args)
     if (!PyNeoDevice_CheckExact(obj)) {
         return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
     }
-    if (!PyCmISO157652RxMessage_Check(obj_rx_msg)) {
-        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." CM_ISO157652_RX_MESSAGE_OBJECT_NAME);
+    if (_isPythonModuleObject_IsInstance(obj_rx_msg, "ics.structures.st_cm_iso157652_rx_message", "st_cm_iso157652_rx_message") != 1)
+    {
+        return NULL;
     }
-    Py_XINCREF(obj_rx_msg);
-    cm_iso157652_rx_message_object *temp = (cm_iso157652_rx_message_object*)obj_rx_msg;
+    Py_buffer obj_rx_msg_buffer = {};
+    PyObject_GetBuffer(obj_rx_msg, &obj_rx_msg_buffer, PyBUF_SIMPLE);
+
     ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
     try
     {
         ice::Library* lib = dll_get_library();
         if (!lib) {
             char buffer[512];
-            Py_DECREF(obj_rx_msg);
+            PyBuffer_Release(&obj_rx_msg_buffer);
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         //stCM_ISO157652_RxMessage rx_msg_temp = {0};
         //memcpy(&rx_msg_temp, &(temp->s), sizeof(temp->s));
         ice::Function<int __stdcall (ICS_HANDLE, unsigned int, stCM_ISO157652_RxMessage*)> icsneoISO15765_ReceiveMessage(lib, "icsneoISO15765_ReceiveMessage");
         Py_BEGIN_ALLOW_THREADS
-        if (!icsneoISO15765_ReceiveMessage(handle, iIndex, &temp->s)) {
+        if (!icsneoISO15765_ReceiveMessage(handle, iIndex, (stCM_ISO157652_RxMessage*)obj_rx_msg_buffer.buf)) {
             Py_BLOCK_THREADS
-            Py_DECREF(obj_rx_msg);
+            PyBuffer_Release(&obj_rx_msg_buffer);
             return set_ics_exception(exception_runtime_error(), "icsneoISO15765_ReceiveMessage() Failed");
         }
         Py_END_ALLOW_THREADS
-        Py_DECREF(obj_rx_msg);
+        PyBuffer_Release(&obj_rx_msg_buffer);
         Py_RETURN_NONE;
     }
     catch (ice::Exception& ex)
     {
-        Py_DECREF(obj_rx_msg);
+        PyBuffer_Release(&obj_rx_msg_buffer);
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
@@ -2993,31 +3016,34 @@ PyObject* meth_get_device_status(PyObject* self, PyObject* args)
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
-        ics_device_status_object* ds = (ics_device_status_object*)PyObject_CallObject((PyObject*)&ics_device_status_object_type, NULL);
-        size_t device_status_size = sizeof(ds->s);
+        PyObject* device_status = _getPythonModuleObject("ics.structures.ics_device_status", "ics_device_status");
+        if (!device_status)
+        {
+            return NULL;
+        }
+        Py_buffer device_status_buffer = {};
+        PyObject_GetBuffer(device_status, &device_status_buffer, PyBUF_SIMPLE);
+
+        size_t device_status_size = device_status_buffer.len;
         ice::Function<int __stdcall (ICS_HANDLE, icsDeviceStatus*, size_t*)> icsneoGetDeviceStatus(lib, "icsneoGetDeviceStatus");
         double timestamp = 0;
         Py_BEGIN_ALLOW_THREADS
-        if (!icsneoGetDeviceStatus(handle, &ds->s, &device_status_size)) {
+        if (!icsneoGetDeviceStatus(handle, (icsDeviceStatus*)device_status_buffer.buf, &device_status_size)) {
             Py_BLOCK_THREADS
+            PyBuffer_Release(&device_status_buffer);
             return set_ics_exception(exception_runtime_error(), "icsneoGetDeviceStatus() Failed");
         }
         if (throw_exception_on_size_mismatch)
         {
-                if (device_status_size != sizeof(ds->s))
-                {
-                     Py_BLOCK_THREADS
-                     return set_ics_exception(exception_runtime_error(), "icsneoGetDeviceStatus() API mismatch detected!");
-                }
+            if (device_status_size != device_status_buffer.len)
+            {
+                Py_BLOCK_THREADS
+                PyBuffer_Release(&device_status_buffer);
+                return set_ics_exception(exception_runtime_error(), "icsneoGetDeviceStatus() API mismatch detected!");
+            }
         }
         Py_END_ALLOW_THREADS
-        fire2_device_status_object* f2s = (fire2_device_status_object*)ds->fire2_status;
-        memcpy(&f2s->s, &ds->s, sizeof(f2s->s));
-#if (VSPY3_BUILD_VERSION > 802)
-        vcan4_device_status_object* v4s = (vcan4_device_status_object*)ds->vcan4_status;
-        memcpy(&v4s->s, &ds->s, sizeof(v4s->s));
-#endif
-        return (PyObject*)ds;
+        return device_status;
     }
     catch (ice::Exception& ex)
     {

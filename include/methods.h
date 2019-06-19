@@ -1,15 +1,9 @@
 #ifndef _METHODS_H_
 #define _METHODS_H_
 #include <Python.h>
-#include "object_vcan3_settings.h"
-#include "object_fire_settings.h"
 #include "object_neo_device.h"
-#include "object_api_firmware_info.h"
+#include "object_spy_message.h"
 #include "setup_module_auto_defines.h"
-#include "object_cm_iso157652_tx_message.h"
-#include "object_cm_iso157652_rx_message.h"
-#include "object_ics_device_status.h"
-#include "object_device_settings.h"
 
 #ifdef _cplusplus
 extern "C" {
@@ -387,7 +381,6 @@ PyObject* meth_enable_network_com(PyObject* self, PyObject* args); //icsneoEnabl
     "\t>>> ics.set_reflash_callback(callback)\n" \
     "\t>>> \n" 
 
-#if defined(USE_GENERIC_DEVICE_SETTINGS)
 #define _DOC_GET_DEVICE_SETTINGS \
     MODULE_NAME ".get_device_settings(device, device_type, vnet_slot)\n" \
     "\n" \
@@ -423,30 +416,9 @@ PyObject* meth_enable_network_com(PyObject* self, PyObject* args); //icsneoEnabl
     "\t2\n" \
     "\t>>> s2.cyan.canfd1.FDMode\n" \
     "\t4\n"
-#else
-#define _DOC_GET_DEVICE_SETTINGS \
-    MODULE_NAME ".get_device_settings(device, device_type)\n" \
-    "\n" \
-    "Gets the settings in the device. device_type can override which setting object we deal with normally\n" \
-    "\n" \
-    "Args:\n" \
-    "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
-    "\n" \
-    "Raises:\n" \
-    "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
-    "\n" \
-    "Returns:\n" \
-    "\t:class:`" MODULE_NAME "." VCAN3_SETTINGS_OBJECT_NAME "` or :class:`" MODULE_NAME "." FIRE_SETTINGS_OBJECT_NAME "`.\n" \
-    "\n" \
-    "\t>>> device = ics.open_device()\n" \
-    "\t>>> settings = ics.get_device_settings(device)\n" \
-    "\t>>> type(settings)\n" \
-    "\t<class 'ics.FireSettings'>\n" \
-    "\t>>> \n" 
-#endif
 
-#if defined(USE_GENERIC_DEVICE_SETTINGS)
-    #define _DOC_SET_DEVICE_SETTINGS \
+
+#define _DOC_SET_DEVICE_SETTINGS \
     MODULE_NAME ".set_device_settings(device, settings, save_to_eeprom, vnet_slot)\n" \
     "\n" \
     "Sets the settings in the device. vnet_slot defaults to " MODULE_NAME ".PlasmaIonVnetChannelMain\n" \
@@ -474,34 +446,6 @@ PyObject* meth_enable_network_com(PyObject* self, PyObject* args); //icsneoEnabl
     "\t>>> s.cyan.can_switch_mode = 2\n" \
     "\t>>> ics.set_device_settings(d, s, True, ics.PlasmaIonVnetChannelA)\n" \
     "\t>>> \n"
-#else // #if defined(USE_GENERIC_DEVICE_SETTINGS)
-#define _DOC_SET_DEVICE_SETTINGS \
-    MODULE_NAME ".set_device_settings(device, settings, device_type, save_to_eeprom)\n" \
-    "\n" \
-    "Sets the settings in the device.\n" \
-    "\n" \
-    "Args:\n" \
-    "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
-    "\tsettings (:class:`" MODULE_NAME "." VCAN3_SETTINGS_OBJECT_NAME "`): :class:`" MODULE_NAME "." VCAN3_SETTINGS_OBJECT_NAME "`\n\n" \
-    "\tor:\n\n" \
-    "\tsettings (:class:`" MODULE_NAME "." FIRE_SETTINGS_OBJECT_NAME "`): :class:`" MODULE_NAME "." FIRE_SETTINGS_OBJECT_NAME "`\n\n" \
-    "\n" \
-    "Raises:\n" \
-    "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
-    "\n" \
-    "Returns:\n" \
-    "\tNone.\n" \
-    "\n" \
-    "\t>>> device = ics.open_device()\n" \
-    "\t>>> settings = ics.get_device_settings(device)\n" \
-    "\t>>> type(settings)\n" \
-    "\t<class 'ics.FireSettings'>\n" \
-    "\t>>> settings.can1.Mode\n" \
-    "\t0\n" \
-    "\t>>> settings.can1.Mode = 3\n" \
-    "\t>>> ics.set_device_settings(device, settings)\n" \
-    "\t>>> \n"
-#endif
 
 //"Accepts a " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME ", exception on error."
 #define _DOC_LOAD_DEFAULT_SETTINGS \
@@ -910,7 +854,7 @@ PyObject* meth_enable_network_com(PyObject* self, PyObject* args); //icsneoEnabl
     "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
     "\n" \
     "Returns:\n" \
-    "\t(:class:`" MODULE_NAME "." API_FIRMWARE_INFO_OBJECT_NAME "`)\n" \
+    "\t(:class:`" MODULE_NAME "." "st_api_firmware_info" "`)\n" \
     "\n" \
     "\t>>> device = ics.open_device()\n" \
     "\t>>> info = ics.get_dll_firmware_info(device)\n" \
@@ -932,7 +876,7 @@ PyObject* meth_enable_network_com(PyObject* self, PyObject* args); //icsneoEnabl
     "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
     "\n" \
     "Returns:\n" \
-    "\t(:class:`" MODULE_NAME "." API_FIRMWARE_INFO_OBJECT_NAME "`)\n" \
+    "\t(:class:`" MODULE_NAME "." "st_api_firmware_info" "`)\n" \
     "\n" \
     "\t>>> device = ics.open_device()\n" \
     "\t>>> info = ics.get_hw_firmware_info(device)\n" \
@@ -999,7 +943,7 @@ PyObject* meth_enable_network_com(PyObject* self, PyObject* args); //icsneoEnabl
     "Args:\n" \
     "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
     "\n" \
-    "\tpMsg (:class:`" MODULE_NAME "." CM_ISO157652_TX_MESSAGE_OBJECT_NAME "`): :class:`" MODULE_NAME "." CM_ISO157652_TX_MESSAGE_OBJECT_NAME "`\n\n" \
+    "\tpMsg (:class:`" MODULE_NAME "." "st_cm_iso157652_tx_message" "`): :class:`" MODULE_NAME "." "st_cm_iso157652_tx_message" "`\n\n" \
     "\n" \
     "Raises:\n" \
     "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
@@ -1017,7 +961,7 @@ PyObject* meth_enable_network_com(PyObject* self, PyObject* args); //icsneoEnabl
     "Args:\n" \
     "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
     "\n" \
-    "\tprx_msg (:class:`" MODULE_NAME "." CM_ISO157652_RX_MESSAGE_OBJECT_NAME "`): :class:`" MODULE_NAME "." CM_ISO157652_RX_MESSAGE_OBJECT_NAME "`\n\n" \
+    "\tprx_msg (:class:`" MODULE_NAME "." "st_cm_iso157652_rx_message" "`): :class:`" MODULE_NAME "." "st_cm_iso157652_rx_message" "`\n\n" \
     "\n" \
     "Raises:\n" \
     "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
@@ -1196,7 +1140,7 @@ PyObject* meth_enable_network_com(PyObject* self, PyObject* args); //icsneoEnabl
     "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
     "\n" \
     "Returns:\n" \
-    "\t(:class:`" MODULE_NAME "." ICS_DEVICE_STATUS_OBJECT_NAME "`).\n" \
+    "\t(:class:`" MODULE_NAME "." "ics_device_status" "`).\n" \
     "\n" \
     "\t>>> import ics\n" \
     "\t>>> d = ics.open_device()\n" \
@@ -1248,10 +1192,6 @@ static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("flash_devices", "FlashDevice2", "FlashDevice2", meth_flash_devices, METH_VARARGS, "int _stdcall FlashDevice2()"),
 #endif
     _EZ_ICS_STRUCT_METHOD("set_reflash_callback", "icsneoSetReflashDisplayCallbacks", "SetReflashDisplayCallback", meth_set_reflash_callback, METH_VARARGS, _DOC_SET_REFLASH_CALLBACK),
-    _EZ_ICS_STRUCT_METHOD("get_device_settings", "icsneoGetFireSettings", "GetFireSettings", meth_get_device_settings, METH_VARARGS, _DOC_GET_DEVICE_SETTINGS),
-    _EZ_ICS_STRUCT_METHOD_MULTIPLE("get_device_settings", "icsneoGetVCAN3Settings", "GetVCAN3Settings", meth_get_device_settings, METH_VARARGS, _DOC_GET_DEVICE_SETTINGS),
-    _EZ_ICS_STRUCT_METHOD("set_device_settings", "icsneoSetFireSettings", "SetFireSettings", meth_set_device_settings, METH_VARARGS, _DOC_SET_DEVICE_SETTINGS),
-    _EZ_ICS_STRUCT_METHOD_MULTIPLE("set_device_settings", "icsneoSetVCAN3Settings", "SetVCAN3Settings", meth_set_device_settings, METH_VARARGS, _DOC_SET_DEVICE_SETTINGS),
     _EZ_ICS_STRUCT_METHOD("load_default_settings", "icsneoLoadDefaultSettings", "LoadDefaultSettings", meth_load_default_settings, METH_VARARGS, _DOC_LOAD_DEFAULT_SETTINGS),
     //_EZ_ICS_STRUCT_METHOD("spy_message_to_j1850", METH_spy_message_to_j1850, METH_VARARGS, "Accepts a " MODULE_NAME "." SPY_MESSAGE_OBJECT_NAME ", and returns a " MODULE_NAME "." SPY_MESSAGE_J1850_OBJECT_NAME ". Exception on error."),
     _EZ_ICS_STRUCT_METHOD("read_sdcard", "icsneoReadSDCard", "ReadSDCard", meth_read_sdcard, METH_VARARGS, "icsneoReadSDCard(), Accepts a " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME " and sector index. Returns a bytearray of 512 bytes max. Exception on error."),

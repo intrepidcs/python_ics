@@ -6,35 +6,7 @@
 #include "methods.h"
 #include "exceptions.h"
 #include "object_spy_message.h"
-#include "object_can_settings.h"
-#include "object_swcan_settings.h"
-#include "object_lin_settings.h"
-#include "object_uart_settings.h"
-#include "object_textapi_settings.h"
-#include "object_iso9141_keyword2000_settings.h"
-#include "object_iso9141_keyword2000_init_steps.h"
-#include "object_vcan3_settings.h"
-#include "object_fire_settings.h"
 #include "object_neo_device.h"
-#include "object_vcanrf_settings.h"
-#include "object_cyan_settings.h"
-#include "object_canfd_settings.h"
-#include "object_api_firmware_info.h"
-#include "object_op_eth_general_settings.h"
-#include "object_op_eth_settings.h"
-#include "object_rad_galaxy_settings.h"
-#include "object_ethernet_settings.h"
-#include "object_cm_iso157652_tx_message.h"
-#include "object_cm_iso157652_rx_message.h"
-#include "object_vcan412_settings.h"
-#include "object_vividcan_settings.h"
-#include "object_fire2_device_status.h"
-#include "object_vcan4_device_status.h"
-#include "object_ics_device_status.h"
-#include "object_device_settings.h"
-#include "object_vcan4_settings.h"
-#include "object_timesync_settings.h"
-#include "object_rad_star2_settings.h"
 
 #define _DOC_ICS_MODULE \
     "Python C Code module for interfacing to the icsneo40 dynamic library. Code tries\n" \
@@ -120,34 +92,6 @@ void initics(void)
     // These were a WIP, as you get towards the bottom the code structure is simplier.
     setup_neo_device_object(module);
     setup_spy_message_object(module);
-    setup_can_settings_object(module);
-    setup_swcan_settings_object(module);
-    setup_lin_settings_object(module);
-    setup_uart_settings_object(module);
-    setup_textapi_settings_object(module);
-    setup_iso9141keyword2000_settings_object(module);
-    setup_iso9141keyword2000_init_steps_object(module);
-    setup_vcan3_settings_object(module);
-    setup_fire_settings_object(module);
-    setup_vcanrf_settings_object(module);
-    setup_cyan_settings_object(module);
-    setup_canfd_settings_object(module);
-    setup_api_firmware_info_object(module);
-    setup_op_eth_general_settings_object(module);
-    setup_op_eth_settings_object(module);
-    setup_rad_galaxy_settings_object(module);
-    setup_ethernet_settings_object(module);
-    setup_cm_iso157652_tx_message_object(module);
-    setup_cm_iso157652_rx_message_object(module);
-    setup_vcan412_settings_object(module);
-    setup_vividcan_settings_object(module);
-    setup_fire2_device_status_object(module);
-    setup_vcan4_device_status_object(module); // 803+
-    setup_ics_device_status_object(module);
-    setup_device_settings_object(module);
-    setup_vcan4_settings_object(module); // 803+
-    setup_timesync_settings_object(module);
-    setup_rad_star2_settings_object(module);
 
 #if PY_MAJOR_VERSION >= 3
     return module;
