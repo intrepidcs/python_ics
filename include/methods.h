@@ -389,12 +389,14 @@ PyObject* meth_enable_network_com(PyObject* self, PyObject* args); //icsneoEnabl
 
 #if defined(USE_GENERIC_DEVICE_SETTINGS)
 #define _DOC_GET_DEVICE_SETTINGS \
-    MODULE_NAME ".get_device_settings(device, vnet_slot)\n" \
+    MODULE_NAME ".get_device_settings(device, device_type, vnet_slot)\n" \
     "\n" \
     "Gets the settings in the device. vnet_slot defaults to " MODULE_NAME ".PlasmaIonVnetChannelMain\n" \
     "\n" \
     "Args:\n" \
     "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
+    "\tdevice_type (EDeviceSettingsType): Optional: Overrides default device setings type. Defaults to '-1'\n\n" \
+    "\tvnet_slot (PlasmaIonVnetChannelMain): Optional: Defaults to PlasmaIonVnetChannelMain, Used only for PLASMA/ION Devices.\n\n" \
     "\n" \
     "Raises:\n" \
     "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
@@ -416,7 +418,7 @@ PyObject* meth_enable_network_com(PyObject* self, PyObject* args); //icsneoEnabl
     "\t4\n" \
     "\t>>> s2.cyan\n" \
     "\t<ics.CyanSettings object at 0x02B113C8>\n" \
-    "\t>>> s2 = ics.get_device_settings(d, ics.PlasmaIonVnetChannelA)\n" \
+    "\t>>> s2 = ics.get_device_settings(d, -1, ics.PlasmaIonVnetChannelA)\n" \
     "\t>>> s2.DeviceSettingType\n" \
     "\t2\n" \
     "\t>>> s2.cyan.canfd1.FDMode\n" \
