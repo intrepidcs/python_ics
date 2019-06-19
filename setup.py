@@ -72,8 +72,8 @@ else:
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
     
-module = Extension('ics',
-  define_macros = [('MAJOR_VERSION', MAJOR_VERSION), ('MINOR_VERSION', MINOR_VERSION)],
+ics_extension = Extension('ics.ics',
+  define_macros = [('MAJOR_VERSION', MAJOR_VERSION), ('MINOR_VERSION', MINOR_VERSION), ('EXTERNAL_PROJECT', 1)],
   include_dirs=['include', 'include/ics', 'include/ice'],
   libraries = [],
   library_dirs = ['/usr/local/lib'],
@@ -92,7 +92,11 @@ setup (name = 'python_ics',
        url='https://github.com/intrepidcs/python_ics/',
        cmdclass = { 'build': build, 'test': UnitTests, },
        download_url = 'https://github.com/intrepidcs/python_ics/releases',
-       ext_modules = [module],
+       packages = ['ics', 'ics.structures'], # 'ics.structures', 'ics.main'],
+       #package_dir = {'ics.structures': 'ics',},
+       ext_modules = [ics_extension],
+       #package_dir = {'ics.structures': 'python/ics'},
+       
        classifiers = [
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.3',

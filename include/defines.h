@@ -2,7 +2,7 @@
 #define _DEFINES_H_
 #include <Python.h>
 
-#define MODULE_NAME "ics"
+#define MODULE_NAME "ics.ics"
 #define MODULE_DESCRIPTION "Copyright Intrepid Control Systems, Inc."
 #define VSPY3_BUILD_VERSION 901
 
