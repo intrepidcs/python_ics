@@ -395,7 +395,7 @@ PyObject* meth_enable_network_com(PyObject* self, PyObject* args); //icsneoEnabl
     "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
     "\n" \
     "Returns:\n" \
-    "\t:class:`" MODULE_NAME "."DEVICE_SETTINGS_OBJECT_NAME"`\n" \
+    "\t:class:`" MODULE_NAME ".""device_settings""`\n" \
     "\n" \
     "\t>>> d = ics.open_device()\n" \
     "\t>>> d.Name\n" \
@@ -425,7 +425,7 @@ PyObject* meth_enable_network_com(PyObject* self, PyObject* args); //icsneoEnabl
     "\n" \
     "Args:\n" \
     "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
-    "\tsettings (:class:`" MODULE_NAME "."DEVICE_SETTINGS_OBJECT_NAME"`): :class:`" MODULE_NAME "."DEVICE_SETTINGS_OBJECT_NAME"`\n\n" \
+    "\tsettings (:class:`" MODULE_NAME ".""device_settings""`): :class:`" MODULE_NAME ".""device_settings""`\n\n" \
     "\n" \
     "Raises:\n" \
     "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
@@ -1192,6 +1192,8 @@ static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("flash_devices", "FlashDevice2", "FlashDevice2", meth_flash_devices, METH_VARARGS, "int _stdcall FlashDevice2()"),
 #endif
     _EZ_ICS_STRUCT_METHOD("set_reflash_callback", "icsneoSetReflashDisplayCallbacks", "SetReflashDisplayCallback", meth_set_reflash_callback, METH_VARARGS, _DOC_SET_REFLASH_CALLBACK),
+    _EZ_ICS_STRUCT_METHOD("get_device_settings", "icsneoGetDeviceSettings", "GetDeviceSettings", meth_get_device_settings, METH_VARARGS, _DOC_GET_DEVICE_SETTINGS),
+    _EZ_ICS_STRUCT_METHOD("set_device_settings", "icsneoSetDeviceSettings", "SetDeviceSettings", meth_set_device_settings, METH_VARARGS, _DOC_SET_DEVICE_SETTINGS),
     _EZ_ICS_STRUCT_METHOD("load_default_settings", "icsneoLoadDefaultSettings", "LoadDefaultSettings", meth_load_default_settings, METH_VARARGS, _DOC_LOAD_DEFAULT_SETTINGS),
     //_EZ_ICS_STRUCT_METHOD("spy_message_to_j1850", METH_spy_message_to_j1850, METH_VARARGS, "Accepts a " MODULE_NAME "." SPY_MESSAGE_OBJECT_NAME ", and returns a " MODULE_NAME "." SPY_MESSAGE_J1850_OBJECT_NAME ". Exception on error."),
     _EZ_ICS_STRUCT_METHOD("read_sdcard", "icsneoReadSDCard", "ReadSDCard", meth_read_sdcard, METH_VARARGS, "icsneoReadSDCard(), Accepts a " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME " and sector index. Returns a bytearray of 512 bytes max. Exception on error."),
