@@ -1188,14 +1188,11 @@ PyObject* meth_get_error_messages(PyObject* self, PyObject* args)
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
-PyThreadState* _callback_save = NULL;
 PyObject* msg_callback = NULL;
 static void message_callback(const char* message, bool success)
 {
     // We need to relock the GIL here otherwise we crash
-    if (_callback_save) {
-        PyEval_RestoreThread(_callback_save);
-    }
+    PyGILState_STATE state = PyGILState_Ensure();
     if (!msg_callback) {
         PySys_WriteStdout("%s\n", message);
     } else if (PyObject_HasAttrString(msg_callback, "message_callback")) {
@@ -1204,9 +1201,7 @@ static void message_callback(const char* message, bool success)
         PyObject_CallFunction(msg_callback, "s,b", message, success);
     }
     // Unlock the GIL here again...
-    if (_callback_save) {
-        _callback_save = PyEval_SaveThread();
-    }
+    PyGILState_Release(state);
 }
 
 #ifdef _USE_INTERNAL_HEADER_
@@ -1260,12 +1255,12 @@ PyObject* meth_flash_devices(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         ice::Function<int __stdcall (unsigned long, NeoDevice*, const SReflashChip_t*, unsigned long, unsigned long, unsigned long, unsigned long, void*)> FlashDevice2(lib, "FlashDevice2");
-        _callback_save = PyEval_SaveThread();
+        Py_BEGIN_ALLOW_THREADS
         if (!FlashDevice2(0x3835C256, &(neo_device->dev), rc, reflash_count, 0, 0, 0, &message_callback)) {
-            PyEval_RestoreThread(_callback_save);
+            Py_BLOCK_THREADS
             return set_ics_exception(exception_runtime_error(), "FlashDevice2() Failed");
         }
-        PyEval_RestoreThread(_callback_save);
+        Py_END_ALLOW_THREADS
         Py_RETURN_NONE;
     }
     catch (ice::Exception& ex)
@@ -1280,9 +1275,7 @@ PyObject* msg_reflash_callback = NULL;
 static void message_reflash_callback(const wchar_t* message, unsigned long progress)
 {
     // We need to relock the GIL here otherwise we crash
-    if (_callback_save) {
-        PyEval_RestoreThread(_callback_save);
-    }
+    PyGILState_STATE state = PyGILState_Ensure();
     if (!msg_reflash_callback) {
         PySys_WriteStdout("%s -%d\n", message, progress);
     } else if (PyObject_HasAttrString(msg_reflash_callback, "reflash_callback")) {
@@ -1291,9 +1284,7 @@ static void message_reflash_callback(const wchar_t* message, unsigned long progr
         PyObject_CallFunction(msg_reflash_callback, "u,i", message, progress);
     }
     // Unlock the GIL here again...
-    if (_callback_save) {
-        _callback_save = PyEval_SaveThread();
-    }
+    PyGILState_Release(state);
 }
 
 // void _stdcall icsneoSetReflashCallback( void(*OnReflashUpdate)(const wchar_t*,unsigned long) )
