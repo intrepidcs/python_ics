@@ -1,4 +1,4 @@
-#include "methods.h"
+﻿#include "methods.h"
 #include "exceptions.h"
 #include "dll.h"
 #include "defines.h"
@@ -1307,11 +1307,12 @@ PyObject* meth_get_device_settings(PyObject* self, PyObject* args)
     }
     // Grab the buffer out of the newly created object - make sure to call PyBuffer_Release(&settings_buffer) when done.
     Py_buffer settings_buffer = {};
-    PyObject_GetBuffer(settings, &settings_buffer, PyBUF_SIMPLE);
+    PyObject_GetBuffer(settings, &settings_buffer, PyBUF_C_CONTIGUOUS | PyBUF_WRITABLE);
 
     // Verify we have a valid NeoDevice Object - This comes after s_device_settings allocation for testing purposes
     if (!PyNeoDevice_CheckExact(obj)) {
         PyBuffer_Release(&settings_buffer);
+        Py_DECREF(settings);
         return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
     }
     ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
@@ -1320,6 +1321,7 @@ PyObject* meth_get_device_settings(PyObject* self, PyObject* args)
         ice::Library* lib = dll_get_library();
         if (!lib) {
             PyBuffer_Release(&settings_buffer);
+            Py_DECREF(settings);
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
@@ -1334,6 +1336,7 @@ PyObject* meth_get_device_settings(PyObject* self, PyObject* args)
             {
                 Py_BLOCK_THREADS
                 PyBuffer_Release(&settings_buffer);
+                Py_DECREF(settings);
                 return set_ics_exception(exception_runtime_error(), "icsneoGetDeviceSettingsType() Failed");
             }
         }
@@ -1343,10 +1346,12 @@ PyObject* meth_get_device_settings(PyObject* self, PyObject* args)
         {
             Py_BLOCK_THREADS
             PyBuffer_Release(&settings_buffer);
+            Py_DECREF(settings);
             return set_ics_exception(exception_runtime_error(), "icsneoGetDeviceSettings() Failed");
         }
         Py_END_ALLOW_THREADS
         //PyBuffer_Release(&settings_buffer);
+        //Py_INCREF(settings);
         return settings;
     }
     catch (ice::Exception& ex)
@@ -1382,7 +1387,7 @@ PyObject* meth_set_device_settings(PyObject* self, PyObject* args)
         // int _stdcall icsneoSetDeviceSettings(void* hObject, SDeviceSettings* pSettings, int iNumBytes, int bSaveToEEPROM, EPlasmaIonVnetChannel_t vnetSlot)
         ice::Function<int __stdcall (ICS_HANDLE, SDeviceSettings*, int, int, EPlasmaIonVnetChannel_t)> icsneoSetDeviceSettings(lib, "icsneoSetDeviceSettings");
         Py_buffer settings_buffer = {};
-        PyObject_GetBuffer(settings, &settings_buffer, PyBUF_SIMPLE);
+        PyObject_GetBuffer(settings, &settings_buffer, PyBUF_C_CONTIGUOUS | PyBUF_WRITABLE);
         Py_BEGIN_ALLOW_THREADS
         if (!icsneoSetDeviceSettings(handle, (SDeviceSettings*)settings_buffer.buf, settings_buffer.len, save_to_eeprom, vnet_slot)) {
             Py_BLOCK_THREADS
