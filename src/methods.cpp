@@ -200,132 +200,93 @@ int _isPythonModuleObject_IsInstance(PyObject* object, const char* module_name, 
 
 PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
 {
-    PyObject* device_type = NULL;
-    int ex_options = -1;
-    char* kwords[] = { "type", "stOptionsOpenNeoEx", NULL };
-    if (!PyArg_ParseTupleAndKeywords(args, keywords, arg_parse("|Oi:", __FUNCTION__), 
-            kwords, &device_type, &ex_options)) {
+    PyObject* device_types = NULL;
+    int network_id = -1;
+    char* kwords[] = { "deviceTypes", "NetworkID", NULL };
+    if (!PyArg_ParseTupleAndKeywords(args, keywords, arg_parse("|OO:", __FUNCTION__), 
+            kwords, &device_types, &network_id)) {
         return NULL;
     }
+
+    // Grab the library before we start doing anything...
     ice::Library* lib = dll_get_library();
     if (!lib) { 
         char buffer[512];
         return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
     }
-    NeoDevice devices[255];
-    int count = 255;
-    unsigned long legacy_dev_type = 0xFFFFBFFF;
-    bool use_legacy_device_type = false;
-#if PY_MAJOR_VERSION >= 3
-    if (device_type && PyLong_Check(device_type))
-#else
-    if (device_type && PyInt_Check(device_type))
-#endif PY_MAJOR_VERSION >= 3
+
+    // Create a vector from the device_types python container
+    unsigned int* device_types_list = NULL;
+    unsigned int device_types_list_size = 0;
+    if (device_types && device_types != Py_None)
     {
-        legacy_dev_type = PyLong_AsLong(device_type);
-        use_legacy_device_type = true;
+        std::vector<PyObject*> device_type_vector;
+        if (!_convertListOrTupleToArray(device_types, &device_type_vector))
+            return NULL;
+        device_types_list_size = device_type_vector.size();
+        device_types_list = new unsigned int[device_types_list_size];
+        for (unsigned int i=0; i < device_types_list_size; ++i)
+            device_types_list[i] = PyLong_AsLong(device_type_vector[i]);
     }
+    // Lets finally call the icsneo40 function
     try
     {
-#ifndef USE_LEGACY_FIND_DEVICES
-        // Get the list of device types
-        unsigned int* device_type_list = NULL;
-        unsigned int device_type_list_size = 0;
-        if (!use_legacy_device_type && device_type && device_type != Py_None)
-        {
-            std::vector<PyObject*> device_type_vector;
-            if (!_convertListOrTupleToArray(device_type, &device_type_vector))
-                return NULL;
-            device_type_list_size = device_type_vector.size();
-            device_type_list = new unsigned int[device_type_list_size];
-            for (unsigned int i=0; i < device_type_list_size; ++i)
-                device_type_list[i] = PyLong_AsLong(device_type_vector[i]);
-        }
+        /*
+        int _stdcall icsneoFindDevices(NeoDeviceEx* pNeoDeviceEx,
+                                       int* pNumDevices,
+                                       unsigned int* deviceTypes,
+                                       unsigned int numDeviceTypes,
+                                       POptionsFindNeoEx* pOptionsFindNeoEx,
+                                       unsigned long reserved​)
+        */
+        ice::Function<int __stdcall (NeoDeviceEx*, int*, unsigned int*, unsigned int, POptionsFindNeoEx*, unsigned long)> icsneoFindDevices(lib, "icsneoFindDevices");
+        NeoDeviceEx devices[255];
+        int count = 255;
+
+        // 
+        OptionsFindNeoEx opts = {0};
+        opts.CANOptions.iNetworkID = network_id;
+        POptionsFindNeoEx popts = NULL;
+        if (network_id != -1)
+            popts = &opts;
+
         Py_BEGIN_ALLOW_THREADS
-        try
-        {
-            if (use_legacy_device_type)
-                throw ice::Exception("Use Legacy Function!");
-            if (ex_options != -1)
-                throw ice::Exception("Need to use old style find function");
-            //int _stdcall icsneoFindNeoDevicesNewStyle(unsigned int* deviceTypes, unsigned int numDeviceTypes, NeoDevice* pNeoDevice, int* pNumDevices)
-            ice::Function<int __stdcall (unsigned int*, unsigned int, NeoDevice*, int*)> icsneoFindNeoDevicesNewStyle(lib, "icsneoFindNeoDevicesNewStyle");
-            if (!icsneoFindNeoDevicesNewStyle(device_type_list, device_type_list_size, devices, &count))
-            {
-                Py_BLOCK_THREADS
-                if (device_type_list)
-                    delete[] device_type_list;
-                return set_ics_exception(exception_runtime_error(), "icsneoFindNeoDevicesNewStyle() Failed");
-            }
-        }
-        catch (ice::Exception& ex)
-        {
-            // Use the old style, we are using an old DLL
-            if (device_type_list) {
-                delete[] device_type_list;
-                device_type_list = NULL;
-            }
-            ice::Function<int __stdcall (unsigned long, NeoDevice*, int*)> icsneoFindNeoDevices(lib, "icsneoFindNeoDevices");
-            if (ex_options == -1 && !icsneoFindNeoDevices(legacy_dev_type, devices, &count)) {
-                Py_BLOCK_THREADS
-                return set_ics_exception(exception_runtime_error(), "icsneoFindNeoDevices() Failed");
-            } 
-            if (ex_options != -1) {
-                ice::Function<int __stdcall (unsigned long, NeoDevice*, int*, const POptionsFindNeoEx)> icsneoFindNeoDevicesEx(lib, "icsneoFindNeoDevicesEx");
-                OptionsFindNeoEx opts = {0};
-                opts.CANOptions.iNetworkID = ex_options;
-                if (!icsneoFindNeoDevicesEx(legacy_dev_type, devices, &count, &opts)) {
-                    Py_BLOCK_THREADS
-                    return set_ics_exception(exception_runtime_error(), "icsneoFindNeoDevicesEx() Failed");
-                }
-            }
-        }
-        if (device_type_list)
-            delete[] device_type_list;
-        Py_END_ALLOW_THREADS
-#else
-        ice::Function<int __stdcall (unsigned long, NeoDevice*, int*)> icsneoFindNeoDevices(lib, "icsneoFindNeoDevices");
-        Py_BEGIN_ALLOW_THREADS
-        if (ex_options == -1 && !icsneoFindNeoDevices(legacy_dev_type, devices, &count)) {
+        if (!icsneoFindDevices(devices, &count, device_types_list, device_types_list_size, (network_id != -1) ? &popts : NULL, 0)) {
+            delete[] device_types_list;
+            device_types_list = NULL;
             Py_BLOCK_THREADS
-            return set_ics_exception(exception_runtime_error(), "icsneoFindNeoDevices() Failed");
-        } 
-        if (ex_options != -1) {
-            ice::Function<int __stdcall (unsigned long, NeoDevice*, int*, const POptionsFindNeoEx)> icsneoFindNeoDevicesEx(lib, "icsneoFindNeoDevicesEx");
-            OptionsFindNeoEx opts = {0};
-            opts.CANOptions.iNetworkID = ex_options;
-            if (!icsneoFindNeoDevicesEx(legacy_dev_type, devices, &count, &opts)) {
-                Py_BLOCK_THREADS
-                return set_ics_exception(exception_runtime_error(), "icsneoFindNeoDevicesEx() Failed");
-            }
+            return set_ics_exception(exception_runtime_error(), "icsneoFindNeoDevicesNewStyle() Failed");
         }
         Py_END_ALLOW_THREADS
-#endif
+
+        PyObject* tuple = PyTuple_New(count);
+        if (!tuple) {
+            return NULL;
+        }
+        for (int i=0; i < count; ++i) {
+            PyObject* obj = PyObject_CallObject((PyObject*)&neo_device_object_type, NULL);
+            if (!obj) {
+                    // This should only happen if we run out of memory (malloc failure)?
+                    PyErr_Print();
+                    return set_ics_exception(exception_runtime_error(), "Failed to allocate " NEO_DEVICE_OBJECT_NAME);
+            }
+            // Copy the NeoDevice struct into our python NeoDevice object
+            neo_device_object* neo_device = (neo_device_object*)obj;
+            neo_device->dev = devices[i].neoDevice;
+            neo_device->name = PyUnicode_FromString(neodevice_to_string(devices[i].neoDevice.DeviceType));
+            PyTuple_SetItem(tuple, i, obj);
+        }
+        return tuple;
     }
     catch (ice::Exception& ex)
     {
+        if (device_types_list) {
+            delete[] device_types_list;
+            device_types_list = NULL;
+        }
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    //PyObject* list_object = PyList_New(count);
-    PyObject* tuple = PyTuple_New(count);
-    if (!tuple) {
-        return NULL;
-    }
-    for (int i=0; i < count; ++i) {
-        PyObject* obj = PyObject_CallObject((PyObject*)&neo_device_object_type, NULL);
-        if (!obj) {
-                // This should only happen if we run out of memory (malloc failure)?
-                PyErr_Print();
-                return set_ics_exception(exception_runtime_error(), "Failed to allocate " NEO_DEVICE_OBJECT_NAME);
-        }
-        // Copy the NeoDevice struct into our python NeoDevice object
-        neo_device_object* neo_device = (neo_device_object*)obj;
-        neo_device->dev = devices[i];
-        neo_device->name = PyUnicode_FromString(neodevice_to_string(devices[i].DeviceType));
-        //PyList_Append(list_object, neo_device);
-        PyTuple_SetItem(tuple, i, obj);
-    }
-    return tuple;
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
