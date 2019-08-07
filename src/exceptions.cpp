@@ -11,9 +11,9 @@ char *pyics_base36enc(int sn)
 {
     char *result = NULL;
 #if PY_MAJOR_VERSION >= 3
-    PyObject *name = PyUnicode_FromString("ics");
+    PyObject *name = PyUnicode_FromString("ics.ics");
 #else
-    PyObject *name = PyString_FromString("ics");
+    PyObject *name = PyString_FromString("ics.ics");
 #endif
     PyObject *module = PyImport_Import(name);
     PyObject *dict = PyModule_GetDict(module);
@@ -27,7 +27,7 @@ char *pyics_base36enc(int sn)
             Py_DECREF(name);
             return NULL;
         } else {
-            PyUniStr_AsStrOrUTF8(return_value);
+            return PyUniStr_AsStrOrUTF8(return_value);
         }
     }
     Py_DECREF(module);
