@@ -3024,6 +3024,79 @@ PyObject* meth_enable_network_com(PyObject* self, PyObject* args)
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
+PyObject* meth_enable_bus_voltage_monitor(PyObject* self, PyObject* args)
+{
+    PyObject* obj = NULL;
+    unsigned int enable = 1;
+    unsigned int reserved = 0;
+    if (!PyArg_ParseTuple(args, arg_parse("O|ii:", __FUNCTION__), &obj, &enable, &reserved)) {
+        return NULL;
+    }
+    if (!PyNeoDevice_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        // int _stdcall icsneoEnableBusVoltageMonitor(void* hObject, unsigned int enable, unsigned int reserved)
+        ice::Function<int __stdcall (ICS_HANDLE, unsigned int, unsigned int)> icsneoEnableBusVoltageMonitor(lib, "icsneoEnableBusVoltageMonitor");
+        Py_BEGIN_ALLOW_THREADS
+        if (!icsneoEnableBusVoltageMonitor(handle, enable, reserved)) {
+            Py_BLOCK_THREADS
+            return set_ics_exception(exception_runtime_error(), "icsneoEnableBusVoltageMonitor() Failed");
+        }
+        Py_END_ALLOW_THREADS
+        Py_RETURN_NONE;
+    }
+    catch (ice::Exception& ex)
+    {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
+
+PyObject* meth_get_bus_voltage(PyObject* self, PyObject* args)
+{
+    PyObject* obj = NULL;
+    unsigned int reserved = 0;
+    if (!PyArg_ParseTuple(args, arg_parse("O|i:", __FUNCTION__), &obj, &reserved)) {
+        return NULL;
+    }
+    if (!PyNeoDevice_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+    try
+    {
+        unsigned long mV = 0;
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        // int _stdcall icsneoGetBusVoltage(void* hObject, unsigned long* pVBusVoltage, unsigned int reserved
+        ice::Function<int __stdcall (ICS_HANDLE, unsigned long*, unsigned int)> icsneoGetBusVoltage(lib, "icsneoGetBusVoltage");
+        Py_BEGIN_ALLOW_THREADS
+        if (!icsneoGetBusVoltage(handle, &mV, reserved)) {
+            Py_BLOCK_THREADS
+            return set_ics_exception(exception_runtime_error(), "icsneoGetBusVoltage() Failed");
+        }
+        Py_END_ALLOW_THREADS
+        return Py_BuildValue("i", mV);
+    }
+    catch (ice::Exception& ex)
+    {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
+
+
 PyObject* meth_override_library_name(PyObject* self, PyObject* args)
 {
     const char* name = NULL;

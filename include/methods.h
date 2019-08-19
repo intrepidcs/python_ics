@@ -73,6 +73,8 @@ PyObject* meth_set_bit_rate_ex(PyObject* self, PyObject* args);
 PyObject* meth_get_timestamp_for_msg(PyObject* self, PyObject* args);
 PyObject* meth_get_device_status(PyObject* self, PyObject* args);
 PyObject* meth_enable_network_com(PyObject* self, PyObject* args); //icsneoEnableNetworkCom
+PyObject* meth_enable_bus_voltage_monitor(PyObject* self, PyObject* args);
+PyObject* meth_get_bus_voltage(PyObject* self, PyObject* args);
 
 #ifdef _cplusplus
 }
@@ -1171,7 +1173,51 @@ PyObject* meth_enable_network_com(PyObject* self, PyObject* args); //icsneoEnabl
     "\t>>> status = ics.enable_network_com(d, True)\n" \
     "\t>>> \n"
 
+#define _DOC_ENABLE_BUS_VOLTAGE_MONITOR \
+    MODULE_NAME ".enable_bus_voltage_monitor(device, enable, reserved)\n" \
+    "\n" \
+    "Enable or disable bus voltage monitoring.\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
+    "\n" \
+    "\tenable (:class:`bool`): :class:`int`\n\n" \
+    "\n" \
+    "\treserved (:class:`int`): :class:`int`: Optional. Should be set to zero. Don't set, if unsure.\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\tNone.\n" \
+    "\n" \
+    "\t>>> import ics\n" \
+    "\t>>> d = ics.open_device()\n" \
+    "\t>>> status = ics.enable_bus_voltage_monitor(d, 1)\n" \
+    "\t>>> \n"
 
+#define _DOC_GET_BUS_VOLTAGE \
+    MODULE_NAME ".get_bus_voltage(device, reserved)\n" \
+    "\n" \
+    "Reads bus voltage. (:class:`" MODULE_NAME ".enable_bus_voltage_monitor`) needs to be called first.\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
+    "\n" \
+    "\treserved (:class:`int`): :class:`int`: Optional. Should be set to zero. Don't set, if unsure.\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\tInt: value returned is in mV.\n" \
+    "\n" \
+    "\t>>> import ics\n" \
+    "\t>>> d = ics.open_device()\n" \
+    "\t>>> status = ics.enable_bus_voltage_monitor(d, 1)\n" \
+    "\t>>> ics.get_bus_voltage(d)\n" \
+    "\t12000\n" \
+    "\t>>> \n"
 
 static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("find_devices", "icsneoFindNeoDevices", "FindNeoDevices", (PyCFunction)meth_find_devices, METH_VARARGS | METH_KEYWORDS, _DOC_FIND_DEVICES),
@@ -1240,6 +1286,10 @@ static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("get_device_status", "icsneoGetDeviceStatus", "GetDeviceStatus", meth_get_device_status, METH_VARARGS, _DOC_GET_DEVICE_STATUS),
     
     _EZ_ICS_STRUCT_METHOD("enable_network_com", "icsneoEnableNetworkCom", "EnableNetworkCom", meth_enable_network_com, METH_VARARGS, _DOC_ENABLE_NETWORK_COM),
+
+    _EZ_ICS_STRUCT_METHOD("enable_bus_voltage_monitor", "icsneoEnableBusVoltageMonitor", "EnableBusVoltageMonitor", meth_enable_bus_voltage_monitor, METH_VARARGS, _DOC_ENABLE_BUS_VOLTAGE_MONITOR),
+    _EZ_ICS_STRUCT_METHOD("get_bus_voltage", "icsneoGetBusVoltage", "GetBusVoltage", meth_get_bus_voltage, METH_VARARGS, _DOC_GET_BUS_VOLTAGE),
+
     {"override_library_name", (PyCFunction)meth_override_library_name, METH_VARARGS, _DOC_OVERRIDE_LIBRARY_NAME},
     {"get_library_path", (PyCFunction)meth_get_library_path, METH_NOARGS, ""},
 
