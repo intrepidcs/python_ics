@@ -174,9 +174,17 @@
                 24,
                 ""
             ],
-            "DeviceSettingsTypeMax": [
+            "DeviceRADPlutoSwitchSettingsType": [
                 25,
                 ""
+            ],
+            "DeviceSettingsTypeMax": [
+                26,
+                ""
+            ],
+            "DeviceSettingsNone ": [
+                4294967295,
+                "just wanted to reserve this"
             ]
         },
         "names": [

@@ -745,7 +745,7 @@ typedef struct _STextAPISettings
 		struct
 		{
 			unsigned bExtended : 1;
-			unsigned : 15;
+			unsigned : 31;
 		};
 		uint32_t DWord;
 	} can1_options;
@@ -755,7 +755,7 @@ typedef struct _STextAPISettings
 		struct
 		{
 			unsigned bExtended : 1;
-			unsigned : 15;
+			unsigned : 31;
 		};
 		uint32_t DWord;
 	} can2_options;
@@ -768,7 +768,7 @@ typedef struct _STextAPISettings
 		struct
 		{
 			unsigned bExtended : 1;
-			unsigned : 15;
+			unsigned : 31;
 		};
 		uint32_t DWord;
 	} can3_options;
@@ -779,7 +779,7 @@ typedef struct _STextAPISettings
 		struct
 		{
 			unsigned bExtended : 1;
-			unsigned : 15;
+			unsigned : 31;
 		};
 		uint32_t DWord;
 	} can4_options;
@@ -858,6 +858,10 @@ typedef union _stChipVersions {
 	{
 		uint8_t mchip_major;
 		uint8_t mchip_minor;
+		uint8_t schip_major;
+		uint8_t schip_minor;
+		uint8_t core_major;
+		uint8_t core_minor;
 	} obd2pro_versions;
 
 	struct
@@ -1119,14 +1123,6 @@ enum
 	SERDESCAM_CONFIG_MODE_LOCAL_SCRIPT,
 };
 
-/* bitsPerPixel in SERDESCAM_SETTINGS */
-enum
-{
-	SERDESCAM_BITS_PER_PIXEL_8 = 0,
-	SERDESCAM_BITS_PER_PIXEL_10,
-	SERDESCAM_BITS_PER_PIXEL_12,
-};
-
 /* bitPos in SERDESCAM_SETTINGS */
 enum
 {
@@ -1139,7 +1135,30 @@ enum
 /* videoFormat in SERDESCAM_SETTINGS */
 enum
 {
-	SERDESCAM_VIDEO_FORMAT_YCBCR_422 = 0,
+	SERDESCAM_VIDEO_FORMAT_UYVY_422_8 = 0, // packed YUV 4:2:2, 16bpp, Cb Y0 Cr Y1
+	SERDESCAM_VIDEO_FORMAT_YUYV_422_8, // packed YUV 4:2:2, 16bpp, Y0 Cb Y1 Cr
+	SERDESCAM_VIDEO_FORMAT_YVYU_422_8, // packed YUV 4:2:2, 16bpp, Y0 Cr Y1 Cb
+	SERDESCAM_VIDEO_FORMAT_VYUY_422_8, // packed YUV 4:2:2, 16bpp, Cr Y0 Cb Y1
+	SERDESCAM_VIDEO_FORMAT_BAYER_BGGR_8,
+	SERDESCAM_VIDEO_FORMAT_RAW_8,  // e.g. bayer 8 bit, gray 8 bit
+	SERDESCAM_VIDEO_FORMAT_RAW_10, // e.g. bayer 10 bit, gray 10 bit
+	SERDESCAM_VIDEO_FORMAT_RAW_12,
+	SERDESCAM_VIDEO_FORMAT_RAW_16, // e.g. planar YUV 4:2:2, 16bpp, 8 bit samples
+	SERDESCAM_VIDEO_FORMAT_RAW_20, // e.g. planar YUV 4:2:2, 20bpp, 10 bit samples
+	SERDESCAM_VIDEO_FORMAT_RAW_24, // e.g. packed RGB 8:8:8 24bpp, 8 bit samples
+	SERDESCAM_VIDEO_FORMAT_RAW_30, // e.g. planar YUV 4:4:4, 30bpp, 10 bit samples
+	SERDESCAM_VIDEO_FORMAT_RAW_32, // e.g. packed ARGB 8:8:8:8, 32bpp, 8 bit samples
+	SERDESCAM_VIDEO_FORMAT_RAW_36,
+	SERDESCAM_VIDEO_FORMAT_RGB888,
+	SERDESCAM_VIDEO_FORMAT_UYVY_422_10LE_PACKED,// packed YUV 4:2:2, 20bpp, Cb Y0 Cr Y1, bitpacked
+	SERDESCAM_VIDEO_FORMAT_YUYV_422_10LE_PACKED,// packed YUV 4:2:2, 20bpp, Y0 Cb Y1 Cr, FOURCC Y210 bitpacked
+	SERDESCAM_VIDEO_FORMAT_YVYU_422_10LE_PACKED,// packed YUV 4:2:2, 20bpp, Y0 Cr Y1 Cb, bitpacked
+	SERDESCAM_VIDEO_FORMAT_VYUY_422_10LE_PACKED,// packed YUV 4:2:2, 20bpp, Cr Y0 Cb Y1, bitpacked
+	SERDESCAM_VIDEO_FORMAT_BAYER_BGGR_10LE_PACKED,// 10-bit samples bitpacked into 40-bits little endian
+	SERDESCAM_VIDEO_FORMAT_BAYER_BGGR_12LE_PACKED,// 12-bit samples bitpacked into 40-bits little endian
+	SERDESCAM_VIDEO_FORMAT_BAYER_BGGR_16LE,// 16-bit samples little endian
+	SERDESCAM_VIDEO_FORMAT_BAYER_BGGR_16BE,// 16-bit samples big endian
+	SERDESCAM_VIDEO_FORMAT_JPEG,
 };
 
 typedef struct SERDESCAM_SETTINGS_t
@@ -1150,13 +1169,13 @@ typedef struct SERDESCAM_SETTINGS_t
 	 */
 	uint32_t flags;
 	uint8_t mode;// passthrough, tap, etc
-	uint8_t bitsPerPixel;
+	uint8_t rsvd1;
 	uint8_t bitPos;
 	uint8_t videoFormat;// bytes per pixel
 	uint16_t resWidth;
 	uint16_t resHeight;
 	uint8_t frameSkip;// skip every nth frame
-	uint8_t rsvd[18];
+	uint8_t rsvd2[18];
 } SERDESCAM_SETTINGS;
 #define SERDESCAM_SETTINGS_SIZE 32
 
@@ -2302,7 +2321,7 @@ typedef struct SPluto_GeneralParams_s
 	uint8_t host_port;
 	uint8_t mirr_port;
 	uint8_t ignore2stf;
-} SPluto_GeneralParams;//56
+} SPluto_GeneralParams;//60
 
 typedef struct SPluto_VlLookupEntry_s
 {
@@ -2417,18 +2436,18 @@ typedef struct SPluto_CustomParams_s
 	uint8_t pad;
 } SPluto_CustomParams;//18
 
-typedef struct SPlutoSwitchSettings
+typedef struct SPlutoSwitchSettings_s
 {
-	ExtendedDataFlashHeader_t flashHeader;//all extended data must start with this header
-	SPluto_L2AddressLookupParams l2_addressLookupParams;
-	SPluto_L2AddressLookupEntry l2_addressLookupEntries[PLUTO_MAX_L2_ADDRESS_LOOKUP];
-	SPluto_L2Policing l2_policing[PLUTO_MAX_L2_POLICING];
-	SPluto_L2ForwardingParams l2_forwardingParams;
-	SPluto_L2ForwardingEntry l2_ForwardingEntries[PLUTO_MAX_FORWARDING_ENTRIES];
-	SPluto_VlanLookup vlan_LookupEntries[PLUTO_MAX_VLAN_LOOKUP];
-	SPluto_MacConfig macConfig[PLUTO_MAX_MAC_CONFIG_ENTRIES];
-	SPluto_GeneralParams generalParams;
-	SPluto_RetaggingEntry retagging[PLUTO_MAX_RETAGGING_ENTRIES];
+	ExtendedDataFlashHeader_t flashHeader;//all extended data must start with this header //8
+	SPluto_L2AddressLookupParams l2_addressLookupParams;// 8
+	SPluto_L2AddressLookupEntry l2_addressLookupEntries[PLUTO_MAX_L2_ADDRESS_LOOKUP];// 16 * 1024
+	SPluto_L2Policing l2_policing[PLUTO_MAX_L2_POLICING];// 8 * 45
+	SPluto_L2ForwardingParams l2_forwardingParams;// 18
+	SPluto_L2ForwardingEntry l2_ForwardingEntries[PLUTO_MAX_FORWARDING_ENTRIES];// 12 * 13
+	SPluto_VlanLookup vlan_LookupEntries[PLUTO_MAX_VLAN_LOOKUP];// 8 * 4096
+	SPluto_MacConfig macConfig[PLUTO_MAX_MAC_CONFIG_ENTRIES];// 60  * 5
+	SPluto_GeneralParams generalParams;// 60
+	SPluto_RetaggingEntry retagging[PLUTO_MAX_RETAGGING_ENTRIES];// 10 * 32
 #if 0
 	SPluto_VlPolicingEntry vl_policing[MAX_VL_POLICING_ENTRIES];
 	SPluto_VlForwardingParams vl_forwardingParams;
@@ -2437,6 +2456,7 @@ typedef struct SPlutoSwitchSettings
 	SPluto_ClockSyncParams clkSyncParams;
 #endif
 } SPlutoSwitchSettings;
+#define SPlutoSwitchSettings_SIZE 50378
 
 typedef struct _RADPlutoSettings
 {
@@ -2478,7 +2498,7 @@ typedef struct _RADPlutoSettings
 		uint32_t reserved : 29;
 	} flags;//4
 
-	SPluto_CustomParams custom; //18
+	SPluto_CustomParams custom;//18
 } SRADPlutoSettings;
 #define SRADPlutoSettings_SIZE 306
 
@@ -2607,7 +2627,7 @@ typedef struct _VCAN4IndSettings
 	CANFD_SETTINGS canfd1;
 	CAN_SETTINGS can2;
 	CANFD_SETTINGS canfd2;
-    ETHERNET_SETTINGS ethernet;
+	ETHERNET_SETTINGS ethernet;
 	LIN_SETTINGS lin1;
 	ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings;
 	uint16_t iso_parity;
@@ -2662,7 +2682,7 @@ typedef struct _GLOBAL_SETTINGS
 		SCmProbeSettings cmprobe;
 		SOBD2ProSettings obd2pro;
 		SVCAN412Settings vcan412;
-		SVCAN412Settings vcan4_12; // backwards compatibility with older code
+		SVCAN412Settings vcan4_12;// backwards compatibility with older code
 		SECU_AVBSettings neoecu_avb;
 		SRADSuperMoonSettings radsupermoon;
 		SRADMoon2Settings radmoon2;
@@ -2709,9 +2729,11 @@ typedef enum _EDeviceSettingsType
 	DeviceCMProbeSettingsType,
 	DeviceOBD2ProSettingsType,
 	DeviceRedSettingsType,
+	DeviceRADPlutoSwitchSettingsType,
 	// add new settings type here
 	// Also add to map inside cicsneoVI::Init()
-	DeviceSettingsTypeMax
+	DeviceSettingsTypeMax,
+	DeviceSettingsNone = 0xFFFFFFFF// just wanted to reserve this
 } EDeviceSettingsType;
 
 typedef struct _SDeviceSettings
@@ -2733,11 +2755,12 @@ typedef struct _SDeviceSettings
 		SCmProbeSettings cmprobe;
 		SOBD2ProSettings obd2pro;
 		SVCAN412Settings vcan412;
-		SVCAN412Settings vcan4_12; // backwards compatibility with older code
+		SVCAN412Settings vcan4_12;// backwards compatibility with older code
 		SECU_AVBSettings neoecu_avb;
 		SRADSuperMoonSettings radsupermoon;
 		SRADMoon2Settings radmoon2;
 		SRADPlutoSettings pluto;
+		SPlutoSwitchSettings plutoswitch;
 		SRADGigalogSettings radgigalog;
 		SCANHubSettings canhub;
 		SNeoECU12Settings neoecu12;
@@ -2747,7 +2770,7 @@ typedef struct _SDeviceSettings
 		SVividCANSettings vividcan;
 		SVCAN4IndSettings vcan4_ind;
 		// Make sure GLOBAL_SETTINGS matches this
-		// NOTE: When adding new structures here implement inside icsneoGetDeviceSettings and icsneoSetDeviceSettings also.
+		// NOTE: When adding new structures here implement inside icsneoGetDeviceSettings and icsneoSetDeviceSettings also.	} Settings;
 	} Settings;
 } SDeviceSettings;
 
@@ -3196,8 +3219,9 @@ typedef struct//GM Ethernet Protocol in J2534 V04040
 
 #ifndef INTREPID_NO_CHECK_STRUCT_SIZE
 
-#if defined(__cplusplus) && (__cplusplus > 199711L)
+#if (defined(__cplusplus) && (__cplusplus > 199711L))
 #define ics_static_assert(e, msg) static_assert(e, msg)
+#define CHECK_STRUCT_SIZE(X) ics_static_assert(sizeof(X) == X##_SIZE, #X " is the wrong size");
 #else
 #define ASSERT_CONCAT_(a, b) a##b
 #define ASSERT_CONCAT(a, b) ASSERT_CONCAT_(a, b)
@@ -3206,9 +3230,9 @@ typedef struct//GM Ethernet Protocol in J2534 V04040
 	{                                                            \
 		ASSERT_CONCAT(assert_line_, __LINE__) = 1 / (int)(!!(e)) \
 	}
+#define CHECK_STRUCT_SIZE(X) ics_static_assert(sizeof(X) == X##_SIZE, #X " is the wrong size");
 #endif
 
-#define CHECK_STRUCT_SIZE(X) ics_static_assert(sizeof(X) == X##_SIZE, #X " is the wrong size");
 
 CHECK_STRUCT_SIZE(CAN_SETTINGS);
 CHECK_STRUCT_SIZE(CANFD_SETTINGS);
@@ -3265,6 +3289,7 @@ CHECK_STRUCT_SIZE(SRadGigalogComm);
 CHECK_STRUCT_SIZE(SRADPlutoSettings);
 CHECK_STRUCT_SIZE(CANHubSettings);
 CHECK_STRUCT_SIZE(SNeoECU12Settings);
+CHECK_STRUCT_SIZE(SPlutoSwitchSettings);
 CHECK_STRUCT_SIZE(VCAN4IndSettings);
 #endif /* INTREPID_NO_CHECK_STRUCT_SIZE */
 

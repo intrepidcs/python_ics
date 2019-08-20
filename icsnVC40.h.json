@@ -841,12 +841,6 @@
                 0,
                 ""
             ],
-            "bitsPerPixel": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ],
             "flags": [
                 "uint32_t",
                 0,
@@ -877,7 +871,13 @@
                 0,
                 ""
             ],
-            "rsvd": [
+            "rsvd1": [
+                "uint8_t",
+                0,
+                0,
+                ""
+            ],
+            "rsvd2": [
                 "uint8_t",
                 18,
                 0,
@@ -923,7 +923,7 @@
         "pack": 0,
         "union": false
     },
-    "SPlutoSwitchSettings": {
+    "SPlutoSwitchSettings_s": {
         "members": {
             "avbParams": [
                 "SPluto_AVBParams",
@@ -941,55 +941,55 @@
                 "ExtendedDataFlashHeader_t",
                 0,
                 0,
-                "all extended data must start with this header"
+                ""
             ],
             "generalParams": [
                 "SPluto_GeneralParams",
                 0,
                 0,
-                ""
+                "60"
             ],
             "l2_ForwardingEntries": [
                 "SPluto_L2ForwardingEntry",
                 13,
                 0,
-                ""
+                "12 * 13"
             ],
             "l2_addressLookupEntries": [
                 "SPluto_L2AddressLookupEntry",
                 1024,
                 0,
-                ""
+                "16 * 1024"
             ],
             "l2_addressLookupParams": [
                 "SPluto_L2AddressLookupParams",
                 0,
                 0,
-                ""
+                "8"
             ],
             "l2_forwardingParams": [
                 "SPluto_L2ForwardingParams",
                 0,
                 0,
-                ""
+                "18"
             ],
             "l2_policing": [
                 "SPluto_L2Policing",
                 45,
                 0,
-                ""
+                "8 * 45"
             ],
             "macConfig": [
                 "SPluto_MacConfig",
                 5,
                 0,
-                ""
+                "60 * 5"
             ],
             "retagging": [
                 "SPluto_RetaggingEntry",
                 32,
                 0,
-                ""
+                "10 * 32"
             ],
             "vl_forwardingEntries": [
                 "SPluto_VlForwardingEntry",
@@ -1013,7 +1013,7 @@
                 "SPluto_VlanLookup",
                 4096,
                 0,
-                ""
+                "8 * 4096"
             ]
         },
         "names": [
@@ -3791,6 +3791,12 @@
                     ],
                     "pluto": [
                         "SRADPlutoSettings",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "plutoswitch": [
+                        "SPlutoSwitchSettings",
                         0,
                         0,
                         ""
@@ -9384,6 +9390,18 @@
             },
             "obd2pro_versions": {
                 "members": {
+                    "core_major": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "core_minor": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
                     "mchip_major": [
                         "uint8_t",
                         0,
@@ -9391,6 +9409,18 @@
                         ""
                     ],
                     "mchip_minor": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "schip_major": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "schip_minor": [
                         "uint8_t",
                         0,
                         0,

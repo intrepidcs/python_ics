@@ -1,7 +1,7 @@
 # This file was auto generated; Do not modify, if you value your sanity!
 import ctypes
 
-try: # 28
+try: # 29
     from e_device_settings_type import e_device_settings_type
     from s_red_settings import s_red_settings
     from s_fire_settings import s_fire_settings
@@ -22,6 +22,7 @@ try: # 28
     from srad_super_moon_settings import srad_super_moon_settings
     from srad_moon2_settings import srad_moon2_settings
     from srad_pluto_settings import srad_pluto_settings
+    from s_pluto_switch_settings_s import s_pluto_switch_settings_s
     from srad_gigalog_settings import srad_gigalog_settings
     from scan_hub_settings import scan_hub_settings
     from s_neo_ecu12_settings import s_neo_ecu12_settings
@@ -51,6 +52,7 @@ except:
     from ics.structures.srad_super_moon_settings import srad_super_moon_settings
     from ics.structures.srad_moon2_settings import srad_moon2_settings
     from ics.structures.srad_pluto_settings import srad_pluto_settings
+    from ics.structures.s_pluto_switch_settings_s import s_pluto_switch_settings_s
     from ics.structures.srad_gigalog_settings import srad_gigalog_settings
     from ics.structures.scan_hub_settings import scan_hub_settings
     from ics.structures.s_neo_ecu12_settings import s_neo_ecu12_settings
@@ -84,6 +86,7 @@ class Settings(ctypes.Union):
         ('radsupermoon', srad_super_moon_settings), 
         ('radmoon2', srad_moon2_settings), 
         ('pluto', srad_pluto_settings), 
+        ('plutoswitch', s_pluto_switch_settings_s), 
         ('radgigalog', srad_gigalog_settings), 
         ('canhub', scan_hub_settings), 
         ('neoecu12', s_neo_ecu12_settings), 

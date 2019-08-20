@@ -70,7 +70,7 @@ __all__ = [
     "s_pluto_avb_params_s",
     "s_pluto_clock_sync_params_s",
     "s_pluto_custom_params_s",
-    "s_pluto_switch_settings",
+    "s_pluto_switch_settings_s",
     "srad_pluto_settings",
     "scan_hub_settings",
     "s_flex_vnetz_settings",

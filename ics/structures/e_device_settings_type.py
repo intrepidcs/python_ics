@@ -34,7 +34,9 @@ class e_device_settings_type(IntEnum):
     DeviceCMProbeSettingsType = 22
     DeviceOBD2ProSettingsType = 23
     DeviceRedSettingsType = 24
-    DeviceSettingsTypeMax = 25
+    DeviceRADPlutoSwitchSettingsType = 25
+    DeviceSettingsTypeMax = 26
+    DeviceSettingsNone  = 4294967295
 
 
 # Extra names go here:

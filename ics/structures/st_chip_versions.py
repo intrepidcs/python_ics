@@ -111,6 +111,10 @@ class obd2pro_versions(ctypes.Structure):
     _fields_ = [
         ('mchip_major', ctypes.c_uint8), 
         ('mchip_minor', ctypes.c_uint8), 
+        ('schip_major', ctypes.c_uint8), 
+        ('schip_minor', ctypes.c_uint8), 
+        ('core_major', ctypes.c_uint8), 
+        ('core_minor', ctypes.c_uint8), 
     ]
 
 # Extra names go here:
