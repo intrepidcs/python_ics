@@ -474,12 +474,6 @@ int setup_module_auto_defines(PyObject * module)
 	// end of enum -  };
 
 	// enum
-	result += PyModule_AddIntMacro(module, SERDESCAM_BITS_PER_PIXEL_8);
-	result += PyModule_AddIntMacro(module, SERDESCAM_BITS_PER_PIXEL_10);
-	result += PyModule_AddIntMacro(module, SERDESCAM_BITS_PER_PIXEL_12);
-	// end of enum -  };
-
-	// enum
 	result += PyModule_AddIntMacro(module, SERDESCAM_PIXEL_BIT_POS_0);
 	result += PyModule_AddIntMacro(module, SERDESCAM_PIXEL_BIT_POS_1);
 	result += PyModule_AddIntMacro(module, SERDESCAM_PIXEL_BIT_POS_2);
@@ -487,7 +481,30 @@ int setup_module_auto_defines(PyObject * module)
 	// end of enum -  };
 
 	// enum
-	result += PyModule_AddIntMacro(module, SERDESCAM_VIDEO_FORMAT_YCBCR_422);
+	result += PyModule_AddIntMacro(module, SERDESCAM_VIDEO_FORMAT_UYVY_422_8);
+	result += PyModule_AddIntMacro(module, SERDESCAM_VIDEO_FORMAT_YUYV_422_8);
+	result += PyModule_AddIntMacro(module, SERDESCAM_VIDEO_FORMAT_YVYU_422_8);
+	result += PyModule_AddIntMacro(module, SERDESCAM_VIDEO_FORMAT_VYUY_422_8);
+	result += PyModule_AddIntMacro(module, SERDESCAM_VIDEO_FORMAT_BAYER_BGGR_8);
+	result += PyModule_AddIntMacro(module, SERDESCAM_VIDEO_FORMAT_RAW_8);
+	result += PyModule_AddIntMacro(module, SERDESCAM_VIDEO_FORMAT_RAW_10);
+	result += PyModule_AddIntMacro(module, SERDESCAM_VIDEO_FORMAT_RAW_12);
+	result += PyModule_AddIntMacro(module, SERDESCAM_VIDEO_FORMAT_RAW_16);
+	result += PyModule_AddIntMacro(module, SERDESCAM_VIDEO_FORMAT_RAW_20);
+	result += PyModule_AddIntMacro(module, SERDESCAM_VIDEO_FORMAT_RAW_24);
+	result += PyModule_AddIntMacro(module, SERDESCAM_VIDEO_FORMAT_RAW_30);
+	result += PyModule_AddIntMacro(module, SERDESCAM_VIDEO_FORMAT_RAW_32);
+	result += PyModule_AddIntMacro(module, SERDESCAM_VIDEO_FORMAT_RAW_36);
+	result += PyModule_AddIntMacro(module, SERDESCAM_VIDEO_FORMAT_RGB888);
+	result += PyModule_AddIntMacro(module, SERDESCAM_VIDEO_FORMAT_UYVY_422_10LE_PACKED);
+	result += PyModule_AddIntMacro(module, SERDESCAM_VIDEO_FORMAT_YUYV_422_10LE_PACKED);
+	result += PyModule_AddIntMacro(module, SERDESCAM_VIDEO_FORMAT_YVYU_422_10LE_PACKED);
+	result += PyModule_AddIntMacro(module, SERDESCAM_VIDEO_FORMAT_VYUY_422_10LE_PACKED);
+	result += PyModule_AddIntMacro(module, SERDESCAM_VIDEO_FORMAT_BAYER_BGGR_10LE_PACKED);
+	result += PyModule_AddIntMacro(module, SERDESCAM_VIDEO_FORMAT_BAYER_BGGR_12LE_PACKED);
+	result += PyModule_AddIntMacro(module, SERDESCAM_VIDEO_FORMAT_BAYER_BGGR_16LE);
+	result += PyModule_AddIntMacro(module, SERDESCAM_VIDEO_FORMAT_BAYER_BGGR_16BE);
+	result += PyModule_AddIntMacro(module, SERDESCAM_VIDEO_FORMAT_JPEG);
 	// end of enum -  };
 
 	result += PyModule_AddIntMacro(module, SERDESCAM_SETTINGS_SIZE);
@@ -543,6 +560,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, PLUTO_MAX_RETAGGING_ENTRIES);
 	result += PyModule_AddIntMacro(module, MAX_VL_POLICING_ENTRIES);
 	result += PyModule_AddIntMacro(module, MAX_VL_FORWARDING_ENTRIES);
+	result += PyModule_AddIntMacro(module, SPlutoSwitchSettings_SIZE);
 	result += PyModule_AddIntMacro(module, SRADPlutoSettings_SIZE);
 	result += PyModule_AddIntMacro(module, CANHubSettings_SIZE);
 	result += PyModule_AddIntMacro(module, SFlexVnetzSettings_Size);
@@ -555,6 +573,7 @@ int setup_module_auto_defines(PyObject * module)
 	// end of enum -  } flexVnetMode;
 
 	result += PyModule_AddIntMacro(module, SNeoECU12Settings_SIZE);
+	result += PyModule_AddIntMacro(module, VCAN4IndSettings_SIZE);
 	result += PyModule_AddIntMacro(module, GS_VERSION);
 	result += PyModule_AddIntMacro(module, GLOBAL_SETTINGS_SIZE);
 	result += PyModule_AddIntMacro(module, NEOVI_3G_MAX_SETTINGS_SIZE);
@@ -573,7 +592,20 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, DeviceRADMoon2SettingsType);
 	result += PyModule_AddIntMacro(module, DeviceRADPlutoSettingsType);
 	result += PyModule_AddIntMacro(module, DeviceRADGigalogSettingsType);
+	result += PyModule_AddIntMacro(module, DeviceVCANRFSettingsType);
+	result += PyModule_AddIntMacro(module, DeviceEEVBSettingsType);
+	result += PyModule_AddIntMacro(module, DeviceVCAN4IndSettingsType);
+	result += PyModule_AddIntMacro(module, DeviceNeoECU12SettingsType);
+	result += PyModule_AddIntMacro(module, DeviceFlexVnetzSettingsType);
+	result += PyModule_AddIntMacro(module, DeviceCANHUBSettingsType);
+	result += PyModule_AddIntMacro(module, DeviceIEVBSettingsType);
+	result += PyModule_AddIntMacro(module, DeviceOBD2SimSettingsType);
+	result += PyModule_AddIntMacro(module, DeviceCMProbeSettingsType);
+	result += PyModule_AddIntMacro(module, DeviceOBD2ProSettingsType);
+	result += PyModule_AddIntMacro(module, DeviceRedSettingsType);
+	result += PyModule_AddIntMacro(module, DeviceRADPlutoSwitchSettingsType);
 	result += PyModule_AddIntMacro(module, DeviceSettingsTypeMax);
+	result += PyModule_AddIntMacro(module, DeviceSettingsNone);
 	// end of enum -  } EDeviceSettingsType;
 
 	// enum
