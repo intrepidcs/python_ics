@@ -892,10 +892,8 @@ PyObject* meth_transmit_messages(PyObject* self, PyObject* args)
             }
             msgs[i] = &(obj->msg);
         }
-        Py_BEGIN_ALLOW_THREADS
         for (int i=0; i < TUPLE_COUNT; ++i) {
             if (!icsneoTxMessages(handle, msgs[i], msgs[i]->NetworkID, 1)) {
-                Py_BLOCK_THREADS
                 if (created_tuple) {
                     Py_XDECREF(tuple);
                 }
@@ -910,7 +908,6 @@ PyObject* meth_transmit_messages(PyObject* self, PyObject* args)
             } 
             */
         }
-        Py_END_ALLOW_THREADS
         if (created_tuple) {
             Py_XDECREF(tuple);
         }
