@@ -986,10 +986,10 @@ PyObject* meth_get_messages(PyObject* self, PyObject* args)
             PyErr_Print();
             return set_ics_exception_dev(exception_runtime_error(), obj, "Failed to allocate " SPY_MESSAGE_OBJECT_NAME);
         }
+        Py_BEGIN_ALLOW_THREADS
         for (double i=timeout; i > 0; --i) {
             count = 20000;
             errors = 0;
-            Py_BEGIN_ALLOW_THREADS
             if (!icsneoGetMessages(handle, (icsSpyMessage*)msgs, &count, &errors) && !errors) {
                 // We are going to try one more time just incase
                 count = 20000;
@@ -999,7 +999,6 @@ PyObject* meth_get_messages(PyObject* self, PyObject* args)
                     return set_ics_exception_dev(exception_runtime_error(), obj, "icsneoGetMessages() Failed");
                 }
             }
-            Py_END_ALLOW_THREADS
             if (count || errors) {
                 break;
             }
@@ -1008,6 +1007,7 @@ PyObject* meth_get_messages(PyObject* self, PyObject* args)
                 Sleep(1);
             }
         }
+        Py_END_ALLOW_THREADS
         PyObject* tuple = PyTuple_New(count);
         for (int i=0; i < count; ++i) {
             PyObject* obj = NULL;
