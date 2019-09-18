@@ -81,7 +81,7 @@ module = Extension('ics',
   extra_compile_args=compile_args)
 
 setup (name = 'python_ics',
-       version = '%d.%d' % (MAJOR_VERSION, MINOR_VERSION),
+       version = '%d.%d-2' % (MAJOR_VERSION, MINOR_VERSION),
        description = 'Library for interfacing with Intrepid devices in Python',
        long_description = read('README.md'),
        license = "MIT",
