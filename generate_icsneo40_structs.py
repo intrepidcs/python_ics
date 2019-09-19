@@ -393,12 +393,12 @@ def parse_header_file(filename='include/ics/icsnVC40.h'):
         inner_union_data_member = OrderedDict()
         inner_union_name = ''
         inner_anonomous_union = False
-        inner_union_data = OrderedDict()
+        #inner_union_data = OrderedDict()
         inside_inner_struct = False
         inner_anonomous_struct = False
         inner_struct_data_member = OrderedDict()
         inner_struct_name = ''
-        inner_struct_data = OrderedDict()
+        #inner_struct_data = OrderedDict()
         inner_struct_inside_anonomous_union = False
         inner_union_has_structs = False
         
@@ -529,12 +529,14 @@ def parse_header_file(filename='include/ics/icsnVC40.h'):
                     struct_data[struct_name]['pack'] = pack_size
                     struct_data[struct_name]['union'] = struct_is_union
                     struct_data_member = OrderedDict()
+                    """
                     if inner_struct_data and not inner_union_has_structs:
                         struct_data[struct_name]['members'].update(inner_struct_data)
                         inner_struct_data = OrderedDict()
                     if inner_union_data:
                         struct_data[struct_name]['members'].update(inner_union_data)
                         inner_union_data = OrderedDict()
+                    """
                     inner_union_has_structs = False
                     if debug_print:
                         print('------- Extra Names: {} -------------------------\n'.format(' '.join(extra_names)))
@@ -551,15 +553,18 @@ def parse_header_file(filename='include/ics/icsnVC40.h'):
                         inner_extra_names = ''.join(line.split()).strip('};').split(',')
                         if inner_anonomous_struct and inner_extra_names[0]:
                             inner_struct_name = inner_extra_names[0]
-                        
+                            
                         if inner_anonomous_struct and not inner_extra_names[0]:
-                            inner_struct_data.update(inner_struct_data_member)
+                            struct_data_member.update(inner_struct_data_member)
                         else:
+                            inner_struct_data = OrderedDict()
                             inner_struct_data[inner_struct_name] = OrderedDict()
                             inner_struct_data[inner_struct_name]['names'] = inner_extra_names
                             inner_struct_data[inner_struct_name]['members'] = inner_struct_data_member
                             inner_struct_data[inner_struct_name]['pack'] = pack_size
                             inner_struct_data[inner_struct_name]['union'] = False
+                            struct_data_member.update(inner_struct_data)
+                        
                         inner_struct_data_member = OrderedDict()
                         inner_struct_name = ''
                         continue
@@ -580,13 +585,16 @@ def parse_header_file(filename='include/ics/icsnVC40.h'):
                             inner_union_name = inner_extra_names[0]
                             inner_anonomous_union = False
                         if inner_anonomous_union and not inner_extra_names[0]:
-                            inner_union_data.update(inner_union_data_member)
+                            struct_data_member.update(inner_union_data_member)
                         else:
+                            inner_union_data = OrderedDict()
                             inner_union_data[inner_union_name] = OrderedDict()
                             inner_union_data[inner_union_name]['names'] = inner_extra_names
                             inner_union_data[inner_union_name]['members'] = inner_union_data_member
                             inner_union_data[inner_union_name]['pack'] = pack_size
                             inner_union_data[inner_union_name]['union'] = True
+                            struct_data_member.update(inner_union_data)
+                        
                         inner_union_data_member = OrderedDict()
                         inner_union_name = ''
                         if inner_union_has_structs and inner_anonomous_union:
