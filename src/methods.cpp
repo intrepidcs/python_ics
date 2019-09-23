@@ -81,7 +81,11 @@ char* neodevice_to_string(unsigned long type)
     case NEODEVICE_RAD_MOON_DUO: return "RAD-Moon-Duo";
     case NEODEVICE_VCAN3: return "ValueCAN3";
     case NEODEVICE_ONYX: return "neoVI FIRE3";
+#if defined(NEODEVICE_JUPITER)
     case NEODEVICE_JUPITER: return "RAD-Jupiter";
+#elif defined(NEODEVICE_RADJUPITER)
+    case NEODEVICE_RADJUPITER: return "RAD-Jupiter";
+#endif
     case NEODEVICE_VCAN4_IND: return "ValueCAN4 Industrial";
     case NEODEVICE_GIGASTAR: return "RAD-GIGAStar";
     case NEODEVICE_RED: return "neoVI RED";
@@ -1320,7 +1324,7 @@ PyObject* meth_get_device_settings(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), "icsneoGetDeviceSettings() Failed");
         }
         Py_END_ALLOW_THREADS
-        //PyBuffer_Release(&settings_buffer);
+        //PyBuffer_Release(&settings_buffer2);
         //Py_INCREF(settings);
         return settings;
     }
