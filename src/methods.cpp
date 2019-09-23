@@ -454,7 +454,7 @@ PyObject* meth_close_device(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         ice::Function<int __stdcall (ICS_HANDLE, int*)>  icsneoClosePort(lib, "icsneoClosePort");
-        ice::Function<int __stdcall (ICS_HANDLE)>  icsneoFreeObject(lib, "icsneoFreeObject");
+        ice::Function<void __stdcall (ICS_HANDLE)>  icsneoFreeObject(lib, "icsneoFreeObject");
         int error_count = 0;
         Py_BEGIN_ALLOW_THREADS
         if (!icsneoClosePort(PyNeoDevice_GetNeoDevice(obj)->handle, &error_count)) {

@@ -88,7 +88,7 @@ static void neo_device_object_dealloc(neo_device_object* self)
             ice::Library* lib = dll_get_library();
             if (lib) {
                 ice::Function<int __stdcall (ICS_HANDLE, int*)>  icsneoClosePort(lib, "icsneoClosePort");
-                ice::Function<int __stdcall (ICS_HANDLE)>  icsneoFreeObject(lib, "icsneoFreeObject");
+                ice::Function<void __stdcall (ICS_HANDLE)>  icsneoFreeObject(lib, "icsneoFreeObject");
                 int error_count = 0;
                 if (icsneoClosePort(self->handle, &error_count)) {
                     icsneoFreeObject(self->handle);
