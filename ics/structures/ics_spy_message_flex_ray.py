@@ -20,10 +20,6 @@ class ics_spy_message_flex_ray(ctypes.Structure):
         ('NumberBytesData', ctypes.c_uint8), 
         ('NetworkID2', ctypes.c_uint8), 
         ('DescriptionID', ctypes.c_int16), 
-        ('Data', ctypes.c_uint8 * 8), 
-        ('ExtraDataPtr', ctypes.c_voidp), 
-        ('MiscData', ctypes.c_uint8), 
-        ('Reserved', ctypes.c_uint8 * 3), 
         ('ArbIDOrHeader', ctypes.c_uint32), 
         ('id', ctypes.c_uint32, 12), # [Bitfield] 
         ('res1', ctypes.c_uint32, 4), # [Bitfield] 
@@ -36,6 +32,7 @@ class ics_spy_message_flex_ray(ctypes.Structure):
         ('payload_preamble', ctypes.c_uint32, 1), # [Bitfield] 
         ('frame_reserved', ctypes.c_uint32, 1), # [Bitfield] 
         ('dynamic', ctypes.c_uint32, 1), # [Bitfield] 
+        ('Data', ctypes.c_uint8 * 8), 
         ('StatusBitField3', ctypes.c_uint32), 
         ('StatusBitField4', ctypes.c_uint32), 
         ('AckBytes', ctypes.c_uint8 * 8), 
@@ -47,6 +44,9 @@ class ics_spy_message_flex_ray(ctypes.Structure):
         ('fcrc1', ctypes.c_uint32, 8), # [Bitfield] 
         ('fcrc2', ctypes.c_uint32, 8), # [Bitfield] 
         ('tss_len_12_5ns', ctypes.c_uint32, 8), # [Bitfield] 
+        ('ExtraDataPtr', ctypes.c_voidp), 
+        ('MiscData', ctypes.c_uint8), 
+        ('Reserved', ctypes.c_uint8 * 3), 
     ]
 
 # Extra names go here:

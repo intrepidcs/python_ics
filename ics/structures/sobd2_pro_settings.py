@@ -58,8 +58,8 @@ class sobd2_pro_settings(ctypes.Structure):
         ('network_enabled_on_boot', ctypes.c_uint16), 
         ('iso15765_separation_time_offset', ctypes.c_int16), 
         ('text_api', s_text_api_settings), 
-        ('can_switch_mode', ctypes.c_uint16), 
         ('flags', flags), 
+        ('can_switch_mode', ctypes.c_uint16), 
     ]
 
 # Extra names go here:

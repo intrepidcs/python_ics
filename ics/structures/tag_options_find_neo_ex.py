@@ -12,8 +12,8 @@ class CANOptions(ctypes.Structure):
 
 class tag_options_find_neo_ex(ctypes.Union):
     _fields_ = [
-        ('Reserved', ctypes.c_uint32 * 16), 
         ('CANOptions', CANOptions), 
+        ('Reserved', ctypes.c_uint32 * 16), 
     ]
 
 # Extra names go here:

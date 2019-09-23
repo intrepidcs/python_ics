@@ -39,8 +39,8 @@ class sobd2_sim_settings(ctypes.Structure):
         ('misc_io_analog_enable', ctypes.c_uint16), 
         ('ain_sample_period', ctypes.c_uint16), 
         ('ain_threshold', ctypes.c_uint16), 
-        ('text_api', s_text_api_settings), 
         ('flags', flags), 
+        ('text_api', s_text_api_settings), 
     ]
 
 # Extra names go here:

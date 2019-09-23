@@ -50,18 +50,18 @@ class s_text_api_settings(ctypes.Structure):
     _fields_ = [
         ('can1_tx_id', ctypes.c_uint32), 
         ('can1_rx_id', ctypes.c_uint32), 
+        ('can1_options', can1_options), 
         ('can2_tx_id', ctypes.c_uint32), 
         ('can2_rx_id', ctypes.c_uint32), 
+        ('can2_options', can2_options), 
         ('network_enables', ctypes.c_uint32), 
         ('can3_tx_id', ctypes.c_uint32), 
         ('can3_rx_id', ctypes.c_uint32), 
+        ('can3_options', can3_options), 
         ('can4_tx_id', ctypes.c_uint32), 
         ('can4_rx_id', ctypes.c_uint32), 
-        ('reserved', ctypes.c_uint32 * 5), 
-        ('can1_options', can1_options), 
-        ('can2_options', can2_options), 
-        ('can3_options', can3_options), 
         ('can4_options', can4_options), 
+        ('reserved', ctypes.c_uint32 * 5), 
     ]
 
 # Extra names go here:

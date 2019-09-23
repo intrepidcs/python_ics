@@ -53,9 +53,9 @@ class svcan4_settings(ctypes.Structure):
         ('text_api', s_text_api_settings), 
         ('termination_enables', ctypes.c_uint64), 
         ('ethernet', ethernet_settings), 
+        ('flags', flags), 
         ('pwr_man_enable', ctypes.c_uint16), 
         ('pwr_man_timeout', ctypes.c_uint16), 
-        ('flags', flags), 
     ]
 
 # Extra names go here:

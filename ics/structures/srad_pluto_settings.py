@@ -56,8 +56,8 @@ class srad_pluto_settings(ctypes.Structure):
         ('iso9141_kwp_settings', iso9141_keyword2000_settings), # 114
         ('ethernet', ethernet_settings), # 8
         ('text_api', s_text_api_settings), # 72
-        ('custom', s_pluto_custom_params_s), # 18
         ('flags', flags), 
+        ('custom', s_pluto_custom_params_s), # 18
     ]
 
 # Extra names go here:

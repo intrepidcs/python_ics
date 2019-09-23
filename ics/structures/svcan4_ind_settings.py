@@ -14,6 +14,19 @@ except:
     from ics.structures.lin_settings import lin_settings
     from ics.structures.iso9141_keyword2000_settings import iso9141_keyword2000_settings
 
+# network_enables
+class network_enables(ctypes.Union):
+    _pack_ = 2
+    _fields_ = [
+        ('word', ctypes.c_uint64), 
+        ('network_enables', ctypes.c_uint16), 
+        ('network_enables_2', ctypes.c_uint16), 
+        ('network_enables_3', ctypes.c_uint16), 
+    ]
+
+# Extra names go here:
+# End of extra names
+
 # flags
 class flags(ctypes.Structure):
     _pack_ = 2
@@ -23,19 +36,6 @@ class flags(ctypes.Structure):
         ('busMessagesToAndroid', ctypes.c_uint32, 1), # [Bitfield] 
         ('enablePcEthernetComm', ctypes.c_uint32, 1), # [Bitfield] 
         ('reserved', ctypes.c_uint32, 28), # [Bitfield] 
-    ]
-
-# Extra names go here:
-# End of extra names
-
-# network_enables
-class network_enables(ctypes.Union):
-    _pack_ = 2
-    _fields_ = [
-        ('word', ctypes.c_uint64), 
-        ('network_enables', ctypes.c_uint16), 
-        ('network_enables_2', ctypes.c_uint16), 
-        ('network_enables_3', ctypes.c_uint16), 
     ]
 
 # Extra names go here:
@@ -58,9 +58,9 @@ class svcan4_ind_settings(ctypes.Structure):
         ('perf_en', ctypes.c_uint16), 
         ('iso15765_separation_time_offset', ctypes.c_int16), 
         ('network_enabled_on_boot', ctypes.c_uint16), 
+        ('network_enables', network_enables), 
         ('termination_enables', ctypes.c_uint64), 
         ('flags', flags), 
-        ('network_enables', network_enables), 
     ]
 
 # Extra names go here:

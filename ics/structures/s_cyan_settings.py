@@ -102,10 +102,10 @@ class s_cyan_settings(ctypes.Structure):
         ('ethernet', ethernet_settings), 
         ('slaveVnetA', ctypes.c_uint16), 
         ('slaveVnetB', ctypes.c_uint16), 
+        ('flags', flags), 
         ('digitalIoThresholdTicks', ctypes.c_uint16), 
         ('digitalIoThresholdEnable', ctypes.c_uint16), 
         ('timeSync', timesync_icshardware_settings), 
-        ('flags', flags), 
     ]
 
 # Extra names go here:
