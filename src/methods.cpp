@@ -1324,8 +1324,7 @@ PyObject* meth_get_device_settings(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), "icsneoGetDeviceSettings() Failed");
         }
         Py_END_ALLOW_THREADS
-        //PyBuffer_Release(&settings_buffer2);
-        //Py_INCREF(settings);
+        PyBuffer_Release(&settings_buffer);
         return settings;
     }
     catch (ice::Exception& ex)
