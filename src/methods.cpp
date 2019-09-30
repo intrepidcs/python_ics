@@ -381,20 +381,22 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
             // Find the first free device
             for (int i=0; i < count; ++i)
             {
-                if (devices[i].neoDevice.NumberOfClients != 0)
-                    continue;
                 // If we are looking for a serial number, check here
                 if (serial_number && devices[i].neoDevice.SerialNumber != serial_number)
                     continue;
+                if (devices[i].neoDevice.NumberOfClients != 0)
+                {
+                    return set_ics_exception(exception_runtime_error(), "Found device, but its already open!");
+                }
                 // We matched a neoDevice, lets allocate it here.
                 device = PyObject_CallObject((PyObject*)&neo_device_object_type, NULL);
                 PyNeoDevice_GetNeoDevice(device)->dev = devices[i].neoDevice;
                 PyNeoDevice_GetNeoDevice(device)->name = PyUnicode_FromString(neodevice_to_string(devices[i].neoDevice.DeviceType));
                 break;
             }
-            if (!device)
+            if (!PyNeoDevice_CheckExact(device))
             {
-                return set_ics_exception(exception_runtime_error(), "Failed to find a free device to open.");
+                return set_ics_exception(exception_runtime_error(), "Failed to find a device to open.");
             }
         }
         catch (ice::Exception& ex)
@@ -428,7 +430,7 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
         if (!icsneoOpenDevice(&neo_device_ex, &PyNeoDevice_GetNeoDevice(device)->handle, NULL, config_read, options, (network_id != -1) ? popts : NULL, 0)) 
         {
             Py_BLOCK_THREADS
-            return set_ics_exception(exception_runtime_error(), "icsneoFindDevices() Failed");
+            return set_ics_exception(exception_runtime_error(), "icsneoOpenDevice() Failed");
         }
         Py_END_ALLOW_THREADS
 
