@@ -221,7 +221,7 @@ PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
     }
 
     // Create a vector from the device_types python container
-    unsigned int* device_types_list = NULL;
+    std::unique_ptr<unsigned int[]> device_types_list;
     unsigned int device_types_list_size = 0;
     if (device_types && device_types != Py_None)
     {
@@ -229,9 +229,9 @@ PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
         if (!_convertListOrTupleToArray(device_types, &device_type_vector))
             return NULL;
         device_types_list_size = device_type_vector.size();
-        device_types_list = new unsigned int[device_types_list_size];
+        device_types_list.reset((new unsigned int(device_types_list_size)));
         for (unsigned int i=0; i < device_types_list_size; ++i)
-            device_types_list[i] = PyLong_AsLong(device_type_vector[i]);
+            device_types_list[i] = (unsigned int)PyLong_AsLong(device_type_vector[i]);
     }
     // Lets finally call the icsneo40 function
     try
@@ -256,9 +256,7 @@ PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
             popts = &opts;
 
         Py_BEGIN_ALLOW_THREADS
-        if (!icsneoFindDevices(devices, &count, device_types_list, device_types_list_size, (network_id != -1) ? &popts : NULL, 0)) {
-            delete[] device_types_list;
-            device_types_list = NULL;
+        if (!icsneoFindDevices(devices, &count, device_types_list.get(), device_types_list_size, (network_id != -1) ? &popts : NULL, 0)) {
             Py_BLOCK_THREADS
             return set_ics_exception(exception_runtime_error(), "icsneoFindDevices() Failed");
         }
@@ -285,10 +283,6 @@ PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
     }
     catch (ice::Exception& ex)
     {
-        if (device_types_list) {
-            delete[] device_types_list;
-            device_types_list = NULL;
-        }
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
