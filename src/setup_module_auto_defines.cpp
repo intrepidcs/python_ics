@@ -114,7 +114,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, NEODEVICE_RAD_MOON_DUO);
 	result += PyModule_AddIntMacro(module, NEODEVICE_ONYX);
 	result += PyModule_AddIntMacro(module, NEODEVICE_VCAN3);
-	result += PyModule_AddIntMacro(module, NEODEVICE_JUPITER);
+	result += PyModule_AddIntMacro(module, NEODEVICE_RADJUPITER);
 	result += PyModule_AddIntMacro(module, NEODEVICE_VCAN4_IND);
 	result += PyModule_AddIntMacro(module, NEODEVICE_GIGASTAR);
 	result += PyModule_AddIntMacro(module, NEODEVICE_RED);
@@ -574,6 +574,8 @@ int setup_module_auto_defines(PyObject * module)
 
 	result += PyModule_AddIntMacro(module, SNeoECU12Settings_SIZE);
 	result += PyModule_AddIntMacro(module, VCAN4IndSettings_SIZE);
+	result += PyModule_AddIntMacro(module, RADJUPITER_NUM_PORTS);
+	result += PyModule_AddIntMacro(module, SRADJupiterSettings_SIZE);
 	result += PyModule_AddIntMacro(module, GS_VERSION);
 	result += PyModule_AddIntMacro(module, GLOBAL_SETTINGS_SIZE);
 	result += PyModule_AddIntMacro(module, NEOVI_3G_MAX_SETTINGS_SIZE);
@@ -604,6 +606,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, DeviceOBD2ProSettingsType);
 	result += PyModule_AddIntMacro(module, DeviceRedSettingsType);
 	result += PyModule_AddIntMacro(module, DeviceRADPlutoSwitchSettingsType);
+	result += PyModule_AddIntMacro(module, DeviceRADJupiterSettingsType);
 	result += PyModule_AddIntMacro(module, DeviceSettingsTypeMax);
 	result += PyModule_AddIntMacro(module, DeviceSettingsNone);
 	// end of enum -  } EDeviceSettingsType;
@@ -627,6 +630,10 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, icsSpyMessageLong_SIZE);
 	result += PyModule_AddIntMacro(module, icsSpyMessageJ1850_SIZE);
 	result += PyModule_AddIntMacro(module, icsSpyMessageVSB_SIZE);
+	result += PyModule_AddIntMacro(module, MAX_PHY_REG_PKT_ENTRIES);
+	result += PyModule_AddIntMacro(module, PHY_REG_PKT_VERSION);
+	result += PyModule_AddIntMacro(module, MAX_PHY_SETTINGS_STRUCT);
+	result += PyModule_AddIntMacro(module, MAX_NUMBYTES_PHYSETTINGS);
 	// enum
 	// end of enum -  	}
 

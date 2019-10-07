@@ -197,6 +197,17 @@ class radgigalog_versions(ctypes.Structure):
 # Extra names go here:
 # End of extra names
 
+# jupiter_versions
+class jupiter_versions(ctypes.Structure):
+    _pack_ = 2
+    _fields_ = [
+        ('mchip_major', ctypes.c_uint8), 
+        ('mchip_minor', ctypes.c_uint8), 
+    ]
+
+# Extra names go here:
+# End of extra names
+
 class st_chip_versions(ctypes.Union):
     _pack_ = 2
     _fields_ = [
@@ -216,6 +227,7 @@ class st_chip_versions(ctypes.Union):
         ('radmoon2_versions', radmoon2_versions), 
         ('pluto_versions', pluto_versions), 
         ('radgigalog_versions', radgigalog_versions), 
+        ('jupiter_versions', jupiter_versions), 
     ]
 
 # Extra names go here:

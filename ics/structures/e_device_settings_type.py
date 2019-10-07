@@ -35,7 +35,8 @@ class e_device_settings_type(IntEnum):
     DeviceOBD2ProSettingsType = 23
     DeviceRedSettingsType = 24
     DeviceRADPlutoSwitchSettingsType = 25
-    DeviceSettingsTypeMax = 26
+    DeviceRADJupiterSettingsType = 26
+    DeviceSettingsTypeMax = 27
     DeviceSettingsNone  = 4294967295
 
 

@@ -923,6 +923,156 @@
         "pack": 0,
         "union": false
     },
+    "SPhyRegPkt": {
+        "members": {
+            "Clause45Enable:1": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "Enabled:1": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "WriteEnable:1": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "clause22": [
+                "PhyRegPktClause22Mess_t",
+                0,
+                0,
+                ""
+            ],
+            "clause45": [
+                "PhyRegPktClause45Mess_t",
+                0,
+                0,
+                ""
+            ],
+            "flags": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "reserved:9": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "version:4": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ]
+        },
+        "names": [
+            "PhyRegPkt_t"
+        ],
+        "pack": 0,
+        "union": false
+    },
+    "SPhyRegPktClause22Mess": {
+        "members": {
+            "page": [
+                "uint8_t",
+                0,
+                0,
+                "8 bits"
+            ],
+            "phyAddr": [
+                "uint8_t",
+                0,
+                0,
+                "5 bits"
+            ],
+            "regAddr": [
+                "uint16_t",
+                0,
+                0,
+                "5 bits"
+            ],
+            "regVal": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ]
+        },
+        "names": [
+            "PhyRegPktClause22Mess_t"
+        ],
+        "pack": 0,
+        "union": false
+    },
+    "SPhyRegPktClause45Mess": {
+        "members": {
+            "device": [
+                "uint8_t",
+                0,
+                0,
+                "5 bits"
+            ],
+            "port": [
+                "uint8_t",
+                0,
+                0,
+                ""
+            ],
+            "regAddr": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "regVal": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ]
+        },
+        "names": [
+            "PhyRegPktClause45Mess_t"
+        ],
+        "pack": 0,
+        "union": false
+    },
+    "SPhyRegPktHdr": {
+        "members": {
+            "entryBytes": [
+                "uint8_t",
+                0,
+                0,
+                ""
+            ],
+            "numEntries": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "version": [
+                "uint8_t",
+                0,
+                0,
+                ""
+            ]
+        },
+        "names": [
+            "PhyRegPktHdr_t"
+        ],
+        "pack": 0,
+        "union": false
+    },
     "SPlutoSwitchSettings_s": {
         "members": {
             "avbParams": [
@@ -2391,6 +2541,12 @@
                 0,
                 ""
             ],
+            "jupiter": [
+                "SRADJupiterSettings",
+                0,
+                0,
+                ""
+            ],
             "len": [
                 "uint16_t",
                 0,
@@ -3755,6 +3911,12 @@
                     ],
                     "ievb": [
                         "SIEVBSettings",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "jupiter": [
+                        "SRADJupiterSettings",
                         0,
                         0,
                         ""
@@ -6319,6 +6481,249 @@
         },
         "names": [
             "SRADGigalogSettings"
+        ],
+        "pack": 2,
+        "union": false
+    },
+    "_SRADJupiterSettings": {
+        "members": {
+            "can1": [
+                "CAN_SETTINGS",
+                0,
+                0,
+                "12"
+            ],
+            "can2": [
+                "CAN_SETTINGS",
+                0,
+                0,
+                "12"
+            ],
+            "canfd1": [
+                "CANFD_SETTINGS",
+                0,
+                0,
+                "10"
+            ],
+            "canfd2": [
+                "CANFD_SETTINGS",
+                0,
+                0,
+                "10"
+            ],
+            "ethernet": [
+                "ETHERNET_SETTINGS",
+                0,
+                0,
+                "8"
+            ],
+            "flags": {
+                "members": {
+                    "disableUsbCheckOnBoot": [
+                        "uint32_t",
+                        0,
+                        1,
+                        "[Bitfield] "
+                    ],
+                    "enableLatencyTest": [
+                        "uint32_t",
+                        0,
+                        1,
+                        "[Bitfield] "
+                    ],
+                    "enablePcEthernetComm": [
+                        "uint32_t",
+                        0,
+                        1,
+                        "[Bitfield] "
+                    ],
+                    "reserved": [
+                        "uint32_t",
+                        0,
+                        29,
+                        "[Bitfield] "
+                    ]
+                },
+                "names": [
+                    "flags"
+                ],
+                "pack": 2,
+                "union": false
+            },
+            "iso15765_separation_time_offset": [
+                "int16_t",
+                0,
+                0,
+                "2"
+            ],
+            "iso9141_kwp_enable_reserved": [
+                "uint16_t",
+                0,
+                0,
+                "2"
+            ],
+            "iso9141_kwp_settings": [
+                "ISO9141_KEYWORD2000_SETTINGS",
+                0,
+                0,
+                "114"
+            ],
+            "iso_msg_termination": [
+                "uint16_t",
+                0,
+                0,
+                "2"
+            ],
+            "iso_parity": [
+                "uint16_t",
+                0,
+                0,
+                "2"
+            ],
+            "iso_tester_pullup_enable": [
+                "uint16_t",
+                0,
+                0,
+                "2"
+            ],
+            "lin1": [
+                "LIN_SETTINGS",
+                0,
+                0,
+                "10"
+            ],
+            "misc_io_analog_enable": [
+                "uint16_t",
+                0,
+                0,
+                "2"
+            ],
+            "network_enabled_on_boot": [
+                "uint16_t",
+                0,
+                0,
+                "2"
+            ],
+            "network_enables": [
+                "uint16_t",
+                0,
+                0,
+                "2"
+            ],
+            "network_enables_2": [
+                "uint16_t",
+                0,
+                0,
+                "2"
+            ],
+            "network_enables_3": [
+                "uint16_t",
+                0,
+                0,
+                "2"
+            ],
+            "perf_en": [
+                "uint16_t",
+                0,
+                0,
+                "2"
+            ],
+            "pwr_man_enable": [
+                "uint16_t",
+                0,
+                0,
+                "2"
+            ],
+            "pwr_man_timeout": [
+                "uint32_t",
+                0,
+                0,
+                "4"
+            ],
+            "switchSettings": [
+                "SRADJupiterSwitchSettings",
+                0,
+                0,
+                "28"
+            ],
+            "termination_enables": [
+                "uint64_t",
+                0,
+                0,
+                "8"
+            ],
+            "text_api": [
+                "STextAPISettings",
+                0,
+                0,
+                "72"
+            ]
+        },
+        "names": [
+            "SRADJupiterSettings"
+        ],
+        "pack": 2,
+        "union": false
+    },
+    "_SRADJupiterSwitchSettings": {
+        "members": {
+            "enablePhy": [
+                "uint8_t",
+                8,
+                0,
+                "8"
+            ],
+            "pad": [
+                "uint8_t",
+                0,
+                0,
+                ""
+            ],
+            "phyMode": [
+                "uint8_t",
+                8,
+                0,
+                "8"
+            ],
+            "port7Select": [
+                "uint8_t",
+                0,
+                0,
+                "1"
+            ],
+            "port8Legacy": [
+                "uint8_t",
+                0,
+                0,
+                ""
+            ],
+            "port8Select": [
+                "uint8_t",
+                0,
+                0,
+                "1"
+            ],
+            "port8Speed": [
+                "uint8_t",
+                0,
+                0,
+                ""
+            ],
+            "spoofMacFlag": [
+                "uint8_t",
+                0,
+                0,
+                ""
+            ],
+            "spoofedMac": [
+                "uint8_t",
+                6,
+                0,
+                ""
+            ]
+        },
+        "names": [
+            "SRADJupiterSwitchSettings"
         ],
         "pack": 2,
         "union": false
@@ -9363,6 +9768,27 @@
                 },
                 "names": [
                     "fire_versions"
+                ],
+                "pack": 2,
+                "union": false
+            },
+            "jupiter_versions": {
+                "members": {
+                    "mchip_major": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "mchip_minor": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ]
+                },
+                "names": [
+                    "jupiter_versions"
                 ],
                 "pack": 2,
                 "union": false

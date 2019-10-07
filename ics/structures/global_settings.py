@@ -1,7 +1,7 @@
 # This file was auto generated; Do not modify, if you value your sanity!
 import ctypes
 
-try: # 27
+try: # 28
     from s_red_settings import s_red_settings
     from s_fire_settings import s_fire_settings
     from s_fire_vnet_settings import s_fire_vnet_settings
@@ -29,6 +29,7 @@ try: # 27
     from s_flex_vnetz_settings import s_flex_vnetz_settings
     from s_vivid_can_settings import s_vivid_can_settings
     from svcan4_ind_settings import svcan4_ind_settings
+    from srad_jupiter_settings import srad_jupiter_settings
 except:
     from ics.structures.s_red_settings import s_red_settings
     from ics.structures.s_fire_settings import s_fire_settings
@@ -57,6 +58,7 @@ except:
     from ics.structures.s_flex_vnetz_settings import s_flex_vnetz_settings
     from ics.structures.s_vivid_can_settings import s_vivid_can_settings
     from ics.structures.svcan4_ind_settings import svcan4_ind_settings
+    from ics.structures.srad_jupiter_settings import srad_jupiter_settings
 
 class global_settings(ctypes.Structure):
     _pack_ = 2
@@ -92,6 +94,7 @@ class global_settings(ctypes.Structure):
         ('flexvnetz', s_flex_vnetz_settings), 
         ('vividcan', s_vivid_can_settings), 
         ('vcan4_ind', svcan4_ind_settings), 
+        ('jupiter', srad_jupiter_settings), 
     ]
 
 # Extra names go here:

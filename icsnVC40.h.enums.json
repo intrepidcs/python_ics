@@ -178,8 +178,12 @@
                 25,
                 ""
             ],
-            "DeviceSettingsTypeMax": [
+            "DeviceRADJupiterSettingsType": [
                 26,
+                ""
+            ],
+            "DeviceSettingsTypeMax": [
+                27,
                 ""
             ],
             "DeviceSettingsNone ": [

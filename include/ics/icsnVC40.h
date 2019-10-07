@@ -41,6 +41,8 @@ typedef unsigned __int64 uint64_t;
 #include <stdint.h>
 #endif
 
+
+
 // MSVC++ 10.0 _MSC_VER == 1600 64-bit version doesn't allow multi-line #if directives...
 #if defined(_WIN64) || defined(__x86_64__) || defined(__aarch64__) || defined(__x86_64__) || defined(__LP64__) || defined(_M_AMD64) || \
 	defined(_M_IA64) || defined(__PPC64__)
@@ -164,7 +166,7 @@ typedef unsigned __int64 uint64_t;
 #define NEODEVICE_RAD_MOON_DUO (0x0000000e)
 #define NEODEVICE_ONYX (0x0000000f)
 #define NEODEVICE_VCAN3 (0x00000010)
-#define NEODEVICE_JUPITER (0x00000011)
+#define NEODEVICE_RADJUPITER (0x00000011)
 #define NEODEVICE_VCAN4_IND (0x00000012)
 #define NEODEVICE_GIGASTAR (0x00000013)
 #define NEODEVICE_RED (0x00000040)
@@ -900,6 +902,11 @@ typedef union _stChipVersions {
 		uint8_t zynq_core_major;
 		uint8_t zynq_core_minor;
 	} radgigalog_versions;
+	struct
+	{
+		uint8_t mchip_major;
+		uint8_t mchip_minor;
+	} jupiter_versions;
 } stChipVersions;
 
 #define stChipVersions_SIZE 8
@@ -2660,6 +2667,67 @@ typedef struct _VCAN4IndSettings
 } VCAN4IndSettings, SVCAN4IndSettings;
 #define VCAN4IndSettings_SIZE (212)
 
+#define RADJUPITER_NUM_PORTS 8
+
+typedef struct _SRADJupiterSwitchSettings
+{
+	uint8_t phyMode[RADJUPITER_NUM_PORTS]; //8
+	uint8_t enablePhy[RADJUPITER_NUM_PORTS];//8
+	uint8_t port7Select; //1
+	uint8_t port8Select; //1
+	uint8_t port8Speed;
+	uint8_t port8Legacy;
+	uint8_t spoofMacFlag;
+	uint8_t spoofedMac[6];
+	uint8_t pad;
+} SRADJupiterSwitchSettings;//28
+
+typedef struct _SRADJupiterSettings
+{
+	/* Performance Test */
+	uint16_t perf_en;//2
+
+	CAN_SETTINGS can1;//12
+	CANFD_SETTINGS canfd1;//10
+	CAN_SETTINGS can2;//12
+	CANFD_SETTINGS canfd2;//10
+	LIN_SETTINGS lin1;//10
+
+	uint16_t network_enables;//2
+	uint16_t network_enables_2;//2
+	uint16_t network_enables_3;//2
+	uint64_t termination_enables;//8
+	uint16_t misc_io_analog_enable;//2
+
+	uint32_t pwr_man_timeout;//4
+	uint16_t pwr_man_enable;//2
+
+	uint16_t network_enabled_on_boot;//2
+
+	/* ISO15765-2 Transport Layer */
+	int16_t iso15765_separation_time_offset;//2
+	uint16_t iso9141_kwp_enable_reserved;//2
+	uint16_t iso_tester_pullup_enable;//2
+	uint16_t iso_parity;//2
+	uint16_t iso_msg_termination;//2
+	ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings;//114
+	ETHERNET_SETTINGS ethernet;//8
+
+	STextAPISettings text_api;//72
+
+	struct
+	{
+		uint32_t disableUsbCheckOnBoot : 1;
+		uint32_t enableLatencyTest : 1;
+		uint32_t enablePcEthernetComm : 1;
+		uint32_t reserved : 29;
+	} flags;//4
+
+	SRADJupiterSwitchSettings switchSettings;//28
+} SRADJupiterSettings;//316
+
+#define SRADJupiterSettings_SIZE 316
+
 #define GS_VERSION 5
 typedef struct _GLOBAL_SETTINGS
 {
@@ -2695,6 +2763,7 @@ typedef struct _GLOBAL_SETTINGS
 		SFlexVnetzSettings flexvnetz;
 		SVividCANSettings vividcan;
 		VCAN4IndSettings vcan4_ind;
+		SRADJupiterSettings jupiter;
 		// Make sure SDeviceSettings matches this
 	};
 } GLOBAL_SETTINGS;
@@ -2730,6 +2799,7 @@ typedef enum _EDeviceSettingsType
 	DeviceOBD2ProSettingsType,
 	DeviceRedSettingsType,
 	DeviceRADPlutoSwitchSettingsType,
+	DeviceRADJupiterSettingsType,
 	// add new settings type here
 	// Also add to map inside cicsneoVI::Init()
 	DeviceSettingsTypeMax,
@@ -2769,6 +2839,7 @@ typedef struct _SDeviceSettings
 		SFlexVnetzSettings flexvnetz;
 		SVividCANSettings vividcan;
 		SVCAN4IndSettings vcan4_ind;
+		SRADJupiterSettings jupiter;
 		// Make sure GLOBAL_SETTINGS matches this
 		// NOTE: When adding new structures here implement inside icsneoGetDeviceSettings and icsneoSetDeviceSettings also.	} Settings;
 	} Settings;
@@ -3205,7 +3276,7 @@ typedef union {
 } icsDeviceStatus;
 
 
-typedef struct//GM Ethernet Protocol in J2534 V04040
+typedef struct
 {
 	char szName[128];//Adaptor name -  ASCII Null terminated
 	char szDeviceName[64];//Device name	- ASCII Null terminated
@@ -3216,6 +3287,56 @@ typedef struct//GM Ethernet Protocol in J2534 V04040
 		[16];//The Ipv6 address assigned to the Network interface. No compressed or short form notation// If not available, all bytes are set to zero to imply the absence of an address.
 	unsigned char bIPV4_Address[4];// The Ipv4 address assigned to the Network interface. If not available, all bytes are set to zero.
 } J2534_ADAPTER_INFORMATION;
+
+#define MAX_PHY_REG_PKT_ENTRIES 128
+#define PHY_REG_PKT_VERSION 1
+typedef struct SPhyRegPktHdr
+{
+	uint16_t numEntries;
+	uint8_t version;
+	uint8_t entryBytes;
+}PhyRegPktHdr_t;
+
+#define MAX_PHY_SETTINGS_STRUCT	128
+#define MAX_NUMBYTES_PHYSETTINGS MAX_PHY_SETTINGS_STRUCT*sizeof(PhyRegPktHdr_t)
+
+typedef struct SPhyRegPktClause22Mess
+{
+	uint8_t phyAddr; //5 bits
+	uint8_t page;//8 bits
+	uint16_t regAddr; //5 bits
+	uint16_t regVal;
+}PhyRegPktClause22Mess_t; //6 bytes
+
+typedef struct SPhyRegPktClause45Mess
+{
+	uint8_t port; //5 bits    uint8_t device; //5 bits
+	uint8_t device; //5 bits
+	uint16_t regAddr;
+	uint16_t regVal;
+}PhyRegPktClause45Mess_t; //6 bytes
+
+typedef struct SPhyRegPkt
+{
+	union
+	{
+		struct{
+			uint16_t Enabled:1;
+			uint16_t WriteEnable:1;
+			uint16_t Clause45Enable:1;
+			uint16_t reserved:9;
+			uint16_t version:4;
+		};
+		uint16_t flags;
+	};
+
+	union
+	{
+		PhyRegPktClause22Mess_t clause22;
+		PhyRegPktClause45Mess_t clause45;
+	};
+}PhyRegPkt_t;
+
 
 #ifndef INTREPID_NO_CHECK_STRUCT_SIZE
 
@@ -3291,6 +3412,7 @@ CHECK_STRUCT_SIZE(CANHubSettings);
 CHECK_STRUCT_SIZE(SNeoECU12Settings);
 CHECK_STRUCT_SIZE(SPlutoSwitchSettings);
 CHECK_STRUCT_SIZE(VCAN4IndSettings);
+CHECK_STRUCT_SIZE(SRADJupiterSettings);
 #endif /* INTREPID_NO_CHECK_STRUCT_SIZE */
 
 #endif /* _ICSNVC40_H */
