@@ -14,6 +14,8 @@
 #include "object_neo_device.h"
 #include "setup_module_auto_defines.h"
 
+#include <memory>
+
 extern PyTypeObject spy_message_object_type;
 // __func__, __FUNCTION__ and __PRETTY_FUNCTION__ are not preprocessor macros.
 // but MSVC doesn't follow c standard and treats __FUNCTION__ as a string literal macro...
@@ -3093,6 +3095,108 @@ PyObject* meth_get_bus_voltage(PyObject* self, PyObject* args)
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
+
+
+PyObject* meth_read_jupiter_firmware(PyObject* self, PyObject* args)
+{
+    PyObject* obj = NULL;
+    size_t fileSize = 0;
+    EPlasmaIonVnetChannel_t channel = PlasmaIonVnetChannelMain;
+    if (!PyArg_ParseTuple(args, arg_parse("Oi|i:", __FUNCTION__), &obj, &fileSize, &channel)) {
+        return NULL;
+    }
+
+    // Create the ByteArray
+    PyObject* ba = PyObject_CallObject((PyObject*)&PyByteArray_Type, NULL);
+    if (!ba) {
+        return NULL;
+    }
+    // Resize the ByteArray
+    int ret_val = PyByteArray_Resize(ba, fileSize);
+    // TODO: Documentation doesn't say what return value is.
+
+    if (!PyNeoDevice_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        // int __stdcall icsneoReadJupiterFirmware(void* hObject, char* fileData, size_t* fileDataSize, EPlasmaIonVnetChannel_t channel)
+        ice::Function<int __stdcall (ICS_HANDLE, char*, size_t*, EPlasmaIonVnetChannel_t)> icsneoReadJupiterFirmware(lib, "icsneoReadJupiterFirmware");
+
+        // Grab the ByteArray Buffer Object
+        Py_buffer ba_buffer = {};
+        PyObject_GetBuffer(ba, &ba_buffer, PyBUF_C_CONTIGUOUS | PyBUF_WRITABLE);
+
+        Py_BEGIN_ALLOW_THREADS
+        if (!icsneoReadJupiterFirmware(handle, (char*)ba_buffer.buf, &fileSize, channel)) {
+
+            Py_BLOCK_THREADS
+            PyBuffer_Release(&ba_buffer);
+            return set_ics_exception(exception_runtime_error(), "icsneoReadJupiterFirmware() Failed");
+        }
+        Py_END_ALLOW_THREADS
+        PyBuffer_Release(&ba_buffer);
+        return Py_BuildValue("Oi", ba, fileSize);
+    }
+    catch (ice::Exception& ex)
+    {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
+
+PyObject* meth_write_jupiter_firmware(PyObject* self, PyObject* args)
+{
+    PyObject* obj = NULL;
+    PyObject* bytes = NULL;
+    EPlasmaIonVnetChannel_t channel = PlasmaIonVnetChannelMain;
+    if (!PyArg_ParseTuple(args, arg_parse("OO|i:", __FUNCTION__), &obj, &bytes, &channel)) {
+        return NULL;
+    }
+    if (!PyBytes_CheckExact(bytes)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of ByteArray type ");
+    }
+    if (!PyNeoDevice_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        // int __stdcall icsneoWriteJupiterFirmware(void* hObject, char* fileData, size_t fileDataSize, EPlasmaIonVnetChannel_t channel)
+        ice::Function<int __stdcall (ICS_HANDLE, char*, size_t, EPlasmaIonVnetChannel_t)> icsneoWriteJupiterFirmware(lib, "icsneoWriteJupiterFirmware");
+
+        // Grab the ByteArray Buffer Object
+        Py_buffer bytes_buffer = {};
+        PyObject_GetBuffer(bytes, &bytes_buffer, PyBUF_C_CONTIGUOUS);
+
+        Py_BEGIN_ALLOW_THREADS
+        if (!icsneoWriteJupiterFirmware(handle, (char*)bytes_buffer.buf, bytes_buffer.len, channel)) {
+            Py_BLOCK_THREADS
+            PyBuffer_Release(&bytes_buffer);
+            return set_ics_exception(exception_runtime_error(), "icsneoWriteJupiterFirmware() Failed");
+        }
+        Py_END_ALLOW_THREADS
+        PyBuffer_Release(&bytes_buffer);
+        Py_RETURN_NONE;
+    }
+    catch (ice::Exception& ex)
+    {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+
 }
 
 
