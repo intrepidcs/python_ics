@@ -3161,7 +3161,7 @@ PyObject* meth_write_jupiter_firmware(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyBytes_CheckExact(bytes)) {
-        return set_ics_exception(exception_runtime_error(), "Argument must be of ByteArray type ");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of Bytes type ");
     }
     if (!PyNeoDevice_CheckExact(obj)) {
         return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
