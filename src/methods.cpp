@@ -297,6 +297,7 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
     int config_read = 0;
     int options = 0;
     int network_id = -1;
+    bool device_need_ref_inc = false;
     char* kwords[] = { "device", "network_ids", "config_read", "options", "network_id", NULL };
     if (!PyArg_ParseTupleAndKeywords(args, keywords, arg_parse("|OOiii:", __FUNCTION__), 
             kwords, &device, &network_ids, &config_read, &options, &network_id)) {
@@ -350,6 +351,16 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
     else if (device && !PyNeoDevice_CheckExact(device))
     {
         return set_ics_exception(exception_runtime_error(),"Invalid 'device' parameter object type passed to open_device().");
+    }
+    else if (device && PyNeoDevice_CheckExact(device))
+    {
+        // If the user passed in a NeoDevice device we need to increment 
+        // the reference counter when we return it since device is a borrowed
+        // reference.
+        // devs = ics.find_devices()
+        // device = ics.open_device(devs[0])
+        // del device # This will decrement the reference and crash interp
+        device_need_ref_inc = true;
     }
 
     if ((device && !PyNeoDevice_CheckExact(device)) || !device)
@@ -429,7 +440,11 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
             return set_ics_exception(exception_runtime_error(), "icsneoOpenDevice() Failed");
         }
         Py_END_ALLOW_THREADS
-
+        
+        if (device_need_ref_inc)
+        {
+            Py_INCREF(device);
+        }
         return device;
     }
     catch (ice::Exception& ex)
