@@ -562,7 +562,7 @@ PyObject* meth_get_rtc(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), "Failed to initialize PyDateTime");
         }
         PyObject* datetime = PyDateTime_FromDateAndTime(device_utc_time.tm_year+1900,
-            device_utc_time.tm_mon,
+            device_utc_time.tm_mon+1,
             device_utc_time.tm_mday,
             device_utc_time.tm_hour,
             device_utc_time.tm_min,
