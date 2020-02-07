@@ -433,6 +433,7 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
             return set_ics_exception(exception_runtime_error(), "icsneoOpenDevice() Failed");
         }
         Py_END_ALLOW_THREADS
+        Py_IncRef(device);
 
         return device;
     }
