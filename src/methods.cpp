@@ -974,7 +974,7 @@ PyObject* meth_get_messages(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         ice::Function<int __stdcall (ICS_HANDLE, icsSpyMessage*, int*, int*)> icsneoGetMessages(lib, "icsneoGetMessages");
-        int count;
+        int count = 0;
         int errors = 0;
         union SpyMessage {
             icsSpyMessageJ1850 msg_j1850;
