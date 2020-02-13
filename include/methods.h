@@ -75,6 +75,8 @@ PyObject* meth_get_device_status(PyObject* self, PyObject* args);
 PyObject* meth_enable_network_com(PyObject* self, PyObject* args); //icsneoEnableNetworkCom
 PyObject* meth_enable_bus_voltage_monitor(PyObject* self, PyObject* args);
 PyObject* meth_get_bus_voltage(PyObject* self, PyObject* args);
+PyObject* meth_read_jupiter_firmware(PyObject* self, PyObject* args);
+PyObject* meth_write_jupiter_firmware(PyObject* self, PyObject* args);
 
 #ifdef _cplusplus
 }
@@ -1219,6 +1221,45 @@ PyObject* meth_get_bus_voltage(PyObject* self, PyObject* args);
     "\t12000\n" \
     "\t>>> \n"
 
+#define _DOC_READ_JUPITER_FIRMWARE \
+    MODULE_NAME ".read_jupiter_firmware(device, size, [vnetChannel])\n" \
+    "\n" \
+    "Reads firmware binary from a RAD-Jupiter. If not sure, don't use this method\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
+    "\n" \
+    "\tsize (:class:`int`): :class:`int`: size of the bytes to read of the firmware binary.\n\n" \
+    "\n" \
+    "\tvnetChannel (:class:`int`): :class:`int`: Optional. Don't set, if unsure.\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\tNone\n" \
+    "\n" \
+
+#define _DOC_WRITE_JUPITER_FIRMWARE \
+    MODULE_NAME ".write_jupiter_firmware(device, bytes, [vnetChannel])\n" \
+    "\n" \
+    "Writes firmware binary to a RAD-Jupiter. If not sure, don't use this method\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
+    "\n" \
+    "\tbytes (:class:`bytes`): :class:`bytes`: bytes of the firmware binary.\n\n" \
+    "\n" \
+    "\tvnetChannel (:class:`int`): :class:`int`: Optional. Don't set, if unsure.\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\tNone\n" \
+    "\n" \
+
+
 static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("find_devices", "icsneoFindNeoDevices", "FindNeoDevices", (PyCFunction)meth_find_devices, METH_VARARGS | METH_KEYWORDS, _DOC_FIND_DEVICES),
     _EZ_ICS_STRUCT_METHOD("open_device", "icsneoOpenNeoDevice", "OpenNeoDevice", (PyCFunction)meth_open_device, METH_VARARGS | METH_KEYWORDS, _DOC_OPEN_DEVICES),
@@ -1289,6 +1330,9 @@ static PyMethodDef IcsMethods[] = {
 
     _EZ_ICS_STRUCT_METHOD("enable_bus_voltage_monitor", "icsneoEnableBusVoltageMonitor", "EnableBusVoltageMonitor", meth_enable_bus_voltage_monitor, METH_VARARGS, _DOC_ENABLE_BUS_VOLTAGE_MONITOR),
     _EZ_ICS_STRUCT_METHOD("get_bus_voltage", "icsneoGetBusVoltage", "GetBusVoltage", meth_get_bus_voltage, METH_VARARGS, _DOC_GET_BUS_VOLTAGE),
+
+    _EZ_ICS_STRUCT_METHOD("read_jupiter_firmware", "icsneoReadJupiterFirmware", "ReadJupiterFirmware", meth_read_jupiter_firmware, METH_VARARGS, _DOC_READ_JUPITER_FIRMWARE),
+    _EZ_ICS_STRUCT_METHOD("write_jupiter_firmware", "icsneoWriteJupiterFirmware", "WriteJupiterFirmware", meth_write_jupiter_firmware, METH_VARARGS, _DOC_WRITE_JUPITER_FIRMWARE),
 
     {"override_library_name", (PyCFunction)meth_override_library_name, METH_VARARGS, _DOC_OVERRIDE_LIBRARY_NAME},
     {"get_library_path", (PyCFunction)meth_get_library_path, METH_NOARGS, ""},
