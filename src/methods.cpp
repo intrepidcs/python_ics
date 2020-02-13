@@ -77,10 +77,11 @@ char* neodevice_to_string(unsigned long type)
     case NEODEVICE_RADPLUTO: return "RAD-Pluto";
     case NEODEVICE_VCAN42_EL: return "ValueCAN4-1";
     case NEODEVICE_RADIO_CANHUB: return "neoRAD-IO2-CANHUB";
+    case NEODEVICE_NEOECU12: return "neoECU12";
     case NEODEVICE_OBD2_LCBADGE: return "neoOBD2-LC BADGE";
     case NEODEVICE_RAD_MOON_DUO: return "RAD-Moon-Duo";
-    case NEODEVICE_VCAN3: return "ValueCAN3";
     case NEODEVICE_ONYX: return "neoVI FIRE3";
+    case NEODEVICE_VCAN3: return "ValueCAN3";
 #if defined(NEODEVICE_JUPITER)
     case NEODEVICE_JUPITER: return "RAD-Jupiter";
 #elif defined(NEODEVICE_RADJUPITER)
