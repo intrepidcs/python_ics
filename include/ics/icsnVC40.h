@@ -41,8 +41,6 @@ typedef unsigned __int64 uint64_t;
 #include <stdint.h>
 #endif
 
-#define MAX_PHY_SETTINGS_STRUCT	128
-#define MAX_NUMBYTES_PHYSETTINGS MAX_PHY_SETTINGS_STRUCT*sizeof(SPHYRegPkt)
 
 // MSVC++ 10.0 _MSC_VER == 1600 64-bit version doesn't allow multi-line #if directives...
 #if defined(_WIN64) || defined(__x86_64__) || defined(__aarch64__) || defined(__x86_64__) || defined(__LP64__) || defined(_M_AMD64) || \
@@ -3269,6 +3267,10 @@ typedef struct SPhyRegPkt
 		PhyRegPktClause45Mess_t clause45;
 	};
 }PhyRegPkt_t;
+
+#define MAX_PHY_SETTINGS_STRUCT	128
+#define MAX_NUMBYTES_PHYSETTINGS MAX_PHY_SETTINGS_STRUCT*sizeof(PhyRegPkt_t)
+
 
 
 #ifndef INTREPID_NO_CHECK_STRUCT_SIZE
