@@ -923,6 +923,156 @@
         "pack": 0,
         "union": false
     },
+    "SPhyRegPkt": {
+        "members": {
+            "Clause45Enable:1": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "Enabled:1": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "WriteEnable:1": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "clause22": [
+                "PhyRegPktClause22Mess_t",
+                0,
+                0,
+                ""
+            ],
+            "clause45": [
+                "PhyRegPktClause45Mess_t",
+                0,
+                0,
+                ""
+            ],
+            "flags": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "reserved:9": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "version:4": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ]
+        },
+        "names": [
+            "PhyRegPkt_t"
+        ],
+        "pack": 0,
+        "union": false
+    },
+    "SPhyRegPktClause22Mess": {
+        "members": {
+            "page": [
+                "uint8_t",
+                0,
+                0,
+                "8 bits"
+            ],
+            "phyAddr": [
+                "uint8_t",
+                0,
+                0,
+                "5 bits"
+            ],
+            "regAddr": [
+                "uint16_t",
+                0,
+                0,
+                "5 bits"
+            ],
+            "regVal": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ]
+        },
+        "names": [
+            "PhyRegPktClause22Mess_t"
+        ],
+        "pack": 0,
+        "union": false
+    },
+    "SPhyRegPktClause45Mess": {
+        "members": {
+            "device": [
+                "uint8_t",
+                0,
+                0,
+                "5 bits"
+            ],
+            "port": [
+                "uint8_t",
+                0,
+                0,
+                ""
+            ],
+            "regAddr": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "regVal": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ]
+        },
+        "names": [
+            "PhyRegPktClause45Mess_t"
+        ],
+        "pack": 0,
+        "union": false
+    },
+    "SPhyRegPktHdr": {
+        "members": {
+            "entryBytes": [
+                "uint8_t",
+                0,
+                0,
+                ""
+            ],
+            "numEntries": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "version": [
+                "uint8_t",
+                0,
+                0,
+                ""
+            ]
+        },
+        "names": [
+            "PhyRegPktHdr_t"
+        ],
+        "pack": 0,
+        "union": false
+    },
     "SPlutoSwitchSettings_s": {
         "members": {
             "avbParams": [

@@ -41,6 +41,9 @@ typedef unsigned __int64 uint64_t;
 #include <stdint.h>
 #endif
 
+#define MAX_PHY_SETTINGS_STRUCT	128
+#define MAX_NUMBYTES_PHYSETTINGS MAX_PHY_SETTINGS_STRUCT*sizeof(SPHYRegPkt)
+
 // MSVC++ 10.0 _MSC_VER == 1600 64-bit version doesn't allow multi-line #if directives...
 #if defined(_WIN64) || defined(__x86_64__) || defined(__aarch64__) || defined(__x86_64__) || defined(__LP64__) || defined(_M_AMD64) || \
 	defined(_M_IA64) || defined(__PPC64__)
@@ -136,6 +139,8 @@ typedef unsigned __int64 uint64_t;
  */
 #define NETID_HW_COM_LATENCY_TEST 512
 #define NETID_DEVICE_STATUS 513
+#define NETID_UDP 514
+#define NETID_AUTOSAR 515
 
 /* Upper boundry of Network IDs */
 #define NETID_MAX 100
@@ -259,6 +264,8 @@ typedef unsigned __int64 uint64_t;
 #define SPY_PROTOCOL_CANFD 30
 #define SPY_PROTOCOL_GMFSA 31
 #define SPY_PROTOCOL_TCP 32
+#define SPY_PROTOCOL_UDP 33
+#define SPY_PROTOCOL_AUTOSAR 34
 
 /* Bitmasks for StatusBitField member of icsSpyMessage */
 #define SPY_STATUS_GLOBAL_ERR 0x01
@@ -3205,7 +3212,7 @@ typedef union {
 } icsDeviceStatus;
 
 
-typedef struct//GM Ethernet Protocol in J2534 V04040
+typedef struct
 {
 	char szName[128];//Adaptor name -  ASCII Null terminated
 	char szDeviceName[64];//Device name	- ASCII Null terminated
@@ -3216,6 +3223,53 @@ typedef struct//GM Ethernet Protocol in J2534 V04040
 		[16];//The Ipv6 address assigned to the Network interface. No compressed or short form notation// If not available, all bytes are set to zero to imply the absence of an address.
 	unsigned char bIPV4_Address[4];// The Ipv4 address assigned to the Network interface. If not available, all bytes are set to zero.
 } J2534_ADAPTER_INFORMATION;
+
+#define MAX_PHY_REG_PKT_ENTRIES 128
+#define PHY_REG_PKT_VERSION 1
+typedef struct SPhyRegPktHdr
+{
+	uint16_t numEntries;
+	uint8_t version;
+	uint8_t entryBytes;
+}PhyRegPktHdr_t;
+
+typedef struct SPhyRegPktClause22Mess
+{
+	uint8_t phyAddr; //5 bits
+	uint8_t page;//8 bits
+	uint16_t regAddr; //5 bits
+	uint16_t regVal;
+}PhyRegPktClause22Mess_t; //6 bytes
+
+typedef struct SPhyRegPktClause45Mess
+{
+	uint8_t port; //5 bits    uint8_t device; //5 bits
+	uint8_t device; //5 bits
+	uint16_t regAddr;
+	uint16_t regVal;
+}PhyRegPktClause45Mess_t; //6 bytes
+
+typedef struct SPhyRegPkt
+{
+	union
+	{
+		struct{
+			uint16_t Enabled:1;
+			uint16_t WriteEnable:1;
+			uint16_t Clause45Enable:1;
+			uint16_t reserved:9;
+			uint16_t version:4;
+		};
+		uint16_t flags;
+	};
+
+	union
+	{
+		PhyRegPktClause22Mess_t clause22;
+		PhyRegPktClause45Mess_t clause45;
+	};
+}PhyRegPkt_t;
+
 
 #ifndef INTREPID_NO_CHECK_STRUCT_SIZE
 

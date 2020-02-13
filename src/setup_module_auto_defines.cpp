@@ -12,6 +12,8 @@ int setup_module_auto_defines(PyObject * module)
 {
 	int result = 0;
 
+	result += PyModule_AddIntMacro(module, MAX_PHY_SETTINGS_STRUCT);
+	result += PyModule_AddIntMacro(module, MAX_NUMBYTES_PHYSETTINGS);
 	result += PyModule_AddIntMacro(module, NEOVI_COMMTYPE_RS232);
 	result += PyModule_AddIntMacro(module, NEOVI_COMMTYPE_USB_BULK);
 	result += PyModule_AddIntMacro(module, NEOVI_COMMTYPE_TCPIP);
@@ -95,6 +97,8 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, NETID_LSFTCAN2);
 	result += PyModule_AddIntMacro(module, NETID_HW_COM_LATENCY_TEST);
 	result += PyModule_AddIntMacro(module, NETID_DEVICE_STATUS);
+	result += PyModule_AddIntMacro(module, NETID_UDP);
+	result += PyModule_AddIntMacro(module, NETID_AUTOSAR);
 	result += PyModule_AddIntMacro(module, NETID_MAX);
 	result += PyModule_AddIntMacro(module, NETID_INVALID);
 	result += PyModule_AddIntMacro(module, NEODEVICE_UNKNOWN);
@@ -201,6 +205,8 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, SPY_PROTOCOL_CANFD);
 	result += PyModule_AddIntMacro(module, SPY_PROTOCOL_GMFSA);
 	result += PyModule_AddIntMacro(module, SPY_PROTOCOL_TCP);
+	result += PyModule_AddIntMacro(module, SPY_PROTOCOL_UDP);
+	result += PyModule_AddIntMacro(module, SPY_PROTOCOL_AUTOSAR);
 	result += PyModule_AddIntMacro(module, SPY_STATUS_GLOBAL_ERR);
 	result += PyModule_AddIntMacro(module, SPY_STATUS_TX_MSG);
 	result += PyModule_AddIntMacro(module, SPY_STATUS_XTD_FRAME);
@@ -627,6 +633,8 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, icsSpyMessageLong_SIZE);
 	result += PyModule_AddIntMacro(module, icsSpyMessageJ1850_SIZE);
 	result += PyModule_AddIntMacro(module, icsSpyMessageVSB_SIZE);
+	result += PyModule_AddIntMacro(module, MAX_PHY_REG_PKT_ENTRIES);
+	result += PyModule_AddIntMacro(module, PHY_REG_PKT_VERSION);
 	// enum
 	// end of enum -  	}
 
