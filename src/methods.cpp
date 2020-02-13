@@ -80,7 +80,10 @@ char* neodevice_to_string(unsigned long type)
     case NEODEVICE_OBD2_LCBADGE: return "neoOBD2-LC BADGE";
     case NEODEVICE_RAD_MOON_DUO: return "RAD-Moon-Duo";
     case NEODEVICE_VCAN3: return "ValueCAN3";
+#if defined(NEODEVICE_ONYX)
     case NEODEVICE_ONYX: return "neoVI FIRE3";
+#endif
+    case NEODEVICE_FIRE3: return "neoVI FIRE3";
 #if defined(NEODEVICE_JUPITER)
     case NEODEVICE_JUPITER: return "RAD-Jupiter";
 #elif defined(NEODEVICE_RADJUPITER)
@@ -88,6 +91,8 @@ char* neodevice_to_string(unsigned long type)
 #endif
     case NEODEVICE_VCAN4_IND: return "ValueCAN4 Industrial";
     case NEODEVICE_GIGASTAR: return "RAD-GIGAStar";
+    case NEODEVICE_RED2: return "neoVI RED2";
+    case NEODEVICE_ECU22: return "neoECU22";
     case NEODEVICE_RED: return "neoVI RED";
     case NEODEVICE_ECU: return "neoECU";
     case NEODEVICE_IEVB: return "IEVB";
