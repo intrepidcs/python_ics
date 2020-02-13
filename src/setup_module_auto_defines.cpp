@@ -95,6 +95,9 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, NETID_LSFTCAN2);
 	result += PyModule_AddIntMacro(module, NETID_HW_COM_LATENCY_TEST);
 	result += PyModule_AddIntMacro(module, NETID_DEVICE_STATUS);
+	result += PyModule_AddIntMacro(module, NETID_UDP);
+	result += PyModule_AddIntMacro(module, NETID_AUTOSAR);
+	result += PyModule_AddIntMacro(module, NETID_FORWARDED_MESSAGE);
 	result += PyModule_AddIntMacro(module, NETID_MAX);
 	result += PyModule_AddIntMacro(module, NETID_INVALID);
 	result += PyModule_AddIntMacro(module, NEODEVICE_UNKNOWN);
@@ -112,11 +115,13 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, NEODEVICE_NEOECU12);
 	result += PyModule_AddIntMacro(module, NEODEVICE_OBD2_LCBADGE);
 	result += PyModule_AddIntMacro(module, NEODEVICE_RAD_MOON_DUO);
-	result += PyModule_AddIntMacro(module, NEODEVICE_ONYX);
+	result += PyModule_AddIntMacro(module, NEODEVICE_FIRE3);
 	result += PyModule_AddIntMacro(module, NEODEVICE_VCAN3);
-	result += PyModule_AddIntMacro(module, NEODEVICE_JUPITER);
+	result += PyModule_AddIntMacro(module, NEODEVICE_RADJUPITER);
 	result += PyModule_AddIntMacro(module, NEODEVICE_VCAN4_IND);
 	result += PyModule_AddIntMacro(module, NEODEVICE_GIGASTAR);
+	result += PyModule_AddIntMacro(module, NEODEVICE_RED2);
+	result += PyModule_AddIntMacro(module, NEODEVICE_ECU22);
 	result += PyModule_AddIntMacro(module, NEODEVICE_RED);
 	result += PyModule_AddIntMacro(module, NEODEVICE_ECU);
 	result += PyModule_AddIntMacro(module, NEODEVICE_IEVB);
@@ -201,6 +206,8 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, SPY_PROTOCOL_CANFD);
 	result += PyModule_AddIntMacro(module, SPY_PROTOCOL_GMFSA);
 	result += PyModule_AddIntMacro(module, SPY_PROTOCOL_TCP);
+	result += PyModule_AddIntMacro(module, SPY_PROTOCOL_UDP);
+	result += PyModule_AddIntMacro(module, SPY_PROTOCOL_AUTOSAR);
 	result += PyModule_AddIntMacro(module, SPY_STATUS_GLOBAL_ERR);
 	result += PyModule_AddIntMacro(module, SPY_STATUS_TX_MSG);
 	result += PyModule_AddIntMacro(module, SPY_STATUS_XTD_FRAME);
@@ -508,6 +515,7 @@ int setup_module_auto_defines(PyObject * module)
 	// end of enum -  };
 
 	result += PyModule_AddIntMacro(module, SERDESCAM_SETTINGS_SIZE);
+	result += PyModule_AddIntMacro(module, RADMOONDUO_CONVERTER_SETTINGS_SIZE);
 	// enum
 	result += PyModule_AddIntMacro(module, REPORT_ON_PERIODIC);
 	result += PyModule_AddIntMacro(module, REPORT_ON_MISC1);
@@ -574,6 +582,10 @@ int setup_module_auto_defines(PyObject * module)
 
 	result += PyModule_AddIntMacro(module, SNeoECU12Settings_SIZE);
 	result += PyModule_AddIntMacro(module, VCAN4IndSettings_SIZE);
+	result += PyModule_AddIntMacro(module, RADJUPITER_NUM_PORTS);
+	result += PyModule_AddIntMacro(module, SRADJupiterSettings_SIZE);
+	result += PyModule_AddIntMacro(module, SFire3Settings_size);
+	result += PyModule_AddIntMacro(module, RadMoonDuoSettings_SIZE);
 	result += PyModule_AddIntMacro(module, GS_VERSION);
 	result += PyModule_AddIntMacro(module, GLOBAL_SETTINGS_SIZE);
 	result += PyModule_AddIntMacro(module, NEOVI_3G_MAX_SETTINGS_SIZE);
@@ -604,6 +616,9 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, DeviceOBD2ProSettingsType);
 	result += PyModule_AddIntMacro(module, DeviceRedSettingsType);
 	result += PyModule_AddIntMacro(module, DeviceRADPlutoSwitchSettingsType);
+	result += PyModule_AddIntMacro(module, DeviceRADJupiterSettingsType);
+	result += PyModule_AddIntMacro(module, DeviceFire3SettingsType);
+	result += PyModule_AddIntMacro(module, DeviceRadMoonDuoSettingsType);
 	result += PyModule_AddIntMacro(module, DeviceSettingsTypeMax);
 	result += PyModule_AddIntMacro(module, DeviceSettingsNone);
 	// end of enum -  } EDeviceSettingsType;
@@ -627,6 +642,10 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, icsSpyMessageLong_SIZE);
 	result += PyModule_AddIntMacro(module, icsSpyMessageJ1850_SIZE);
 	result += PyModule_AddIntMacro(module, icsSpyMessageVSB_SIZE);
+	result += PyModule_AddIntMacro(module, MAX_PHY_REG_PKT_ENTRIES);
+	result += PyModule_AddIntMacro(module, PHY_REG_PKT_VERSION);
+	result += PyModule_AddIntMacro(module, MAX_PHY_SETTINGS_STRUCT);
+	result += PyModule_AddIntMacro(module, MAX_NUMBYTES_PHYSETTINGS);
 	// enum
 	// end of enum -  	}
 
