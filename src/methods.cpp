@@ -3175,12 +3175,12 @@ PyObject* meth_read_jupiter_firmware(PyObject* self, PyObject* args)
 PyObject* meth_write_jupiter_firmware(PyObject* self, PyObject* args)
 {
     PyObject* obj = NULL;
-    PyObject* bytes = NULL;
+    PyObject* bytes_obj = NULL;
     EPlasmaIonVnetChannel_t channel = PlasmaIonVnetChannelMain;
-    if (!PyArg_ParseTuple(args, arg_parse("OO|i:", __FUNCTION__), &obj, &bytes, &channel)) {
+    if (!PyArg_ParseTuple(args, arg_parse("OO|i:", __FUNCTION__), &obj, &bytes_obj, &channel)) {
         return NULL;
     }
-    if (!PyBytes_CheckExact(bytes)) {
+    if (!PyBytes_CheckExact(bytes_obj)) {
         return set_ics_exception(exception_runtime_error(), "Argument must be of Bytes type ");
     }
     if (!PyNeoDevice_CheckExact(obj)) {
@@ -3196,19 +3196,33 @@ PyObject* meth_write_jupiter_firmware(PyObject* self, PyObject* args)
         }
         // int __stdcall icsneoWriteJupiterFirmware(void* hObject, char* fileData, size_t fileDataSize, EPlasmaIonVnetChannel_t channel)
         ice::Function<int __stdcall (ICS_HANDLE, char*, size_t, EPlasmaIonVnetChannel_t)> icsneoWriteJupiterFirmware(lib, "icsneoWriteJupiterFirmware");
-
+        
+        // Convert the object to a bytes object
+        PyObject* bytes = PyBytes_FromObject(bytes_obj);
+        // Grab the byte size
+        Py_ssize_t bsize = PyBytes_Size(bytes);
+        // Grab the data out of the bytes
+        char* bytes_str = PyBytes_AsString(bytes);
+        if (!bytes_str)
+        {
+            return NULL;
+        }
+        
         // Grab the ByteArray Buffer Object
-        Py_buffer bytes_buffer = {};
-        PyObject_GetBuffer(bytes, &bytes_buffer, PyBUF_C_CONTIGUOUS);
+        //Py_buffer bytes_buffer = {};
+        //PyObject_GetBuffer(bytes, &bytes_buffer, PyBUF_C_CONTIGUOUS);
 
         Py_BEGIN_ALLOW_THREADS
-        if (!icsneoWriteJupiterFirmware(handle, (char*)bytes_buffer.buf, bytes_buffer.len, channel)) {
+        //if (!icsneoWriteJupiterFirmware(handle, (char*)bytes_buffer.buf, bytes_buffer.len, channel)) {
+        if (!icsneoWriteJupiterFirmware(handle, bytes_str, bsize, channel)) {
             Py_BLOCK_THREADS
-            PyBuffer_Release(&bytes_buffer);
+            Py_DECREF(bytes);
+            //PyBuffer_Release(&bytes_buffer);
             return set_ics_exception(exception_runtime_error(), "icsneoWriteJupiterFirmware() Failed");
         }
         Py_END_ALLOW_THREADS
-        PyBuffer_Release(&bytes_buffer);
+        Py_DECREF(bytes);
+        //PyBuffer_Release(&bytes_buffer);
         Py_RETURN_NONE;
     }
     catch (ice::Exception& ex)
