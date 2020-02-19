@@ -2440,7 +2440,7 @@ PyObject* meth_set_backup_power_enabled(PyObject* self, PyObject* args)
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
-PyObject* meth_set_backup_power_ready(PyObject* self, PyObject* args)
+PyObject* meth_get_backup_power_ready(PyObject* self, PyObject* args)
 {
     PyObject* obj = NULL;
     unsigned int enabled = 0;
