@@ -75,6 +75,10 @@ PyObject* meth_get_device_status(PyObject* self, PyObject* args);
 PyObject* meth_enable_network_com(PyObject* self, PyObject* args); //icsneoEnableNetworkCom
 PyObject* meth_enable_bus_voltage_monitor(PyObject* self, PyObject* args);
 PyObject* meth_get_bus_voltage(PyObject* self, PyObject* args);
+PyObject* meth_get_disk_details(PyObject* self, PyObject* args);
+PyObject* meth_disk_format(PyObject* self, PyObject* args);
+PyObject* meth_disk_format_cancel(PyObject* self, PyObject* args);
+PyObject* meth_get_disk_format_progress(PyObject* self, PyObject* args);
 
 #ifdef _cplusplus
 }
@@ -1219,6 +1223,88 @@ PyObject* meth_get_bus_voltage(PyObject* self, PyObject* args);
     "\t12000\n" \
     "\t>>> \n"
 
+#define _DOC_GET_DISK_DETAILS \
+    MODULE_NAME ".get_disk_details(device)\n" \
+    "\n" \
+    "Returns the device disk details.\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\t(:class:`" MODULE_NAME "." "srad_gigalog_disk_details" "`).\n" \
+    "\n" \
+    "\t>>> import ics\n" \
+    "\t>>> d = ics.open_device()\n" \
+    "\t>>> details = ics.get_disk_details(d)\n" \
+    "\t>>> details.structure.options\n" \
+	"\t>>> \n"
+
+#define _DOC_DISK_FORMAT \
+    MODULE_NAME ".disk_format(device)\n" \
+    "\n" \
+    "Starts disk formatting on the device.\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\tNone.\n" \
+    "\n" \
+    "\t>>> import ics\n" \
+    "\t>>> d = ics.open_device()\n" \
+    "\t>>> details = ics.get_disk_details(d)\n" \
+    "\t>>> details. = ics.get_disk_details(d)\n" \
+    "\t>>> ics.disk_format(d, details)\n" \
+    "\t>>> \n"
+
+#define _DOC_DISK_FORMAT_CANCEL \
+    MODULE_NAME ".disk_format_cancel(device)\n" \
+    "\n" \
+    "Cancel in progress disk formatting on the device.\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\tNone.\n" \
+    "\n" \
+    "\t>>> import ics\n" \
+    "\t>>> d = ics.open_device()\n" \
+    "\t>>> ics.disk_format(d, details)\n" \
+    "\t>>> ics.disk_format_cancel(d)\n" \
+    "\t>>> \n"
+
+#define _DOC_DISK_FORMAT_PROGRESS \
+    MODULE_NAME ".get_disk_format_progress(device)\n" \
+    "\n" \
+    "Returns the device disk formatting progress.\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\t(:class:`" MODULE_NAME "." "srad_gigalog_disk_format_progress" "`).\n" \
+    "\n" \
+    "\t>>> import ics\n" \
+    "\t>>> d = ics.open_device()\n" \
+    "\t>>> d = ics.disk_format(d, details)\n" \
+    "\t>>> progress = ics.get_disk_format_progress(d)\n" \
+    "\t>>> progress.sectorsRemaining\n" \
+	"\t>>> \n"
+
 static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("find_devices", "icsneoFindNeoDevices", "FindNeoDevices", (PyCFunction)meth_find_devices, METH_VARARGS | METH_KEYWORDS, _DOC_FIND_DEVICES),
     _EZ_ICS_STRUCT_METHOD("open_device", "icsneoOpenNeoDevice", "OpenNeoDevice", (PyCFunction)meth_open_device, METH_VARARGS | METH_KEYWORDS, _DOC_OPEN_DEVICES),
@@ -1292,6 +1378,11 @@ static PyMethodDef IcsMethods[] = {
 
     {"override_library_name", (PyCFunction)meth_override_library_name, METH_VARARGS, _DOC_OVERRIDE_LIBRARY_NAME},
     {"get_library_path", (PyCFunction)meth_get_library_path, METH_NOARGS, ""},
+
+    _EZ_ICS_STRUCT_METHOD("get_disk_details", "icsneoRequestDiskDetails", "RequestDiskDetails", meth_get_disk_details, METH_VARARGS, _DOC_GET_DISK_DETAILS),
+    _EZ_ICS_STRUCT_METHOD("disk_format", "icsneoRequestDiskFormat", "RequestDiskFormat", meth_disk_format, METH_VARARGS, _DOC_DISK_FORMAT),
+    _EZ_ICS_STRUCT_METHOD("disk_format_cancel", "icsneoRequestDiskFormatCancel", "RequestDiskFormatCancel", meth_disk_format_cancel, METH_VARARGS, _DOC_DISK_FORMAT_CANCEL),
+    _EZ_ICS_STRUCT_METHOD("get_disk_format_progress", "icsneoRequestDiskFormatProgress", "RequestDiskFormatProgress", meth_get_disk_format_progress, METH_VARARGS, _DOC_DISK_FORMAT_PROGRESS),
 
     { NULL, NULL, 0, NULL }
 };
