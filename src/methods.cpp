@@ -3166,7 +3166,7 @@ PyObject* meth_get_disk_details(PyObject* self, PyObject* args)
         }
         ice::Function<int __stdcall (ICS_HANDLE, SDiskDetails*)>  icsneoRequestDiskDetails(lib, "icsneoRequestDiskDetails");
 
-        PyObject* details = _getPythonModuleObject("ics.structures.srad_gigalog_disk_details", "srad_gigalog_disk_details");
+        PyObject* details = _getPythonModuleObject("ics.structures.s_disk_details", "s_disk_details");
         if (!details)
         {
             return NULL;
@@ -3284,7 +3284,7 @@ PyObject* meth_get_disk_format_progress(PyObject* self, PyObject* args)
         }
         ice::Function<int __stdcall (ICS_HANDLE, SDiskFormatProgress*)>  icsneoRequestDiskFormatProgress(lib, "icsneoRequestDiskFormatProgress");
 
-        PyObject* progress = _getPythonModuleObject("ics.structures.srad_gigalog_disk_format_progress", "srad_gigalog_disk_format_progress");
+        PyObject* progress = _getPythonModuleObject("ics.structures.s_disk_format_progress", "s_disk_format_progress");
         if (!progress)
         {
             return NULL;
