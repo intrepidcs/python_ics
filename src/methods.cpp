@@ -213,7 +213,7 @@ PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
 {
     PyObject* device_types = NULL;
     int network_id = -1;
-    char* kwords[] = { "deviceTypes", "NetworkID", NULL };
+    char* kwords[] = { "device_types", "network_id", NULL };
     if (!PyArg_ParseTupleAndKeywords(args, keywords, arg_parse("|Oi:", __FUNCTION__), 
             kwords, &device_types, &network_id)) {
         return NULL;
@@ -302,10 +302,11 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
     int config_read = 0;
     int options = 0;
     int network_id = -1;
+    bool use_neovi_server = false;
     bool device_need_ref_inc = false;
-    char* kwords[] = { "device", "network_ids", "config_read", "options", "network_id", NULL };
-    if (!PyArg_ParseTupleAndKeywords(args, keywords, arg_parse("|OOiii:", __FUNCTION__), 
-            kwords, &device, &network_ids, &config_read, &options, &network_id)) {
+    char* kwords[] = { "device", "network_ids", "config_read", "options", "network_id", "use_server", NULL };
+    if (!PyArg_ParseTupleAndKeywords(args, keywords, arg_parse("|OOiiib:", __FUNCTION__), 
+            kwords, &device, &network_ids, &config_read, &options, &network_id, &use_neovi_server)) {
         return NULL;
     }
 
@@ -322,6 +323,23 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
         // Device is a serial number in integer format
         serial_number = PyLong_AsLong(device);
     }
+
+    // Create a vector from the device_types python container
+    std::unique_ptr<unsigned char[]> network_ids_list;
+    unsigned int network_ids_list_size = 0;
+    bool use_network_ids = false;
+    if (network_ids && network_ids != Py_None)
+    {
+        std::vector<PyObject*> network_ids_vector;
+        if (!_convertListOrTupleToArray(network_ids, &network_ids_vector))
+            return NULL;
+        network_ids_list_size = network_ids_vector.size();
+        network_ids_list.reset((new unsigned char(network_ids_list_size)));
+        for (unsigned int i=0; i < network_ids_list_size; ++i)
+            network_ids_list[i] = (unsigned char)PyLong_AsLong(network_ids_vector[i]);
+        use_network_ids = true;
+    }
+
     else if (device && PyUnicode_CheckExact(device))
     {
         // Lets convert the base36 string into an integer
@@ -396,7 +414,8 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
                 // If we are looking for a serial number, check here
                 if (serial_number && devices[i].neoDevice.SerialNumber != serial_number)
                     continue;
-                if (devices[i].neoDevice.NumberOfClients != 0)
+                // If we aren't using neoVI Server and already have a connection we can't proceed.
+                if (!use_neovi_server && devices[i].neoDevice.NumberOfClients != 0)
                 {
                     return set_ics_exception(exception_runtime_error(), "Found device, but its already open!");
                 }
@@ -439,7 +458,7 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
             popts = &opts;
 
         Py_BEGIN_ALLOW_THREADS
-        if (!icsneoOpenDevice(&neo_device_ex, &PyNeoDevice_GetNeoDevice(device)->handle, NULL, config_read, options, (network_id != -1) ? popts : NULL, 0)) 
+        if (!icsneoOpenDevice(&neo_device_ex, &PyNeoDevice_GetNeoDevice(device)->handle, use_network_ids ? network_ids_list.get() : NULL, config_read, options, (network_id != -1) ? popts : NULL, 0))
         {
             Py_BLOCK_THREADS
             return set_ics_exception(exception_runtime_error(), "icsneoOpenDevice() Failed");

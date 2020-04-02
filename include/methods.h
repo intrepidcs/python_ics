@@ -99,8 +99,8 @@ PyObject* meth_write_jupiter_firmware(PyObject* self, PyObject* args);
     "Args:\n" \
     "\tdevice_type (int): Accepts " MODULE_NAME ".NEODEVICE_* Macros\n\n" \
     "\t*New in 3.0 (803):*\n\n" \
-    "\tdevice_type (List/Tuple): Accepts a Container of " MODULE_NAME ".NEODEVICE_* Macros\n\n" \
-    "\tstOptionsOpenNeoEx (int): Usually ics.NETID_CAN, if needed\n\n" \
+    "\tdevice_types (List/Tuple): Accepts a Container of " MODULE_NAME ".NEODEVICE_* Macros\n\n" \
+    "\tnetwork_id (int): OptionsFindNeoEx.CANOptions.iNetworkID. Usually ics.NETID_CAN, if needed\n\n" \
     "\n" \
     "Raises:\n" \
     "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
@@ -128,10 +128,11 @@ PyObject* meth_write_jupiter_firmware(PyObject* self, PyObject* args);
     "Args:\n" \
     "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
     "\tdevice (int): Serial Number of the device\n\n" \
-    "\tbNetworkIDs (int): Network Enables\n\n" \
-    "\tbConfigRead (int): Config Read\n\n" \
-    "\tiOptions (int): DEVICE_OPTION_* defines\n\n" \
-    "\tstOptionsOpenNeoEx (int): Usually ics.NETID_CAN, if needed\n\n" \
+    "\tnetwork_ids (List/Tuple): This is an array of number IDs which specify the NetworkID parameter of each network. This allows you to assign a custom network ID to each network. Normally, you will assign consecutive IDs to each of the networks. See NetworkIDList for a list of current network ID's. You may also set this parameter to NULL (zero) and the default network ID's will be used.\n\n" \
+    "\tbconfig_read (int): Specifies whether the DLL should read the neoVI's device configuration before enabling the device. It is recommended that this value be set to 1.\n\n" \
+    "\toptions (int): DEVICE_OPTION_* defines\n\n" \
+    "\tnetwork_id (int): OptionsFindNeoEx.CANOptions.iNetworkID. Usually ics.NETID_CAN, if needed\n\n" \
+    "\tuse_server (int): Defaults to False, Setting to True allows opening the same device more than once.\n\n" \
     "\n" \
     "Raises:\n" \
     "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
