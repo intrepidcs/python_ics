@@ -317,13 +317,6 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
         return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
     }
 
-    // Verify device type
-    if (device && PyLong_CheckExact(device))
-    {
-        // Device is a serial number in integer format
-        serial_number = PyLong_AsLong(device);
-    }
-
     // Create a vector from the device_types python container
     std::unique_ptr<unsigned char[]> network_ids_list;
     unsigned int network_ids_list_size = 0;
@@ -340,6 +333,12 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
         use_network_ids = true;
     }
 
+    // Verify device type
+    if (device && PyLong_CheckExact(device))
+    {
+        // Device is a serial number in integer format
+        serial_number = PyLong_AsLong(device);
+    }
     else if (device && PyUnicode_CheckExact(device))
     {
         // Lets convert the base36 string into an integer
