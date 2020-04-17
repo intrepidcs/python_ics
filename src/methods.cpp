@@ -976,7 +976,7 @@ PyObject* meth_get_messages(PyObject* self, PyObject* args)
             return set_ics_exception_dev(exception_runtime_error(), obj, "Failed to allocate " SPY_MESSAGE_OBJECT_NAME);
         }
         Py_BEGIN_ALLOW_THREADS
-        for (double i=timeout; i > 0; --i) {
+        for (double i=timeout; i >= 0; --i) {
             count = 20000;
             errors = 0;
             if (!icsneoGetMessages(handle, (icsSpyMessage*)msgs, &count, &errors) && !errors) {
