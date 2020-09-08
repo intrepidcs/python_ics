@@ -8,7 +8,7 @@ import sys
 import unittest
 
 MAJOR_VERSION = 4
-MINOR_VERSION = 4
+MINOR_VERSION = 5
 
 def _run_tests():
     directory = os.path.abspath(os.path.dirname(sys.modules['__main__'].__file__))
