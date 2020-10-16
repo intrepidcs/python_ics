@@ -74,11 +74,6 @@ typedef struct
 #ifndef __stdcall
 #define __stdcall
 
-// Sleep is a windows.h specific function.
-#include <unistd.h>
-#define Sleep(i) sleep(i)
-
-
 #endif
 #endif
 
@@ -973,6 +968,7 @@ PyObject* meth_get_messages(PyObject* self, PyObject* args)
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
+        ice::Function<int __stdcall (ICS_HANDLE, unsigned int)> icsneoWaitForRxMessagesWithTimeOut(lib, "icsneoWaitForRxMessagesWithTimeOut");
         ice::Function<int __stdcall (ICS_HANDLE, icsSpyMessage*, int*, int*)> icsneoGetMessages(lib, "icsneoGetMessages");
         int count = 0;
         int errors = 0;
@@ -987,24 +983,10 @@ PyObject* meth_get_messages(PyObject* self, PyObject* args)
             return set_ics_exception_dev(exception_runtime_error(), obj, "Failed to allocate " SPY_MESSAGE_OBJECT_NAME);
         }
         Py_BEGIN_ALLOW_THREADS
-        for (double i=timeout; i >= 0; --i) {
-            count = 20000;
-            errors = 0;
-            if (!icsneoGetMessages(handle, (icsSpyMessage*)msgs, &count, &errors) && !errors) {
-                // We are going to try one more time just incase
-                count = 20000;
-                errors = 0;
-                if (!icsneoGetMessages(handle, (icsSpyMessage*)msgs, &count, &errors)) {
-                    Py_BLOCK_THREADS
-                    return set_ics_exception_dev(exception_runtime_error(), obj, "icsneoGetMessages() Failed");
-                }
-            }
-            if (count || errors) {
-                break;
-            }
-            // We don't want to sleep, if there isn't a timeout left.
-            if (i) {
-                Sleep(1);
+        if(timeout==0 || icsneoWaitForRxMessagesWithTimeOut(handle, (unsigned int)timeout)) {
+            if (!icsneoGetMessages(handle, (icsSpyMessage*)msgs, &count, &errors)) {
+                Py_BLOCK_THREADS
+                return set_ics_exception_dev(exception_runtime_error(), obj, "icsneoGetMessages() Failed");
             }
         }
         Py_END_ALLOW_THREADS
