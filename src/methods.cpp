@@ -983,20 +983,20 @@ PyObject* meth_get_messages(PyObject* self, PyObject* args)
         }
         ice::Function<int __stdcall (ICS_HANDLE, unsigned int)> icsneoWaitForRxMessagesWithTimeOut(lib, "icsneoWaitForRxMessagesWithTimeOut");
         ice::Function<int __stdcall (ICS_HANDLE, icsSpyMessage*, int*, int*)> icsneoGetMessages(lib, "icsneoGetMessages");
-        int count = 0;
+        int count = 20000;
         int errors = 0;
         union SpyMessage {
             icsSpyMessageJ1850 msg_j1850;
             icsSpyMessage msg;
         };
-        SpyMessage *msgs = PyMem_New(SpyMessage, 20000);
+        SpyMessage *msgs = PyMem_New(SpyMessage, count);
         if (!msgs) {
             // This should only happen if we run out of memory (malloc failure)?
             PyErr_Print();
             return set_ics_exception_dev(exception_runtime_error(), obj, "Failed to allocate " SPY_MESSAGE_OBJECT_NAME);
         }
         Py_BEGIN_ALLOW_THREADS
-        if(timeout==0 || icsneoWaitForRxMessagesWithTimeOut(handle, (unsigned int)timeout)) {
+        if (timeout == 0 || icsneoWaitForRxMessagesWithTimeOut(handle, (unsigned int)timeout)) {
             if (!icsneoGetMessages(handle, (icsSpyMessage*)msgs, &count, &errors)) {
                 Py_BLOCK_THREADS
                 return set_ics_exception_dev(exception_runtime_error(), obj, "icsneoGetMessages() Failed");
