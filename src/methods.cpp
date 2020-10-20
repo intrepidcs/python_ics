@@ -1661,7 +1661,7 @@ PyObject* meth_coremini_read_app_signal(PyObject* self, PyObject* args) //Script
             return set_ics_exception(exception_runtime_error(), "icsneoScriptReadAppSignal() Failed");
         }
         Py_END_ALLOW_THREADS
-        return Py_BuildValue("i", value);
+        return Py_BuildValue("d", value);
     }
     catch (ice::Exception& ex)
     {
@@ -1675,7 +1675,7 @@ PyObject* meth_coremini_write_app_signal(PyObject* self, PyObject* args) //Scrip
     int index;
     PyObject* obj = NULL;
     double value = 0;
-    if (!PyArg_ParseTuple(args, arg_parse("Oii:", __FUNCTION__), &obj, &index, &value)) {
+    if (!PyArg_ParseTuple(args, arg_parse("Oid:", __FUNCTION__), &obj, &index, &value)) {
         return NULL;
     }
     if (!PyNeoDevice_CheckExact(obj)) {
