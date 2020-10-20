@@ -978,6 +978,8 @@ PyObject* meth_get_messages(PyObject* self, PyObject* args)
                 PyMem_Free(msgs);
                 return set_ics_exception_dev(exception_runtime_error(), obj, "icsneoGetMessages() Failed");
             }
+        } else {
+            count = 0;
         }
         Py_END_ALLOW_THREADS
         PyObject* tuple = PyTuple_New(count);
