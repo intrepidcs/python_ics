@@ -975,6 +975,7 @@ PyObject* meth_get_messages(PyObject* self, PyObject* args)
         if (timeout == 0 || icsneoWaitForRxMessagesWithTimeOut(handle, (unsigned int)timeout)) {
             if (!icsneoGetMessages(handle, (icsSpyMessage*)msgs, &count, &errors)) {
                 Py_BLOCK_THREADS
+                PyMem_Free(msgs);
                 return set_ics_exception_dev(exception_runtime_error(), obj, "icsneoGetMessages() Failed");
             }
         }
