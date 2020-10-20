@@ -618,7 +618,7 @@ PyObject* meth_get_bus_voltage(PyObject* self, PyObject* args);
     "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
     "\n" \
     "Returns:\n" \
-    "\tint on Success.\n" \
+    "\tfloat on Success.\n" \
     "\n" \
     "\t>>> device = ics.open_device()\n" \
     "\t>>> ics.coremini_read_app_signal(device, 1)\n" \
@@ -632,7 +632,7 @@ PyObject* meth_get_bus_voltage(PyObject* self, PyObject* args);
     "Args:\n" \
     "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
     "\tindex (int): Index of the application signal.\n\n" \
-    "\tvalue (int): New value of the application signal.\n\n" \
+    "\tvalue (float): New value of the application signal.\n\n" \
     "\n" \
     "Raises:\n" \
     "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
