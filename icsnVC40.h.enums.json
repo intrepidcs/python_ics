@@ -178,8 +178,20 @@
                 25,
                 ""
             ],
-            "DeviceSettingsTypeMax": [
+            "DeviceRADJupiterSettingsType": [
                 26,
+                ""
+            ],
+            "DeviceFire3SettingsType": [
+                27,
+                ""
+            ],
+            "DeviceRadMoonDuoSettingsType": [
+                28,
+                ""
+            ],
+            "DeviceSettingsTypeMax": [
+                29,
                 ""
             ],
             "DeviceSettingsNone ": [

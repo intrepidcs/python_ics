@@ -58,6 +58,10 @@ Installation on Linux
 ============================================================
 python_ics does not provide binaries for linux distributions so we will have to compile from source. This can be easily achieved by utilzing Python's PIP. First we need to make sure we have some base packages installed.
 
+libicsneo is a newer library and has wider support for Intrepid Products under linux (https://github.com/intrepidcs/libicsneo).
+libicsneo has a legacy library (``libicsneolegacy.so``) that can be loaded by utilizing ``ics.override_library_name("libicsneolegacy.so")``.
+
+
 Fedora Dependencies (FC28)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
