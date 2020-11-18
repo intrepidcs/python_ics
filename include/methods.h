@@ -57,7 +57,7 @@ PyObject* meth_firmware_update_required(PyObject* self, PyObject* args);
 PyObject* meth_get_dll_firmware_info(PyObject* self, PyObject* args);
 PyObject* meth_get_backup_power_enabled(PyObject* self, PyObject* args);
 PyObject* meth_set_backup_power_enabled(PyObject* self, PyObject* args);
-PyObject* meth_set_backup_power_ready(PyObject* self, PyObject* args);
+PyObject* meth_get_backup_power_ready(PyObject* self, PyObject* args);
 PyObject* meth_load_readbin(PyObject* self, PyObject* args);
 PyObject* meth_iso15765_transmit_message(PyObject* self, PyObject* args); // icsneoISO15765_TransmitMessage
 PyObject* meth_iso15765_receive_message(PyObject* self, PyObject* args); // icsneoISO15765_ReceiveMessageMessage
@@ -1310,7 +1310,7 @@ static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("get_dll_firmware_info", "icsneoGetDLLFirmwareInfo", "GetDLLFirmwareInfo", meth_get_dll_firmware_info, METH_VARARGS, _DOC_GET_DLL_FIRMWARE_INFO),
     _EZ_ICS_STRUCT_METHOD("get_backup_power_enabled", "icsneoGetBackupPowerEnabled", "GetBackupPowerEnabled", meth_get_backup_power_enabled, METH_VARARGS, _DOC_GET_BACKUP_POWER_ENABLED),
     _EZ_ICS_STRUCT_METHOD("set_backup_power_enabled", "icsneoSetBackupPowerEnabled", "SetBackupPowerEnabled", meth_set_backup_power_enabled, METH_VARARGS, _DOC_SET_BACKUP_POWER_ENABLED),
-    _EZ_ICS_STRUCT_METHOD("get_backup_power_ready", "icsneoGetBackupPowerReady", "GetBackupPowerReady", meth_set_backup_power_ready, METH_VARARGS, _DOC_GET_BACKUP_POWER_READY),
+    _EZ_ICS_STRUCT_METHOD("get_backup_power_ready", "icsneoGetBackupPowerReady", "GetBackupPowerReady", meth_get_backup_power_ready, METH_VARARGS, _DOC_GET_BACKUP_POWER_READY),
 #ifdef _USE_INTERNAL_HEADER_
     _EZ_ICS_STRUCT_METHOD("load_readbin", "icsneoScriptLoadReadBin", "ScriptLoadReadBin", meth_load_readbin, METH_VARARGS, _DOC_LOAD_READBIN),
 #endif
