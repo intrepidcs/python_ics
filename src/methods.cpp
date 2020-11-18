@@ -3120,7 +3120,6 @@ PyObject* meth_get_bus_voltage(PyObject* self, PyObject* args)
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
-
 PyObject* meth_read_jupiter_firmware(PyObject* self, PyObject* args)
 {
     PyObject* obj = NULL;
@@ -3273,6 +3272,169 @@ PyObject* meth_get_library_path(PyObject* self)
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         return Py_BuildValue("s", lib->getPath().c_str());
+    }
+    catch (ice::Exception& ex)
+    {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
+
+PyObject* meth_get_disk_details(PyObject* self, PyObject* args)
+{
+    PyObject* obj = NULL;
+	if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
+        return NULL;
+    }
+    if (!PyNeoDevice_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        ice::Function<int __stdcall (ICS_HANDLE, SDiskDetails*)>  icsneoRequestDiskDetails(lib, "icsneoRequestDiskDetails");
+
+        PyObject* details = _getPythonModuleObject("ics.structures.s_disk_details", "s_disk_details");
+        if (!details)
+        {
+            return NULL;
+        }
+        Py_buffer details_buffer = {};
+        PyObject_GetBuffer(details, &details_buffer, PyBUF_SIMPLE);
+
+        Py_BEGIN_ALLOW_THREADS
+        if (!icsneoRequestDiskDetails(handle, (SDiskDetails*)details_buffer.buf)) {
+            Py_BLOCK_THREADS
+            PyBuffer_Release(&details_buffer);
+            Py_DECREF(details);
+            return set_ics_exception(exception_runtime_error(), "icsneoRequestDiskDetails() Failed");
+        }
+        Py_END_ALLOW_THREADS
+        PyBuffer_Release(&details_buffer);
+        return details;
+    }
+    catch (ice::Exception& ex)
+    {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
+
+PyObject* meth_disk_format(PyObject* self, PyObject* args)
+{
+    PyObject* details = NULL;
+    PyObject* obj = NULL;
+	if (!PyArg_ParseTuple(args, arg_parse("OO:", __FUNCTION__), &obj, &details)) {
+        return NULL;
+    }
+    if (!PyNeoDevice_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        Py_buffer details_buffer = {};
+        PyObject_GetBuffer(details, &details_buffer, PyBUF_C_CONTIGUOUS | PyBUF_WRITABLE);
+        ice::Function<int __stdcall (ICS_HANDLE, SDiskDetails*)>  icsneoRequestDiskFormat(lib, "icsneoRequestDiskFormat");
+
+        Py_BEGIN_ALLOW_THREADS
+        if (!icsneoRequestDiskFormat(handle, (SDiskDetails*)details_buffer.buf)) {
+            Py_BLOCK_THREADS
+            PyBuffer_Release(&details_buffer);
+            return set_ics_exception(exception_runtime_error(), "icsneoRequestDiskFormat() Failed");
+        }
+        Py_END_ALLOW_THREADS
+        PyBuffer_Release(&details_buffer);
+        Py_RETURN_NONE;
+    }
+    catch (ice::Exception& ex)
+    {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
+
+PyObject* meth_disk_format_cancel(PyObject* self, PyObject* args)
+{
+    PyObject* obj = NULL;
+	if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
+        return NULL;
+    }
+    if (!PyNeoDevice_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        ice::Function<int __stdcall (ICS_HANDLE)>  icsneoRequestDiskFormatCancel(lib, "icsneoRequestDiskFormatCancel");
+
+        Py_BEGIN_ALLOW_THREADS
+        if (!icsneoRequestDiskFormatCancel(handle)) {
+            Py_BLOCK_THREADS
+            return set_ics_exception(exception_runtime_error(), "icsneoRequestDiskFormatCancel() Failed");
+        }
+        Py_END_ALLOW_THREADS
+        Py_RETURN_NONE;
+    }
+    catch (ice::Exception& ex)
+    {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
+
+PyObject* meth_get_disk_format_progress(PyObject* self, PyObject* args)
+{
+    PyObject* obj = NULL;
+	if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
+        return NULL;
+    }
+    if (!PyNeoDevice_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        ice::Function<int __stdcall (ICS_HANDLE, SDiskFormatProgress*)>  icsneoRequestDiskFormatProgress(lib, "icsneoRequestDiskFormatProgress");
+
+        PyObject* progress = _getPythonModuleObject("ics.structures.s_disk_format_progress", "s_disk_format_progress");
+        if (!progress)
+        {
+            return NULL;
+        }
+        Py_buffer progress_buffer = {};
+        PyObject_GetBuffer(progress, &progress_buffer, PyBUF_SIMPLE);
+
+        Py_BEGIN_ALLOW_THREADS
+        if (!icsneoRequestDiskFormatProgress(handle, (SDiskFormatProgress*)progress_buffer.buf)) {
+            Py_BLOCK_THREADS
+            PyBuffer_Release(&progress_buffer);
+            Py_DECREF(progress);
+            return set_ics_exception(exception_runtime_error(), "icsneoRequestDiskFormatProgress() Failed");
+        }
+        Py_END_ALLOW_THREADS
+        PyBuffer_Release(&progress_buffer);
+        return progress;
     }
     catch (ice::Exception& ex)
     {
