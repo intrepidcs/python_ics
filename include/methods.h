@@ -75,6 +75,8 @@ PyObject* meth_get_device_status(PyObject* self, PyObject* args);
 PyObject* meth_enable_network_com(PyObject* self, PyObject* args); //icsneoEnableNetworkCom
 PyObject* meth_enable_bus_voltage_monitor(PyObject* self, PyObject* args);
 PyObject* meth_get_bus_voltage(PyObject* self, PyObject* args);
+PyObject* meth_read_jupiter_firmware(PyObject* self, PyObject* args);
+PyObject* meth_write_jupiter_firmware(PyObject* self, PyObject* args);
 PyObject* meth_get_disk_details(PyObject* self, PyObject* args);
 PyObject* meth_disk_format(PyObject* self, PyObject* args);
 PyObject* meth_disk_format_cancel(PyObject* self, PyObject* args);
@@ -101,8 +103,8 @@ PyObject* meth_get_disk_format_progress(PyObject* self, PyObject* args);
     "Args:\n" \
     "\tdevice_type (int): Accepts " MODULE_NAME ".NEODEVICE_* Macros\n\n" \
     "\t*New in 3.0 (803):*\n\n" \
-    "\tdevice_type (List/Tuple): Accepts a Container of " MODULE_NAME ".NEODEVICE_* Macros\n\n" \
-    "\tstOptionsOpenNeoEx (int): Usually ics.NETID_CAN, if needed\n\n" \
+    "\tdevice_types (List/Tuple): Accepts a Container of " MODULE_NAME ".NEODEVICE_* Macros\n\n" \
+    "\tnetwork_id (int): OptionsFindNeoEx.CANOptions.iNetworkID. Usually ics.NETID_CAN, if needed\n\n" \
     "\n" \
     "Raises:\n" \
     "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
@@ -130,10 +132,11 @@ PyObject* meth_get_disk_format_progress(PyObject* self, PyObject* args);
     "Args:\n" \
     "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
     "\tdevice (int): Serial Number of the device\n\n" \
-    "\tbNetworkIDs (int): Network Enables\n\n" \
-    "\tbConfigRead (int): Config Read\n\n" \
-    "\tiOptions (int): DEVICE_OPTION_* defines\n\n" \
-    "\tstOptionsOpenNeoEx (int): Usually ics.NETID_CAN, if needed\n\n" \
+    "\tnetwork_ids (List/Tuple): This is an array of number IDs which specify the NetworkID parameter of each network. This allows you to assign a custom network ID to each network. Normally, you will assign consecutive IDs to each of the networks. See NetworkIDList for a list of current network ID's. You may also set this parameter to NULL (zero) and the default network ID's will be used.\n\n" \
+    "\tbconfig_read (int): Specifies whether the DLL should read the neoVI's device configuration before enabling the device. It is recommended that this value be set to 1.\n\n" \
+    "\toptions (int): DEVICE_OPTION_* defines\n\n" \
+    "\tnetwork_id (int): OptionsFindNeoEx.CANOptions.iNetworkID. Usually ics.NETID_CAN, if needed\n\n" \
+    "\tuse_server (int): Defaults to False, Setting to True allows opening the same device more than once.\n\n" \
     "\n" \
     "Raises:\n" \
     "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
@@ -568,7 +571,7 @@ PyObject* meth_get_disk_format_progress(PyObject* self, PyObject* args);
     "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
     "\n" \
     "Returns:\n" \
-    "\tint on Success.\n" \
+    "\tfloat on Success.\n" \
     "\n" \
     "\t>>> device = ics.open_device()\n" \
     "\t>>> ics.coremini_read_app_signal(device, 1)\n" \
@@ -582,7 +585,7 @@ PyObject* meth_get_disk_format_progress(PyObject* self, PyObject* args);
     "Args:\n" \
     "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
     "\tindex (int): Index of the application signal.\n\n" \
-    "\tvalue (int): New value of the application signal.\n\n" \
+    "\tvalue (float): New value of the application signal.\n\n" \
     "\n" \
     "Raises:\n" \
     "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
@@ -1223,6 +1226,44 @@ PyObject* meth_get_disk_format_progress(PyObject* self, PyObject* args);
     "\t12000\n" \
     "\t>>> \n"
 
+#define _DOC_READ_JUPITER_FIRMWARE \
+    MODULE_NAME ".read_jupiter_firmware(device, size, [vnetChannel])\n" \
+    "\n" \
+    "Reads firmware binary from a RAD-Jupiter. If not sure, don't use this method\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
+    "\n" \
+    "\tsize (:class:`int`): :class:`int`: size of the bytes to read of the firmware binary.\n\n" \
+    "\n" \
+    "\tvnetChannel (:class:`int`): :class:`int`: Optional. Don't set, if unsure.\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\tNone\n" \
+    "\n" \
+
+#define _DOC_WRITE_JUPITER_FIRMWARE \
+    MODULE_NAME ".write_jupiter_firmware(device, bytes, [vnetChannel])\n" \
+    "\n" \
+    "Writes firmware binary to a RAD-Jupiter. If not sure, don't use this method\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
+    "\n" \
+    "\tbytes (:class:`bytes`): :class:`bytes`: bytes of the firmware binary.\n\n" \
+    "\n" \
+    "\tvnetChannel (:class:`int`): :class:`int`: Optional. Don't set, if unsure.\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\tNone\n" \
+    "\n" \
+
 #define _DOC_GET_DISK_DETAILS \
     MODULE_NAME ".get_disk_details(device)\n" \
     "\n" \
@@ -1376,13 +1417,16 @@ static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("enable_bus_voltage_monitor", "icsneoEnableBusVoltageMonitor", "EnableBusVoltageMonitor", meth_enable_bus_voltage_monitor, METH_VARARGS, _DOC_ENABLE_BUS_VOLTAGE_MONITOR),
     _EZ_ICS_STRUCT_METHOD("get_bus_voltage", "icsneoGetBusVoltage", "GetBusVoltage", meth_get_bus_voltage, METH_VARARGS, _DOC_GET_BUS_VOLTAGE),
 
-    {"override_library_name", (PyCFunction)meth_override_library_name, METH_VARARGS, _DOC_OVERRIDE_LIBRARY_NAME},
-    {"get_library_path", (PyCFunction)meth_get_library_path, METH_NOARGS, ""},
+    _EZ_ICS_STRUCT_METHOD("read_jupiter_firmware", "icsneoReadJupiterFirmware", "ReadJupiterFirmware", meth_read_jupiter_firmware, METH_VARARGS, _DOC_READ_JUPITER_FIRMWARE),
+    _EZ_ICS_STRUCT_METHOD("write_jupiter_firmware", "icsneoWriteJupiterFirmware", "WriteJupiterFirmware", meth_write_jupiter_firmware, METH_VARARGS, _DOC_WRITE_JUPITER_FIRMWARE),
 
     _EZ_ICS_STRUCT_METHOD("get_disk_details", "icsneoRequestDiskDetails", "RequestDiskDetails", meth_get_disk_details, METH_VARARGS, _DOC_GET_DISK_DETAILS),
     _EZ_ICS_STRUCT_METHOD("disk_format", "icsneoRequestDiskFormat", "RequestDiskFormat", meth_disk_format, METH_VARARGS, _DOC_DISK_FORMAT),
     _EZ_ICS_STRUCT_METHOD("disk_format_cancel", "icsneoRequestDiskFormatCancel", "RequestDiskFormatCancel", meth_disk_format_cancel, METH_VARARGS, _DOC_DISK_FORMAT_CANCEL),
     _EZ_ICS_STRUCT_METHOD("get_disk_format_progress", "icsneoRequestDiskFormatProgress", "RequestDiskFormatProgress", meth_get_disk_format_progress, METH_VARARGS, _DOC_DISK_FORMAT_PROGRESS),
+
+    {"override_library_name", (PyCFunction)meth_override_library_name, METH_VARARGS, _DOC_OVERRIDE_LIBRARY_NAME},
+    {"get_library_path", (PyCFunction)meth_get_library_path, METH_NOARGS, ""},
 
     { NULL, NULL, 0, NULL }
 };

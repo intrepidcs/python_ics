@@ -14,6 +14,8 @@
 #include "object_neo_device.h"
 #include "setup_module_auto_defines.h"
 
+#include <memory>
+
 extern PyTypeObject spy_message_object_type;
 // __func__, __FUNCTION__ and __PRETTY_FUNCTION__ are not preprocessor macros.
 // but MSVC doesn't follow c standard and treats __FUNCTION__ as a string literal macro...
@@ -53,11 +55,6 @@ typedef struct
 #ifndef __stdcall
 #define __stdcall
 
-// Sleep is a windows.h specific function.
-#include <unistd.h>
-#define Sleep(i) sleep(i)
-
-
 #endif
 #endif
 
@@ -80,6 +77,9 @@ char* neodevice_to_string(unsigned long type)
     case NEODEVICE_OBD2_LCBADGE: return "neoOBD2-LC BADGE";
     case NEODEVICE_RAD_MOON_DUO: return "RAD-Moon-Duo";
     case NEODEVICE_VCAN3: return "ValueCAN3";
+#if defined(NEODEVICE_ONYX)
+    case NEODEVICE_ONYX: return "neoVI FIRE3";
+#endif
     case NEODEVICE_FIRE3: return "neoVI FIRE3";
 #if defined(NEODEVICE_JUPITER)
     case NEODEVICE_JUPITER: return "RAD-Jupiter";
@@ -88,6 +88,8 @@ char* neodevice_to_string(unsigned long type)
 #endif
     case NEODEVICE_VCAN4_IND: return "ValueCAN4 Industrial";
     case NEODEVICE_GIGASTAR: return "RAD-GIGAStar";
+    case NEODEVICE_RED2: return "neoVI RED2";
+    case NEODEVICE_ECU22: return "neoECU22";
     case NEODEVICE_RED: return "neoVI RED";
     case NEODEVICE_ECU: return "neoECU";
     case NEODEVICE_IEVB: return "IEVB";
@@ -206,7 +208,7 @@ PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
 {
     PyObject* device_types = NULL;
     int network_id = -1;
-    char* kwords[] = { "deviceTypes", "NetworkID", NULL };
+    char* kwords[] = { "device_types", "network_id", NULL };
     if (!PyArg_ParseTupleAndKeywords(args, keywords, arg_parse("|Oi:", __FUNCTION__), 
             kwords, &device_types, &network_id)) {
         return NULL;
@@ -220,7 +222,7 @@ PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
     }
 
     // Create a vector from the device_types python container
-    unsigned int* device_types_list = NULL;
+    std::unique_ptr<unsigned int[]> device_types_list;
     unsigned int device_types_list_size = 0;
     if (device_types && device_types != Py_None)
     {
@@ -228,9 +230,9 @@ PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
         if (!_convertListOrTupleToArray(device_types, &device_type_vector))
             return NULL;
         device_types_list_size = device_type_vector.size();
-        device_types_list = new unsigned int[device_types_list_size];
+        device_types_list.reset((new unsigned int(device_types_list_size)));
         for (unsigned int i=0; i < device_types_list_size; ++i)
-            device_types_list[i] = PyLong_AsLong(device_type_vector[i]);
+            device_types_list[i] = (unsigned int)PyLong_AsLong(device_type_vector[i]);
     }
     // Lets finally call the icsneo40 function
     try
@@ -255,9 +257,7 @@ PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
             popts = &opts;
 
         Py_BEGIN_ALLOW_THREADS
-        if (!icsneoFindDevices(devices, &count, device_types_list, device_types_list_size, (network_id != -1) ? &popts : NULL, 0)) {
-            delete[] device_types_list;
-            device_types_list = NULL;
+        if (!icsneoFindDevices(devices, &count, device_types_list.get(), device_types_list_size, (network_id != -1) ? &popts : NULL, 0)) {
             Py_BLOCK_THREADS
             return set_ics_exception(exception_runtime_error(), "icsneoFindDevices() Failed");
         }
@@ -284,10 +284,6 @@ PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
     }
     catch (ice::Exception& ex)
     {
-        if (device_types_list) {
-            delete[] device_types_list;
-            device_types_list = NULL;
-        }
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
@@ -301,9 +297,11 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
     int config_read = 0;
     int options = 0;
     int network_id = -1;
-    char* kwords[] = { "device", "network_ids", "config_read", "options", "network_id", NULL };
-    if (!PyArg_ParseTupleAndKeywords(args, keywords, arg_parse("|OOiii:", __FUNCTION__), 
-            kwords, &device, &network_ids, &config_read, &options, &network_id)) {
+    bool use_neovi_server = false;
+    bool device_need_ref_inc = false;
+    char* kwords[] = { "device", "network_ids", "config_read", "options", "network_id", "use_server", NULL };
+    if (!PyArg_ParseTupleAndKeywords(args, keywords, arg_parse("|OOiiib:", __FUNCTION__), 
+            kwords, &device, &network_ids, &config_read, &options, &network_id, &use_neovi_server)) {
         return NULL;
     }
 
@@ -312,6 +310,22 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
     if (!lib) { 
         char buffer[512];
         return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+    }
+
+    // Create a vector from the device_types python container
+    std::unique_ptr<unsigned char[]> network_ids_list;
+    unsigned int network_ids_list_size = 0;
+    bool use_network_ids = false;
+    if (network_ids && network_ids != Py_None)
+    {
+        std::vector<PyObject*> network_ids_vector;
+        if (!_convertListOrTupleToArray(network_ids, &network_ids_vector))
+            return NULL;
+        network_ids_list_size = network_ids_vector.size();
+        network_ids_list.reset((new unsigned char(network_ids_list_size)));
+        for (unsigned int i=0; i < network_ids_list_size; ++i)
+            network_ids_list[i] = (unsigned char)PyLong_AsLong(network_ids_vector[i]);
+        use_network_ids = true;
     }
 
     // Verify device type
@@ -355,6 +369,16 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
     {
         return set_ics_exception(exception_runtime_error(),"Invalid 'device' parameter object type passed to open_device().");
     }
+    else if (device && PyNeoDevice_CheckExact(device))
+    {
+        // If the user passed in a NeoDevice device we need to increment 
+        // the reference counter when we return it since device is a borrowed
+        // reference.
+        // devs = ics.find_devices()
+        // device = ics.open_device(devs[0])
+        // del device # This will decrement the reference and crash interp
+        device_need_ref_inc = true;
+    }
 
     if ((device && !PyNeoDevice_CheckExact(device)) || !device)
     {
@@ -384,7 +408,8 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
                 // If we are looking for a serial number, check here
                 if (serial_number && devices[i].neoDevice.SerialNumber != serial_number)
                     continue;
-                if (devices[i].neoDevice.NumberOfClients != 0)
+                // If we aren't using neoVI Server and already have a connection we can't proceed.
+                if (!use_neovi_server && devices[i].neoDevice.NumberOfClients != 0)
                 {
                     return set_ics_exception(exception_runtime_error(), "Found device, but its already open!");
                 }
@@ -427,14 +452,17 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
             popts = &opts;
 
         Py_BEGIN_ALLOW_THREADS
-        if (!icsneoOpenDevice(&neo_device_ex, &PyNeoDevice_GetNeoDevice(device)->handle, NULL, config_read, options, (network_id != -1) ? popts : NULL, 0)) 
+        if (!icsneoOpenDevice(&neo_device_ex, &PyNeoDevice_GetNeoDevice(device)->handle, use_network_ids ? network_ids_list.get() : NULL, config_read, options, (network_id != -1) ? popts : NULL, 0))
         {
             Py_BLOCK_THREADS
             return set_ics_exception(exception_runtime_error(), "icsneoOpenDevice() Failed");
         }
         Py_END_ALLOW_THREADS
-        Py_IncRef(device);
-
+        
+        if (device_need_ref_inc)
+        {
+            Py_INCREF(device);
+        }
         return device;
     }
     catch (ice::Exception& ex)
@@ -953,39 +981,29 @@ PyObject* meth_get_messages(PyObject* self, PyObject* args)
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
+        ice::Function<int __stdcall (ICS_HANDLE, unsigned int)> icsneoWaitForRxMessagesWithTimeOut(lib, "icsneoWaitForRxMessagesWithTimeOut");
         ice::Function<int __stdcall (ICS_HANDLE, icsSpyMessage*, int*, int*)> icsneoGetMessages(lib, "icsneoGetMessages");
-        int count;
+        int count = 20000;
         int errors = 0;
         union SpyMessage {
             icsSpyMessageJ1850 msg_j1850;
             icsSpyMessage msg;
         };
-        SpyMessage *msgs = PyMem_New(SpyMessage, 20000);
+        SpyMessage *msgs = PyMem_New(SpyMessage, count);
         if (!msgs) {
             // This should only happen if we run out of memory (malloc failure)?
             PyErr_Print();
             return set_ics_exception_dev(exception_runtime_error(), obj, "Failed to allocate " SPY_MESSAGE_OBJECT_NAME);
         }
         Py_BEGIN_ALLOW_THREADS
-        for (double i=timeout; i > 0; --i) {
-            count = 20000;
-            errors = 0;
-            if (!icsneoGetMessages(handle, (icsSpyMessage*)msgs, &count, &errors) && !errors) {
-                // We are going to try one more time just incase
-                count = 20000;
-                errors = 0;
-                if (!icsneoGetMessages(handle, (icsSpyMessage*)msgs, &count, &errors)) {
-                    Py_BLOCK_THREADS
-                    return set_ics_exception_dev(exception_runtime_error(), obj, "icsneoGetMessages() Failed");
-                }
+        if (timeout == 0 || icsneoWaitForRxMessagesWithTimeOut(handle, (unsigned int)timeout)) {
+            if (!icsneoGetMessages(handle, (icsSpyMessage*)msgs, &count, &errors)) {
+                Py_BLOCK_THREADS
+                PyMem_Free(msgs);
+                return set_ics_exception_dev(exception_runtime_error(), obj, "icsneoGetMessages() Failed");
             }
-            if (count || errors) {
-                break;
-            }
-            // We don't want to sleep, if there isn't a timeout left.
-            if (i) {
-                Sleep(1);
-            }
+        } else {
+            count = 0;
         }
         Py_END_ALLOW_THREADS
         PyObject* tuple = PyTuple_New(count);
@@ -1670,7 +1688,7 @@ PyObject* meth_coremini_read_app_signal(PyObject* self, PyObject* args) //Script
             return set_ics_exception(exception_runtime_error(), "icsneoScriptReadAppSignal() Failed");
         }
         Py_END_ALLOW_THREADS
-        return Py_BuildValue("i", value);
+        return Py_BuildValue("d", value);
     }
     catch (ice::Exception& ex)
     {
@@ -1684,7 +1702,7 @@ PyObject* meth_coremini_write_app_signal(PyObject* self, PyObject* args) //Scrip
     int index;
     PyObject* obj = NULL;
     double value = 0;
-    if (!PyArg_ParseTuple(args, arg_parse("Oii:", __FUNCTION__), &obj, &index, &value)) {
+    if (!PyArg_ParseTuple(args, arg_parse("Oid:", __FUNCTION__), &obj, &index, &value)) {
         return NULL;
     }
     if (!PyNeoDevice_CheckExact(obj)) {
@@ -3100,6 +3118,121 @@ PyObject* meth_get_bus_voltage(PyObject* self, PyObject* args)
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
+
+PyObject* meth_read_jupiter_firmware(PyObject* self, PyObject* args)
+{
+    PyObject* obj = NULL;
+    size_t fileSize = 0;
+    EPlasmaIonVnetChannel_t channel = PlasmaIonVnetChannelMain;
+    if (!PyArg_ParseTuple(args, arg_parse("Oi|i:", __FUNCTION__), &obj, &fileSize, &channel)) {
+        return NULL;
+    }
+
+    // Create the ByteArray
+    PyObject* ba = PyObject_CallObject((PyObject*)&PyByteArray_Type, NULL);
+    if (!ba) {
+        return NULL;
+    }
+    // Resize the ByteArray
+    int ret_val = PyByteArray_Resize(ba, fileSize);
+    // TODO: Documentation doesn't say what return value is.
+
+    if (!PyNeoDevice_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        // int __stdcall icsneoReadJupiterFirmware(void* hObject, char* fileData, size_t* fileDataSize, EPlasmaIonVnetChannel_t channel)
+        ice::Function<int __stdcall (ICS_HANDLE, char*, size_t*, EPlasmaIonVnetChannel_t)> icsneoReadJupiterFirmware(lib, "icsneoReadJupiterFirmware");
+
+        // Grab the ByteArray Buffer Object
+        Py_buffer ba_buffer = {};
+        PyObject_GetBuffer(ba, &ba_buffer, PyBUF_C_CONTIGUOUS | PyBUF_WRITABLE);
+
+        Py_BEGIN_ALLOW_THREADS
+        if (!icsneoReadJupiterFirmware(handle, (char*)ba_buffer.buf, &fileSize, channel)) {
+
+            Py_BLOCK_THREADS
+            PyBuffer_Release(&ba_buffer);
+            return set_ics_exception(exception_runtime_error(), "icsneoReadJupiterFirmware() Failed");
+        }
+        Py_END_ALLOW_THREADS
+        PyBuffer_Release(&ba_buffer);
+        return Py_BuildValue("Oi", ba, fileSize);
+    }
+    catch (ice::Exception& ex)
+    {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
+
+PyObject* meth_write_jupiter_firmware(PyObject* self, PyObject* args)
+{
+    PyObject* obj = NULL;
+    PyObject* bytes_obj = NULL;
+    EPlasmaIonVnetChannel_t channel = PlasmaIonVnetChannelMain;
+    if (!PyArg_ParseTuple(args, arg_parse("OO|i:", __FUNCTION__), &obj, &bytes_obj, &channel)) {
+        return NULL;
+    }
+    if (!PyBytes_CheckExact(bytes_obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of Bytes type ");
+    }
+    if (!PyNeoDevice_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        // int __stdcall icsneoWriteJupiterFirmware(void* hObject, char* fileData, size_t fileDataSize, EPlasmaIonVnetChannel_t channel)
+        ice::Function<int __stdcall (ICS_HANDLE, char*, size_t, EPlasmaIonVnetChannel_t)> icsneoWriteJupiterFirmware(lib, "icsneoWriteJupiterFirmware");
+        
+        // Convert the object to a bytes object
+        PyObject* bytes = PyBytes_FromObject(bytes_obj);
+        // Grab the byte size
+        Py_ssize_t bsize = PyBytes_Size(bytes);
+        // Grab the data out of the bytes
+        char* bytes_str = PyBytes_AsString(bytes);
+        if (!bytes_str)
+        {
+            return NULL;
+        }
+        
+        // Grab the ByteArray Buffer Object
+        //Py_buffer bytes_buffer = {};
+        //PyObject_GetBuffer(bytes, &bytes_buffer, PyBUF_C_CONTIGUOUS);
+
+        Py_BEGIN_ALLOW_THREADS
+        //if (!icsneoWriteJupiterFirmware(handle, (char*)bytes_buffer.buf, bytes_buffer.len, channel)) {
+        if (!icsneoWriteJupiterFirmware(handle, bytes_str, bsize, channel)) {
+            Py_BLOCK_THREADS
+            Py_DECREF(bytes);
+            //PyBuffer_Release(&bytes_buffer);
+            return set_ics_exception(exception_runtime_error(), "icsneoWriteJupiterFirmware() Failed");
+        }
+        Py_END_ALLOW_THREADS
+        Py_DECREF(bytes);
+        //PyBuffer_Release(&bytes_buffer);
+        Py_RETURN_NONE;
+    }
+    catch (ice::Exception& ex)
+    {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+
 }
 
 

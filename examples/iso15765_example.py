@@ -65,12 +65,12 @@ def transmit_iso15765_msg(device, netid=ics.NETID_HSCAN, is_canfd=False):
     # CmISO157652TxMessage.flags bitfield union isn't implemented as of 2.12, we need to do it manually.
     msg.flags = 0
     # paddingEnable
-    msg.flags |= (1 << 5)
+    msg.flags |= (1 << 6)
     # CANFD: Enable + BRS
     if is_canfd:
-        msg.flags |= (1 << 6) | (1 << 7)
+        msg.flags |= (1 << 7) | (1 << 8)
     # tx_dl
-    msg.flags |= (8 << 23)
+    msg.flags |= (8 << 24)
     # Data
     msg.data = [x for x in range(number_of_bytes)]
 
