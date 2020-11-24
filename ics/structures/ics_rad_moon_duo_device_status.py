@@ -6,14 +6,12 @@ try: # 1
 except:
     from ics.structures.ethernet_network_status_t import ethernet_network_status_t
 
-class ics_vcan4_device_status(ctypes.Structure):
+class ics_rad_moon_duo_device_status(ctypes.Structure):
     _fields_ = [
-        ('ethernetActivationLineEnabled', ctypes.c_uint8), 
-        ('ethernetStatus', ethernet_network_status_t), 
-        ('unused', ctypes.c_uint8), 
+        ('ethernetStatus', ethernet_network_status_t * 4), 
     ]
 
 # Extra names go here:
-icsVcan4DeviceStatus = ics_vcan4_device_status
+icsRadMoonDuoDeviceStatus = ics_rad_moon_duo_device_status
 # End of extra names
 

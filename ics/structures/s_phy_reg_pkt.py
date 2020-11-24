@@ -10,11 +10,11 @@ except:
 
 class s_phy_reg_pkt(ctypes.Structure):
     _fields_ = [
-        ('Enabled:1', ctypes.c_uint16), 
-        ('WriteEnable:1', ctypes.c_uint16), 
-        ('Clause45Enable:1', ctypes.c_uint16), 
-        ('reserved:9', ctypes.c_uint16), 
-        ('version:4', ctypes.c_uint16), 
+        ('Enabled', ctypes.c_uint16, 1), # [Bitfield] 
+        ('WriteEnable', ctypes.c_uint16, 1), # [Bitfield] 
+        ('Clause45Enable', ctypes.c_uint16, 1), # [Bitfield] 
+        ('reserved', ctypes.c_uint16, 9), # [Bitfield] 
+        ('version', ctypes.c_uint16, 4), # [Bitfield] 
         ('flags', ctypes.c_uint16), 
         ('clause22', s_phy_reg_pkt_clause22_mess), 
         ('clause45', s_phy_reg_pkt_clause45_mess), 

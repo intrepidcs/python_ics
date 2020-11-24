@@ -1,7 +1,7 @@
 # This file was auto generated; Do not modify, if you value your sanity!
 import ctypes
 
-try: # 9
+try: # 13
     from op_eth_general_settings import op_eth_general_settings
     from op_eth_settings import op_eth_settings
     from can_settings import can_settings
@@ -11,6 +11,10 @@ try: # 9
     from iso9141_keyword2000_settings import iso9141_keyword2000_settings
     from s_text_api_settings import s_text_api_settings
     from timesync_icshardware_settings import timesync_icshardware_settings
+    from rad_reporting_settings import rad_reporting_settings
+    from disk_settings import disk_settings
+    from logger_settings import logger_settings
+    from ethernet_settings2 import ethernet_settings2
 except:
     from ics.structures.op_eth_general_settings import op_eth_general_settings
     from ics.structures.op_eth_settings import op_eth_settings
@@ -21,6 +25,10 @@ except:
     from ics.structures.iso9141_keyword2000_settings import iso9141_keyword2000_settings
     from ics.structures.s_text_api_settings import s_text_api_settings
     from ics.structures.timesync_icshardware_settings import timesync_icshardware_settings
+    from ics.structures.rad_reporting_settings import rad_reporting_settings
+    from ics.structures.disk_settings import disk_settings
+    from ics.structures.logger_settings import logger_settings
+    from ics.structures.ethernet_settings2 import ethernet_settings2
 
 class srad_galaxy_settings(ctypes.Structure):
     _pack_ = 2
@@ -83,6 +91,12 @@ class srad_galaxy_settings(ctypes.Structure):
         ('text_api', s_text_api_settings), 
         ('timeSyncSettings', timesync_icshardware_settings), 
         ('hwComLatencyTestEn', ctypes.c_uint16), 
+        ('reporting', rad_reporting_settings), 
+        ('disk', disk_settings), 
+        ('logger', logger_settings), 
+        ('ethernet1', ethernet_settings2), # DAQ port on label, NETID_ETHERNET
+        ('ethernet2', ethernet_settings2), # LAN port on label, NETID_ETHERNET2
+        ('network_enables_4', ctypes.c_uint16), 
     ]
 
 # Extra names go here:

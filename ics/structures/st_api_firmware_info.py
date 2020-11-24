@@ -24,6 +24,7 @@ class st_api_firmware_info(ctypes.Structure):
         ('iMainVnetHWrevMajor', ctypes.c_uint8), 
         ('iMainVnetHWrevMinor', ctypes.c_uint8), 
         ('iMainVnetSRAMSize', ctypes.c_uint8), 
+        ('iPhySiliconRev', ctypes.c_uint8), 
     ]
 
 # Extra names go here:
