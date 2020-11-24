@@ -12,7 +12,7 @@ class serdescam_settings(ctypes.Structure):
         ('resWidth', ctypes.c_uint16), 
         ('resHeight', ctypes.c_uint16), 
         ('frameSkip', ctypes.c_uint8), # skip every nth frame
-        ('rsvd2', ctypes.c_uint8 * 18), 
+        ('rsvd2', ctypes.c_uint8 * 19), 
     ]
 
 # Extra names go here:

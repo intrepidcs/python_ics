@@ -1,7 +1,7 @@
 # This file was auto generated; Do not modify, if you value your sanity!
 import ctypes
 
-try: # 13
+try: # 14
     from can_settings import can_settings
     from canfd_settings import canfd_settings
     from iso9141_keyword2000_settings import iso9141_keyword2000_settings
@@ -9,9 +9,10 @@ try: # 13
     from disk_settings import disk_settings
     from timesync_icshardware_settings import timesync_icshardware_settings
     from ethernet_settings2 import ethernet_settings2
-    from serdescam_settings import serdescam_settings
-    from ethernet10_g_settings import ethernet10_g_settings
     from lin_settings import lin_settings
+    from op_eth_general_settings import op_eth_general_settings
+    from op_eth_settings import op_eth_settings
+    from serdescam_settings import serdescam_settings
     from serdespoc_settings import serdespoc_settings
     from logger_settings import logger_settings
     from rad_reporting_settings import rad_reporting_settings
@@ -23,9 +24,10 @@ except:
     from ics.structures.disk_settings import disk_settings
     from ics.structures.timesync_icshardware_settings import timesync_icshardware_settings
     from ics.structures.ethernet_settings2 import ethernet_settings2
-    from ics.structures.serdescam_settings import serdescam_settings
-    from ics.structures.ethernet10_g_settings import ethernet10_g_settings
     from ics.structures.lin_settings import lin_settings
+    from ics.structures.op_eth_general_settings import op_eth_general_settings
+    from ics.structures.op_eth_settings import op_eth_settings
+    from ics.structures.serdescam_settings import serdescam_settings
     from ics.structures.serdespoc_settings import serdespoc_settings
     from ics.structures.logger_settings import logger_settings
     from ics.structures.rad_reporting_settings import rad_reporting_settings
@@ -35,14 +37,13 @@ class flags(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
         ('hwComLatencyTestEn', ctypes.c_uint16, 1), # [Bitfield] 
-        ('disableUsbCheckOnBoot', ctypes.c_uint16, 1), # [Bitfield] 
-        ('reserved', ctypes.c_uint16, 14), # [Bitfield] 
+        ('reserved', ctypes.c_uint16, 15), # [Bitfield] 
     ]
 
 # Extra names go here:
 # End of extra names
 
-class srad_gigalog_settings(ctypes.Structure):
+class srad_gigastar_settings(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
         ('ecu_id', ctypes.c_uint32), 
@@ -59,10 +60,6 @@ class srad_gigalog_settings(ctypes.Structure):
         ('canfd5', canfd_settings), 
         ('can6', can_settings), 
         ('canfd6', canfd_settings), 
-        ('can7', can_settings), 
-        ('canfd7', canfd_settings), 
-        ('can8', can_settings), 
-        ('canfd8', canfd_settings), 
         ('network_enables', ctypes.c_uint16), 
         ('network_enables_2', ctypes.c_uint16), 
         ('pwr_man_timeout', ctypes.c_uint32), 
@@ -79,26 +76,26 @@ class srad_gigalog_settings(ctypes.Structure):
         ('idle_wakeup_network_enables_3', ctypes.c_uint16), 
         ('text_api', s_text_api_settings), 
         ('termination_enables', ctypes.c_uint64), 
-        ('rsvd1', ctypes.c_uint8 * 8), # previously ETHERNET_SETTINGS
-        ('rsvd2', ctypes.c_uint8 * 8), # previously ETHERNET10G_SETTINGS
         ('disk', disk_settings), 
         ('timeSyncSettings', timesync_icshardware_settings), 
         ('flags', flags), 
-        ('ethernet', ethernet_settings2), 
-        ('serdescam1', serdescam_settings), 
-        ('ethernet10g', ethernet10_g_settings), 
+        ('ethernet1', ethernet_settings2), 
+        ('ethernet2', ethernet_settings2), 
         ('lin1', lin_settings), 
+        ('opEthGen', op_eth_general_settings), 
+        ('opEth1', op_eth_settings), 
+        ('opEth2', op_eth_settings), 
+        ('serdescam1', serdescam_settings), 
         ('serdespoc', serdespoc_settings), 
         ('logger', logger_settings), 
         ('serdescam2', serdescam_settings), 
         ('serdescam3', serdescam_settings), 
         ('serdescam4', serdescam_settings), 
-        ('ethernet2', ethernet_settings2), 
-        ('network_enables_4', ctypes.c_uint16), 
         ('reporting', rad_reporting_settings), 
+        ('network_enables_4', ctypes.c_uint16), 
     ]
 
 # Extra names go here:
-SRADGigalogSettings = srad_gigalog_settings
+SRADGigastarSettings = srad_gigastar_settings
 # End of extra names
 

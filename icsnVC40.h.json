@@ -636,6 +636,27 @@
         "pack": 0,
         "union": false
     },
+    "LOGGER_SETTINGS_t": {
+        "members": {
+            "extraction_timeout": [
+                "uint8_t",
+                0,
+                0,
+                ""
+            ],
+            "rsvd": [
+                "uint8_t",
+                3,
+                0,
+                ""
+            ]
+        },
+        "names": [
+            "LOGGER_SETTINGS"
+        ],
+        "pack": 2,
+        "union": false
+    },
     "NeoDevice": {
         "members": {
             "DeviceType": [
@@ -833,6 +854,51 @@
         "pack": 2,
         "union": false
     },
+    "RAD_REPORTING_SETTINGS_t": {
+        "members": {
+            "flags": [
+                "uint32_t",
+                0,
+                0,
+                ""
+            ],
+            "gps_interval_ms": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "io_interval_ms": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "rsvd": [
+                "uint8_t",
+                4,
+                0,
+                ""
+            ],
+            "serdes_interval_ms": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "temp_interval_ms": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ]
+        },
+        "names": [
+            "RAD_REPORTING_SETTINGS"
+        ],
+        "pack": 2,
+        "union": false
+    },
     "RadMoonDuoSettings": {
         "members": {
             "converter": [
@@ -952,7 +1018,7 @@
             ],
             "rsvd2": [
                 "uint8_t",
-                18,
+                19,
                 0,
                 ""
             ],
@@ -965,6 +1031,39 @@
         },
         "names": [
             "SERDESCAM_SETTINGS"
+        ],
+        "pack": 2,
+        "union": false
+    },
+    "SERDESPOC_SETTINGS_t": {
+        "members": {
+            "chksum": [
+                "uint16_t",
+                0,
+                0,
+                "checksum to protect settings structure (don't want corrupt voltage settings)"
+            ],
+            "mode": [
+                "uint8_t",
+                0,
+                0,
+                "no poc, generated supply, serializer passthrough"
+            ],
+            "rsvd": [
+                "uint8_t",
+                6,
+                0,
+                ""
+            ],
+            "voltage": [
+                "uint8_t",
+                0,
+                0,
+                "generated voltage"
+            ]
+        },
+        "names": [
+            "SERDESPOC_SETTINGS"
         ],
         "pack": 2,
         "union": false
@@ -998,23 +1097,23 @@
     },
     "SPhyRegPkt": {
         "members": {
-            "Clause45Enable:1": [
+            "Clause45Enable": [
                 "uint16_t",
                 0,
-                0,
-                ""
+                1,
+                "[Bitfield] "
             ],
-            "Enabled:1": [
+            "Enabled": [
                 "uint16_t",
                 0,
-                0,
-                ""
+                1,
+                "[Bitfield] "
             ],
-            "WriteEnable:1": [
+            "WriteEnable": [
                 "uint16_t",
                 0,
-                0,
-                ""
+                1,
+                "[Bitfield] "
             ],
             "clause22": [
                 "PhyRegPktClause22Mess_t",
@@ -1034,17 +1133,17 @@
                 0,
                 ""
             ],
-            "reserved:9": [
+            "reserved": [
                 "uint16_t",
                 0,
-                0,
-                ""
+                9,
+                "[Bitfield] "
             ],
-            "version:4": [
+            "version": [
                 "uint16_t",
                 0,
-                0,
-                ""
+                4,
+                "[Bitfield] "
             ]
         },
         "names": [
@@ -1144,6 +1243,93 @@
             "PhyRegPktHdr_t"
         ],
         "pack": 0,
+        "union": false
+    },
+    "SPlutoPtpParams_s": {
+        "members": {
+            "clockaccuracy": [
+                "uint8_t",
+                0,
+                0,
+                ""
+            ],
+            "clockclass": [
+                "uint8_t",
+                0,
+                0,
+                ""
+            ],
+            "gPTPportRole": [
+                "uint8_t",
+                4,
+                0,
+                "the 5th port is used for SAM"
+            ],
+            "logAnnounceInterval": [
+                "int8_t",
+                0,
+                0,
+                "log2ms"
+            ],
+            "logPDelayReqInterval": [
+                "int8_t",
+                0,
+                0,
+                "log2ms"
+            ],
+            "logSyncInterval": [
+                "int8_t",
+                0,
+                0,
+                "log2ms"
+            ],
+            "neighborPropDelayThresh": [
+                "uint32_t",
+                0,
+                0,
+                "ns"
+            ],
+            "offset_scaled_log_variance": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "portEnable": [
+                "uint8_t",
+                4,
+                0,
+                "the 5th port is used for SAM"
+            ],
+            "priority1": [
+                "uint8_t",
+                0,
+                0,
+                ""
+            ],
+            "priority2": [
+                "uint8_t",
+                0,
+                0,
+                ""
+            ],
+            "profile": [
+                "uint8_t",
+                0,
+                0,
+                ""
+            ],
+            "sys_phc_sync_interval": [
+                "uint32_t",
+                0,
+                0,
+                "ns"
+            ]
+        },
+        "names": [
+            "PlutoPtpParams_t"
+        ],
+        "pack": 2,
         "union": false
     },
     "SPlutoSwitchSettings_s": {
@@ -1567,6 +1753,12 @@
             ],
             "pad": [
                 "uint8_t",
+                0,
+                0,
+                ""
+            ],
+            "ptpParams": [
+                "PlutoPtpParams_t",
                 0,
                 0,
                 ""
@@ -2590,6 +2782,12 @@
                 0,
                 ""
             ],
+            "etherBadge": [
+                "SEtherBadgeSettings",
+                0,
+                0,
+                ""
+            ],
             "fire": [
                 "SFireSettings",
                 0,
@@ -2676,6 +2874,12 @@
             ],
             "radgigalog": [
                 "SRADGigalogSettings",
+                0,
+                0,
+                ""
+            ],
+            "radgigastar": [
+                "SRADGigastarSettings",
                 0,
                 0,
                 ""
@@ -3169,6 +3373,12 @@
                 0,
                 ""
             ],
+            "ethernet2": [
+                "ETHERNET_SETTINGS2",
+                0,
+                0,
+                ""
+            ],
             "flags": {
                 "members": {
                     "disableUsbCheckOnBoot": [
@@ -3246,6 +3456,12 @@
             ],
             "lin2": [
                 "LIN_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "misc_io_analog_enable": [
+                "uint16_t",
                 0,
                 0,
                 ""
@@ -3330,13 +3546,19 @@
                 "SPluto_CustomParams",
                 0,
                 0,
-                "18"
+                "44"
             ],
             "ethernet": [
                 "ETHERNET_SETTINGS",
                 0,
                 0,
                 "8"
+            ],
+            "ethernet2": [
+                "ETHERNET_SETTINGS2",
+                0,
+                0,
+                "16"
             ],
             "flags": {
                 "members": {
@@ -3653,11 +3875,23 @@
                 0,
                 ""
             ],
+            "disk": [
+                "DISK_SETTINGS",
+                0,
+                0,
+                ""
+            ],
             "ethernet": [
                 "ETHERNET_SETTINGS",
                 0,
                 0,
                 ""
+            ],
+            "ethernet2": [
+                "ETHERNET_SETTINGS2",
+                0,
+                0,
+                "supercedes ethernet settings"
             ],
             "flags": {
                 "members": {
@@ -4021,6 +4255,12 @@
                         0,
                         ""
                     ],
+                    "etherBadge": [
+                        "SEtherBadgeSettings",
+                        0,
+                        0,
+                        ""
+                    ],
                     "fire": [
                         "SFireSettings",
                         0,
@@ -4111,6 +4351,12 @@
                         0,
                         ""
                     ],
+                    "radgigastar": [
+                        "SRADGigastarSettings",
+                        0,
+                        0,
+                        ""
+                    ],
                     "radmoon2": [
                         "SRADMoon2Settings",
                         0,
@@ -4193,6 +4439,96 @@
         },
         "names": [
             "SDeviceSettings"
+        ],
+        "pack": 2,
+        "union": false
+    },
+    "_SDiskDetails": {
+        "members": {
+            "status": [
+                "SDiskStatus",
+                12,
+                0,
+                ""
+            ],
+            "structure": [
+                "SDiskStructure",
+                0,
+                0,
+                ""
+            ]
+        },
+        "names": [
+            "SDiskDetails"
+        ],
+        "pack": 2,
+        "union": false
+    },
+    "_SDiskFormatProgress": {
+        "members": {
+            "sectorsRemaining": [
+                "uint8_t",
+                8,
+                0,
+                ""
+            ],
+            "state": [
+                "uint16_t",
+                0,
+                0,
+                "state of formatting (not started, writing file system, formatting, writing VSAs, finished)"
+            ]
+        },
+        "names": [
+            "SDiskFormatProgress"
+        ],
+        "pack": 2,
+        "union": false
+    },
+    "_SDiskStatus": {
+        "members": {
+            "bytesPerSector": [
+                "uint8_t",
+                4,
+                0,
+                ""
+            ],
+            "sectors": [
+                "uint8_t",
+                8,
+                0,
+                ""
+            ],
+            "status": [
+                "uint16_t",
+                0,
+                0,
+                "0x1 = present, 0x2 = initialized"
+            ]
+        },
+        "names": [
+            "SDiskStatus"
+        ],
+        "pack": 2,
+        "union": false
+    },
+    "_SDiskStructure": {
+        "members": {
+            "options": [
+                "uint16_t",
+                0,
+                0,
+                "0x01 full format"
+            ],
+            "settings": [
+                "DISK_SETTINGS",
+                0,
+                0,
+                ""
+            ]
+        },
+        "names": [
+            "SDiskStructure"
         ],
         "pack": 2,
         "union": false
@@ -4461,8 +4797,284 @@
         "pack": 2,
         "union": false
     },
+    "_SEtherBadgeSettings": {
+        "members": {
+            "ain_sample_period": [
+                "uint16_t",
+                0,
+                0,
+                "2"
+            ],
+            "ain_threshold": [
+                "uint16_t",
+                0,
+                0,
+                "2"
+            ],
+            "can1": [
+                "CAN_SETTINGS",
+                0,
+                0,
+                "12"
+            ],
+            "can2": [
+                "CAN_SETTINGS",
+                0,
+                0,
+                "12"
+            ],
+            "canfd1": [
+                "CANFD_SETTINGS",
+                0,
+                0,
+                "10"
+            ],
+            "canfd2": [
+                "CANFD_SETTINGS",
+                0,
+                0,
+                "10"
+            ],
+            "ethernet": [
+                "ETHERNET_SETTINGS",
+                0,
+                0,
+                "8"
+            ],
+            "ethernet2": [
+                "ETHERNET_SETTINGS2",
+                0,
+                0,
+                "16"
+            ],
+            "flags": {
+                "members": {
+                    "disableUsbCheckOnBoot": [
+                        "uint32_t",
+                        0,
+                        1,
+                        "[Bitfield] "
+                    ],
+                    "enableLatencyTest": [
+                        "uint32_t",
+                        0,
+                        1,
+                        "[Bitfield] "
+                    ],
+                    "enablePcEthernetComm": [
+                        "uint32_t",
+                        0,
+                        1,
+                        "[Bitfield] "
+                    ],
+                    "reserved": [
+                        "uint32_t",
+                        0,
+                        29,
+                        "[Bitfield] "
+                    ]
+                },
+                "names": [
+                    "flags"
+                ],
+                "pack": 2,
+                "union": false
+            },
+            "iso15765_separation_time_offset": [
+                "int16_t",
+                0,
+                0,
+                "2"
+            ],
+            "iso9141_kwp_enable_reserved": [
+                "uint16_t",
+                0,
+                0,
+                "2"
+            ],
+            "iso9141_kwp_settings": [
+                "ISO9141_KEYWORD2000_SETTINGS",
+                0,
+                0,
+                "114"
+            ],
+            "iso_msg_termination": [
+                "uint16_t",
+                0,
+                0,
+                "2"
+            ],
+            "iso_parity": [
+                "uint16_t",
+                0,
+                0,
+                "2"
+            ],
+            "iso_tester_pullup_enable": [
+                "uint16_t",
+                0,
+                0,
+                "2"
+            ],
+            "lin1": [
+                "LIN_SETTINGS",
+                0,
+                0,
+                "10"
+            ],
+            "misc_io_analog_enable": [
+                "uint16_t",
+                0,
+                0,
+                "2"
+            ],
+            "misc_io_initial_ddr": [
+                "uint16_t",
+                0,
+                0,
+                "2"
+            ],
+            "misc_io_initial_latch": [
+                "uint16_t",
+                0,
+                0,
+                "2"
+            ],
+            "misc_io_on_report_events": [
+                "uint16_t",
+                0,
+                0,
+                "2"
+            ],
+            "misc_io_report_period": [
+                "uint16_t",
+                0,
+                0,
+                "2"
+            ],
+            "network_enabled_on_boot": [
+                "uint16_t",
+                0,
+                0,
+                "2"
+            ],
+            "network_enables": [
+                "uint16_t",
+                0,
+                0,
+                "2"
+            ],
+            "network_enables_2": [
+                "uint16_t",
+                0,
+                0,
+                "2"
+            ],
+            "network_enables_3": [
+                "uint16_t",
+                0,
+                0,
+                "2"
+            ],
+            "perf_en": [
+                "uint16_t",
+                0,
+                0,
+                "2"
+            ],
+            "pwr_man_enable": [
+                "uint16_t",
+                0,
+                0,
+                "2"
+            ],
+            "pwr_man_timeout": [
+                "uint32_t",
+                0,
+                0,
+                "4"
+            ],
+            "termination_enables": [
+                "uint64_t",
+                0,
+                0,
+                "8"
+            ],
+            "text_api": [
+                "STextAPISettings",
+                0,
+                0,
+                "72"
+            ]
+        },
+        "names": [
+            "SEtherBadgeSettings"
+        ],
+        "pack": 2,
+        "union": false
+    },
+    "_SExtSubCmdComm": {
+        "members": {
+            "details": [
+                "SDiskDetails",
+                0,
+                0,
+                ""
+            ],
+            "hdr": [
+                "SExtSubCmdHdr",
+                0,
+                0,
+                ""
+            ],
+            "progress": [
+                "SDiskFormatProgress",
+                0,
+                0,
+                ""
+            ],
+            "structure": [
+                "SDiskStructure",
+                0,
+                0,
+                ""
+            ]
+        },
+        "names": [
+            "SExtSubCmdComm"
+        ],
+        "pack": 2,
+        "union": false
+    },
+    "_SExtSubCmdHdr": {
+        "members": {
+            "cmd": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "length": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ]
+        },
+        "names": [
+            "SExtSubCmdHdr"
+        ],
+        "pack": 2,
+        "union": false
+    },
     "_SFire3Settings": {
         "members": {
+            "ain_threshold": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
             "can1": [
                 "CAN_SETTINGS",
                 0,
@@ -4559,6 +5171,18 @@
                 0,
                 ""
             ],
+            "digitalIoThresholdEnable": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "digitalIoThresholdTicks": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
             "disk": [
                 "DISK_SETTINGS",
                 0,
@@ -4567,6 +5191,12 @@
             ],
             "ethernet": [
                 "ETHERNET_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "ethernet2": [
+                "ETHERNET_SETTINGS2",
                 0,
                 0,
                 ""
@@ -4676,7 +5306,31 @@
                 0,
                 ""
             ],
+            "misc_io_analog_enable": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "misc_io_initial_ddr": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "misc_io_initial_latch": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
             "misc_io_on_report_events": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "misc_io_report_period": [
                 "uint16_t",
                 0,
                 0,
@@ -5504,8 +6158,20 @@
                 0,
                 ""
             ],
+            "disk": [
+                "DISK_SETTINGS",
+                0,
+                0,
+                ""
+            ],
             "ethernet": [
                 "ETHERNET_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "ethernet2": [
+                "ETHERNET_SETTINGS2",
                 0,
                 0,
                 ""
@@ -5519,6 +6185,18 @@
                         "[Bitfield] "
                     ],
                     "disableUsbCheckOnBoot": [
+                        "uint32_t",
+                        0,
+                        1,
+                        "[Bitfield] "
+                    ],
+                    "enableDefaultLogger": [
+                        "uint32_t",
+                        0,
+                        1,
+                        "[Bitfield] "
+                    ],
+                    "enableDefaultUpload": [
                         "uint32_t",
                         0,
                         1,
@@ -5539,7 +6217,7 @@
                     "reserved": [
                         "uint32_t",
                         0,
-                        28,
+                        26,
                         "[Bitfield] "
                     ]
                 },
@@ -6350,6 +7028,24 @@
                 0,
                 ""
             ],
+            "disk": [
+                "DISK_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "ethernet1": [
+                "ETHERNET_SETTINGS2",
+                0,
+                0,
+                "DAQ port on label, NETID_ETHERNET"
+            ],
+            "ethernet2": [
+                "ETHERNET_SETTINGS2",
+                0,
+                0,
+                "LAN port on label, NETID_ETHERNET2"
+            ],
             "hwComLatencyTestEn": [
                 "uint16_t",
                 0,
@@ -6410,6 +7106,12 @@
                 0,
                 ""
             ],
+            "logger": [
+                "LOGGER_SETTINGS",
+                0,
+                0,
+                ""
+            ],
             "misc_io_analog_enable": [
                 "uint16_t",
                 0,
@@ -6459,6 +7161,12 @@
                 ""
             ],
             "network_enables_3": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "network_enables_4": [
                 "uint16_t",
                 0,
                 0,
@@ -6560,6 +7268,12 @@
                 0,
                 ""
             ],
+            "reporting": [
+                "RAD_REPORTING_SETTINGS",
+                0,
+                0,
+                ""
+            ],
             "swcan1": [
                 "SWCAN_SETTINGS",
                 0,
@@ -6587,96 +7301,6 @@
         },
         "names": [
             "SRADGalaxySettings"
-        ],
-        "pack": 2,
-        "union": false
-    },
-    "_SRADGigalogDiskDetails": {
-        "members": {
-            "status": [
-                "SRADGigalogDiskStatus",
-                12,
-                0,
-                ""
-            ],
-            "structure": [
-                "SRADGigalogDiskStructure",
-                0,
-                0,
-                ""
-            ]
-        },
-        "names": [
-            "SRADGigalogDiskDetails"
-        ],
-        "pack": 2,
-        "union": false
-    },
-    "_SRADGigalogDiskFormatProgress": {
-        "members": {
-            "sectorsRemaining": [
-                "uint8_t",
-                8,
-                0,
-                ""
-            ],
-            "state": [
-                "uint16_t",
-                0,
-                0,
-                "state of formatting (not started, writing file system, formatting, writing VSAs, finished)"
-            ]
-        },
-        "names": [
-            "SRADGigalogDiskFormatProgress"
-        ],
-        "pack": 2,
-        "union": false
-    },
-    "_SRADGigalogDiskStatus": {
-        "members": {
-            "bytesPerSector": [
-                "uint8_t",
-                4,
-                0,
-                ""
-            ],
-            "sectors": [
-                "uint8_t",
-                8,
-                0,
-                ""
-            ],
-            "status": [
-                "uint16_t",
-                0,
-                0,
-                "0x1 = present, 0x2 = initialized, 0x04 included in formatting"
-            ]
-        },
-        "names": [
-            "SRADGigalogDiskStatus"
-        ],
-        "pack": 2,
-        "union": false
-    },
-    "_SRADGigalogDiskStructure": {
-        "members": {
-            "options": [
-                "uint16_t",
-                0,
-                0,
-                "0x01 full format"
-            ],
-            "settings": [
-                "DISK_SETTINGS",
-                0,
-                0,
-                ""
-            ]
-        },
-        "names": [
-            "SRADGigalogDiskStructure"
         ],
         "pack": 2,
         "union": false
@@ -6803,12 +7427,39 @@
                 0,
                 ""
             ],
-            "hwComLatencyTestEn": [
-                "uint16_t",
+            "ethernet2": [
+                "ETHERNET_SETTINGS2",
                 0,
                 0,
                 ""
             ],
+            "flags": {
+                "members": {
+                    "disableUsbCheckOnBoot": [
+                        "uint16_t",
+                        0,
+                        1,
+                        "[Bitfield] "
+                    ],
+                    "hwComLatencyTestEn": [
+                        "uint16_t",
+                        0,
+                        1,
+                        "[Bitfield] "
+                    ],
+                    "reserved": [
+                        "uint16_t",
+                        0,
+                        14,
+                        "[Bitfield] "
+                    ]
+                },
+                "names": [
+                    "flags"
+                ],
+                "pack": 2,
+                "union": false
+            },
             "idle_wakeup_network_enables_1": [
                 "uint16_t",
                 0,
@@ -6857,6 +7508,18 @@
                 0,
                 ""
             ],
+            "lin1": [
+                "LIN_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "logger": [
+                "LOGGER_SETTINGS",
+                0,
+                0,
+                ""
+            ],
             "network_enabled_on_boot": [
                 "uint16_t",
                 0,
@@ -6881,6 +7544,12 @@
                 0,
                 ""
             ],
+            "network_enables_4": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
             "perf_en": [
                 "uint16_t",
                 0,
@@ -6899,6 +7568,12 @@
                 0,
                 ""
             ],
+            "reporting": [
+                "RAD_REPORTING_SETTINGS",
+                0,
+                0,
+                ""
+            ],
             "rsvd1": [
                 "uint8_t",
                 8,
@@ -6913,6 +7588,30 @@
             ],
             "serdescam1": [
                 "SERDESCAM_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "serdescam2": [
+                "SERDESCAM_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "serdescam3": [
+                "SERDESCAM_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "serdescam4": [
+                "SERDESCAM_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "serdespoc": [
+                "SERDESPOC_SETTINGS",
                 0,
                 0,
                 ""
@@ -6938,6 +7637,312 @@
         },
         "names": [
             "SRADGigalogSettings"
+        ],
+        "pack": 2,
+        "union": false
+    },
+    "_SRADGigastarSettings": {
+        "members": {
+            "can1": [
+                "CAN_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "can2": [
+                "CAN_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "can3": [
+                "CAN_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "can4": [
+                "CAN_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "can5": [
+                "CAN_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "can6": [
+                "CAN_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "canfd1": [
+                "CANFD_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "canfd2": [
+                "CANFD_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "canfd3": [
+                "CANFD_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "canfd4": [
+                "CANFD_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "canfd5": [
+                "CANFD_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "canfd6": [
+                "CANFD_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "disk": [
+                "DISK_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "ecu_id": [
+                "uint32_t",
+                0,
+                0,
+                ""
+            ],
+            "ethernet1": [
+                "ETHERNET_SETTINGS2",
+                0,
+                0,
+                ""
+            ],
+            "ethernet2": [
+                "ETHERNET_SETTINGS2",
+                0,
+                0,
+                ""
+            ],
+            "flags": {
+                "members": {
+                    "hwComLatencyTestEn": [
+                        "uint16_t",
+                        0,
+                        1,
+                        "[Bitfield] "
+                    ],
+                    "reserved": [
+                        "uint16_t",
+                        0,
+                        15,
+                        "[Bitfield] "
+                    ]
+                },
+                "names": [
+                    "flags"
+                ],
+                "pack": 2,
+                "union": false
+            },
+            "idle_wakeup_network_enables_1": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "idle_wakeup_network_enables_2": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "idle_wakeup_network_enables_3": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "iso15765_separation_time_offset": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "iso9141_kwp_settings_1": [
+                "ISO9141_KEYWORD2000_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "iso_9141_kwp_enable_reserved": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "iso_msg_termination_1": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "iso_parity_1": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "lin1": [
+                "LIN_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "logger": [
+                "LOGGER_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "network_enabled_on_boot": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "network_enables": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "network_enables_2": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "network_enables_3": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "network_enables_4": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "opEth1": [
+                "OP_ETH_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "opEth2": [
+                "OP_ETH_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "opEthGen": [
+                "OP_ETH_GENERAL_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "perf_en": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "pwr_man_enable": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "pwr_man_timeout": [
+                "uint32_t",
+                0,
+                0,
+                ""
+            ],
+            "reporting": [
+                "RAD_REPORTING_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "serdescam1": [
+                "SERDESCAM_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "serdescam2": [
+                "SERDESCAM_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "serdescam3": [
+                "SERDESCAM_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "serdescam4": [
+                "SERDESCAM_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "serdespoc": [
+                "SERDESPOC_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "termination_enables": [
+                "uint64_t",
+                0,
+                0,
+                ""
+            ],
+            "text_api": [
+                "STextAPISettings",
+                0,
+                0,
+                ""
+            ],
+            "timeSyncSettings": [
+                "TIMESYNC_ICSHARDWARE_SETTINGS",
+                0,
+                0,
+                ""
+            ]
+        },
+        "names": [
+            "SRADGigastarSettings"
         ],
         "pack": 2,
         "union": false
@@ -6973,6 +7978,12 @@
                 0,
                 0,
                 "8"
+            ],
+            "ethernet2": [
+                "ETHERNET_SETTINGS2",
+                0,
+                0,
+                ""
             ],
             "flags": {
                 "members": {
@@ -7304,6 +8315,12 @@
                 0,
                 ""
             ],
+            "ethernet": [
+                "ETHERNET_SETTINGS2",
+                0,
+                0,
+                ""
+            ],
             "hwComLatencyTestEn": [
                 "uint16_t",
                 0,
@@ -7460,6 +8477,12 @@
                 0,
                 ""
             ],
+            "reporting": [
+                "RAD_REPORTING_SETTINGS",
+                0,
+                0,
+                ""
+            ],
             "text_api": [
                 "STextAPISettings",
                 0,
@@ -7481,6 +8504,12 @@
     },
     "_SRADSuperMoonSettings": {
         "members": {
+            "Eth2": [
+                "ETHERNET_SETTINGS2",
+                0,
+                0,
+                ""
+            ],
             "hwComLatencyTestEn": [
                 "uint16_t",
                 0,
@@ -7550,60 +8579,6 @@
         },
         "names": [
             "SRADSuperMoonSettings"
-        ],
-        "pack": 2,
-        "union": false
-    },
-    "_SRadGigalogComm": {
-        "members": {
-            "details": [
-                "SRADGigalogDiskDetails",
-                0,
-                0,
-                ""
-            ],
-            "hdr": [
-                "SRadGigalogSubCmdHdr",
-                0,
-                0,
-                ""
-            ],
-            "progress": [
-                "SRADGigalogDiskFormatProgress",
-                0,
-                0,
-                ""
-            ],
-            "structure": [
-                "SRADGigalogDiskStructure",
-                0,
-                0,
-                ""
-            ]
-        },
-        "names": [
-            "SRadGigalogComm"
-        ],
-        "pack": 2,
-        "union": false
-    },
-    "_SRadGigalogSubCmdHdr": {
-        "members": {
-            "cmd": [
-                "uint16_t",
-                0,
-                0,
-                ""
-            ],
-            "length": [
-                "uint16_t",
-                0,
-                0,
-                ""
-            ]
-        },
-        "names": [
-            "SRadGigalogSubCmdHdr"
         ],
         "pack": 2,
         "union": false
@@ -7915,6 +8890,12 @@
             ],
             "ethernet": [
                 "ETHERNET_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "ethernet2": [
+                "ETHERNET_SETTINGS2",
                 0,
                 0,
                 ""
@@ -8564,6 +9545,12 @@
             ],
             "ethernet": [
                 "ETHERNET_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "ethernet2": [
+                "ETHERNET_SETTINGS2",
                 0,
                 0,
                 ""
@@ -9848,6 +10835,12 @@
                 0,
                 ""
             ],
+            "iPhySiliconRev": [
+                "uint8_t",
+                0,
+                0,
+                ""
+            ],
             "iType": [
                 "int32_t",
                 0,
@@ -10172,6 +11165,27 @@
                 "pack": 2,
                 "union": false
             },
+            "ether_badge_versions": {
+                "members": {
+                    "mchip_major": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "mchip_minor": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ]
+                },
+                "names": [
+                    "ether_badge_versions"
+                ],
+                "pack": 2,
+                "union": false
+            },
             "fire3_versions": {
                 "members": {
                     "zchip_major": [
@@ -10457,6 +11471,27 @@
                 "pack": 2,
                 "union": false
             },
+            "radgigalog3_versions": {
+                "members": {
+                    "zynq_core_major": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "zynq_core_minor": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ]
+                },
+                "names": [
+                    "radgigalog3_versions"
+                ],
+                "pack": 2,
+                "union": false
+            },
             "radgigalog_versions": {
                 "members": {
                     "zynq_core_major": [
@@ -10474,6 +11509,48 @@
                 },
                 "names": [
                     "radgigalog_versions"
+                ],
+                "pack": 2,
+                "union": false
+            },
+            "radgigastar_usbz_versions": {
+                "members": {
+                    "zynq_core_major": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "zynq_core_minor": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ]
+                },
+                "names": [
+                    "radgigastar_usbz_versions"
+                ],
+                "pack": 2,
+                "union": false
+            },
+            "radgigastar_versions": {
+                "members": {
+                    "zynq_core_major": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "zynq_core_minor": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ]
+                },
+                "names": [
+                    "radgigastar_versions"
                 ],
                 "pack": 2,
                 "union": false
@@ -10677,6 +11754,45 @@
         "pack": 2,
         "union": true
     },
+    "ethernetNetworkStatus_t": {
+        "members": {
+            "linkFullDuplex": [
+                "uint8_t",
+                0,
+                0,
+                ""
+            ],
+            "linkMode": [
+                "uint8_t",
+                0,
+                0,
+                "for automotive networks - see opEthLinkMode"
+            ],
+            "linkSpeed": [
+                "uint8_t",
+                0,
+                0,
+                "see ethLinkSpeed"
+            ],
+            "linkStatus": [
+                "uint8_t",
+                0,
+                0,
+                ""
+            ],
+            "networkId": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ]
+        },
+        "names": [
+            "ethernetNetworkStatus_t"
+        ],
+        "pack": 0,
+        "union": false
+    },
     "icsDeviceStatus": {
         "members": {
             "fire2Status": [
@@ -10697,8 +11813,38 @@
                 0,
                 ""
             ],
+            "jupiterStatus": [
+                "icsRadJupiterDeviceStatus",
+                0,
+                0,
+                ""
+            ],
+            "obd2proStatus": [
+                "icsOBD2ProDeviceStatus",
+                0,
+                0,
+                ""
+            ],
+            "plutoStatus": [
+                "icsRadPlutoDeviceStatus",
+                0,
+                0,
+                ""
+            ],
+            "radMoonDuoStatus": [
+                "icsRadMoonDuoDeviceStatus",
+                0,
+                0,
+                ""
+            ],
             "vcan4Status": [
                 "icsVcan4DeviceStatus",
+                0,
+                0,
+                ""
+            ],
+            "vcan4indStatus": [
+                "icsVcan4IndustrialDeviceStatus",
                 0,
                 0,
                 ""
@@ -10730,6 +11876,12 @@
                 0,
                 ""
             ],
+            "ethernetStatus": [
+                "ethernetNetworkStatus_t",
+                0,
+                0,
+                ""
+            ],
             "usbHostPowerEnabled": [
                 "uint8_t",
                 0,
@@ -10743,9 +11895,48 @@
         "pack": 0,
         "union": false
     },
+    "icsFire2VnetDeviceStatus": {
+        "members": {
+            "ethernetActivationLineEnabled": [
+                "uint8_t",
+                0,
+                0,
+                ""
+            ],
+            "ethernetStatus": [
+                "ethernetNetworkStatus_t",
+                0,
+                0,
+                ""
+            ],
+            "unused": [
+                "uint8_t",
+                0,
+                0,
+                ""
+            ]
+        },
+        "names": [
+            "icsFire2VnetDeviceStatus"
+        ],
+        "pack": 0,
+        "union": false
+    },
     "icsFire3DeviceStatus": {
         "members": {
             "ethernetActivationLineEnabled": [
+                "uint8_t",
+                0,
+                0,
+                ""
+            ],
+            "ethernetStatus": [
+                "ethernetNetworkStatus_t",
+                0,
+                0,
+                ""
+            ],
+            "unused": [
                 "uint8_t",
                 0,
                 0,
@@ -10765,10 +11956,82 @@
                 0,
                 0,
                 ""
+            ],
+            "ethernetStatus": [
+                "ethernetNetworkStatus_t",
+                0,
+                0,
+                ""
+            ],
+            "unused": [
+                "uint8_t",
+                0,
+                0,
+                ""
             ]
         },
         "names": [
             "icsFlexVnetzDeviceStatus"
+        ],
+        "pack": 0,
+        "union": false
+    },
+    "icsOBD2ProDeviceStatus": {
+        "members": {
+            "ethernetStatus": [
+                "ethernetNetworkStatus_t",
+                0,
+                0,
+                ""
+            ]
+        },
+        "names": [
+            "icsOBD2ProDeviceStatus"
+        ],
+        "pack": 0,
+        "union": false
+    },
+    "icsRadJupiterDeviceStatus": {
+        "members": {
+            "ethernetStatus": [
+                "ethernetNetworkStatus_t",
+                0,
+                0,
+                ""
+            ]
+        },
+        "names": [
+            "icsRadJupiterDeviceStatus"
+        ],
+        "pack": 0,
+        "union": false
+    },
+    "icsRadMoonDuoDeviceStatus": {
+        "members": {
+            "ethernetStatus": [
+                "ethernetNetworkStatus_t",
+                4,
+                0,
+                ""
+            ]
+        },
+        "names": [
+            "icsRadMoonDuoDeviceStatus"
+        ],
+        "pack": 0,
+        "union": false
+    },
+    "icsRadPlutoDeviceStatus": {
+        "members": {
+            "ethernetStatus": [
+                "ethernetNetworkStatus_t",
+                0,
+                0,
+                ""
+            ]
+        },
+        "names": [
+            "icsRadPlutoDeviceStatus"
         ],
         "pack": 0,
         "union": false
@@ -10780,10 +12043,37 @@
                 0,
                 0,
                 ""
+            ],
+            "ethernetStatus": [
+                "ethernetNetworkStatus_t",
+                0,
+                0,
+                ""
+            ],
+            "unused": [
+                "uint8_t",
+                0,
+                0,
+                ""
             ]
         },
         "names": [
             "icsVcan4DeviceStatus"
+        ],
+        "pack": 0,
+        "union": false
+    },
+    "icsVcan4IndustrialDeviceStatus": {
+        "members": {
+            "ethernetStatus": [
+                "ethernetNetworkStatus_t",
+                0,
+                0,
+                ""
+            ]
+        },
+        "names": [
+            "icsVcan4IndustrialDeviceStatus"
         ],
         "pack": 0,
         "union": false

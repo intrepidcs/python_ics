@@ -1,7 +1,7 @@
 # This file was auto generated; Do not modify, if you value your sanity!
 import ctypes
 
-try: # 8
+try: # 10
     from can_settings import can_settings
     from canfd_settings import canfd_settings
     from swcan_settings import swcan_settings
@@ -10,6 +10,8 @@ try: # 8
     from s_text_api_settings import s_text_api_settings
     from ethernet_settings import ethernet_settings
     from timesync_icshardware_settings import timesync_icshardware_settings
+    from disk_settings import disk_settings
+    from ethernet_settings2 import ethernet_settings2
 except:
     from ics.structures.can_settings import can_settings
     from ics.structures.canfd_settings import canfd_settings
@@ -19,6 +21,8 @@ except:
     from ics.structures.s_text_api_settings import s_text_api_settings
     from ics.structures.ethernet_settings import ethernet_settings
     from ics.structures.timesync_icshardware_settings import timesync_icshardware_settings
+    from ics.structures.disk_settings import disk_settings
+    from ics.structures.ethernet_settings2 import ethernet_settings2
 
 # flags
 class flags(ctypes.Structure):
@@ -106,6 +110,8 @@ class s_cyan_settings(ctypes.Structure):
         ('digitalIoThresholdTicks', ctypes.c_uint16), 
         ('digitalIoThresholdEnable', ctypes.c_uint16), 
         ('timeSync', timesync_icshardware_settings), 
+        ('disk', disk_settings), 
+        ('ethernet2', ethernet_settings2), # supercedes ethernet settings
     ]
 
 # Extra names go here:
