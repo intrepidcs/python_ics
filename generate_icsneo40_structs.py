@@ -401,6 +401,7 @@ def parse_header_file(filename='include/ics/icsnVC40.h'):
         #inner_struct_data = OrderedDict()
         inner_struct_inside_anonomous_union = False
         inner_union_has_structs = False
+        pushed_last_pack_size = False
         
         pack_size = 0
         for line in f:
@@ -432,9 +433,20 @@ def parse_header_file(filename='include/ics/icsnVC40.h'):
             if line.startswith("#"):
                 # get the pack size
                 if re.match('#pragma.*pack.*.*pop.*', line):
-                    pack_size = 0
+                    if pushed_last_pack_size:
+                        pack_size = last_pack_size
+                        pushed_last_pack_size = False
+                    else:
+                        pack_size = 0
                 elif re.match('#pragma.*pack.*.*push.*', line):
-                    pack_size = int(re.search('\d{1,}', line).group(0))
+                    try:
+                        pack_size = int(re.search('\d{1,}', line).group(0))
+                    except AttributeError:
+                        if not 'push' in line:
+                            raise
+                        pushed_last_pack_size = True
+                        last_pack_size = pack_size
+                        pack_size = 0
                     if debug_print:
                         print("PACK SIZE:", pack_size)
                 elif re.match('#define.*', line) and len(line.split(' ')) == 3 and not '\\' in line and not 'sizeof' in line:
