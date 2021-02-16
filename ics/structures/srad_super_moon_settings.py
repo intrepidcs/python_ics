@@ -1,16 +1,18 @@
 # This file was auto generated; Do not modify, if you value your sanity!
 import ctypes
 
-try: # 4
+try: # 5
     from op_eth_general_settings import op_eth_general_settings
     from op_eth_settings import op_eth_settings
     from s_text_api_settings import s_text_api_settings
     from timesync_icshardware_settings import timesync_icshardware_settings
+    from ethernet_settings2 import ethernet_settings2
 except:
     from ics.structures.op_eth_general_settings import op_eth_general_settings
     from ics.structures.op_eth_settings import op_eth_settings
     from ics.structures.s_text_api_settings import s_text_api_settings
     from ics.structures.timesync_icshardware_settings import timesync_icshardware_settings
+    from ics.structures.ethernet_settings2 import ethernet_settings2
 
 class srad_super_moon_settings(ctypes.Structure):
     _pack_ = 2
@@ -26,6 +28,7 @@ class srad_super_moon_settings(ctypes.Structure):
         ('pc_com_mode', ctypes.c_uint16), 
         ('timeSyncSettings', timesync_icshardware_settings), 
         ('hwComLatencyTestEn', ctypes.c_uint16), 
+        ('Eth2', ethernet_settings2), 
     ]
 
 # Extra names go here:

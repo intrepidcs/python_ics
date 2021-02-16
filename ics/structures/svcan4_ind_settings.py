@@ -1,18 +1,20 @@
 # This file was auto generated; Do not modify, if you value your sanity!
 import ctypes
 
-try: # 5
+try: # 6
     from can_settings import can_settings
     from canfd_settings import canfd_settings
     from ethernet_settings import ethernet_settings
     from lin_settings import lin_settings
     from iso9141_keyword2000_settings import iso9141_keyword2000_settings
+    from ethernet_settings2 import ethernet_settings2
 except:
     from ics.structures.can_settings import can_settings
     from ics.structures.canfd_settings import canfd_settings
     from ics.structures.ethernet_settings import ethernet_settings
     from ics.structures.lin_settings import lin_settings
     from ics.structures.iso9141_keyword2000_settings import iso9141_keyword2000_settings
+    from ics.structures.ethernet_settings2 import ethernet_settings2
 
 # network_enables
 class network_enables(ctypes.Union):
@@ -61,6 +63,7 @@ class svcan4_ind_settings(ctypes.Structure):
         ('network_enables', network_enables), 
         ('termination_enables', ctypes.c_uint64), 
         ('flags', flags), 
+        ('ethernet2', ethernet_settings2), 
     ]
 
 # Extra names go here:

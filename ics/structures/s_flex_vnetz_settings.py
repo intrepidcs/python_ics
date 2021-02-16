@@ -1,18 +1,22 @@
 # This file was auto generated; Do not modify, if you value your sanity!
 import ctypes
 
-try: # 5
+try: # 7
     from can_settings import can_settings
     from canfd_settings import canfd_settings
     from ethernet_settings import ethernet_settings
     from timesync_icshardware_settings import timesync_icshardware_settings
     from s_text_api_settings import s_text_api_settings
+    from disk_settings import disk_settings
+    from ethernet_settings2 import ethernet_settings2
 except:
     from ics.structures.can_settings import can_settings
     from ics.structures.canfd_settings import canfd_settings
     from ics.structures.ethernet_settings import ethernet_settings
     from ics.structures.timesync_icshardware_settings import timesync_icshardware_settings
     from ics.structures.s_text_api_settings import s_text_api_settings
+    from ics.structures.disk_settings import disk_settings
+    from ics.structures.ethernet_settings2 import ethernet_settings2
 
 # network_enables
 class network_enables(ctypes.Union):
@@ -35,7 +39,9 @@ class flags(ctypes.Structure):
         ('enableLatencyTest', ctypes.c_uint32, 1), # [Bitfield] 
         ('busMessagesToAndroid', ctypes.c_uint32, 1), # [Bitfield] 
         ('enablePcEthernetComm', ctypes.c_uint32, 1), # [Bitfield] 
-        ('reserved', ctypes.c_uint32, 28), # [Bitfield] 
+        ('enableDefaultLogger', ctypes.c_uint32, 1), # [Bitfield] 
+        ('enableDefaultUpload', ctypes.c_uint32, 1), # [Bitfield] 
+        ('reserved', ctypes.c_uint32, 26), # [Bitfield] 
     ]
 
 # Extra names go here:
@@ -74,6 +80,8 @@ class s_flex_vnetz_settings(ctypes.Structure):
         ('timeSync', timesync_icshardware_settings), 
         ('text_api', s_text_api_settings), 
         ('flags', flags), 
+        ('disk', disk_settings), 
+        ('ethernet2', ethernet_settings2), 
     ]
 
 # Extra names go here:

@@ -472,7 +472,7 @@ PyObject* meth_get_disk_format_progress(PyObject* self, PyObject* args);
     "\tNone.\n" \
     "\n" \
     "\t>>> device = ics.open_device()\n" \
-    "\t>>> settings = ics.load_default_settings(device)\n" \
+    "\t>>> ics.load_default_settings(device)\n" \
     "\t>>> \n"
 
 #define _DOC_CREATE_NEOVI_RADIO_MESSAGE \

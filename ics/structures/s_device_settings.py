@@ -1,7 +1,7 @@
 # This file was auto generated; Do not modify, if you value your sanity!
 import ctypes
 
-try: # 32
+try: # 34
     from e_device_settings_type import e_device_settings_type
     from s_red_settings import s_red_settings
     from s_fire_settings import s_fire_settings
@@ -31,9 +31,11 @@ try: # 32
     from s_flex_vnetz_settings import s_flex_vnetz_settings
     from s_vivid_can_settings import s_vivid_can_settings
     from svcan4_ind_settings import svcan4_ind_settings
+    from srad_gigastar_settings import srad_gigastar_settings
     from srad_jupiter_settings import srad_jupiter_settings
     from s_fire3_settings import s_fire3_settings
     from s_rad_moon_duo_settings import s_rad_moon_duo_settings
+    from s_ether_badge_settings import s_ether_badge_settings
 except:
     from ics.structures.e_device_settings_type import e_device_settings_type
     from ics.structures.s_red_settings import s_red_settings
@@ -64,9 +66,11 @@ except:
     from ics.structures.s_flex_vnetz_settings import s_flex_vnetz_settings
     from ics.structures.s_vivid_can_settings import s_vivid_can_settings
     from ics.structures.svcan4_ind_settings import svcan4_ind_settings
+    from ics.structures.srad_gigastar_settings import srad_gigastar_settings
     from ics.structures.srad_jupiter_settings import srad_jupiter_settings
     from ics.structures.s_fire3_settings import s_fire3_settings
     from ics.structures.s_rad_moon_duo_settings import s_rad_moon_duo_settings
+    from ics.structures.s_ether_badge_settings import s_ether_badge_settings
 
 # Settings
 class Settings(ctypes.Union):
@@ -101,9 +105,11 @@ class Settings(ctypes.Union):
         ('flexvnetz', s_flex_vnetz_settings), 
         ('vividcan', s_vivid_can_settings), 
         ('vcan4_ind', svcan4_ind_settings), 
+        ('radgigastar', srad_gigastar_settings), 
         ('jupiter', srad_jupiter_settings), 
         ('fire3', s_fire3_settings), 
         ('radmoon_duo', s_rad_moon_duo_settings), 
+        ('etherBadge', s_ether_badge_settings), 
     ]
 
 # Extra names go here:
