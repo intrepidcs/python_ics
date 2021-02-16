@@ -1,48 +1,67 @@
 {
-    "_ERADGigalogDiskFormat": {
+    "_opEthLinkMode": {
         "members": {
-            "RADGigalogDiskFormatUnknown ": [
+            "OPETH_LINK_AUTO ": [
                 0,
                 ""
             ],
-            "RADGigalogDiskFormatFAT32": [
+            "OPETH_LINK_MASTER": [
                 1,
                 ""
             ],
-            "RADGigalogDiskFormatexFAT": [
+            "OPETH_LINK_SLAVE": [
                 2,
                 ""
             ]
         },
         "names": [
-            "ERADGigalogDiskFormat"
+            "opEthLinkMode"
         ]
     },
-    "_ERADGigalogDiskLayout": {
+    "_EDiskFormat": {
         "members": {
-            "RADGigalogDiskLayoutSpanned ": [
+            "DiskFormatUnknown ": [
                 0,
                 ""
             ],
-            "RADGigalogDiskLayoutRAID0": [
+            "DiskFormatFAT32": [
                 1,
                 ""
             ],
-            "RADGigalogDiskLayoutRAID1": [
+            "DiskFormatexFAT": [
+                2,
+                ""
+            ]
+        },
+        "names": [
+            "EDiskFormat"
+        ]
+    },
+    "_EDiskLayout": {
+        "members": {
+            "DiskLayoutSpanned ": [
+                0,
+                ""
+            ],
+            "DiskLayoutRAID0": [
+                1,
+                ""
+            ],
+            "DiskLayoutRAID1": [
                 2,
                 ""
             ],
-            "RADGigalogDiskLayoutRAID5": [
+            "DiskLayoutRAID5": [
                 3,
                 ""
             ],
-            "RADGigalogDiskLayoutIndividual": [
+            "DiskLayoutIndividual": [
                 4,
                 ""
             ]
         },
         "names": [
-            "ERADGigalogDiskLayout"
+            "EDiskLayout"
         ]
     },
     "_flexVnetMode": {
@@ -178,20 +197,28 @@
                 25,
                 ""
             ],
-            "DeviceRADJupiterSettingsType": [
+            "DeviceRADGigastarSettingsType": [
                 26,
                 ""
             ],
-            "DeviceFire3SettingsType": [
+            "DeviceRADJupiterSettingsType": [
                 27,
                 ""
             ],
-            "DeviceRadMoonDuoSettingsType": [
+            "DeviceFire3SettingsType": [
                 28,
                 ""
             ],
-            "DeviceSettingsTypeMax": [
+            "DeviceRadMoonDuoSettingsType": [
                 29,
+                ""
+            ],
+            "DeviceEtherBadgeSettingsType": [
+                30,
+                ""
+            ],
+            "DeviceSettingsTypeMax": [
+                31,
                 ""
             ],
             "DeviceSettingsNone ": [

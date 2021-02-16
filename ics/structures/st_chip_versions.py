@@ -197,6 +197,39 @@ class radgigalog_versions(ctypes.Structure):
 # Extra names go here:
 # End of extra names
 
+# radgigalog3_versions
+class radgigalog3_versions(ctypes.Structure):
+    _pack_ = 2
+    _fields_ = [
+        ('zynq_core_major', ctypes.c_uint8), 
+        ('zynq_core_minor', ctypes.c_uint8), 
+    ]
+
+# Extra names go here:
+# End of extra names
+
+# radgigastar_versions
+class radgigastar_versions(ctypes.Structure):
+    _pack_ = 2
+    _fields_ = [
+        ('zynq_core_major', ctypes.c_uint8), 
+        ('zynq_core_minor', ctypes.c_uint8), 
+    ]
+
+# Extra names go here:
+# End of extra names
+
+# radgigastar_usbz_versions
+class radgigastar_usbz_versions(ctypes.Structure):
+    _pack_ = 2
+    _fields_ = [
+        ('zynq_core_major', ctypes.c_uint8), 
+        ('zynq_core_minor', ctypes.c_uint8), 
+    ]
+
+# Extra names go here:
+# End of extra names
+
 # jupiter_versions
 class jupiter_versions(ctypes.Structure):
     _pack_ = 2
@@ -230,6 +263,17 @@ class rad_moon_duo_versions(ctypes.Structure):
 # Extra names go here:
 # End of extra names
 
+# ether_badge_versions
+class ether_badge_versions(ctypes.Structure):
+    _pack_ = 2
+    _fields_ = [
+        ('mchip_major', ctypes.c_uint8), 
+        ('mchip_minor', ctypes.c_uint8), 
+    ]
+
+# Extra names go here:
+# End of extra names
+
 class st_chip_versions(ctypes.Union):
     _pack_ = 2
     _fields_ = [
@@ -249,9 +293,13 @@ class st_chip_versions(ctypes.Union):
         ('radmoon2_versions', radmoon2_versions), 
         ('pluto_versions', pluto_versions), 
         ('radgigalog_versions', radgigalog_versions), 
+        ('radgigalog3_versions', radgigalog3_versions), 
+        ('radgigastar_versions', radgigastar_versions), 
+        ('radgigastar_usbz_versions', radgigastar_usbz_versions), 
         ('jupiter_versions', jupiter_versions), 
         ('fire3_versions', fire3_versions), 
         ('rad_moon_duo_versions', rad_moon_duo_versions), 
+        ('ether_badge_versions', ether_badge_versions), 
     ]
 
 # Extra names go here:
