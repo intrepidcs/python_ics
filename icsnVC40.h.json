@@ -603,19 +603,19 @@
                 "unsigned char",
                 4,
                 0,
-                "The Ipv4 address assigned to the Network interface. If not available, all bytes are set to zero."
+                "The Ipv4 address assigned to the Network interface."
             ],
             "bIPV6_Address": [
                 "unsigned char",
                 16,
                 0,
-                ""
+                "The Ipv6 address assigned to the Network interface."
             ],
             "bMAC_Address": [
                 "unsigned char",
                 6,
                 0,
-                "The Media Access Control (MAC) Address of the Network interface in the PC that is to be connected to the vehicle."
+                "The Media Access Control (MAC) Address of"
             ],
             "szDeviceName": [
                 "char",
@@ -1041,7 +1041,7 @@
                 "uint16_t",
                 0,
                 0,
-                "checksum to protect settings structure (don't want corrupt voltage settings)"
+                "checksum to protect settings structure (don't want corrupt"
             ],
             "mode": [
                 "uint8_t",
@@ -1243,93 +1243,6 @@
             "PhyRegPktHdr_t"
         ],
         "pack": 0,
-        "union": false
-    },
-    "SPlutoPtpParams_s": {
-        "members": {
-            "clockaccuracy": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ],
-            "clockclass": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ],
-            "gPTPportRole": [
-                "uint8_t",
-                4,
-                0,
-                "the 5th port is used for SAM"
-            ],
-            "logAnnounceInterval": [
-                "int8_t",
-                0,
-                0,
-                "log2ms"
-            ],
-            "logPDelayReqInterval": [
-                "int8_t",
-                0,
-                0,
-                "log2ms"
-            ],
-            "logSyncInterval": [
-                "int8_t",
-                0,
-                0,
-                "log2ms"
-            ],
-            "neighborPropDelayThresh": [
-                "uint32_t",
-                0,
-                0,
-                "ns"
-            ],
-            "offset_scaled_log_variance": [
-                "uint16_t",
-                0,
-                0,
-                ""
-            ],
-            "portEnable": [
-                "uint8_t",
-                4,
-                0,
-                "the 5th port is used for SAM"
-            ],
-            "priority1": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ],
-            "priority2": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ],
-            "profile": [
-                "uint8_t",
-                0,
-                0,
-                ""
-            ],
-            "sys_phc_sync_interval": [
-                "uint32_t",
-                0,
-                0,
-                "ns"
-            ]
-        },
-        "names": [
-            "PlutoPtpParams_t"
-        ],
-        "pack": 2,
         "union": false
     },
     "SPlutoSwitchSettings_s": {
@@ -1753,12 +1666,6 @@
             ],
             "pad": [
                 "uint8_t",
-                0,
-                0,
-                ""
-            ],
-            "ptpParams": [
-                "PlutoPtpParams_t",
                 0,
                 0,
                 ""
@@ -2782,12 +2689,6 @@
                 0,
                 ""
             ],
-            "etherBadge": [
-                "SEtherBadgeSettings",
-                0,
-                0,
-                ""
-            ],
             "fire": [
                 "SFireSettings",
                 0,
@@ -3373,12 +3274,6 @@
                 0,
                 ""
             ],
-            "ethernet2": [
-                "ETHERNET_SETTINGS2",
-                0,
-                0,
-                ""
-            ],
             "flags": {
                 "members": {
                     "disableUsbCheckOnBoot": [
@@ -3456,12 +3351,6 @@
             ],
             "lin2": [
                 "LIN_SETTINGS",
-                0,
-                0,
-                ""
-            ],
-            "misc_io_analog_enable": [
-                "uint16_t",
                 0,
                 0,
                 ""
@@ -3546,19 +3435,13 @@
                 "SPluto_CustomParams",
                 0,
                 0,
-                "44"
+                "18"
             ],
             "ethernet": [
                 "ETHERNET_SETTINGS",
                 0,
                 0,
                 "8"
-            ],
-            "ethernet2": [
-                "ETHERNET_SETTINGS2",
-                0,
-                0,
-                "16"
             ],
             "flags": {
                 "members": {
@@ -3886,12 +3769,6 @@
                 0,
                 0,
                 ""
-            ],
-            "ethernet2": [
-                "ETHERNET_SETTINGS2",
-                0,
-                0,
-                "supercedes ethernet settings"
             ],
             "flags": {
                 "members": {
@@ -4255,12 +4132,6 @@
                         0,
                         ""
                     ],
-                    "etherBadge": [
-                        "SEtherBadgeSettings",
-                        0,
-                        0,
-                        ""
-                    ],
                     "fire": [
                         "SFireSettings",
                         0,
@@ -4476,7 +4347,7 @@
                 "uint16_t",
                 0,
                 0,
-                "state of formatting (not started, writing file system, formatting, writing VSAs, finished)"
+                "state of formatting (not started, writing file system,"
             ]
         },
         "names": [
@@ -4797,222 +4668,6 @@
         "pack": 2,
         "union": false
     },
-    "_SEtherBadgeSettings": {
-        "members": {
-            "ain_sample_period": [
-                "uint16_t",
-                0,
-                0,
-                "2"
-            ],
-            "ain_threshold": [
-                "uint16_t",
-                0,
-                0,
-                "2"
-            ],
-            "can1": [
-                "CAN_SETTINGS",
-                0,
-                0,
-                "12"
-            ],
-            "can2": [
-                "CAN_SETTINGS",
-                0,
-                0,
-                "12"
-            ],
-            "canfd1": [
-                "CANFD_SETTINGS",
-                0,
-                0,
-                "10"
-            ],
-            "canfd2": [
-                "CANFD_SETTINGS",
-                0,
-                0,
-                "10"
-            ],
-            "ethernet": [
-                "ETHERNET_SETTINGS",
-                0,
-                0,
-                "8"
-            ],
-            "ethernet2": [
-                "ETHERNET_SETTINGS2",
-                0,
-                0,
-                "16"
-            ],
-            "flags": {
-                "members": {
-                    "disableUsbCheckOnBoot": [
-                        "uint32_t",
-                        0,
-                        1,
-                        "[Bitfield] "
-                    ],
-                    "enableLatencyTest": [
-                        "uint32_t",
-                        0,
-                        1,
-                        "[Bitfield] "
-                    ],
-                    "enablePcEthernetComm": [
-                        "uint32_t",
-                        0,
-                        1,
-                        "[Bitfield] "
-                    ],
-                    "reserved": [
-                        "uint32_t",
-                        0,
-                        29,
-                        "[Bitfield] "
-                    ]
-                },
-                "names": [
-                    "flags"
-                ],
-                "pack": 2,
-                "union": false
-            },
-            "iso15765_separation_time_offset": [
-                "int16_t",
-                0,
-                0,
-                "2"
-            ],
-            "iso9141_kwp_enable_reserved": [
-                "uint16_t",
-                0,
-                0,
-                "2"
-            ],
-            "iso9141_kwp_settings": [
-                "ISO9141_KEYWORD2000_SETTINGS",
-                0,
-                0,
-                "114"
-            ],
-            "iso_msg_termination": [
-                "uint16_t",
-                0,
-                0,
-                "2"
-            ],
-            "iso_parity": [
-                "uint16_t",
-                0,
-                0,
-                "2"
-            ],
-            "iso_tester_pullup_enable": [
-                "uint16_t",
-                0,
-                0,
-                "2"
-            ],
-            "lin1": [
-                "LIN_SETTINGS",
-                0,
-                0,
-                "10"
-            ],
-            "misc_io_analog_enable": [
-                "uint16_t",
-                0,
-                0,
-                "2"
-            ],
-            "misc_io_initial_ddr": [
-                "uint16_t",
-                0,
-                0,
-                "2"
-            ],
-            "misc_io_initial_latch": [
-                "uint16_t",
-                0,
-                0,
-                "2"
-            ],
-            "misc_io_on_report_events": [
-                "uint16_t",
-                0,
-                0,
-                "2"
-            ],
-            "misc_io_report_period": [
-                "uint16_t",
-                0,
-                0,
-                "2"
-            ],
-            "network_enabled_on_boot": [
-                "uint16_t",
-                0,
-                0,
-                "2"
-            ],
-            "network_enables": [
-                "uint16_t",
-                0,
-                0,
-                "2"
-            ],
-            "network_enables_2": [
-                "uint16_t",
-                0,
-                0,
-                "2"
-            ],
-            "network_enables_3": [
-                "uint16_t",
-                0,
-                0,
-                "2"
-            ],
-            "perf_en": [
-                "uint16_t",
-                0,
-                0,
-                "2"
-            ],
-            "pwr_man_enable": [
-                "uint16_t",
-                0,
-                0,
-                "2"
-            ],
-            "pwr_man_timeout": [
-                "uint32_t",
-                0,
-                0,
-                "4"
-            ],
-            "termination_enables": [
-                "uint64_t",
-                0,
-                0,
-                "8"
-            ],
-            "text_api": [
-                "STextAPISettings",
-                0,
-                0,
-                "72"
-            ]
-        },
-        "names": [
-            "SEtherBadgeSettings"
-        ],
-        "pack": 2,
-        "union": false
-    },
     "_SExtSubCmdComm": {
         "members": {
             "details": [
@@ -5191,12 +4846,6 @@
             ],
             "ethernet": [
                 "ETHERNET_SETTINGS",
-                0,
-                0,
-                ""
-            ],
-            "ethernet2": [
-                "ETHERNET_SETTINGS2",
                 0,
                 0,
                 ""
@@ -6170,12 +5819,6 @@
                 0,
                 ""
             ],
-            "ethernet2": [
-                "ETHERNET_SETTINGS2",
-                0,
-                0,
-                ""
-            ],
             "flags": {
                 "members": {
                     "busMessagesToAndroid": [
@@ -7034,18 +6677,6 @@
                 0,
                 ""
             ],
-            "ethernet1": [
-                "ETHERNET_SETTINGS2",
-                0,
-                0,
-                "DAQ port on label, NETID_ETHERNET"
-            ],
-            "ethernet2": [
-                "ETHERNET_SETTINGS2",
-                0,
-                0,
-                "LAN port on label, NETID_ETHERNET2"
-            ],
             "hwComLatencyTestEn": [
                 "uint16_t",
                 0,
@@ -7161,12 +6792,6 @@
                 ""
             ],
             "network_enables_3": [
-                "uint16_t",
-                0,
-                0,
-                ""
-            ],
-            "network_enables_4": [
                 "uint16_t",
                 0,
                 0,
@@ -7979,12 +7604,6 @@
                 0,
                 "8"
             ],
-            "ethernet2": [
-                "ETHERNET_SETTINGS2",
-                0,
-                0,
-                ""
-            ],
             "flags": {
                 "members": {
                     "disableUsbCheckOnBoot": [
@@ -8311,12 +7930,6 @@
             ],
             "canfd2": [
                 "CANFD_SETTINGS",
-                0,
-                0,
-                ""
-            ],
-            "ethernet": [
-                "ETHERNET_SETTINGS2",
                 0,
                 0,
                 ""
@@ -8890,12 +8503,6 @@
             ],
             "ethernet": [
                 "ETHERNET_SETTINGS",
-                0,
-                0,
-                ""
-            ],
-            "ethernet2": [
-                "ETHERNET_SETTINGS2",
                 0,
                 0,
                 ""
@@ -9545,12 +9152,6 @@
             ],
             "ethernet": [
                 "ETHERNET_SETTINGS",
-                0,
-                0,
-                ""
-            ],
-            "ethernet2": [
-                "ETHERNET_SETTINGS2",
                 0,
                 0,
                 ""
@@ -11161,27 +10762,6 @@
                 },
                 "names": [
                     "cmprobe_versions"
-                ],
-                "pack": 2,
-                "union": false
-            },
-            "ether_badge_versions": {
-                "members": {
-                    "mchip_major": [
-                        "uint8_t",
-                        0,
-                        0,
-                        ""
-                    ],
-                    "mchip_minor": [
-                        "uint8_t",
-                        0,
-                        0,
-                        ""
-                    ]
-                },
-                "names": [
-                    "ether_badge_versions"
                 ],
                 "pack": 2,
                 "union": false

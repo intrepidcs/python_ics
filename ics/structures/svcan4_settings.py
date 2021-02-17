@@ -1,14 +1,13 @@
 # This file was auto generated; Do not modify, if you value your sanity!
 import ctypes
 
-try: # 7
+try: # 6
     from can_settings import can_settings
     from canfd_settings import canfd_settings
     from lin_settings import lin_settings
     from iso9141_keyword2000_settings import iso9141_keyword2000_settings
     from s_text_api_settings import s_text_api_settings
     from ethernet_settings import ethernet_settings
-    from ethernet_settings2 import ethernet_settings2
 except:
     from ics.structures.can_settings import can_settings
     from ics.structures.canfd_settings import canfd_settings
@@ -16,7 +15,6 @@ except:
     from ics.structures.iso9141_keyword2000_settings import iso9141_keyword2000_settings
     from ics.structures.s_text_api_settings import s_text_api_settings
     from ics.structures.ethernet_settings import ethernet_settings
-    from ics.structures.ethernet_settings2 import ethernet_settings2
 
 # flags
 class flags(ctypes.Structure):
@@ -58,7 +56,6 @@ class svcan4_settings(ctypes.Structure):
         ('flags', flags), 
         ('pwr_man_enable', ctypes.c_uint16), 
         ('pwr_man_timeout', ctypes.c_uint16), 
-        ('ethernet2', ethernet_settings2), 
     ]
 
 # Extra names go here:

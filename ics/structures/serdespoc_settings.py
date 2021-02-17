@@ -7,7 +7,7 @@ class serdespoc_settings(ctypes.Structure):
         ('mode', ctypes.c_uint8), # no poc, generated supply, serializer passthrough
         ('rsvd', ctypes.c_uint8 * 6), 
         ('voltage', ctypes.c_uint8), # generated voltage
-        ('chksum', ctypes.c_uint16), # checksum to protect settings structure (don't want corrupt voltage settings)
+        ('chksum', ctypes.c_uint16), # checksum to protect settings structure (don't want corrupt
     ]
 
 # Extra names go here:

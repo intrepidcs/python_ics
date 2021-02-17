@@ -263,17 +263,6 @@ class rad_moon_duo_versions(ctypes.Structure):
 # Extra names go here:
 # End of extra names
 
-# ether_badge_versions
-class ether_badge_versions(ctypes.Structure):
-    _pack_ = 2
-    _fields_ = [
-        ('mchip_major', ctypes.c_uint8), 
-        ('mchip_minor', ctypes.c_uint8), 
-    ]
-
-# Extra names go here:
-# End of extra names
-
 class st_chip_versions(ctypes.Union):
     _pack_ = 2
     _fields_ = [
@@ -299,7 +288,6 @@ class st_chip_versions(ctypes.Union):
         ('jupiter_versions', jupiter_versions), 
         ('fire3_versions', fire3_versions), 
         ('rad_moon_duo_versions', rad_moon_duo_versions), 
-        ('ether_badge_versions', ether_badge_versions), 
     ]
 
 # Extra names go here:
