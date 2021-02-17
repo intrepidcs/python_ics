@@ -1,7 +1,7 @@
 # This file was auto generated; Do not modify, if you value your sanity!
 import ctypes
 
-try: # 8
+try: # 7
     from can_settings import can_settings
     from canfd_settings import canfd_settings
     from lin_settings import lin_settings
@@ -9,7 +9,6 @@ try: # 8
     from ethernet_settings import ethernet_settings
     from s_text_api_settings import s_text_api_settings
     from s_pluto_custom_params_s import s_pluto_custom_params_s
-    from ethernet_settings2 import ethernet_settings2
 except:
     from ics.structures.can_settings import can_settings
     from ics.structures.canfd_settings import canfd_settings
@@ -18,7 +17,6 @@ except:
     from ics.structures.ethernet_settings import ethernet_settings
     from ics.structures.s_text_api_settings import s_text_api_settings
     from ics.structures.s_pluto_custom_params_s import s_pluto_custom_params_s
-    from ics.structures.ethernet_settings2 import ethernet_settings2
 
 # flags
 class flags(ctypes.Structure):
@@ -59,8 +57,7 @@ class srad_pluto_settings(ctypes.Structure):
         ('ethernet', ethernet_settings), # 8
         ('text_api', s_text_api_settings), # 72
         ('flags', flags), 
-        ('custom', s_pluto_custom_params_s), # 44
-        ('ethernet2', ethernet_settings2), # 16
+        ('custom', s_pluto_custom_params_s), # 18
     ]
 
 # Extra names go here:

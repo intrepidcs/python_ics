@@ -1,9 +1,11 @@
 # This file was auto generated; Do not modify, if you value your sanity!
 import ctypes
 
-class op_eth_settings_u1_s1(ctypes.Structure):
+class op_eth_settings(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
+        ('ucConfigMode', ctypes.c_uint8), 
+        ('preemption_en', ctypes.c_ubyte), 
         ('mac_addr1', ctypes.c_ubyte * 6), # Original Addr for spoofing
         ('mac_addr2', ctypes.c_ubyte * 6), # Target Addr for spoofing
         ('mac_spoofing_en', ctypes.c_ushort, 1), # [Bitfield] 
@@ -11,21 +13,7 @@ class op_eth_settings_u1_s1(ctypes.Structure):
         ('link_spd', ctypes.c_ushort, 2), # [Bitfield] 
         ('q2112_phy_mode', ctypes.c_ushort, 1), # [Bitfield] 
         ('reserved', ctypes.c_ushort, 11), # [Bitfield] 
-    ]
-
-class op_eth_settings_u1(ctypes.Union):
-    _pack_ = 2
-    _fields_ = [
-        ('s1', op_eth_settings_u1_s1), 
         ('reserved0', ctypes.c_ubyte * 14), 
-    ]
-
-class op_eth_settings(ctypes.Structure):
-    _pack_ = 2
-    _fields_ = [
-        ('ucConfigMode', ctypes.c_uint8), 
-        ('preemption_en', ctypes.c_ubyte), 
-        ('u1',op_eth_settings_u1), 
     ]
 
 # Extra names go here:
