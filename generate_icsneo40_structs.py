@@ -1,6 +1,8 @@
+# run before: clang-format --style=mozilla -i include\ics\icsnVC40.h
 import re
 import os.path
 from collections import OrderedDict 
+import sys
 
 debug_print = False
 
@@ -706,6 +708,7 @@ if __name__ == '__main__':
         f.write("]\n")
     
     # Verify We can at least import all of the modules - quick check to make sure parser worked.
+    sys.path.insert(0, output_dir)
     for file_name in file_names:
         import_line = "from ics.structures import {}".format(re.sub('(\.py)', '', file_name)) 
         try:
