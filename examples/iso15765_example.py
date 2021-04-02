@@ -62,15 +62,14 @@ def transmit_iso15765_msg(device, netid=ics.NETID_HSCAN, is_canfd=False):
     msg.fs_wait = 0x3000 # ms
     msg.blockSize = 0
     msg.stMin = 0
-    # CmISO157652TxMessage.flags bitfield union isn't implemented as of 2.12, we need to do it manually.
-    msg.flags = 0
     # paddingEnable
-    msg.flags |= (1 << 6)
+    msg.paddingEnable = 1
     # CANFD: Enable + BRS
     if is_canfd:
-        msg.flags |= (1 << 7) | (1 << 8)
+        msg.iscanFD = 1
+        msg.isBRSEnabled = 1
     # tx_dl
-    msg.flags |= (8 << 24)
+    msg.tx_dl = 1
     # Data
     msg.data = [x for x in range(number_of_bytes)]
 
@@ -93,16 +92,14 @@ def setup_rx_iso15765_msg(device, netid=ics.NETID_HSCAN, is_canfd=False):
     msg.blockSize = 100
     msg.stMin = 10
     msg.cf_timeout = 1000
-    # CmISO157652RxMessage.flags bitfield union isn't implemented as of 2.12, we need to do it manually.
-    msg.flags = 0
     # enableFlowControlTransmission = 1
-    msg.flags |= (1 << 4)
+    msg.enableFlowControlTransmission = 1
     # paddingEnable
-    msg.flags |= (1 << 5)
+    msg.paddingEnable = 1
     # CANFD: Enable + BRS
     if is_canfd:
-        msg.flags |= (1 << 6) | (1 << 7)
-
+        msg.iscanFD = 1
+        msg.isBRSEnabled = 1
     print_message(msg)
     print("Setting up iso15765 message on {}...".format(dev_name(device)))
     ics.iso15765_receive_message(device, netid, msg)
