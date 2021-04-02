@@ -47,6 +47,8 @@ except ImportError:
 class build(build_module.build):
     def run(self):
         import extract_icsneo40_defines # there should be a better way to do this...
+        import generate_icsneo40_structs
+        generate_icsneo40_structs.generate()
         build_module.build.run(self)
 
 home_path = os.path.expanduser('~')
