@@ -20,7 +20,7 @@ class secu_settings(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
         ('ecu_id', ctypes.c_uint32), 
-        ('selected_network', ctypes.c_uint16), # not supported yet - default to HSCAN
+        ('selected_network', ctypes.c_uint16), 
         ('can1', can_settings), 
         ('can2', can_settings), 
         ('lin1', lin_settings), 

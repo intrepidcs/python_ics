@@ -33,31 +33,32 @@ class flags(ctypes.Structure):
 
 class srad_pluto_settings(ctypes.Structure):
     _pack_ = 2
+    _anonymous_ = ("flags",)
     _fields_ = [
-        ('perf_en', ctypes.c_uint16), # 2
-        ('can1', can_settings), # 12
-        ('canfd1', canfd_settings), # 10
-        ('can2', can_settings), # 12
-        ('canfd2', canfd_settings), # 10
-        ('lin1', lin_settings), # 10
-        ('network_enables', ctypes.c_uint16), # 2
-        ('network_enables_2', ctypes.c_uint16), # 2
-        ('network_enables_3', ctypes.c_uint16), # 2
-        ('termination_enables', ctypes.c_uint64), # 8
-        ('misc_io_analog_enable', ctypes.c_uint16), # 2
-        ('pwr_man_timeout', ctypes.c_uint32), # 4
-        ('pwr_man_enable', ctypes.c_uint16), # 2
-        ('network_enabled_on_boot', ctypes.c_uint16), # 2
-        ('iso15765_separation_time_offset', ctypes.c_int16), # 2
-        ('iso9141_kwp_enable_reserved', ctypes.c_uint16), # 2
-        ('iso_tester_pullup_enable', ctypes.c_uint16), # 2
-        ('iso_parity', ctypes.c_uint16), # 2
-        ('iso_msg_termination', ctypes.c_uint16), # 2
-        ('iso9141_kwp_settings', iso9141_keyword2000_settings), # 114
-        ('ethernet', ethernet_settings), # 8
-        ('text_api', s_text_api_settings), # 72
+        ('perf_en', ctypes.c_uint16), 
+        ('can1', can_settings), 
+        ('canfd1', canfd_settings), 
+        ('can2', can_settings), 
+        ('canfd2', canfd_settings), 
+        ('lin1', lin_settings), 
+        ('network_enables', ctypes.c_uint16), 
+        ('network_enables_2', ctypes.c_uint16), 
+        ('network_enables_3', ctypes.c_uint16), 
+        ('termination_enables', ctypes.c_uint64), 
+        ('misc_io_analog_enable', ctypes.c_uint16), 
+        ('pwr_man_timeout', ctypes.c_uint32), 
+        ('pwr_man_enable', ctypes.c_uint16), 
+        ('network_enabled_on_boot', ctypes.c_uint16), 
+        ('iso15765_separation_time_offset', ctypes.c_int16), 
+        ('iso9141_kwp_enable_reserved', ctypes.c_uint16), 
+        ('iso_tester_pullup_enable', ctypes.c_uint16), 
+        ('iso_parity', ctypes.c_uint16), 
+        ('iso_msg_termination', ctypes.c_uint16), 
+        ('iso9141_kwp_settings', iso9141_keyword2000_settings), 
+        ('ethernet', ethernet_settings), 
+        ('text_api', s_text_api_settings), 
         ('flags', flags), 
-        ('custom', s_pluto_custom_params_s), # 18
+        ('custom', s_pluto_custom_params_s), 
     ]
 
 # Extra names go here:

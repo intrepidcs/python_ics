@@ -10,7 +10,7 @@ class s_disk_structure(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
         ('settings', disk_settings), 
-        ('options', ctypes.c_uint16), # 0x01 full format
+        ('options', ctypes.c_uint16), 
     ]
 
 # Extra names go here:

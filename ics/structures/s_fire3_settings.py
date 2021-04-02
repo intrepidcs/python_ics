@@ -51,6 +51,7 @@ class flags(ctypes.Structure):
 
 class s_fire3_settings(ctypes.Structure):
     _pack_ = 2
+    _anonymous_ = ("network_enables", "flags",)
     _fields_ = [
         ('perf_en', ctypes.c_uint16), 
         ('network_enabled_on_boot', ctypes.c_uint16), 

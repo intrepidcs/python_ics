@@ -45,6 +45,7 @@ class flags(ctypes.Structure):
 
 class srad_gigastar_settings(ctypes.Structure):
     _pack_ = 2
+    _anonymous_ = ("flags",)
     _fields_ = [
         ('ecu_id', ctypes.c_uint32), 
         ('perf_en', ctypes.c_uint16), 

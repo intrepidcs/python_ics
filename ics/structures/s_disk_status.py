@@ -4,7 +4,7 @@ import ctypes
 class s_disk_status(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
-        ('status', ctypes.c_uint16), # 0x1 = present, 0x2 = initialized
+        ('status', ctypes.c_uint16), 
         ('sectors', ctypes.c_uint8 * 8), 
         ('bytesPerSector', ctypes.c_uint8 * 4), 
     ]

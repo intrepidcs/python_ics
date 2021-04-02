@@ -44,6 +44,7 @@ class flags(ctypes.Structure):
 
 class srad_gigalog_settings(ctypes.Structure):
     _pack_ = 2
+    _anonymous_ = ("flags",)
     _fields_ = [
         ('ecu_id', ctypes.c_uint32), 
         ('perf_en', ctypes.c_uint16), 
@@ -79,8 +80,8 @@ class srad_gigalog_settings(ctypes.Structure):
         ('idle_wakeup_network_enables_3', ctypes.c_uint16), 
         ('text_api', s_text_api_settings), 
         ('termination_enables', ctypes.c_uint64), 
-        ('rsvd1', ctypes.c_uint8 * 8), # previously ETHERNET_SETTINGS
-        ('rsvd2', ctypes.c_uint8 * 8), # previously ETHERNET10G_SETTINGS
+        ('rsvd1', ctypes.c_uint8 * 8), 
+        ('rsvd2', ctypes.c_uint8 * 8), 
         ('disk', disk_settings), 
         ('timeSyncSettings', timesync_icshardware_settings), 
         ('flags', flags), 

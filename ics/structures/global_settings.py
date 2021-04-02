@@ -66,12 +66,10 @@ except:
     from ics.structures.s_fire3_settings import s_fire3_settings
     from ics.structures.s_rad_moon_duo_settings import s_rad_moon_duo_settings
 
-class global_settings(ctypes.Structure):
+# _U5
+class _U5(ctypes.Union):
     _pack_ = 2
     _fields_ = [
-        ('version', ctypes.c_uint16), 
-        ('len', ctypes.c_uint16), 
-        ('chksum', ctypes.c_uint16), 
         ('red', s_red_settings), 
         ('fire', s_fire_settings), 
         ('firevnet', s_fire_vnet_settings), 
@@ -87,7 +85,7 @@ class global_settings(ctypes.Structure):
         ('cmprobe', s_cm_probe_settings), 
         ('obd2pro', sobd2_pro_settings), 
         ('vcan412', svcan412_settings), 
-        ('vcan4_12', svcan412_settings), # backwards compatibility with older code
+        ('vcan4_12', svcan412_settings), 
         ('neoecu_avb', secu_avb_settings), 
         ('radsupermoon', srad_super_moon_settings), 
         ('radmoon2', srad_moon2_settings), 
@@ -104,6 +102,19 @@ class global_settings(ctypes.Structure):
         ('jupiter', srad_jupiter_settings), 
         ('fire3', s_fire3_settings), 
         ('radmoonduo', s_rad_moon_duo_settings), 
+    ]
+
+# Extra names go here:
+# End of extra names
+
+class global_settings(ctypes.Structure):
+    _pack_ = 2
+    _anonymous_ = ("_U5",)
+    _fields_ = [
+        ('version', ctypes.c_uint16), 
+        ('len', ctypes.c_uint16), 
+        ('chksum', ctypes.c_uint16), 
+        ('_U5', _U5), 
     ]
 
 # Extra names go here:

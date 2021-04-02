@@ -43,6 +43,7 @@ class flags(ctypes.Structure):
 
 class svcan4_ind_settings(ctypes.Structure):
     _pack_ = 2
+    _anonymous_ = ("network_enables", "flags",)
     _fields_ = [
         ('can1', can_settings), 
         ('canfd1', canfd_settings), 

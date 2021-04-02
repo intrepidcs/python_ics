@@ -24,6 +24,7 @@ class flags(ctypes.Structure):
 
 class secu_avb_settings(ctypes.Structure):
     _pack_ = 2
+    _anonymous_ = ("flags",)
     _fields_ = [
         ('perf_en', ctypes.c_uint16), 
         ('can1', can_settings), 

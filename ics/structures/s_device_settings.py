@@ -89,7 +89,7 @@ class Settings(ctypes.Union):
         ('cmprobe', s_cm_probe_settings), 
         ('obd2pro', sobd2_pro_settings), 
         ('vcan412', svcan412_settings), 
-        ('vcan4_12', svcan412_settings), # backwards compatibility with older code
+        ('vcan4_12', svcan412_settings), 
         ('neoecu_avb', secu_avb_settings), 
         ('radsupermoon', srad_super_moon_settings), 
         ('radmoon2', srad_moon2_settings), 
@@ -114,6 +114,7 @@ class Settings(ctypes.Union):
 
 class s_device_settings(ctypes.Structure):
     _pack_ = 2
+    _anonymous_ = ("Settings",)
     _fields_ = [
         ('DeviceSettingType', ctypes.c_int), 
         ('Settings', Settings), 
