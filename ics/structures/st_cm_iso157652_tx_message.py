@@ -1,8 +1,29 @@
 # This file was auto generated; Do not modify, if you value your sanity!
 import ctypes
 
+# _U6
+class _U6(ctypes.Union):
+    _pack_ = 2
+    _fields_ = [
+        ('id_29_bit_enable', ctypes.c_uint32, 1), # [Bitfield] 
+        ('fc_id_29_bit_enable', ctypes.c_uint32, 1), # [Bitfield] 
+        ('ext_address_enable', ctypes.c_uint32, 1), # [Bitfield] 
+        ('fc_ext_address_enable', ctypes.c_uint32, 1), # [Bitfield] 
+        ('overrideSTmin', ctypes.c_uint32, 1), # [Bitfield] 
+        ('overrideBlockSize', ctypes.c_uint32, 1), # [Bitfield] 
+        ('paddingEnable', ctypes.c_uint32, 1), # [Bitfield] 
+        ('iscanFD', ctypes.c_uint32, 1), # [Bitfield] 
+        ('isBRSEnabled', ctypes.c_uint32, 1), # [Bitfield] 
+        ('tx_dl', ctypes.c_uint32, 8), # [Bitfield] 
+        ('flags', ctypes.c_uint32), 
+    ]
+
+# Extra names go here:
+# End of extra names
+
 class st_cm_iso157652_tx_message(ctypes.Structure):
     _pack_ = 2
+    _anonymous_ = ("_U6",)
     _fields_ = [
         ('vs_netid', ctypes.c_uint16), 
         ('padding', ctypes.c_uint8), 
@@ -18,17 +39,7 @@ class st_cm_iso157652_tx_message(ctypes.Structure):
         ('fs_wait', ctypes.c_uint16), 
         ('data', ctypes.c_uint8 * 4096), 
         ('num_bytes', ctypes.c_uint32), 
-        ('id_29_bit_enable', ctypes.c_uint32, 1), # [Bitfield] 
-        ('fc_id_29_bit_enable', ctypes.c_uint32, 1), # [Bitfield] 
-        ('ext_address_enable', ctypes.c_uint32, 1), # [Bitfield] 
-        ('fc_ext_address_enable', ctypes.c_uint32, 1), # [Bitfield] 
-        ('overrideSTmin', ctypes.c_uint32, 1), # [Bitfield] 
-        ('overrideBlockSize', ctypes.c_uint32, 1), # [Bitfield] 
-        ('paddingEnable', ctypes.c_uint32, 1), # [Bitfield] 
-        ('iscanFD', ctypes.c_uint32, 1), # [Bitfield] 
-        ('isBRSEnabled', ctypes.c_uint32, 1), # [Bitfield] 
-        ('tx_dl', ctypes.c_uint32, 8), # [Bitfield] 
-        ('flags', ctypes.c_uint32), 
+        ('_U6', _U6), 
     ]
 
 # Extra names go here:

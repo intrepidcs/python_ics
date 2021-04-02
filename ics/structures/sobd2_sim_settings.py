@@ -23,6 +23,7 @@ class flags(ctypes.Structure):
 
 class sobd2_sim_settings(ctypes.Structure):
     _pack_ = 2
+    _anonymous_ = ("flags",)
     _fields_ = [
         ('can1', can_settings), 
         ('can2', can_settings), 

@@ -12,13 +12,24 @@ except:
     from ics.structures.s_disk_details import s_disk_details
     from ics.structures.s_disk_format_progress import s_disk_format_progress
 
-class s_ext_sub_cmd_comm(ctypes.Structure):
+# _U3
+class _U3(ctypes.Union):
     _pack_ = 2
     _fields_ = [
-        ('hdr', s_ext_sub_cmd_hdr), 
         ('structure', s_disk_structure), 
         ('details', s_disk_details), 
         ('progress', s_disk_format_progress), 
+    ]
+
+# Extra names go here:
+# End of extra names
+
+class s_ext_sub_cmd_comm(ctypes.Structure):
+    _pack_ = 2
+    _anonymous_ = ("_U3",)
+    _fields_ = [
+        ('hdr', s_ext_sub_cmd_hdr), 
+        ('_U3', _U3), 
     ]
 
 # Extra names go here:

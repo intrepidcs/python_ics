@@ -8,7 +8,7 @@ class ethernet10_g_settings(ctypes.Structure):
         ('ip_addr', ctypes.c_uint32), 
         ('netmask', ctypes.c_uint32), 
         ('gateway', ctypes.c_uint32), 
-        ('link_speed', ctypes.c_uint8), # 0=10, 1=100, 2=1000, 3=2500, 4=5000, 5=10000
+        ('link_speed', ctypes.c_uint8), 
         ('rsvd2', ctypes.c_uint8 * 7), 
     ]
 

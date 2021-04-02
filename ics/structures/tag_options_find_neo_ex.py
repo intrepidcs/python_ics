@@ -11,6 +11,7 @@ class CANOptions(ctypes.Structure):
 # End of extra names
 
 class tag_options_find_neo_ex(ctypes.Union):
+    _anonymous_ = ("CANOptions",)
     _fields_ = [
         ('CANOptions', CANOptions), 
         ('Reserved', ctypes.c_uint32 * 16), 

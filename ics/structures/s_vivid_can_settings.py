@@ -22,11 +22,12 @@ class flags(ctypes.Structure):
 
 class s_vivid_can_settings(ctypes.Structure):
     _pack_ = 2
+    _anonymous_ = ("flags",)
     _fields_ = [
         ('ecu_id', ctypes.c_uint32), 
-        ('can1', can_settings), # 12 bytes
-        ('swcan1', swcan_settings), # 14 bytes
-        ('lsftcan1', can_settings), # 12 bytes
+        ('can1', can_settings), 
+        ('swcan1', swcan_settings), 
+        ('lsftcan1', can_settings), 
         ('network_enables', ctypes.c_uint16), 
         ('network_enabled_on_boot', ctypes.c_uint16), 
         ('iso15765_separation_time_offset', ctypes.c_uint16), 

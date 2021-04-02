@@ -47,6 +47,7 @@ class can4_options(ctypes.Union):
 
 class s_text_api_settings(ctypes.Structure):
     _pack_ = 2
+    _anonymous_ = ("can1_options", "can2_options", "can3_options", "can4_options",)
     _fields_ = [
         ('can1_tx_id', ctypes.c_uint32), 
         ('can1_rx_id', ctypes.c_uint32), 
