@@ -771,7 +771,9 @@ def parse_header_file(filename):
     return struct_data, enum_data
 
 
-if __name__ == '__main__':
+def generate():
+    import shutil
+    import json
     filename = 'include/ics/icsnVC40.h'
     filename = format_file(filename)
     struct_data, enum_data = parse_header_file(filename)
@@ -797,7 +799,7 @@ if __name__ == '__main__':
         # print(data_types)
         print(sorted(list(dict.fromkeys(data_types))))
     # make the json file
-    import json
+    
     j = json.dumps(struct_data, indent=4, sort_keys=False)
     with open('icsnVC40.h.json', 'w+') as f:
         f.write(j)
@@ -806,7 +808,13 @@ if __name__ == '__main__':
         f.write(j)
     # generate the python files
     output_dir = './ics/structures'
+    print(f"Removing {output_dir}...")
+    try:
+        shutil.rmtree(output_dir)
+    except FileNotFoundError:
+        pass
     file_names = []
+    prefered_names = []
     for name in struct_data:
         prefered_name = get_preferred_struct_name(
             name, get_struct_names(struct_data))
@@ -815,7 +823,13 @@ if __name__ == '__main__':
             prefered_name, struct_data[name], struct_data, output_dir)
         print("Generated {}...".format(file_name))
         file_names.append(file_name)
-
+        prefered_names.append(prefered_name)
+    # write a hidden_import python file for pyinstaller
+    with open('./ics/hiddenimports.py', 'w+') as f:
+        f.write('hidden_imports = [\n')
+        for prefered_name in sorted(prefered_names):
+            f.write(f'    "ics.structures.{prefered_name}",\n')
+        f.write(']\n\n')
     # enums
     for name in enum_data:
         prefered_name = get_preferred_struct_name(
@@ -854,3 +868,6 @@ if __name__ == '__main__':
             print("ERROR: ", ex, 'IMPORT LINE:', import_line)
     """
     print("Done.")
+
+if __name__ == '__main__':
+    generate()
