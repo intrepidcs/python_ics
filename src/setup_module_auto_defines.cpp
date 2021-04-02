@@ -736,7 +736,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, MAX_PHY_SETTINGS_STRUCT);
 	result += PyModule_AddIntMacro(module, MAX_NUMBYTES_PHYSETTINGS);
 	// enum
-	// end of enum -      }
+	// end of enum -    }
 
 
 	return result == 0 ? 1 : 0;

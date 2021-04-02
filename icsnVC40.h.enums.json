@@ -219,7 +219,7 @@
             ],
             "DeviceSettingsNone ": [
                 4294967295,
-                "just wanted to reserve this"
+                ""
             ]
         },
         "names": [
@@ -230,15 +230,15 @@
         "members": {
             "PlasmaIonVnetChannelMain": [
                 0,
-                "PLASMA = SLOT 2, ION = VNET2"
+                ""
             ],
             "PlasmaIonVnetChannelA": [
                 1,
-                "PLASMA = SLOT 1, ION = VNET1"
+                ""
             ],
             "PlasmaIonVnetChannelB": [
                 2,
-                "PLASMA = SLOT 3, ION = NA"
+                ""
             ],
             "eSoftCore": [
                 3,
