@@ -211,7 +211,7 @@ def generate_ctype_struct_pyfile_from_dict(name, data, struct_data, path='.', is
     def convert_to_ctype_object(data_type):
         if data_type == 'unsigned':
             data_type = 'uint32_t'
-        elif data_type == 'void *':
+        elif data_type == 'void *' or data_type == 'void*':
             data_type = 'void_p'
         elif data_type == 'unsigned char':
             data_type = 'ubyte'
@@ -221,6 +221,8 @@ def generate_ctype_struct_pyfile_from_dict(name, data, struct_data, path='.', is
             data_type = 'ushort'
         elif data_type == 'descIdType':
             data_type = 'int16_t'
+        elif data_type == 'e_device_settings_type':
+            data_type == 'int32_t'
 
         #print("DEBUG:", data_type)
         is_pointer = '*' in data_type
@@ -413,13 +415,14 @@ def generate_ctype_struct_pyfile_from_dict(name, data, struct_data, path='.', is
 
 def format_file(filename):
     processed_fname = "icsnVC40_processed.h"
-    # Format the file
-    result = run(["clang-format", "-i", "--style",
-                  "{BasedOnStyle: Microsoft, ColumnLimit: '200'}", filename], stdout=PIPE, stderr=PIPE)
-    result.check_returncode()
     # Run it through the preprocessor
     # clang -E -P .\include\ics\icsnVC40.h -o output.h
     result = run(["clang", "-E", "-P", filename, "-o", processed_fname], stdout=PIPE, stderr=PIPE)
+    result.check_returncode()
+
+    # Format the file
+    result = run(["clang-format", "-i", "--style",
+                  "{BasedOnStyle: Mozilla, ColumnLimit: '200'}", processed_fname], stdout=PIPE, stderr=PIPE)
     result.check_returncode()
 
     return processed_fname
@@ -813,9 +816,12 @@ def generate():
         shutil.rmtree(output_dir)
     except FileNotFoundError:
         pass
+    ignore_names = ['__fsid_t',] 
     file_names = []
     prefered_names = []
     for name in struct_data:
+        if name in ignore_names:
+            continue
         prefered_name = get_preferred_struct_name(
             name, get_struct_names(struct_data))
         #file_name, file_path = generate_ctype_struct_pyfile_from_dict(re.sub('^_', '', name), struct_data[name], struct_data, output_dir)
@@ -840,7 +846,6 @@ def generate():
         file_names.append(file_name)
 
     # Generate __init__.py and add all the modules to __all__
-    ignore_names = []  # [ 'SRADGigalogSettings', 'SRADGigalogDiskStatus', 'SRADGigalogDiskStructure', 'SRADGigalogDiskDetails', 'SRADGigalogDiskFormatProgress', 'SRadGigalogSubCmdHdr', 'DISK_SETTINGS_t', 'SRadGigalogComm',]
     with open(os.path.join(output_dir, '__init__.py'), 'w+') as f:
         f.write("__all__ = [\n")
         for file_name in file_names:
