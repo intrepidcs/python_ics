@@ -41,8 +41,10 @@ def generate_variables():
 def generate_documentation():
     return inspect.cleandoc(
     """.. include:: header.rst
+    .. include:: examples.rst
+
     ============================================================
-    Documentation
+    Module Documentation
     ============================================================
     .. automodule:: ics.ics
         :members:
@@ -50,19 +52,19 @@ def generate_documentation():
         :undoc-members:
 
     ============================================================
-    Functions
+    Module Functions
     ============================================================
 
     %s
 
     ============================================================
-    Structures
+    Module Structures
     ============================================================
 
     %s
 
     ============================================================
-    Variables
+    Module Variables
     ============================================================
 
     %s
