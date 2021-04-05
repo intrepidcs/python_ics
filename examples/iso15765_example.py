@@ -1,4 +1,5 @@
 import ics
+import ctypes
 
 enable_print_message = False
 enable_use_server = True
@@ -49,7 +50,7 @@ def open_device(index=0):
 # Iso15765 Fuctions #########################################################
 def transmit_iso15765_msg(device, netid=ics.NETID_HSCAN, is_canfd=False):
     number_of_bytes = 64
-    msg = ics.CmISO157652TxMessage()
+    msg = ics.st_cm_iso157652_tx_message.st_cm_iso157652_tx_message()
     msg.id = 0x7E0
     msg.vs_netid = netid
     msg.num_bytes = number_of_bytes
@@ -71,7 +72,8 @@ def transmit_iso15765_msg(device, netid=ics.NETID_HSCAN, is_canfd=False):
     # tx_dl
     msg.tx_dl = 1
     # Data
-    msg.data = [x for x in range(number_of_bytes)]
+    my_data = [x for x in range(number_of_bytes)]
+    msg.data = (ctypes.c_ubyte*len(msg.data))(*my_data)
 
     # Transmit the message
     print("Transmitting iso15765 message on {}...".format(dev_name(device)))
@@ -82,7 +84,7 @@ def transmit_iso15765_msg(device, netid=ics.NETID_HSCAN, is_canfd=False):
     print("Transmitted iso15765 message on {}.".format(dev_name(device)))
 
 def setup_rx_iso15765_msg(device, netid=ics.NETID_HSCAN, is_canfd=False):
-    msg = ics.CmISO157652RxMessage()
+    msg = ics.st_cm_iso157652_rx_message.st_cm_iso157652_rx_message()
 
     msg.id = 0x7E0
     msg.vs_netid = netid
