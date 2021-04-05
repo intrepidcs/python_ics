@@ -1,6 +1,8 @@
 .. include:: header.rst
+.. include:: examples.rst
+
 ============================================================
-Documentation
+Module Documentation
 ============================================================
 .. automodule:: ics.ics
     :members:
@@ -8,7 +10,7 @@ Documentation
     :undoc-members:
 
 ============================================================
-Functions
+Module Functions
 ============================================================
 
 .. autosummary::
@@ -208,7 +210,7 @@ Functions
 
 
 ============================================================
-Structures
+Module Structures
 ============================================================
 
     .. autoclass:: ics.structures.can_settings.can_settings
@@ -694,7 +696,7 @@ Structures
 
 
 ============================================================
-Variables
+Module Variables
 ============================================================
 
     .. py:data:: AUTO
@@ -770,7 +772,7 @@ Variables
             :annotation: = 6
 
     .. py:data:: BUILD_DATETIME
-            :annotation: = Apr  2 2021 16:05:32
+            :annotation: = Apr  5 2021 10:56:06
 
     .. py:data:: CANFD_BRS_ENABLED
             :annotation: = 2

@@ -19,24 +19,23 @@ Starting with 903, python_ics module will now match official upstream version re
 ``pip install 'python_ics>=5.0,<904.0' --force-reinstall``
 
     **Note:** Refer to platform specific installation if not on Windows
-    
-v802
+
+Older Versions:
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-``pip install 'python_ics>=2.0,<3.0' --force-reinstall``
+- v802
+    ``pip install 'python_ics>=2.0,<3.0' --force-reinstall``
 
-    **Note:** Refer to platform specific installation if not on Windows
+        **Note:** Refer to platform specific installation if not on Windows
 
-v803
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-``pip install 'python_ics>=3.0,<4.0' --force-reinstall``
+- v803
+    ``pip install 'python_ics>=3.0,<4.0' --force-reinstall``
 
-    **Note:** Refer to platform specific installation if not on Windows
+        **Note:** Refer to platform specific installation if not on Windows
 
-v900
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-``pip install 'python_ics>=4.0,<5.0' --force-reinstall``
+- v900
+    ``pip install 'python_ics>=4.0,<5.0' --force-reinstall``
 
-    **Note:** Refer to platform specific installation if not on Windows
+        **Note:** Refer to platform specific installation if not on Windows
 
 
 ============================================================
