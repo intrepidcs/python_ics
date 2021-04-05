@@ -1,7 +1,5 @@
 __all__ = [
     "s_extended_data_flash_header",
-    "neo_device",
-    "neo_device_ex",
     "tag_options_open_neo_ex",
     "tag_options_find_neo_ex",
     "tagicsneo_vi_command",
@@ -91,10 +89,8 @@ __all__ = [
     "iso15765_2015_tx_message",
     "st_cm_iso157652_rx_message",
     "spy_filter_long",
-    "ics_spy_message",
     "ics_spy_message_flex_ray",
     "ics_spy_message_long",
-    "ics_spy_message_j1850",
     "ics_spy_message_vsb",
     "ethernet_network_status_t",
     "ics_fire2_device_status",

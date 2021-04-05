@@ -816,14 +816,14 @@ def generate():
         shutil.rmtree(output_dir)
     except FileNotFoundError:
         pass
-    ignore_names = ['__fsid_t',] 
+    ignore_names = ['__fsid_t', 'NeoDevice', 'neo_device', 'NeoDeviceEx', 'neo_device_ex', 'icsSpyMessage', 'icsSpyMessageJ1850', 'ics_spy_message', 'ics_spy_message_j1850'] 
     file_names = []
     prefered_names = []
     for name in struct_data:
-        if name in ignore_names:
-            continue
         prefered_name = get_preferred_struct_name(
             name, get_struct_names(struct_data))
+        if name in ignore_names or prefered_name in ignore_names:
+            continue
         #file_name, file_path = generate_ctype_struct_pyfile_from_dict(re.sub('^_', '', name), struct_data[name], struct_data, output_dir)
         file_name, file_path = generate_ctype_struct_pyfile_from_dict(
             prefered_name, struct_data[name], struct_data, output_dir)
