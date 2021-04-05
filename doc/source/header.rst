@@ -10,6 +10,38 @@ This module is essentially just a wrapper around icsneo40.dll. For more document
 Whats New?
 ============================================================
 
+v903 is a new release that implements features that break existing API in some areas.
+
+
+ISO 15765-2
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+old naming conventions have been updated to reflex closer to the actual codebase.
+
+.. code-block:: python
+
+    # Old:
+    tx_msg = ics.CmISO157652TxMessage()
+    rx_msg = ics.CmISO157652RxMessage()
+
+    # New:
+    tx_msg = ics.st_cm_iso157652_tx_message.st_cm_iso157652_tx_message()
+    rx_msg = ics.st_cm_iso157652_rx_message.st_cm_iso157652_rx_message()
+
+``ics.st_cm_iso157652_tx_message.st_cm_iso157652_tx_message()`` data structure is now a ctypes.c_ubytes array instead of a python list.
+
+.. code-block:: python
+
+    # Old:
+    msg.data = [x for x in range(number_of_bytes)]
+
+    # New:
+    my_data = [x for x in range(number_of_bytes)]
+    msg.data = (ctypes.c_ubyte*len(msg.data))(*my_data)
+
+    >>> msg.data
+    <ics.structures.st_cm_iso157652_tx_message.c_ubyte_Array_4096 object at 0x0000023E534BE940>
+
 Settings
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
