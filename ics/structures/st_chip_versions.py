@@ -263,9 +263,31 @@ class rad_moon_duo_versions(ctypes.Structure):
 # Extra names go here:
 # End of extra names
 
+# ether_badge_versions
+class ether_badge_versions(ctypes.Structure):
+    _pack_ = 2
+    _fields_ = [
+        ('mchip_major', ctypes.c_uint8), 
+        ('mchip_minor', ctypes.c_uint8), 
+    ]
+
+# Extra names go here:
+# End of extra names
+
+# rad_a2b_versions
+class rad_a2b_versions(ctypes.Structure):
+    _pack_ = 2
+    _fields_ = [
+        ('zynq_core_major', ctypes.c_uint8), 
+        ('zynq_core_minor', ctypes.c_uint8), 
+    ]
+
+# Extra names go here:
+# End of extra names
+
 class st_chip_versions(ctypes.Union):
     _pack_ = 2
-    _anonymous_ = ("fire_versions", "plasma_fire_vnet", "vcan3_versions", "vcanrf_versions", "radgalaxy_versions", "radstar2_versions", "vividcan_versions", "cmprobe_versions", "obd2pro_versions", "vcan41_versions", "vcan42_versions", "neoecu_avb_versions", "radsupermoon_versions", "radmoon2_versions", "pluto_versions", "radgigalog_versions", "radgigalog3_versions", "radgigastar_versions", "radgigastar_usbz_versions", "jupiter_versions", "fire3_versions", "rad_moon_duo_versions",)
+    _anonymous_ = ("fire_versions", "plasma_fire_vnet", "vcan3_versions", "vcanrf_versions", "radgalaxy_versions", "radstar2_versions", "vividcan_versions", "cmprobe_versions", "obd2pro_versions", "vcan41_versions", "vcan42_versions", "neoecu_avb_versions", "radsupermoon_versions", "radmoon2_versions", "pluto_versions", "radgigalog_versions", "radgigalog3_versions", "radgigastar_versions", "radgigastar_usbz_versions", "jupiter_versions", "fire3_versions", "rad_moon_duo_versions", "ether_badge_versions", "rad_a2b_versions",)
     _fields_ = [
         ('fire_versions', fire_versions), 
         ('plasma_fire_vnet', plasma_fire_vnet), 
@@ -289,6 +311,8 @@ class st_chip_versions(ctypes.Union):
         ('jupiter_versions', jupiter_versions), 
         ('fire3_versions', fire3_versions), 
         ('rad_moon_duo_versions', rad_moon_duo_versions), 
+        ('ether_badge_versions', ether_badge_versions), 
+        ('rad_a2b_versions', rad_a2b_versions), 
     ]
 
 # Extra names go here:

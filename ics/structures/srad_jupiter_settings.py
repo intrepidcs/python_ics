@@ -1,7 +1,7 @@
 # This file was auto generated; Do not modify, if you value your sanity!
 import ctypes
 
-try: # 7
+try: # 8
     from can_settings import can_settings
     from canfd_settings import canfd_settings
     from lin_settings import lin_settings
@@ -9,6 +9,7 @@ try: # 7
     from ethernet_settings import ethernet_settings
     from s_text_api_settings import s_text_api_settings
     from srad_jupiter_switch_settings import srad_jupiter_switch_settings
+    from ethernet_settings2 import ethernet_settings2
 except:
     from ics.structures.can_settings import can_settings
     from ics.structures.canfd_settings import canfd_settings
@@ -17,6 +18,7 @@ except:
     from ics.structures.ethernet_settings import ethernet_settings
     from ics.structures.s_text_api_settings import s_text_api_settings
     from ics.structures.srad_jupiter_switch_settings import srad_jupiter_switch_settings
+    from ics.structures.ethernet_settings2 import ethernet_settings2
 
 # flags
 class flags(ctypes.Structure):
@@ -59,6 +61,7 @@ class srad_jupiter_settings(ctypes.Structure):
         ('text_api', s_text_api_settings), 
         ('flags', flags), 
         ('switchSettings', srad_jupiter_switch_settings), 
+        ('ethernet2', ethernet_settings2), 
     ]
 
 # Extra names go here:

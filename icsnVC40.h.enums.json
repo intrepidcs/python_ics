@@ -213,8 +213,16 @@
                 29,
                 ""
             ],
-            "DeviceSettingsTypeMax": [
+            "DeviceEtherBadgeSettingsType": [
                 30,
+                ""
+            ],
+            "DeviceRADA2BSettingsType": [
+                31,
+                ""
+            ],
+            "DeviceSettingsTypeMax": [
+                32,
                 ""
             ],
             "DeviceSettingsNone ": [

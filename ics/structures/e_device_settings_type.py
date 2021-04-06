@@ -39,7 +39,9 @@ class e_device_settings_type(IntEnum):
     DeviceRADJupiterSettingsType = 27
     DeviceFire3SettingsType = 28
     DeviceRadMoonDuoSettingsType = 29
-    DeviceSettingsTypeMax = 30
+    DeviceEtherBadgeSettingsType = 30
+    DeviceRADA2BSettingsType = 31
+    DeviceSettingsTypeMax = 32
     DeviceSettingsNone  = 4294967295
 
 

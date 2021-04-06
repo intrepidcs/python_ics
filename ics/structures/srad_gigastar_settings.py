@@ -1,7 +1,7 @@
 # This file was auto generated; Do not modify, if you value your sanity!
 import ctypes
 
-try: # 14
+try: # 15
     from can_settings import can_settings
     from canfd_settings import canfd_settings
     from iso9141_keyword2000_settings import iso9141_keyword2000_settings
@@ -16,6 +16,7 @@ try: # 14
     from serdespoc_settings import serdespoc_settings
     from logger_settings import logger_settings
     from rad_reporting_settings import rad_reporting_settings
+    from serdesgen_settings import serdesgen_settings
 except:
     from ics.structures.can_settings import can_settings
     from ics.structures.canfd_settings import canfd_settings
@@ -31,6 +32,7 @@ except:
     from ics.structures.serdespoc_settings import serdespoc_settings
     from ics.structures.logger_settings import logger_settings
     from ics.structures.rad_reporting_settings import rad_reporting_settings
+    from ics.structures.serdesgen_settings import serdesgen_settings
 
 # flags
 class flags(ctypes.Structure):
@@ -94,6 +96,7 @@ class srad_gigastar_settings(ctypes.Structure):
         ('serdescam4', serdescam_settings), 
         ('reporting', rad_reporting_settings), 
         ('network_enables_4', ctypes.c_uint16), 
+        ('serdesgen', serdesgen_settings), 
     ]
 
 # Extra names go here:

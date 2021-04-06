@@ -1,7 +1,7 @@
 # This file was auto generated; Do not modify, if you value your sanity!
 import ctypes
 
-try: # 31
+try: # 33
     from s_red_settings import s_red_settings
     from s_fire_settings import s_fire_settings
     from s_fire_vnet_settings import s_fire_vnet_settings
@@ -33,6 +33,8 @@ try: # 31
     from srad_jupiter_settings import srad_jupiter_settings
     from s_fire3_settings import s_fire3_settings
     from s_rad_moon_duo_settings import s_rad_moon_duo_settings
+    from s_ether_badge_settings import s_ether_badge_settings
+    from srada2_b_settings import srada2_b_settings
 except:
     from ics.structures.s_red_settings import s_red_settings
     from ics.structures.s_fire_settings import s_fire_settings
@@ -65,6 +67,8 @@ except:
     from ics.structures.srad_jupiter_settings import srad_jupiter_settings
     from ics.structures.s_fire3_settings import s_fire3_settings
     from ics.structures.s_rad_moon_duo_settings import s_rad_moon_duo_settings
+    from ics.structures.s_ether_badge_settings import s_ether_badge_settings
+    from ics.structures.srada2_b_settings import srada2_b_settings
 
 # _U5
 class _U5(ctypes.Union):
@@ -102,6 +106,8 @@ class _U5(ctypes.Union):
         ('jupiter', srad_jupiter_settings), 
         ('fire3', s_fire3_settings), 
         ('radmoonduo', s_rad_moon_duo_settings), 
+        ('etherBadge', s_ether_badge_settings), 
+        ('rad_a2b', srada2_b_settings), 
     ]
 
 # Extra names go here:
