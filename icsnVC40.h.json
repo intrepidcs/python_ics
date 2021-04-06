@@ -101,13 +101,13 @@
                 ""
             ],
             "pAvailWIFINetwork": [
-                "void *",
+                "void*",
                 0,
                 0,
                 ""
             ],
             "pWIFIInterfaceInfo": [
-                "void *",
+                "void*",
                 0,
                 0,
                 ""
@@ -1636,6 +1636,50 @@
                 "pack": 2,
                 "union": false,
                 "anonymous": true
+            },
+            "ether_badge_versions": {
+                "names": [
+                    "ether_badge_versions"
+                ],
+                "members": {
+                    "mchip_major": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "mchip_minor": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ]
+                },
+                "pack": 2,
+                "union": false,
+                "anonymous": true
+            },
+            "rad_a2b_versions": {
+                "names": [
+                    "rad_a2b_versions"
+                ],
+                "members": {
+                    "zynq_core_major": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "zynq_core_minor": [
+                        "uint8_t",
+                        0,
+                        0,
+                        ""
+                    ]
+                },
+                "pack": 2,
+                "union": false,
+                "anonymous": true
             }
         },
         "pack": 2,
@@ -2334,6 +2378,51 @@
             "chksum": [
                 "uint16_t",
                 0,
+                0,
+                ""
+            ]
+        },
+        "pack": 2,
+        "union": false
+    },
+    "SERDESGEN_SETTINGS_t": {
+        "names": [
+            "SERDESGEN_SETTINGS"
+        ],
+        "members": {
+            "flags": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "rsvd1": [
+                "uint8_t",
+                0,
+                0,
+                ""
+            ],
+            "mod_id": [
+                "uint8_t",
+                0,
+                0,
+                ""
+            ],
+            "tx_speed": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "rx_speed": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "rsvd2": [
+                "uint8_t",
+                24,
                 0,
                 ""
             ]
@@ -3531,6 +3620,12 @@
                 0,
                 0,
                 ""
+            ],
+            "ethernet2": [
+                "ETHERNET_SETTINGS2",
+                0,
+                0,
+                ""
             ]
         },
         "pack": 2,
@@ -3778,6 +3873,12 @@
             ],
             "pwr_man_timeout": [
                 "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "ethernet2": [
+                "ETHERNET_SETTINGS2",
                 0,
                 0,
                 ""
@@ -5023,6 +5124,24 @@
                 0,
                 0,
                 ""
+            ],
+            "ethernet1": [
+                "ETHERNET_SETTINGS2",
+                0,
+                0,
+                ""
+            ],
+            "ethernet2": [
+                "ETHERNET_SETTINGS2",
+                0,
+                0,
+                ""
+            ],
+            "network_enables_4": [
+                "uint16_t",
+                0,
+                0,
+                ""
             ]
         },
         "pack": 2,
@@ -5248,6 +5367,12 @@
                 0,
                 0,
                 ""
+            ],
+            "ethernet": [
+                "ETHERNET_SETTINGS2",
+                0,
+                0,
+                ""
             ]
         },
         "pack": 2,
@@ -5326,6 +5451,133 @@
             ],
             "Eth2": [
                 "ETHERNET_SETTINGS2",
+                0,
+                0,
+                ""
+            ]
+        },
+        "pack": 2,
+        "union": false
+    },
+    "_SRADA2BSettings": {
+        "names": [
+            "SRADA2BSettings"
+        ],
+        "members": {
+            "perf_en": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "flags": {
+                "names": [
+                    "flags"
+                ],
+                "members": {
+                    "hwComLatencyTestEn": [
+                        "uint16_t",
+                        0,
+                        1,
+                        "[Bitfield] "
+                    ]
+                },
+                "pack": 2,
+                "union": false,
+                "anonymous": true
+            },
+            "network_enabled_on_boot": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "can1": [
+                "CAN_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "canfd1": [
+                "CANFD_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "can2": [
+                "CAN_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "canfd2": [
+                "CANFD_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "lin1": [
+                "LIN_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "iso9141_kwp_settings_1": [
+                "ISO9141_KEYWORD2000_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "iso_parity_1": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "iso_msg_termination_1": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "network_enables": [
+                "uint64_t",
+                0,
+                0,
+                ""
+            ],
+            "termination_enables": [
+                "uint64_t",
+                0,
+                0,
+                ""
+            ],
+            "timeSyncSettings": [
+                "TIMESYNC_ICSHARDWARE_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "reporting": [
+                "RAD_REPORTING_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "disk": [
+                "DISK_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "logger": [
+                "LOGGER_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "iso15765_separation_time_offset": [
+                "int16_t",
                 0,
                 0,
                 ""
@@ -5741,6 +5993,12 @@
                 0,
                 0,
                 ""
+            ],
+            "serdesgen": [
+                "SERDESGEN_SETTINGS",
+                0,
+                0,
+                ""
             ]
         },
         "pack": 2,
@@ -6045,6 +6303,12 @@
             ],
             "network_enables_4": [
                 "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "serdesgen": [
+                "SERDESGEN_SETTINGS",
                 0,
                 0,
                 ""
@@ -6497,6 +6761,18 @@
             },
             "can_switch_mode": [
                 "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "misc_io_analog_enable": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "ethernet2": [
+                "ETHERNET_SETTINGS2",
                 0,
                 0,
                 ""
@@ -7808,6 +8084,93 @@
         "pack": 2,
         "union": false
     },
+    "SPlutoPtpParams_s": {
+        "names": [
+            "PlutoPtpParams_t"
+        ],
+        "members": {
+            "neighborPropDelayThresh": [
+                "uint32_t",
+                0,
+                0,
+                ""
+            ],
+            "sys_phc_sync_interval": [
+                "uint32_t",
+                0,
+                0,
+                ""
+            ],
+            "logPDelayReqInterval": [
+                "int8_t",
+                0,
+                0,
+                ""
+            ],
+            "logSyncInterval": [
+                "int8_t",
+                0,
+                0,
+                ""
+            ],
+            "logAnnounceInterval": [
+                "int8_t",
+                0,
+                0,
+                ""
+            ],
+            "profile": [
+                "uint8_t",
+                0,
+                0,
+                ""
+            ],
+            "priority1": [
+                "uint8_t",
+                0,
+                0,
+                ""
+            ],
+            "clockclass": [
+                "uint8_t",
+                0,
+                0,
+                ""
+            ],
+            "clockaccuracy": [
+                "uint8_t",
+                0,
+                0,
+                ""
+            ],
+            "priority2": [
+                "uint8_t",
+                0,
+                0,
+                ""
+            ],
+            "offset_scaled_log_variance": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "gPTPportRole": [
+                "uint8_t",
+                4,
+                0,
+                ""
+            ],
+            "portEnable": [
+                "uint8_t",
+                4,
+                0,
+                ""
+            ]
+        },
+        "pack": 2,
+        "union": false
+    },
     "SPluto_CustomParams_s": {
         "names": [
             "SPluto_CustomParams"
@@ -7845,6 +8208,12 @@
             ],
             "pad": [
                 "uint8_t",
+                0,
+                0,
+                ""
+            ],
+            "ptpParams": [
+                "PlutoPtpParams_t",
                 0,
                 0,
                 ""
@@ -8095,6 +8464,12 @@
             },
             "custom": [
                 "SPluto_CustomParams",
+                0,
+                0,
+                ""
+            ],
+            "ethernet2": [
+                "ETHERNET_SETTINGS2",
                 0,
                 0,
                 ""
@@ -8428,6 +8803,12 @@
             },
             "disk": [
                 "DISK_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "ethernet2": [
+                "ETHERNET_SETTINGS2",
                 0,
                 0,
                 ""
@@ -8822,7 +9203,13 @@
                 "pack": 2,
                 "union": false,
                 "anonymous": true
-            }
+            },
+            "ethernet2": [
+                "ETHERNET_SETTINGS2",
+                0,
+                0,
+                ""
+            ]
         },
         "pack": 2,
         "union": false
@@ -9063,6 +9450,12 @@
             },
             "switchSettings": [
                 "SRADJupiterSwitchSettings",
+                0,
+                0,
+                ""
+            ],
+            "ethernet2": [
+                "ETHERNET_SETTINGS2",
                 0,
                 0,
                 ""
@@ -9425,6 +9818,12 @@
                 0,
                 0,
                 ""
+            ],
+            "ethernet2": [
+                "ETHERNET_SETTINGS2",
+                0,
+                0,
+                ""
             ]
         },
         "pack": 2,
@@ -9500,6 +9899,223 @@
                 "union": false,
                 "anonymous": true
             }
+        },
+        "pack": 2,
+        "union": false
+    },
+    "_SEtherBadgeSettings": {
+        "names": [
+            "SEtherBadgeSettings"
+        ],
+        "members": {
+            "perf_en": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "can1": [
+                "CAN_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "canfd1": [
+                "CANFD_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "can2": [
+                "CAN_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "canfd2": [
+                "CANFD_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "lin1": [
+                "LIN_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "network_enables": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "network_enables_2": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "network_enables_3": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "termination_enables": [
+                "uint64_t",
+                0,
+                0,
+                ""
+            ],
+            "pwr_man_timeout": [
+                "uint32_t",
+                0,
+                0,
+                ""
+            ],
+            "pwr_man_enable": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "network_enabled_on_boot": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "iso15765_separation_time_offset": [
+                "int16_t",
+                0,
+                0,
+                ""
+            ],
+            "iso9141_kwp_enable_reserved": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "iso_tester_pullup_enable": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "iso_parity": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "iso_msg_termination": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "iso9141_kwp_settings": [
+                "ISO9141_KEYWORD2000_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "ethernet": [
+                "ETHERNET_SETTINGS",
+                0,
+                0,
+                ""
+            ],
+            "misc_io_initial_ddr": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "misc_io_initial_latch": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "misc_io_report_period": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "misc_io_on_report_events": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "misc_io_analog_enable": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "ain_sample_period": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "ain_threshold": [
+                "uint16_t",
+                0,
+                0,
+                ""
+            ],
+            "text_api": [
+                "STextAPISettings",
+                0,
+                0,
+                ""
+            ],
+            "flags": {
+                "names": [
+                    "flags"
+                ],
+                "members": {
+                    "disableUsbCheckOnBoot": [
+                        "uint32_t",
+                        0,
+                        1,
+                        "[Bitfield] "
+                    ],
+                    "enableLatencyTest": [
+                        "uint32_t",
+                        0,
+                        1,
+                        "[Bitfield] "
+                    ],
+                    "enablePcEthernetComm": [
+                        "uint32_t",
+                        0,
+                        1,
+                        "[Bitfield] "
+                    ],
+                    "reserved": [
+                        "uint32_t",
+                        0,
+                        29,
+                        "[Bitfield] "
+                    ]
+                },
+                "pack": 2,
+                "union": false,
+                "anonymous": true
+            },
+            "ethernet2": [
+                "ETHERNET_SETTINGS2",
+                0,
+                0,
+                ""
+            ]
         },
         "pack": 2,
         "union": false
@@ -9723,6 +10339,18 @@
                         0,
                         0,
                         ""
+                    ],
+                    "etherBadge": [
+                        "SEtherBadgeSettings",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "rad_a2b": [
+                        "SRADA2BSettings",
+                        0,
+                        0,
+                        ""
                     ]
                 },
                 "pack": 2,
@@ -9943,6 +10571,18 @@
                     ],
                     "radmoon_duo": [
                         "SRadMoonDuoSettings",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "etherBadge": [
+                        "SEtherBadgeSettings",
+                        0,
+                        0,
+                        ""
+                    ],
+                    "rad_a2b": [
+                        "SRADA2BSettings",
                         0,
                         0,
                         ""
@@ -10203,7 +10843,7 @@
                 ""
             ],
             "data": [
-                "uint8_t *",
+                "uint8_t*",
                 0,
                 0,
                 ""
@@ -10710,7 +11350,7 @@
                 "anonymous": true
             },
             "ExtraDataPtr": [
-                "void *",
+                "void*",
                 0,
                 0,
                 ""
@@ -11003,7 +11643,7 @@
                 "anonymous": true
             },
             "ExtraDataPtr": [
-                "void *",
+                "void*",
                 0,
                 0,
                 ""
@@ -11178,7 +11818,7 @@
                 "anonymous": true
             },
             "ExtraDataPtr": [
-                "void *",
+                "void*",
                 0,
                 0,
                 ""
@@ -11347,7 +11987,7 @@
                 "anonymous": true
             },
             "ExtraDataPtr": [
-                "void *",
+                "void*",
                 0,
                 0,
                 ""
