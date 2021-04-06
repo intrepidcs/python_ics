@@ -213,8 +213,12 @@
                 29,
                 ""
             ],
-            "DeviceSettingsTypeMax": [
+            "DeviceEtherBadgeSettingsType": [
                 30,
+                ""
+            ],
+            "DeviceSettingsTypeMax": [
+                31,
                 ""
             ],
             "DeviceSettingsNone ": [

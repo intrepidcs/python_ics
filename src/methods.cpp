@@ -90,6 +90,11 @@ char* neodevice_to_string(unsigned long type)
     case NEODEVICE_GIGASTAR: return "RAD-GIGAStar";
     case NEODEVICE_RED2: return "neoVI RED2";
     case NEODEVICE_ECU22: return "neoECU22";
+    case NEODEVICE_ETHER_BADGE: return "EtherBADGE";
+    case NEODEVICE_RADSTAR2_A2B: return "RAD-Star-A2B";
+    case NEODEVICE_RADEPSILON: return "RAD-Epsilon";
+    case NEODEVICE_OBD2_SIM_DOIP: return "neoOBD2 Sim";
+    case NEODEVICE_OBD2_DEV: return "neoOBD2 Dev";
     case NEODEVICE_RED: return "neoVI RED";
     case NEODEVICE_ECU: return "neoECU";
     case NEODEVICE_IEVB: return "IEVB";

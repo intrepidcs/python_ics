@@ -1,7 +1,7 @@
 # This file was auto generated; Do not modify, if you value your sanity!
 import ctypes
 
-try: # 33
+try: # 34
     from e_device_settings_type import e_device_settings_type
     from s_red_settings import s_red_settings
     from s_fire_settings import s_fire_settings
@@ -35,6 +35,7 @@ try: # 33
     from srad_jupiter_settings import srad_jupiter_settings
     from s_fire3_settings import s_fire3_settings
     from s_rad_moon_duo_settings import s_rad_moon_duo_settings
+    from s_ether_badge_settings import s_ether_badge_settings
 except:
     from ics.structures.e_device_settings_type import e_device_settings_type
     from ics.structures.s_red_settings import s_red_settings
@@ -69,6 +70,7 @@ except:
     from ics.structures.srad_jupiter_settings import srad_jupiter_settings
     from ics.structures.s_fire3_settings import s_fire3_settings
     from ics.structures.s_rad_moon_duo_settings import s_rad_moon_duo_settings
+    from ics.structures.s_ether_badge_settings import s_ether_badge_settings
 
 # Settings
 class Settings(ctypes.Union):
@@ -107,6 +109,7 @@ class Settings(ctypes.Union):
         ('jupiter', srad_jupiter_settings), 
         ('fire3', s_fire3_settings), 
         ('radmoon_duo', s_rad_moon_duo_settings), 
+        ('etherBadge', s_ether_badge_settings), 
     ]
 
 # Extra names go here:

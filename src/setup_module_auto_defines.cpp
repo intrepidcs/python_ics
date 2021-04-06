@@ -102,6 +102,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, NETID_I2C3);
 	result += PyModule_AddIntMacro(module, NETID_I2C4);
 	result += PyModule_AddIntMacro(module, NETID_ETHERNET2);
+	result += PyModule_AddIntMacro(module, NETID_ETHERNET_TX_WRAP);
 	result += PyModule_AddIntMacro(module, NETID_MAX);
 	result += PyModule_AddIntMacro(module, NETID_INVALID);
 	result += PyModule_AddIntMacro(module, NEODEVICE_UNKNOWN);
@@ -126,6 +127,11 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, NEODEVICE_GIGASTAR);
 	result += PyModule_AddIntMacro(module, NEODEVICE_RED2);
 	result += PyModule_AddIntMacro(module, NEODEVICE_ECU22);
+	result += PyModule_AddIntMacro(module, NEODEVICE_ETHER_BADGE);
+	result += PyModule_AddIntMacro(module, NEODEVICE_RADSTAR2_A2B);
+	result += PyModule_AddIntMacro(module, NEODEVICE_RADEPSILON);
+	result += PyModule_AddIntMacro(module, NEODEVICE_OBD2_SIM_DOIP);
+	result += PyModule_AddIntMacro(module, NEODEVICE_OBD2_DEV);
 	result += PyModule_AddIntMacro(module, NEODEVICE_RED);
 	result += PyModule_AddIntMacro(module, NEODEVICE_ECU);
 	result += PyModule_AddIntMacro(module, NEODEVICE_IEVB);
@@ -294,6 +300,9 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, SPY_STATUS2_ETHERNET_FCS_AVAILABLE);
 	result += PyModule_AddIntMacro(module, SPY_STATUS2_ETHERNET_NO_PADDING);
 	result += PyModule_AddIntMacro(module, SPY_STATUS2_ETHERNET_PREEMPTION_ENABLED);
+	result += PyModule_AddIntMacro(module, SPY_STATUS2_ETHERNET_UPDATE_CHECKSUMS);
+	result += PyModule_AddIntMacro(module, SPY_STATUS2_ETHERNET_MANUALFCS_ENABLED);
+	result += PyModule_AddIntMacro(module, SPY_STATUS2_ETHERNET_FCS_VERIFIED);
 	result += PyModule_AddIntMacro(module, SPY_STATUS2_FLEXRAY_TX_AB);
 	result += PyModule_AddIntMacro(module, SPY_STATUS2_FLEXRAY_TX_AB_NO_A);
 	result += PyModule_AddIntMacro(module, SPY_STATUS2_FLEXRAY_TX_AB_NO_B);
@@ -647,6 +656,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, VCAN412Settings_SIZE);
 	result += PyModule_AddIntMacro(module, SVCAN412Settings_SIZE);
 	result += PyModule_AddIntMacro(module, ECU_AVBSettings_SIZE);
+	result += PyModule_AddIntMacro(module, PLUTO_NUM_PORTS);
 	result += PyModule_AddIntMacro(module, PLUTO_NUM_PRIORITY);
 	result += PyModule_AddIntMacro(module, PLUTO_MAX_L2_POLICING);
 	result += PyModule_AddIntMacro(module, PLUTO_MAX_L2_ADDRESS_LOOKUP);
@@ -656,6 +666,12 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, PLUTO_MAX_RETAGGING_ENTRIES);
 	result += PyModule_AddIntMacro(module, MAX_VL_POLICING_ENTRIES);
 	result += PyModule_AddIntMacro(module, MAX_VL_FORWARDING_ENTRIES);
+	result += PyModule_AddIntMacro(module, gPTP_ROLE_DISABLED);
+	result += PyModule_AddIntMacro(module, gPTP_ROLE_PASSIVE);
+	result += PyModule_AddIntMacro(module, gPTP_ROLE_MASTER);
+	result += PyModule_AddIntMacro(module, gPTP_ROLE_SLAVE);
+	result += PyModule_AddIntMacro(module, gPTP_PROFILE_STANDARD);
+	result += PyModule_AddIntMacro(module, gPTP_PROFILE_AUTOMOTIVE);
 	result += PyModule_AddIntMacro(module, SPlutoSwitchSettings_SIZE);
 	result += PyModule_AddIntMacro(module, SRADPlutoSettings_SIZE);
 	result += PyModule_AddIntMacro(module, CANHubSettings_SIZE);
@@ -674,6 +690,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, SRADJupiterSettings_SIZE);
 	result += PyModule_AddIntMacro(module, SFire3Settings_SIZE);
 	result += PyModule_AddIntMacro(module, RadMoonDuoSettings_SIZE);
+	result += PyModule_AddIntMacro(module, SEtherBadgeSettings_SIZE);
 	result += PyModule_AddIntMacro(module, GS_VERSION);
 	result += PyModule_AddIntMacro(module, GLOBAL_SETTINGS_SIZE);
 	result += PyModule_AddIntMacro(module, NEOVI_3G_MAX_SETTINGS_SIZE);
@@ -708,6 +725,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, DeviceRADJupiterSettingsType);
 	result += PyModule_AddIntMacro(module, DeviceFire3SettingsType);
 	result += PyModule_AddIntMacro(module, DeviceRadMoonDuoSettingsType);
+	result += PyModule_AddIntMacro(module, DeviceEtherBadgeSettingsType);
 	result += PyModule_AddIntMacro(module, DeviceSettingsTypeMax);
 	result += PyModule_AddIntMacro(module, DeviceSettingsNone);
 	// end of enum -  } EDeviceSettingsType;
@@ -736,7 +754,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, MAX_PHY_SETTINGS_STRUCT);
 	result += PyModule_AddIntMacro(module, MAX_NUMBYTES_PHYSETTINGS);
 	// enum
-	// end of enum -    }
+	// end of enum -  	}
 
 
 	return result == 0 ? 1 : 0;
