@@ -19,7 +19,7 @@
 extern PyTypeObject spy_message_object_type;
 // __func__, __FUNCTION__ and __PRETTY_FUNCTION__ are not preprocessor macros.
 // but MSVC doesn't follow c standard and treats __FUNCTION__ as a string literal macro...
-#if (defined(_WIN32) || defined(__WIN32__))
+#ifdef _MSC_VER
 #define arg_parse(a,f) a f
 #else
 const char* arg_parse(const char* args, const char* func)
