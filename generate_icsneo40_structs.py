@@ -830,12 +830,6 @@ def generate():
         print("Generated {}...".format(file_name))
         file_names.append(file_name)
         prefered_names.append(prefered_name)
-    # write a hidden_import python file for pyinstaller
-    with open('./ics/hiddenimports.py', 'w+') as f:
-        f.write('hidden_imports = [\n')
-        for prefered_name in sorted(prefered_names):
-            f.write(f'    "ics.structures.{prefered_name}",\n')
-        f.write(']\n\n')
     # enums
     for name in enum_data:
         prefered_name = get_preferred_struct_name(
@@ -858,6 +852,17 @@ def generate():
             f.write(fname)
             f.write('",\n')
         f.write("]\n")
+    # write a hidden_import python file for pyinstaller
+    with open('./ics/hiddenimports.py', 'w+') as f:
+        f.write('hidden_imports = [\n')
+        for file_name in file_names:
+            fname = re.sub('(\.py)', '', file_name)
+            r = re.compile('(' + fname + ')')
+            if list(filter(r.match, ignore_names)):
+                #print("IGNORING:", fname)
+                continue
+            f.write(f'    "ics.structures.{fname}",\n')
+        f.write(']\n\n')
 
     # Verify We can at least import all of the modules - quick check to make sure parser worked.
     # TODO: This is broke
