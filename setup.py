@@ -9,6 +9,12 @@ import unittest
 
 MAJOR_VERSION = 904
 MINOR_VERSION = 18
+POST_VERSION = None
+
+if POST_VERSION:
+    VERSION_STRING = '%d.%d-%d' % (MAJOR_VERSION, MINOR_VERSION, POST_VERSION)
+else:
+    VERSION_STRING = '%d.%d' % (MAJOR_VERSION, MINOR_VERSION)
 
 def _run_tests():
     directory = os.path.abspath(os.path.dirname(sys.modules['__main__'].__file__))
@@ -61,14 +67,14 @@ for root, dirs, files in os.walk('src'):
 
 # Set compiler flags here
 if 'LINUX' in platform.system().upper():
-	compile_args = [
-		'-fpermissive', 
-		'-Wno-unused-variable',
-		'-Wno-unused-function',
-		'-Wno-write-strings'
-	]
+    compile_args = [
+        '-fpermissive', 
+        '-Wno-unused-variable',
+        '-Wno-unused-function',
+        '-Wno-write-strings'
+    ]
 else:
-	compile_args = []
+    compile_args = []
 
     
 def read(fname):
@@ -83,7 +89,7 @@ ics_extension = Extension('ics.ics',
   extra_compile_args=compile_args)
 
 setup (name = 'python_ics',
-       version = '%d.%d' % (MAJOR_VERSION, MINOR_VERSION),
+       version = VERSION_STRING,
        description = 'Library for interfacing with Intrepid devices in Python',
        long_description = read('README.md'),
        license = "MIT",
@@ -94,11 +100,8 @@ setup (name = 'python_ics',
        url='https://github.com/intrepidcs/python_ics/',
        cmdclass = { 'build': build, 'test': UnitTests, },
        download_url = 'https://github.com/intrepidcs/python_ics/releases',
-       packages = ['ics', 'ics.structures'], # 'ics.structures', 'ics.main'],
-       #package_dir = {'ics.structures': 'ics',},
+       packages = ['ics', 'ics.structures'],
        ext_modules = [ics_extension],
-       #package_dir = {'ics.structures': 'python/ics'},
-       
        classifiers = [
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
