@@ -246,7 +246,7 @@ PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
                                        unsigned long reserved​)
         */
         ice::Function<int __stdcall (NeoDeviceEx*, int*, unsigned int*, unsigned int, POptionsFindNeoEx*, unsigned long)> icsneoFindDevices(lib, "icsneoFindDevices");
-        NeoDeviceEx devices[255];
+		NeoDeviceEx devices[255] = { 0 };
         int count = 255;
 
         // 
@@ -411,7 +411,8 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
                 // If we aren't using neoVI Server and already have a connection we can't proceed.
                 if (!use_neovi_server && devices[i].neoDevice.NumberOfClients != 0)
                 {
-                    return set_ics_exception(exception_runtime_error(), "Found device, but its already open!");
+                    continue;
+                    //return set_ics_exception(exception_runtime_error(), "Found device, but its already open!");
                 }
                 // We matched a neoDevice, lets allocate it here.
                 device = PyObject_CallObject((PyObject*)&neo_device_object_type, NULL);
@@ -419,7 +420,7 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
                 PyNeoDevice_GetNeoDevice(device)->name = PyUnicode_FromString(neodevice_to_string(devices[i].neoDevice.DeviceType));
                 break;
             }
-            if (!PyNeoDevice_CheckExact(device))
+            if (!device || !PyNeoDevice_CheckExact(device))
             {
                 return set_ics_exception(exception_runtime_error(), "Failed to find a device to open.");
             }
