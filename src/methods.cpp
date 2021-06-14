@@ -1,4 +1,4 @@
-﻿#include "methods.h"
+#include "methods.h"
 #include "exceptions.h"
 #include "dll.h"
 #include "defines.h"
@@ -72,7 +72,7 @@ char* neodevice_to_string(unsigned long type)
     case NEODEVICE_VCAN41: return "ValueCAN4-1";
     case NEODEVICE_FIRE: return "neoVI FIRE";
     case NEODEVICE_RADPLUTO: return "RAD-Pluto";
-    case NEODEVICE_VCAN42_EL: return "ValueCAN4-1";
+    case NEODEVICE_VCAN42_EL: return "ValueCAN 4-2EL";
     case NEODEVICE_RADIO_CANHUB: return "neoRAD-IO2-CANHUB";
     case NEODEVICE_OBD2_LCBADGE: return "neoOBD2-LC BADGE";
     case NEODEVICE_RAD_MOON_DUO: return "RAD-Moon-Duo";
