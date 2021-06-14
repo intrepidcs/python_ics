@@ -1,4 +1,4 @@
-#include "methods.h"
+﻿#include "methods.h"
 #include "exceptions.h"
 #include "dll.h"
 #include "defines.h"
@@ -64,52 +64,52 @@ char* neodevice_to_string(unsigned long type)
     switch (type) {
     case NEODEVICE_UNKNOWN: return "Unknown";
     case NEODEVICE_BLUE: return "neoVI BLUE";
-    case NEODEVICE_ECU_AVB: return "neoECU/AVB TSN";
-    case NEODEVICE_RADSUPERMOON: return "RADSuperMoon";
+    case NEODEVICE_ECU_AVB: return "neoECU AVB/TSN";
+    case NEODEVICE_RADSUPERMOON: return "RAD-Supermoon";
     case NEODEVICE_DW_VCAN: return "ValueCAN DW";
-    case NEODEVICE_RADMOON2: return "RADMoon2";
-    case NEODEVICE_RADGIGALOG: return "RADGigalog";
-    case NEODEVICE_VCAN41: return "ValueCAN4-1";
+    case NEODEVICE_RADMOON2: return "RAD-Moon 2";
+    case NEODEVICE_RADGIGALOG: return "RAD-Gigalog";
+    case NEODEVICE_VCAN41: return "ValueCAN 4-1";
     case NEODEVICE_FIRE: return "neoVI FIRE";
     case NEODEVICE_RADPLUTO: return "RAD-Pluto";
     case NEODEVICE_VCAN42_EL: return "ValueCAN 4-2EL";
     case NEODEVICE_RADIO_CANHUB: return "neoRAD-IO2-CANHUB";
     case NEODEVICE_OBD2_LCBADGE: return "neoOBD2-LC BADGE";
-    case NEODEVICE_RAD_MOON_DUO: return "RAD-Moon-Duo";
-    case NEODEVICE_VCAN3: return "ValueCAN3";
+    case NEODEVICE_RAD_MOON_DUO: return "RAD-Moon Duo";
+    case NEODEVICE_VCAN3: return "ValueCAN 3";
 #if defined(NEODEVICE_ONYX)
-    case NEODEVICE_ONYX: return "neoVI FIRE3";
+    case NEODEVICE_ONYX: return "neoVI FIRE 3";
 #endif
-    case NEODEVICE_FIRE3: return "neoVI FIRE3";
+    case NEODEVICE_FIRE3: return "neoVI FIRE 3";
 #if defined(NEODEVICE_JUPITER)
     case NEODEVICE_JUPITER: return "RAD-Jupiter";
 #elif defined(NEODEVICE_RADJUPITER)
     case NEODEVICE_RADJUPITER: return "RAD-Jupiter";
 #endif
-    case NEODEVICE_VCAN4_IND: return "ValueCAN4 Industrial";
-    case NEODEVICE_GIGASTAR: return "RAD-GIGAStar";
-    case NEODEVICE_RED2: return "neoVI RED2";
+    case NEODEVICE_VCAN4_IND: return "ValueCAN 4 Industrial";
+    case NEODEVICE_GIGASTAR: return "RAD-Gigastar";
+    case NEODEVICE_RED2: return "neoVI RED 2";
     case NEODEVICE_ECU22: return "neoECU22";
     case NEODEVICE_RED: return "neoVI RED";
     case NEODEVICE_ECU: return "neoECU";
     case NEODEVICE_IEVB: return "IEVB";
     case NEODEVICE_PENDANT: return "Pendant";
-    case NEODEVICE_OBD2_PRO: return "neoOBD2 Pro";
+    case NEODEVICE_OBD2_PRO: return "neoOBD2 PRO";
     case NEODEVICE_ECUCHIP_UART: return "ECUCHIP";
     case NEODEVICE_PLASMA: return "neoVI PLASMA";
     case NEODEVICE_NEOANALOG: return "neoAnalog";
     case NEODEVICE_CT_OBD: return "neoOBD CT";
     case NEODEVICE_ION: return "neoVI ION";
-    case NEODEVICE_RADSTAR: return "RADStar";
-    case NEODEVICE_VCAN44: return "ValueCAN4-4";
-    case NEODEVICE_VCAN42: return "ValueCAN4-2";
+    case NEODEVICE_RADSTAR: return "RAD-Star";
+    case NEODEVICE_VCAN44: return "ValueCAN 4-4";
+    case NEODEVICE_VCAN42: return "ValueCAN 4-2";
     case NEODEVICE_CMPROBE: return "CM Probe";
     case NEODEVICE_EEVB: return "EEVB";
     case NEODEVICE_VCANRF: return "ValueCAN.rf";
-    case NEODEVICE_FIRE2: return "neoVI FIRE2";
+    case NEODEVICE_FIRE2: return "neoVI FIRE 2";
     case NEODEVICE_FLEX: return "neoVI FLEX";
-    case NEODEVICE_RADGALAXY: return "RADGalaxy";
-    case NEODEVICE_RADSTAR2: return "RADStar2";
+    case NEODEVICE_RADGALAXY: return "RAD-Galaxy";
+    case NEODEVICE_RADSTAR2: return "RAD-Star 2";
     case NEODEVICE_VIVIDCAN: return "VividCAN";
     case NEODEVICE_OBD2_SIM: return "neoOBD2 Sim";
     };
