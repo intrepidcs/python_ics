@@ -414,7 +414,11 @@ def generate_ctype_struct_pyfile_from_dict(name, data, struct_data, path='.', is
 
 
 def format_file(filename):
-    processed_fname = "icsnVC40_processed.h"
+    import os
+    processed_fname = os.path.basename(filename)
+    name, ext = os.path.splitext(processed_fname)
+    processed_fname = f'{name}_processed{ext}'
+    #processed_fname = "icsnVC40_processed.h"
     # Run it through the preprocessor
     # clang -E -P .\include\ics\icsnVC40.h -o output.h
     result = run(["clang", "-E", "-P", filename, "-o", processed_fname], stdout=PIPE, stderr=PIPE)
@@ -774,11 +778,12 @@ def parse_header_file(filename):
     return struct_data, enum_data
 
 
-def generate():
+def generate(filename):
     import shutil
     import json
-    filename = 'include/ics/icsnVC40.h'
+    import os
     filename = format_file(filename)
+    basename = os.path.basename(filename)
     struct_data, enum_data = parse_header_file(filename)
     # print the data to stdout
     if debug_print:
@@ -804,10 +809,10 @@ def generate():
     # make the json file
     
     j = json.dumps(struct_data, indent=4, sort_keys=False)
-    with open('icsnVC40.h.json', 'w+') as f:
+    with open(f'{basename}.json', 'w+') as f:
         f.write(j)
     j = json.dumps(enum_data, indent=4, sort_keys=False)
-    with open('icsnVC40.h.enums.json', 'w+') as f:
+    with open(f'{basename}.enums.json', 'w+') as f:
         f.write(j)
     # generate the python files
     output_dir = './ics/structures'
@@ -880,4 +885,12 @@ def generate():
     print("Done.")
 
 if __name__ == '__main__':
-    generate()
+    import sys
+    import os
+    try:
+        filename = sys.argv[1]
+        filename = os.path.normpath(filename)
+        print(f"Parsing '{filename}'...")
+    except IndexError as _:
+        filename = 'include/ics/icsnVC40.h' 
+    generate(filename)
