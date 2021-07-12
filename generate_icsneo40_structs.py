@@ -657,6 +657,8 @@ def parse_header_file(filename):
                     pos = f.tell()
                     f.seek(last_pos)
                     obj = parse_object(f)
+                    if obj.data_type == DataType.Struct:
+                        obj.packing = pack_size
                     if obj.data_type == DataType.Enum:
                         enum_objects.append(obj)
                     else:
@@ -664,8 +666,6 @@ def parse_header_file(filename):
             finally:
                 last_pos = f.tell()
                 line = f.readline()
-        asdf = c_objects[0].to_ordered_dict()
-        asdf2 = enum_objects[0].to_ordered_dict()
         return c_objects, enum_objects
 
 def generate(filename):
@@ -674,13 +674,15 @@ def generate(filename):
     import os
     basename = os.path.basename(filename)
     filename = format_file(filename)
-    struct_data, enum_data = parse_header_file(filename)
+    c_objects, enum_objects = parse_header_file(filename)
     # print the data to stdout
     if debug_print:
         import pprint
         pp = pprint.PrettyPrinter(indent=1, width=140)
-        pp.pprint(struct_data[0].to_ordered_dict())
-        pp.pprint(enum_data[0].to_ordered_dict())
+        for c_object in c_objects:
+            pp.pprint(c_object.to_ordered_dict())
+        for enum_object in enum_objects:
+            pp.pprint(enum_object.to_ordered_dict())
 
     # print all datatypes
     if False:
@@ -697,7 +699,6 @@ def generate(filename):
         # print(data_types)
         print(sorted(list(dict.fromkeys(data_types))))
     # make the json file
-    
     j = json.dumps(struct_data, indent=4, sort_keys=False)
     with open(f'{basename}.json', 'w+') as f:
         f.write(j)
