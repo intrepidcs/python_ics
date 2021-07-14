@@ -6,8 +6,9 @@ import sys
 from subprocess import run, PIPE
 from enum import Enum, auto
 import random
+import ctypes
 
-debug_print = True
+debug_print = False
 
 __unique_numbers = []
 def get_unique_number():
@@ -125,6 +126,11 @@ def is_line_start_of_object(line):
     is_start = [x for x in object_names if find_whole_word(x)(line) != None]
     return bool(is_start)
 
+# This contains all the objects that don't pass convert_to_ctype_object
+non_ctype_objects = []
+# This contains a list of names of every object we collected
+object_names = []
+
 def parse_object(f, pos=-1, pack_size=None):
     """
     takes a file object and returns a class with the object data.
@@ -208,6 +214,10 @@ def parse_object(f, pos=-1, pack_size=None):
                     last_pos = f.tell()
                     line = f.readline()
         new_obj.assign_preferred_name()
+        # Append the names to a global list for parsing later
+        global object_names
+        object_names.extend(new_obj.names)
+        object_names.append(new_obj.preferred_name)
         return new_obj
     finally:
         if pos != -1:
@@ -217,6 +227,7 @@ def parse_object(f, pos=-1, pack_size=None):
 
 
 def parse_struct_member(buffered_line):
+    # unsigned : 31;
     # unsigned char bIPV6_Address[16];
     # unsigned asdf[12];
     # unsigned : 15;
@@ -253,8 +264,6 @@ def parse_struct_member(buffered_line):
         return None, '', 0, 0  # data_type, array_length, bitwise_length
     if ':' in words:
         # we are a bitfield ;(
-        data_name_index = words.index(":")-1
-
         try:
             bitwise_length = int(
                 re.search('\d*', words[words.index(":")+1]).group(0))
@@ -262,8 +271,16 @@ def parse_struct_member(buffered_line):
             if debug_print:
                 print("EXCEPTION:", ex)
             bitwise_length = 0
-        data_name = words[data_name_index]
-        data_type = ' '.join(words[0:data_name_index])
+        # see if we get a valid ctype object before : to check for things like "unsigned : 31;"
+        pre_colon_text = ' '.join(words[:words.index(":")])
+        check_data_type = convert_to_ctype_object(pre_colon_text)
+        if check_data_type:
+            data_name = ''
+            data_type = pre_colon_text
+        else:
+            data_name_index = words.index(":")-1
+            data_name = words[data_name_index]
+            data_type = ' '.join(words[0:data_name_index])
     else:
         bitwise_length = 0
         data_name = words[-1]
@@ -336,7 +353,9 @@ def get_struct_names(data):
             names[name] = [name, ]
     return names
 
-def get_preferred_struct_name(names):
+def get_preferred_struct_name(_names):
+    # Remove the reference
+    names = _names[:]
     r = re.compile("^[sS].*")
     r_underscore = re.compile("^(?![_]).*")
     r_end_t = re.compile("^.*(_[tT])$")
@@ -368,34 +387,49 @@ def convert_to_snake_case(name):
     return re.sub(r'(_)\1{1,}', '_', s2)
 
 def convert_to_ctype_object(data_type):
-    if data_type == 'unsigned':
-        data_type = 'uint'
-    elif data_type == 'void *' or data_type == 'void*':
-        data_type = 'void_p'
-    elif data_type == 'unsigned char':
-        data_type = 'ubyte'
-    elif data_type == 'unsigned int':
-        data_type = 'uint'
-    elif data_type == 'unsigned long':
-        data_type = 'ulong'
-    elif data_type == 'unsigned short':
-        data_type = 'ushort'
-    elif data_type == 'descIdType':
-        data_type = 'int16_t'
-    elif data_type == 'e_device_settings_type':
-        data_type == 'int'
+    ctype_types = {
+        "c_bool": ("_Bool", "bool"),
+        "c_char": ("char",),
+        "c_wchar": ("wchar_t",),
+        "c_byte": (),
+        "c_ubyte": ("unsigned char",),
+        "c_short": ("short",),
+        "c_ushort": ("unsigned short",),
+        "c_int": ("int",),
+        "c_uint": ("unsigned", "unsigned int",),
+        "c_long": ("long",),
+        "c_ulong": ("unsigned long",),
+        "c_longlong": ("__int64", "long long",),
+        "c_ulonglong": ("unsigned __int64", "unsigned long long",),
+        "c_size_t": ("size_t",),
+        "c_ssize_t": ("ssize_t", "Py_ssize_t",),
+        "c_float": ("float",),
+        "c_double": ("double",),
+        "c_void_p": ("void*", "void *",),
+    }
+    # Add all the intX_t types
+    for d in [8, 16, 32, 64]:
+        ctype_types[f'c_int{d}'] = (f'int{d}_t',)
+        ctype_types[f'c_uint{d}'] = (f'uint{d}_t',)
+    
+    # This is dirty but we don't parse typedefs...
+    ctype_types["c_uint16"] = ctype_types["c_uint16"] + ("descIdType",)
 
-    is_pointer = '*' in data_type
-    # Try to convert to ctypes type
-    try:
-        import ctypes
-        eval("ctypes.c_{}".format(re.sub('_t*|\**', '', data_type)))
-        type = 'ctypes.c_' + re.sub('_t*|\**', '', data_type)
-        if is_pointer:
-            type = 'ctypes.POINTER({})'.format(type)
-        return type
-    except Exception as ex:
-        return None
+    is_pointer = '*' in data_type and not 'void' in data_type
+    for ctype_type, c_types in ctype_types.items():
+        for c_type in c_types:
+            if is_pointer:
+                data_type = data_type.replace('*', '')
+            if c_type == data_type:
+                try:
+                    t = f"ctypes.{ctype_type}"
+                    eval(t)
+                    if is_pointer:
+                        t = f'ctypes.POINTER({t})'
+                    return t
+                except AttributeError as ex:
+                    return None 
+    return None
 
 def format_file(filename):
     import os
@@ -506,6 +540,7 @@ def generate(filename):
     ignore_names = ['__fsid_t', 'NeoDevice', 'neo_device', 'NeoDeviceEx', 'neo_device_ex', 'icsSpyMessage', 'icsSpyMessageJ1850', 'ics_spy_message', 'ics_spy_message_j1850'] 
     file_names = []
     prefered_names = []
+    print(f"Generating python files for {len(c_objects)} objects...")
     for c_object in c_objects:
         # Bypass all the ignore_names above
         names = c_object.names
@@ -514,9 +549,21 @@ def generate(filename):
             continue
         # Generate the python file for the c_object
         file_name, file_path = generate_pyfile(c_object, output_dir)
-        print(file_name, file_path)
-
-    print("Done?")
+        if debug_print:
+            print(file_name, file_path)
+    
+    # Verify we don't have any unknown data types here
+    global non_ctype_objects
+    global object_names 
+    errors = False
+    for non_ctype_object in non_ctype_objects:
+        if non_ctype_object not in object_names:
+            print(f"Warning: Not a valid object: {non_ctype_object}")
+            errors = True
+    if errors:
+        raise RuntimeError("Failed to parse all objects properly")
+    else:
+        print("Generated all python files.")
 
     # Generate __init__.py and add all the modules to __all__
     with open(os.path.join(output_dir, '__init__.py'), 'w+') as f:
@@ -603,7 +650,9 @@ def _write_c_object(f, c_object):
                     data_type = convert_to_ctype_object(member.data_type)
                     # If we aren't a valid ctypes data type we are probably a struct
                     if not data_type:
-                        print(f"Warning: Couldn't find a valid ctype type for '{member.data_type}'")
+                        #print(f"Warning: Couldn't find a valid ctype type for '{member.data_type}' in '{member.name}'")
+                        global non_ctype_objects
+                        non_ctype_objects.append(member.data_type)
                         data_type = member.data_type
                 else:
                     data_type = member.data_type
@@ -666,6 +715,8 @@ def generate_pyfile(c_object, path):
                         import_names.append(convert_to_snake_case(member.data_type))
                 elif isinstance(member, CObject):
                     import_names.extend(get_c_object_imports(member))
+            # anonymous/nameless objects put an empty string in the list, lets remove it here
+            import_names = [name for name in import_names if name]
             return import_names
         
         import_names = get_c_object_imports(c_object)
