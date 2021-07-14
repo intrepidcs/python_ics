@@ -1,43 +1,53 @@
 # This file was auto generated; Do not modify, if you value your sanity!
 import ctypes
+import enum
 
-# _U8
-class _U8(ctypes.Union):
+
+
+class nameless28907(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
-        ('id_29_bit_enable', ctypes.c_uint32, 1), # [Bitfield] 
-        ('fc_id_29_bit_enable', ctypes.c_uint32, 1), # [Bitfield] 
-        ('ext_address_enable', ctypes.c_uint32, 1), # [Bitfield] 
-        ('fc_ext_address_enable', ctypes.c_uint32, 1), # [Bitfield] 
-        ('enableFlowControlTransmission', ctypes.c_uint32, 1), # [Bitfield] 
-        ('paddingEnable', ctypes.c_uint32, 1), # [Bitfield] 
-        ('iscanFD', ctypes.c_uint32, 1), # [Bitfield] 
-        ('isBRSEnabled', ctypes.c_uint32, 1), # [Bitfield] 
-        ('flags', ctypes.c_uint32), 
+        ('id_29_bit_enable', ctypes.c_uint, 1),
+        ('fc_id_29_bit_enable', ctypes.c_uint, 1),
+        ('ext_address_enable', ctypes.c_uint, 1),
+        ('fc_ext_address_enable', ctypes.c_uint, 1),
+        ('enableFlowControlTransmission', ctypes.c_uint, 1),
+        ('paddingEnable', ctypes.c_uint, 1),
+        ('iscanFD', ctypes.c_uint, 1),
+        ('isBRSEnabled', ctypes.c_uint, 1),
     ]
 
-# Extra names go here:
-# End of extra names
+
+
+class nameless54985(ctypes.Union):
+    _pack_ = 2
+    _anonymous_  = ('nameless28907',)
+    _fields_ = [
+        ('nameless28907', nameless28907),
+        ('flags', ctypes.c_uint32),
+    ]
+
+
 
 class st_cm_iso157652_rx_message(ctypes.Structure):
     _pack_ = 2
-    _anonymous_ = ("_U8",)
+    _anonymous_  = ('nameless54985',)
     _fields_ = [
-        ('vs_netid', ctypes.c_uint16), 
-        ('padding', ctypes.c_uint8), 
-        ('id', ctypes.c_uint32), 
-        ('id_mask', ctypes.c_uint32), 
-        ('fc_id', ctypes.c_uint32), 
-        ('flowControlExtendedAddress', ctypes.c_uint8), 
-        ('extendedAddress', ctypes.c_uint8), 
-        ('blockSize', ctypes.c_uint8), 
-        ('stMin', ctypes.c_uint8), 
-        ('cf_timeout', ctypes.c_uint16), 
-        ('_U8', _U8), 
-        ('reserved', ctypes.c_uint8 * 16), 
+        ('vs_netid', ctypes.c_uint16),
+        ('padding', ctypes.c_uint8),
+        ('id', ctypes.c_uint32),
+        ('id_mask', ctypes.c_uint32),
+        ('fc_id', ctypes.c_uint32),
+        ('flowControlExtendedAddress', ctypes.c_uint8),
+        ('extendedAddress', ctypes.c_uint8),
+        ('blockSize', ctypes.c_uint8),
+        ('stMin', ctypes.c_uint8),
+        ('cf_timeout', ctypes.c_uint16),
+        ('nameless54985', nameless54985),
+        ('reserved', ctypes.c_uint8 * 16),
     ]
 
-# Extra names go here:
+
+_stCM_ISO157652_RxMessage = st_cm_iso157652_rx_message
 stCM_ISO157652_RxMessage = st_cm_iso157652_rx_message
-# End of extra names
 

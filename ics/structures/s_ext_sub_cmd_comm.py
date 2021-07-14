@@ -1,38 +1,32 @@
 # This file was auto generated; Do not modify, if you value your sanity!
 import ctypes
+import enum
 
-try: # 4
-    from s_ext_sub_cmd_hdr import s_ext_sub_cmd_hdr
-    from s_disk_structure import s_disk_structure
-    from s_disk_details import s_disk_details
-    from s_disk_format_progress import s_disk_format_progress
-except:
-    from ics.structures.s_ext_sub_cmd_hdr import s_ext_sub_cmd_hdr
-    from ics.structures.s_disk_structure import s_disk_structure
-    from ics.structures.s_disk_details import s_disk_details
-    from ics.structures.s_disk_format_progress import s_disk_format_progress
+from ics.structures.s_ext_sub_cmd_hdr import *
+from ics.structures.s_disk_details import *
+from ics.structures.s_disk_structure import *
+from ics.structures.s_disk_format_progress import *
 
-# _U3
-class _U3(ctypes.Union):
+
+class nameless42136(ctypes.Union):
     _pack_ = 2
     _fields_ = [
-        ('structure', s_disk_structure), 
-        ('details', s_disk_details), 
-        ('progress', s_disk_format_progress), 
+        ('structure', SDiskStructure),
+        ('details', SDiskDetails),
+        ('progress', SDiskFormatProgress),
     ]
 
-# Extra names go here:
-# End of extra names
+
 
 class s_ext_sub_cmd_comm(ctypes.Structure):
     _pack_ = 2
-    _anonymous_ = ("_U3",)
+    _anonymous_  = ('nameless42136',)
     _fields_ = [
-        ('hdr', s_ext_sub_cmd_hdr), 
-        ('_U3', _U3), 
+        ('hdr', SExtSubCmdHdr),
+        ('nameless42136', nameless42136),
     ]
 
-# Extra names go here:
+
+_SExtSubCmdComm = s_ext_sub_cmd_comm
 SExtSubCmdComm = s_ext_sub_cmd_comm
-# End of extra names
 
