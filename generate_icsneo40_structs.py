@@ -633,7 +633,7 @@ def _write_c_object(f, c_object):
     if c_object.data_type in (DataType.Struct, DataType.Union):
         # Setup the packing
         if c_object.packing:
-            f.write(f'    __pack__ = {c_object.packing}\n')
+            f.write(f'    _pack_ = {c_object.packing}\n')
         # Grab all the anonymous names
         anonymous_names = []
         for member in c_object.members:
@@ -641,11 +641,11 @@ def _write_c_object(f, c_object):
                 anonymous_names.append(member.preferred_name)
         if anonymous_names:
             f.write(f'    _anonymous_  = {str(tuple(anonymous_names))}\n')
-        f.write(f'    _fields_  = [\n')
+        f.write(f'    _fields_ = [\n')
     
     # Write the members
     for member in c_object.members:
-        if isinstance(member, CVariable) and member.is_enum:
+        if c_object.data_type == DataType.Enum:
             enum_value = member.enum_value
             if enum_value == None:
                 enum_value = 'enum.auto()'
