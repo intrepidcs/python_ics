@@ -1,24 +1,26 @@
 # This file was auto generated; Do not modify, if you value your sanity!
 import ctypes
+import enum
 
-# CANOptions
-class CANOptions(ctypes.Structure):
+
+
+class can_options(ctypes.Structure):
     _fields_ = [
-        ('iNetworkID', ctypes.c_int32), 
+        ('iNetworkID', ctypes.c_int32),
     ]
 
-# Extra names go here:
-# End of extra names
+
+CANOptions = can_options
 
 class tag_options_find_neo_ex(ctypes.Union):
-    _anonymous_ = ("CANOptions",)
+    _anonymous_  = ('can_options',)
     _fields_ = [
-        ('CANOptions', CANOptions), 
-        ('Reserved', ctypes.c_uint32 * 16), 
+        ('can_options', can_options),
+        ('Reserved', ctypes.c_uint32 * 16),
     ]
 
-# Extra names go here:
+
+tagOptionsFindNeoEx = tag_options_find_neo_ex
 OptionsFindNeoEx = tag_options_find_neo_ex
 POptionsFindNeoEx = tag_options_find_neo_ex
-# End of extra names
 

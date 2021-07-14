@@ -1,45 +1,35 @@
 # This file was auto generated; Do not modify, if you value your sanity!
 import ctypes
+import enum
 
-try: # 10
-    from s_extended_data_flash_header import s_extended_data_flash_header
-    from s_pluto_l2_address_lookup_params_s import s_pluto_l2_address_lookup_params_s
-    from s_pluto_l2_address_lookup_entry_s import s_pluto_l2_address_lookup_entry_s
-    from s_pluto_l2_policing_s import s_pluto_l2_policing_s
-    from s_pluto_l2_forwarding_params_s import s_pluto_l2_forwarding_params_s
-    from s_pluto_l2_forwarding_entry_s import s_pluto_l2_forwarding_entry_s
-    from s_pluto_vlan_lookup_s import s_pluto_vlan_lookup_s
-    from s_pluto_mac_config_s import s_pluto_mac_config_s
-    from s_pluto_general_params_s import s_pluto_general_params_s
-    from s_pluto_retagging_entry_s import s_pluto_retagging_entry_s
-except:
-    from ics.structures.s_extended_data_flash_header import s_extended_data_flash_header
-    from ics.structures.s_pluto_l2_address_lookup_params_s import s_pluto_l2_address_lookup_params_s
-    from ics.structures.s_pluto_l2_address_lookup_entry_s import s_pluto_l2_address_lookup_entry_s
-    from ics.structures.s_pluto_l2_policing_s import s_pluto_l2_policing_s
-    from ics.structures.s_pluto_l2_forwarding_params_s import s_pluto_l2_forwarding_params_s
-    from ics.structures.s_pluto_l2_forwarding_entry_s import s_pluto_l2_forwarding_entry_s
-    from ics.structures.s_pluto_vlan_lookup_s import s_pluto_vlan_lookup_s
-    from ics.structures.s_pluto_mac_config_s import s_pluto_mac_config_s
-    from ics.structures.s_pluto_general_params_s import s_pluto_general_params_s
-    from ics.structures.s_pluto_retagging_entry_s import s_pluto_retagging_entry_s
+from ics.structures.s_pluto_l2_forwarding_params import *
+from ics.structures.s_pluto_vlan_lookup import *
+from ics.structures.s_pluto_l2_policing import *
+from ics.structures.s_pluto_mac_config import *
+from ics.structures.s_pluto_l2_address_lookup_params import *
+from ics.structures.extended_data_flash_header_t import *
+from ics.structures.s_pluto_retagging_entry import *
+from ics.structures.s_pluto_l2_address_lookup_entry import *
+from ics.structures.s_pluto_general_params import *
+from ics.structures.s_pluto_l2_forwarding_entry import *
+
 
 class s_pluto_switch_settings_s(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
-        ('flashHeader', s_extended_data_flash_header), 
-        ('l2_addressLookupParams', s_pluto_l2_address_lookup_params_s), 
-        ('l2_addressLookupEntries', s_pluto_l2_address_lookup_entry_s * 1024), 
-        ('l2_policing', s_pluto_l2_policing_s * 45), 
-        ('l2_forwardingParams', s_pluto_l2_forwarding_params_s), 
-        ('l2_ForwardingEntries', s_pluto_l2_forwarding_entry_s * 13), 
-        ('vlan_LookupEntries', s_pluto_vlan_lookup_s * 4096), 
-        ('macConfig', s_pluto_mac_config_s * 5), 
-        ('generalParams', s_pluto_general_params_s), 
-        ('retagging', s_pluto_retagging_entry_s * 32), 
+        ('flashHeader', ExtendedDataFlashHeader_t),
+        ('l2_addressLookupParams', SPluto_L2AddressLookupParams),
+        ('l2_addressLookupEntries', SPluto_L2AddressLookupEntry * 1024),
+        ('l2_policing', SPluto_L2Policing * 45),
+        ('l2_forwardingParams', SPluto_L2ForwardingParams),
+        ('l2_ForwardingEntries', SPluto_L2ForwardingEntry * 13),
+        ('vlan_LookupEntries', SPluto_VlanLookup * 4096),
+        ('macConfig', SPluto_MacConfig * 5),
+        ('generalParams', SPluto_GeneralParams),
+        ('retagging', SPluto_RetaggingEntry * 32),
     ]
 
-# Extra names go here:
+
+SPlutoSwitchSettings_s = s_pluto_switch_settings_s
 SPlutoSwitchSettings = s_pluto_switch_settings_s
-# End of extra names
 

@@ -1,51 +1,51 @@
 # This file was auto generated; Do not modify, if you value your sanity!
 import ctypes
+import enum
 
-from enum import IntEnum
 
-class e_device_settings_type(IntEnum):
+
+class e_device_settings_type(enum.IntEnum):
     """A ctypes-compatible IntEnum superclass."""
     @classmethod
     def from_param(cls, obj):
         return int(obj)
 
-    DeviceFireSettingsType = 0
-    DeviceFireVnetSettingsType = 1
-    DeviceFire2SettingsType = 2
-    DeviceVCAN3SettingsType = 3
-    DeviceRADGalaxySettingsType = 4
-    DeviceRADStar2SettingsType = 5
-    DeviceVCAN4SettingsType = 6
-    DeviceVCAN412SettingsType = 7
-    DeviceVividCANSettingsType = 8
-    DeviceECU_AVBSettingsType = 9
-    DeviceRADSuperMoonSettingsType = 10
-    DeviceRADMoon2SettingsType = 11
-    DeviceRADPlutoSettingsType = 12
-    DeviceRADGigalogSettingsType = 13
-    DeviceVCANRFSettingsType = 14
-    DeviceEEVBSettingsType = 15
-    DeviceVCAN4IndSettingsType = 16
-    DeviceNeoECU12SettingsType = 17
-    DeviceFlexVnetzSettingsType = 18
-    DeviceCANHUBSettingsType = 19
-    DeviceIEVBSettingsType = 20
-    DeviceOBD2SimSettingsType = 21
-    DeviceCMProbeSettingsType = 22
-    DeviceOBD2ProSettingsType = 23
-    DeviceRedSettingsType = 24
-    DeviceRADPlutoSwitchSettingsType = 25
-    DeviceRADGigastarSettingsType = 26
-    DeviceRADJupiterSettingsType = 27
-    DeviceFire3SettingsType = 28
-    DeviceRadMoonDuoSettingsType = 29
-    DeviceEtherBadgeSettingsType = 30
-    DeviceRADA2BSettingsType = 31
-    DeviceSettingsTypeMax = 32
+    DeviceFireSettingsType = enum.auto()
+    DeviceFireVnetSettingsType = enum.auto()
+    DeviceFire2SettingsType = enum.auto()
+    DeviceVCAN3SettingsType = enum.auto()
+    DeviceRADGalaxySettingsType = enum.auto()
+    DeviceRADStar2SettingsType = enum.auto()
+    DeviceVCAN4SettingsType = enum.auto()
+    DeviceVCAN412SettingsType = enum.auto()
+    DeviceVividCANSettingsType = enum.auto()
+    DeviceECU_AVBSettingsType = enum.auto()
+    DeviceRADSuperMoonSettingsType = enum.auto()
+    DeviceRADMoon2SettingsType = enum.auto()
+    DeviceRADPlutoSettingsType = enum.auto()
+    DeviceRADGigalogSettingsType = enum.auto()
+    DeviceVCANRFSettingsType = enum.auto()
+    DeviceEEVBSettingsType = enum.auto()
+    DeviceVCAN4IndSettingsType = enum.auto()
+    DeviceNeoECU12SettingsType = enum.auto()
+    DeviceFlexVnetzSettingsType = enum.auto()
+    DeviceCANHUBSettingsType = enum.auto()
+    DeviceIEVBSettingsType = enum.auto()
+    DeviceOBD2SimSettingsType = enum.auto()
+    DeviceCMProbeSettingsType = enum.auto()
+    DeviceOBD2ProSettingsType = enum.auto()
+    DeviceRedSettingsType = enum.auto()
+    DeviceRADPlutoSwitchSettingsType = enum.auto()
+    DeviceRADGigastarSettingsType = enum.auto()
+    DeviceRADJupiterSettingsType = enum.auto()
+    DeviceFire3SettingsType = enum.auto()
+    DeviceRadMoonDuoSettingsType = enum.auto()
+    DeviceEtherBadgeSettingsType = enum.auto()
+    DeviceRADA2BSettingsType = enum.auto()
+    DeviceSettingsTypeMax = enum.auto()
     DeviceSettingsNone  = 4294967295
 
 
-# Extra names go here:
+_EDeviceSettingsType = e_device_settings_type
 EDeviceSettingsType = e_device_settings_type
-# End of extra names
 

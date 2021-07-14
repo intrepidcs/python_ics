@@ -1,23 +1,21 @@
 # This file was auto generated; Do not modify, if you value your sanity!
 import ctypes
+import enum
 
-try: # 2
-    from can_settings import can_settings
-    from lin_settings import lin_settings
-except:
-    from ics.structures.can_settings import can_settings
-    from ics.structures.lin_settings import lin_settings
+from ics.structures.lin_settings import *
+from ics.structures.can_settings import *
+
 
 class s_red_settings(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
-        ('can1', can_settings), 
-        ('can2', can_settings), 
-        ('lin1', lin_settings), 
-        ('lin2', lin_settings), 
+        ('can1', CAN_SETTINGS),
+        ('can2', CAN_SETTINGS),
+        ('lin1', LIN_SETTINGS),
+        ('lin2', LIN_SETTINGS),
     ]
 
-# Extra names go here:
+
+_SRedSettings = s_red_settings
 SRedSettings = s_red_settings
-# End of extra names
 
