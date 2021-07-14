@@ -118,11 +118,14 @@ class CObject(object):
 
 def is_line_start_of_object(line):
     "Returns True if we are a c object (enum, struct, union)"
+    def find_whole_word(w):
+        return re.compile(r'\b({0})\b'.format(w), flags=re.IGNORECASE).search
+    
     object_names = ('enum', 'struct', 'union')
-    is_start = [x for x in object_names if x in line]
+    is_start = [x for x in object_names if find_whole_word(x)(line) != None]
     return bool(is_start)
 
-def parse_object(f, pos=-1):
+def parse_object(f, pos=-1, pack_size=None):
     """
     takes a file object and returns a class with the object data.
     if pos is -1, don't reset position when finished
@@ -141,6 +144,7 @@ def parse_object(f, pos=-1):
             raise RuntimeError("Current line is not the declaration of a C Object (enum/struct/union)")
         # Lets start parsing the lines for our C Object
         new_obj = CObject()
+        new_obj.packing = pack_size
         # Grab the object name
         name = re.sub('typedef|struct|enum|union|\{|\s*', '', line)
         new_obj.is_anonymous = not bool(name)
@@ -169,7 +173,7 @@ def parse_object(f, pos=-1):
                 # Parse any embedded objects
                 if is_line_start_of_object(line):
                     f.seek(last_pos)
-                    embedded_object = parse_object(f)
+                    embedded_object = parse_object(f, -1, pack_size)
                     new_obj.members.append(embedded_object)
                     continue
                 opening_bracket_count += line.count('{')
@@ -460,7 +464,7 @@ def parse_header_file(filename):
                 if is_line_start_of_object(line):
                     pos = f.tell()
                     f.seek(last_pos)
-                    obj = parse_object(f)
+                    obj = parse_object(f, -1, pack_size)
                     if obj.data_type == DataType.Struct:
                         obj.packing = pack_size
                     if obj.data_type == DataType.Enum:
@@ -665,7 +669,7 @@ def generate_pyfile(c_object, path):
             return import_names
         
         import_names = get_c_object_imports(c_object)
-        for import_name in import_names:
+        for import_name in list(set(import_names)):
             f.write(f"from ics.structures.{import_name} import *\n")
         f.write('\n\n')
 
