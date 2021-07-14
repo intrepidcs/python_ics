@@ -540,8 +540,15 @@ def generate(filename):
     ignore_names = ['__fsid_t', 'NeoDevice', 'neo_device', 'NeoDeviceEx', 'neo_device_ex', 'icsSpyMessage', 'icsSpyMessageJ1850', 'ics_spy_message', 'ics_spy_message_j1850'] 
     file_names = []
     prefered_names = []
-    print(f"Generating python files for {len(c_objects)} objects...")
-    for c_object in c_objects:
+    all_objects = c_objects + enum_objects
+    print(f"Generating python files objects...")
+    ignored_enum_count = 0
+    for c_object in all_objects:
+        # TODO: Bypass all anonymous enums
+        if c_object.data_type == DataType.Enum:
+            if c_object.is_anonymous:
+                ignored_enum_count += 1
+                continue
         # Bypass all the ignore_names above
         names = c_object.names
         names.append(c_object.preferred_name)
@@ -551,6 +558,7 @@ def generate(filename):
         file_name, file_path = generate_pyfile(c_object, output_dir)
         if debug_print:
             print(file_name, file_path)
+        file_names.append(file_name)
     
     # Verify we don't have any unknown data types here
     global non_ctype_objects
@@ -563,7 +571,7 @@ def generate(filename):
     if errors:
         raise RuntimeError("Failed to parse all objects properly")
     else:
-        print("Generated all python files.")
+        print(f"Generated all python {len(all_objects)-ignored_enum_count} files.")
 
     # Generate __init__.py and add all the modules to __all__
     with open(os.path.join(output_dir, '__init__.py'), 'w+') as f:
