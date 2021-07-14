@@ -510,7 +510,7 @@ def parse_header_file(filename):
                 line = f.readline()
         return c_objects, enum_objects
 
-def generate(filename):
+def generate(filename='include/ics/icsnVC40.h'):
     import shutil
     import json
     import os
@@ -725,7 +725,7 @@ def generate_pyfile(c_object, path):
                     import_names.extend(get_c_object_imports(member))
             # anonymous/nameless objects put an empty string in the list, lets remove it here
             import_names = [name for name in import_names if name]
-            return import_names
+            return sorted(import_names)
         
         import_names = get_c_object_imports(c_object)
         for import_name in list(set(import_names)):
