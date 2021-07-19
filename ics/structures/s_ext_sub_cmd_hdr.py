@@ -7,7 +7,7 @@ import enum
 class s_ext_sub_cmd_hdr(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
-        ('cmd', ctypes.c_uint16),
+        ('command', ctypes.c_uint16),
         ('length', ctypes.c_uint16),
     ]
 

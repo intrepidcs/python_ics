@@ -4,7 +4,7 @@ import enum
 
 
 
-class nameless63912(ctypes.Structure):
+class nameless55083(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
         ('id_29_bit_enable', ctypes.c_uint, 1),
@@ -19,11 +19,11 @@ class nameless63912(ctypes.Structure):
 
 
 
-class nameless44199(ctypes.Union):
+class nameless16918(ctypes.Union):
     _pack_ = 2
-    _anonymous_  = ('nameless63912',)
+    _anonymous_  = ('nameless55083',)
     _fields_ = [
-        ('nameless63912', nameless63912),
+        ('nameless55083', nameless55083),
         ('flags', ctypes.c_uint32),
     ]
 
@@ -31,7 +31,7 @@ class nameless44199(ctypes.Union):
 
 class st_cm_iso157652_rx_message(ctypes.Structure):
     _pack_ = 2
-    _anonymous_  = ('nameless44199',)
+    _anonymous_  = ('nameless16918',)
     _fields_ = [
         ('vs_netid', ctypes.c_uint16),
         ('padding', ctypes.c_uint8),
@@ -43,7 +43,7 @@ class st_cm_iso157652_rx_message(ctypes.Structure):
         ('blockSize', ctypes.c_uint8),
         ('stMin', ctypes.c_uint8),
         ('cf_timeout', ctypes.c_uint16),
-        ('nameless44199', nameless44199),
+        ('nameless16918', nameless16918),
         ('reserved', ctypes.c_uint8 * 16),
     ]
 
