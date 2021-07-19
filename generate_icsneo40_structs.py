@@ -160,7 +160,6 @@ def parse_object(f, pos=-1, pack_size=None):
         new_obj.packing = pack_size
         # Grab the object name
         name = re.sub('typedef|struct|enum|union|\{|\s*', '', line)
-        new_obj.is_anonymous = not bool(name)
         # Only append the name if its not anonymous
         if name:
             new_obj.names.append(name)
@@ -220,6 +219,7 @@ def parse_object(f, pos=-1, pack_size=None):
                 if not finished:
                     last_pos = f.tell()
                     line = f.readline()
+        new_obj.is_anonymous = not bool(new_obj.names)
         new_obj.assign_preferred_name()
         # Append the objects to a global list for parsing later
         global ALL_C_OBJECTS
@@ -704,8 +704,8 @@ def _write_c_object(f, c_object):
     f.write('\n')
 
 def generate_pyfile(c_object, path):
-    name = get_preferred_struct_name(c_object.names)
-    c_object.preferred_name = convert_to_snake_case(name)
+    #name = get_preferred_struct_name(c_object.names)
+    #c_object.preferred_name = convert_to_snake_case(name)
     # Make the fname and the path
     fname = f'{c_object.preferred_name}.py'
     fname_with_path = os.path.normpath(os.path.join(path, fname))
