@@ -184,6 +184,13 @@ typedef unsigned __int64 uint64_t;
 #define NEODEVICE_RADEPSILON (0x00000018)
 #define NEODEVICE_OBD2_SIM_DOIP (0x00000019)
 #define NEODEVICE_OBD2_DEV (0x0000001a)
+#define NEODEVICE_NEW_DEVICE_54 (0x0000001b)
+#define NEODEVICE_NEW_DEVICE_55 (0x0000001c)
+#define NEODEVICE_NEW_DEVICE_56 (0x0000001d)
+#define NEODEVICE_NEW_DEVICE_57 (0x0000001e)
+#define NEODEVICE_NEW_DEVICE_58 (0x0000001f)
+// I'm not sure what was 0x20 anymore, but we'll skip it to be safe
+#define NEODEVICE_NEW_DEVICE_59 (0x00000021)
 #define NEODEVICE_RED (0x00000040)
 #define NEODEVICE_ECU (0x00000080)
 #define NEODEVICE_IEVB (0x00000100)
@@ -994,7 +1001,9 @@ enum
 	OPETH_FUNC_TAP = 0,
 	OPETH_FUNC_MEDIACONVERTER,
 	OPETH_FUNC_TAP_LOW_LATENCY,
-	OPETH_FUNC_RAW_MEDIA_CONVERTER
+	OPETH_FUNC_RAW_MEDIA_CONVERTER,
+	OPETH_FUNC_RAW_MEDIA_CONVERTER2,
+	OPETH_FUNC_RAW_MEDIA_CONVERTER2_LOW_LATENCY,
 };
 
 typedef struct OP_ETH_GENERAL_SETTINGS_t
@@ -1166,6 +1175,7 @@ typedef enum _EDiskLayout
 	DiskLayoutIndividual,
 } EDiskLayout;
 
+// Extended Comm structures
 #define DISK_STATUS_FLAG_PRESENT 0x01
 #define DISK_STATUS_FLAG_INITIALIZED 0x02
 
@@ -1200,21 +1210,59 @@ typedef struct _SDiskFormatProgress
 } SDiskFormatProgress;
 #define SDiskFormatProgress_SIZE 10
 
+typedef struct _StartDHCPServerCommand
+{
+	uint16_t networkId; // NETID_ of the physical ethernet network on which to start the server
+	uint32_t serverIpAddress; // Set as our IP address using LWIP_SetIPAddress
+	uint32_t subnetMask; // Subnet mask to advertise - set our subnet to match using LWIP_SetNetmask
+	uint32_t gatewayAddress; // Gateway address to advertise on DHCP server offers
+	uint32_t startAddress; // Start of IP address range available for the server to offer
+	uint32_t endAddress; // End of IP address range available for the server to offer
+	uint32_t leaseTime; // Lease time setting for the DHCP server in seconds
+	uint32_t overwrite; // flag - set to nonzero if we want to overwrite an already running DHCP server
+} StartDHCPServerCommand;
+
+typedef struct _StopDHCPServerCommand
+{
+	uint16_t networkId; // NETID_ of the network on which to attempt to stop the DHCP server
+} StopDHCPServerCommand;
+
+typedef enum _ExtendedResponseCode
+{
+	EXTENDED_RESPONSE_OK = 0,
+	// Unsupported sub command
+	EXTENDED_RESPONSE_INVALID_COMMAND = -1,
+	// Device is not in the correct state to accept this command
+	EXTENDED_RESPONSE_INVALID_STATE = -2,
+	// Operation failed
+	EXTENDED_RESPONSE_OPERATION_FAILED = -3,
+} ExtendedResponseCode;
+
+typedef struct _ExtendedResponseGeneric
+{
+	uint16_t commandType; // command type we're responding to
+	int32_t returnCode;
+} ExtendedResponseGeneric;
+
 typedef struct _SExtSubCmdHdr
 {
-	uint16_t cmd;
+	uint16_t command;
 	uint16_t length;
 } SExtSubCmdHdr;
 #define SExtSubCmdHdr_SIZE 4
 
 typedef struct _SExtSubCmdComm
 {
-	SExtSubCmdHdr hdr;
+	SExtSubCmdHdr header;
 	union {
 		SDiskStructure structure;
 		SDiskDetails details;
 		SDiskFormatProgress progress;
-	};
+		StartDHCPServerCommand startDHCPServer;
+		StopDHCPServerCommand stopDHCPServer;
+		ExtendedResponseGeneric genericResponse;
+		// Add additional extension commands to this union as needed.
+	} extension;
 } SExtSubCmdComm;
 #define SExtSubCmdComm_SIZE 188
 
@@ -2377,7 +2425,8 @@ typedef struct _SRADGigastarSettings
 	struct
 	{
 		uint16_t hwComLatencyTestEn : 1;
-		uint16_t reserved : 15;
+		uint16_t disableUsbCheckOnBoot : 1;
+		uint16_t reserved : 14;
 	} flags;
 	ETHERNET_SETTINGS2 ethernet1;
 	ETHERNET_SETTINGS2 ethernet2;
@@ -3976,6 +4025,25 @@ typedef struct SPhyRegPktClause45Mess
 	uint16_t regVal;
 }PhyRegPktClause45Mess_t; //6 bytes
 
+typedef enum SPhyRegPktStatus
+{
+	PHYREG_SUCCESS = 0,
+	PHYREG_FAILURE,
+	PHYREG_INVALID_MDIO_BUS_INDEX,
+	PHYREG_INVALID_PHY_ADDR,
+	PHYREG_RESERVED0,
+	PHYREG_RESERVED1,
+	PHYREG_RESERVED2,
+	PHYREG_RESERVED3
+} PhyRegPktStatus_t;
+
+typedef enum SPhyRegPktRw
+{
+	PHYREG_READ = 0,
+	PHYREG_WRITE,
+	PHYREG_BOTH
+} PhyRegPktRw_t;
+
 typedef struct SPhyRegPkt
 {
 	union
@@ -3984,7 +4052,9 @@ typedef struct SPhyRegPkt
 			uint16_t Enabled:1;
 			uint16_t WriteEnable:1;
 			uint16_t Clause45Enable:1;
-			uint16_t reserved:9;
+			uint16_t status:2;
+			uint16_t reserved:3;
+			uint16_t BusIndex:4;
 			uint16_t version:4;
 		};
 		uint16_t flags;
