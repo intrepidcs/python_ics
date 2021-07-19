@@ -669,6 +669,12 @@ def _write_c_object(f, c_object):
                         global NON_CTYPE_OBJ_NAMES
                         NON_CTYPE_OBJ_NAMES.append(member.data_type)
                         data_type = member.data_type
+                    obj = get_object_from_name(member.data_type)
+                    if obj and obj.data_type == DataType.Enum:
+                        # C enum types can be char, unsigned, signed but seem to default to
+                        # 4 byte integer on most systems (even 64-bit)
+                        # This is a potential hole but nothing we can do here
+                        data_type = 'ctypes.c_int32'
                 else:
                     data_type = member.data_type
                 if member.bitfield_size:
