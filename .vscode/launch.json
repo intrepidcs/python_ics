@@ -5,12 +5,29 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Current File",
+            "name": "Python: Generate icsneo40 structs",
+            "type": "python",
+            "request": "launch",
+            "program": "generate_icsneo40_structs.py",
+            "console": "integratedTerminal",
+            "args": ["include/ics/icsnVC40.h", ],
+        },
+        {
+            "name": "Python: Generate test structures",
             "type": "python",
             "request": "launch",
             "program": "generate_icsneo40_structs.py",
             "console": "integratedTerminal",
             "args": ["include/ics/test_structs.h", ],
+        },
+        {
+            "name": "Python: test_structs.py",
+            "type": "python",
+            "request": "launch",
+            "program": "test_structs.py",
+            "cwd": "${workspaceFolder}/test",
+            "console": "integratedTerminal",
+            "args": [],
         }
     ]
 }
