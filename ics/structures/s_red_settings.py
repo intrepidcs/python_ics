@@ -2,8 +2,8 @@
 import ctypes
 import enum
 
-from ics.structures.lin_settings import *
 from ics.structures.can_settings import *
+from ics.structures.lin_settings import *
 
 
 class s_red_settings(ctypes.Structure):

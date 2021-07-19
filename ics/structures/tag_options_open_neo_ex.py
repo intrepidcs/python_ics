@@ -13,7 +13,6 @@ class can_options(ctypes.Structure):
 CANOptions = can_options
 
 class tag_options_open_neo_ex(ctypes.Union):
-    _anonymous_  = ('can_options',)
     _fields_ = [
         ('can_options', can_options),
         ('Reserved', ctypes.c_uint32 * 16),

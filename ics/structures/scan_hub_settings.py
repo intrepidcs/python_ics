@@ -2,8 +2,8 @@
 import ctypes
 import enum
 
-from ics.structures.canfd_settings import *
 from ics.structures.can_settings import *
+from ics.structures.canfd_settings import *
 
 
 class scan_hub_settings(ctypes.Structure):

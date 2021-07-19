@@ -2,8 +2,8 @@
 import ctypes
 import enum
 
-from ics.structures.lin_settings import *
 from ics.structures.can_settings import *
+from ics.structures.lin_settings import *
 from ics.structures.iso9141_keyword2000_settings import *
 
 

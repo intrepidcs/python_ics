@@ -4,7 +4,7 @@ import enum
 
 
 
-class nameless44483(ctypes.Structure):
+class nameless17166(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
         ('bExtended', ctypes.c_uint, 1),
@@ -15,15 +15,15 @@ class nameless44483(ctypes.Structure):
 
 class can1_options(ctypes.Union):
     _pack_ = 2
-    _anonymous_  = ('nameless44483',)
+    _anonymous_  = ('nameless17166',)
     _fields_ = [
-        ('nameless44483', nameless44483),
+        ('nameless17166', nameless17166),
         ('DWord', ctypes.c_uint32),
     ]
 
 
 
-class nameless33071(ctypes.Structure):
+class nameless48919(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
         ('bExtended', ctypes.c_uint, 1),
@@ -34,15 +34,15 @@ class nameless33071(ctypes.Structure):
 
 class can2_options(ctypes.Union):
     _pack_ = 2
-    _anonymous_  = ('nameless33071',)
+    _anonymous_  = ('nameless48919',)
     _fields_ = [
-        ('nameless33071', nameless33071),
+        ('nameless48919', nameless48919),
         ('DWord', ctypes.c_uint32),
     ]
 
 
 
-class nameless10428(ctypes.Structure):
+class nameless36967(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
         ('bExtended', ctypes.c_uint, 1),
@@ -53,15 +53,15 @@ class nameless10428(ctypes.Structure):
 
 class can3_options(ctypes.Union):
     _pack_ = 2
-    _anonymous_  = ('nameless10428',)
+    _anonymous_  = ('nameless36967',)
     _fields_ = [
-        ('nameless10428', nameless10428),
+        ('nameless36967', nameless36967),
         ('DWord', ctypes.c_uint32),
     ]
 
 
 
-class nameless7525(ctypes.Structure):
+class nameless2509(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
         ('bExtended', ctypes.c_uint, 1),
@@ -72,9 +72,9 @@ class nameless7525(ctypes.Structure):
 
 class can4_options(ctypes.Union):
     _pack_ = 2
-    _anonymous_  = ('nameless7525',)
+    _anonymous_  = ('nameless2509',)
     _fields_ = [
-        ('nameless7525', nameless7525),
+        ('nameless2509', nameless2509),
         ('DWord', ctypes.c_uint32),
     ]
 
@@ -82,7 +82,6 @@ class can4_options(ctypes.Union):
 
 class s_text_api_settings(ctypes.Structure):
     _pack_ = 2
-    _anonymous_  = ('can1_options', 'can2_options', 'can3_options', 'can4_options')
     _fields_ = [
         ('can1_tx_id', ctypes.c_uint32),
         ('can1_rx_id', ctypes.c_uint32),

@@ -242,7 +242,6 @@ class rad_a2b_versions(ctypes.Structure):
 
 class st_chip_versions(ctypes.Union):
     _pack_ = 2
-    _anonymous_  = ('fire_versions', 'plasma_fire_vnet', 'vcan3_versions', 'vcanrf_versions', 'radgalaxy_versions', 'radstar2_versions', 'vividcan_versions', 'cmprobe_versions', 'obd2pro_versions', 'vcan41_versions', 'vcan42_versions', 'neoecu_avb_versions', 'radsupermoon_versions', 'radmoon2_versions', 'pluto_versions', 'radgigalog_versions', 'radgigalog3_versions', 'radgigastar_versions', 'radgigastar_usbz_versions', 'jupiter_versions', 'fire3_versions', 'rad_moon_duo_versions', 'ether_badge_versions', 'rad_a2b_versions')
     _fields_ = [
         ('fire_versions', fire_versions),
         ('plasma_fire_vnet', plasma_fire_vnet),
