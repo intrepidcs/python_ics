@@ -2,16 +2,16 @@
 import ctypes
 import enum
 
-from ics.structures.s_pluto_l2_forwarding_params import *
-from ics.structures.s_pluto_vlan_lookup import *
-from ics.structures.s_pluto_l2_policing import *
-from ics.structures.s_pluto_mac_config import *
-from ics.structures.s_pluto_l2_address_lookup_params import *
-from ics.structures.extended_data_flash_header_t import *
-from ics.structures.s_pluto_retagging_entry import *
-from ics.structures.s_pluto_l2_address_lookup_entry import *
-from ics.structures.s_pluto_general_params import *
-from ics.structures.s_pluto_l2_forwarding_entry import *
+from ics.structures.s_pluto_mac_config_s import *
+from ics.structures.s_pluto_general_params_s import *
+from ics.structures.s_pluto_l2_forwarding_entry_s import *
+from ics.structures.s_pluto_retagging_entry_s import *
+from ics.structures.s_pluto_l2_address_lookup_entry_s import *
+from ics.structures.s_pluto_vlan_lookup_s import *
+from ics.structures.s_extended_data_flash_header import *
+from ics.structures.s_pluto_l2_forwarding_params_s import *
+from ics.structures.s_pluto_l2_address_lookup_params_s import *
+from ics.structures.s_pluto_l2_policing_s import *
 
 
 class s_pluto_switch_settings_s(ctypes.Structure):

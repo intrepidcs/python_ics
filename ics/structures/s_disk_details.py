@@ -2,8 +2,8 @@
 import ctypes
 import enum
 
-from ics.structures.s_disk_status import *
 from ics.structures.s_disk_structure import *
+from ics.structures.s_disk_status import *
 
 
 class s_disk_details(ctypes.Structure):

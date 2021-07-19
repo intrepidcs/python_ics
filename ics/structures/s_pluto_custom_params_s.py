@@ -2,7 +2,7 @@
 import ctypes
 import enum
 
-from ics.structures.pluto_ptp_params_t import *
+from ics.structures.s_pluto_ptp_params_s import *
 
 
 class s_pluto_custom_params_s(ctypes.Structure):
