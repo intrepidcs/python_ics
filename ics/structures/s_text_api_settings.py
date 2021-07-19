@@ -4,7 +4,7 @@ import enum
 
 
 
-class nameless57310(ctypes.Structure):
+class nameless44483(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
         ('bExtended', ctypes.c_uint, 1),
@@ -15,15 +15,15 @@ class nameless57310(ctypes.Structure):
 
 class can1_options(ctypes.Union):
     _pack_ = 2
-    _anonymous_  = ('nameless57310',)
+    _anonymous_  = ('nameless44483',)
     _fields_ = [
-        ('nameless57310', nameless57310),
+        ('nameless44483', nameless44483),
         ('DWord', ctypes.c_uint32),
     ]
 
 
 
-class nameless29787(ctypes.Structure):
+class nameless33071(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
         ('bExtended', ctypes.c_uint, 1),
@@ -34,15 +34,15 @@ class nameless29787(ctypes.Structure):
 
 class can2_options(ctypes.Union):
     _pack_ = 2
-    _anonymous_  = ('nameless29787',)
+    _anonymous_  = ('nameless33071',)
     _fields_ = [
-        ('nameless29787', nameless29787),
+        ('nameless33071', nameless33071),
         ('DWord', ctypes.c_uint32),
     ]
 
 
 
-class nameless22645(ctypes.Structure):
+class nameless10428(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
         ('bExtended', ctypes.c_uint, 1),
@@ -53,15 +53,15 @@ class nameless22645(ctypes.Structure):
 
 class can3_options(ctypes.Union):
     _pack_ = 2
-    _anonymous_  = ('nameless22645',)
+    _anonymous_  = ('nameless10428',)
     _fields_ = [
-        ('nameless22645', nameless22645),
+        ('nameless10428', nameless10428),
         ('DWord', ctypes.c_uint32),
     ]
 
 
 
-class nameless29441(ctypes.Structure):
+class nameless7525(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
         ('bExtended', ctypes.c_uint, 1),
@@ -72,9 +72,9 @@ class nameless29441(ctypes.Structure):
 
 class can4_options(ctypes.Union):
     _pack_ = 2
-    _anonymous_  = ('nameless29441',)
+    _anonymous_  = ('nameless7525',)
     _fields_ = [
-        ('nameless29441', nameless29441),
+        ('nameless7525', nameless7525),
         ('DWord', ctypes.c_uint32),
     ]
 

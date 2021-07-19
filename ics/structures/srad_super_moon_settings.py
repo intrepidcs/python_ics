@@ -2,11 +2,11 @@
 import ctypes
 import enum
 
-from ics.structures.s_text_api_settings import *
-from ics.structures.timesync_icshardware_settings import *
 from ics.structures.op_eth_general_settings import *
-from ics.structures.op_eth_settings import *
 from ics.structures.ethernet_settings2 import *
+from ics.structures.timesync_icshardware_settings import *
+from ics.structures.s_text_api_settings import *
+from ics.structures.op_eth_settings import *
 
 
 class srad_super_moon_settings(ctypes.Structure):

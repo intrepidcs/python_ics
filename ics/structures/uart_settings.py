@@ -4,7 +4,7 @@ import enum
 
 
 
-class nameless44289(ctypes.Structure):
+class nameless35634(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
         ('invert_tx', ctypes.c_uint, 1),
@@ -16,19 +16,19 @@ class nameless44289(ctypes.Structure):
 
 
 
-class nameless37117(ctypes.Union):
+class nameless55691(ctypes.Union):
     _pack_ = 2
-    _anonymous_  = ('nameless44289',)
+    _anonymous_  = ('nameless35634',)
     _fields_ = [
         ('bOptions', ctypes.c_uint32),
-        ('nameless44289', nameless44289),
+        ('nameless35634', nameless35634),
     ]
 
 
 
 class uart_settings(ctypes.Structure):
     _pack_ = 2
-    _anonymous_  = ('nameless37117',)
+    _anonymous_  = ('nameless55691',)
     _fields_ = [
         ('Baudrate', ctypes.c_uint16),
         ('spbrg', ctypes.c_uint16),
@@ -37,7 +37,7 @@ class uart_settings(ctypes.Structure):
         ('stop_bits', ctypes.c_uint16),
         ('flow_control', ctypes.c_uint8),
         ('reserved_1', ctypes.c_uint8),
-        ('nameless37117', nameless37117),
+        ('nameless55691', nameless55691),
     ]
 
 

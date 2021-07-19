@@ -4,7 +4,7 @@ import enum
 
 
 
-class nameless17972(ctypes.Structure):
+class nameless14546(ctypes.Structure):
     _fields_ = [
         ('StatusBitField3', ctypes.c_uint32),
         ('StatusBitField4', ctypes.c_uint32),
@@ -12,17 +12,17 @@ class nameless17972(ctypes.Structure):
 
 
 
-class nameless47833(ctypes.Union):
-    _anonymous_  = ('nameless17972',)
+class nameless54761(ctypes.Union):
+    _anonymous_  = ('nameless14546',)
     _fields_ = [
-        ('nameless17972', nameless17972),
+        ('nameless14546', nameless14546),
         ('AckBytes', ctypes.c_uint8 * 8),
     ]
 
 
 
 class ics_spy_message_vsb(ctypes.Structure):
-    _anonymous_  = ('nameless47833',)
+    _anonymous_  = ('nameless54761',)
     _fields_ = [
         ('StatusBitField', ctypes.c_uint32),
         ('StatusBitField2', ctypes.c_uint32),
@@ -43,7 +43,7 @@ class ics_spy_message_vsb(ctypes.Structure):
         ('DescriptionID', ctypes.c_int16),
         ('ArbIDOrHeader', ctypes.c_uint32),
         ('Data', ctypes.c_uint8 * 8),
-        ('nameless47833', nameless47833),
+        ('nameless54761', nameless54761),
         ('ExtraDataPtr', ctypes.c_uint32),
         ('MiscData', ctypes.c_uint8),
         ('Reserved', ctypes.c_uint8 * 3),

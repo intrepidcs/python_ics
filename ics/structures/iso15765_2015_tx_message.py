@@ -4,7 +4,7 @@ import enum
 
 
 
-class nameless17712(ctypes.Structure):
+class nameless5185(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
         ('id_29_bit_enable', ctypes.c_uint16, 1),
@@ -21,11 +21,11 @@ class nameless17712(ctypes.Structure):
 
 
 
-class nameless65235(ctypes.Union):
+class nameless22325(ctypes.Union):
     _pack_ = 2
-    _anonymous_  = ('nameless17712',)
+    _anonymous_  = ('nameless5185',)
     _fields_ = [
-        ('nameless17712', nameless17712),
+        ('nameless5185', nameless5185),
         ('flags', ctypes.c_uint16),
     ]
 
@@ -33,7 +33,7 @@ class nameless65235(ctypes.Union):
 
 class iso15765_2015_tx_message(ctypes.Structure):
     _pack_ = 2
-    _anonymous_  = ('nameless65235',)
+    _anonymous_  = ('nameless22325',)
     _fields_ = [
         ('vs_netid', ctypes.c_uint16),
         ('padding', ctypes.c_uint8),
@@ -50,7 +50,7 @@ class iso15765_2015_tx_message(ctypes.Structure):
         ('data', ctypes.POINTER(ctypes.c_uint8)),
         ('num_bytes', ctypes.c_uint32),
         ('tx_dl', ctypes.c_uint8),
-        ('nameless65235', nameless65235),
+        ('nameless22325', nameless22325),
     ]
 
 
