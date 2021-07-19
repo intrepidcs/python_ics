@@ -127,9 +127,16 @@ def is_line_start_of_object(line):
     return bool(is_start)
 
 # This contains all the objects that don't pass convert_to_ctype_object
-non_ctype_objects = []
-# This contains a list of names of every object we collected
-object_names = []
+NON_CTYPE_OBJ_NAMES = []
+# This contains a list of every object we collected
+ALL_C_OBJECTS = []
+
+def get_object_from_name(name):
+    global ALL_C_OBJECTS
+    for obj in ALL_C_OBJECTS:
+        if name in obj.preferred_name or name in obj.names:
+            return obj
+    return None
 
 def parse_object(f, pos=-1, pack_size=None):
     """
@@ -214,10 +221,9 @@ def parse_object(f, pos=-1, pack_size=None):
                     last_pos = f.tell()
                     line = f.readline()
         new_obj.assign_preferred_name()
-        # Append the names to a global list for parsing later
-        global object_names
-        object_names.extend(new_obj.names)
-        object_names.append(new_obj.preferred_name)
+        # Append the objects to a global list for parsing later
+        global ALL_C_OBJECTS
+        ALL_C_OBJECTS.append(new_obj)
         return new_obj
     finally:
         if pos != -1:
@@ -561,13 +567,14 @@ def generate(filename='include/ics/icsnVC40.h'):
         file_names.append(file_name)
     
     # Verify we don't have any unknown data types here
-    global non_ctype_objects
-    global object_names 
+    global NON_CTYPE_OBJ_NAMES
+    global ALL_C_OBJECTS 
     errors = False
-    for non_ctype_object in non_ctype_objects:
-        if non_ctype_object not in object_names:
-            print(f"Warning: Not a valid object: {non_ctype_object}")
-            errors = True
+    for obj_name in NON_CTYPE_OBJ_NAMES:
+        obj = get_object_from_name(obj_name)
+        if not obj:
+            print(f"Warning: Not a valid object: {obj_name}")
+            errors = False
     if errors:
         raise RuntimeError("Failed to parse all objects properly")
     else:
@@ -659,8 +666,8 @@ def _write_c_object(f, c_object):
                     # If we aren't a valid ctypes data type we are probably a struct
                     if not data_type:
                         #print(f"Warning: Couldn't find a valid ctype type for '{member.data_type}' in '{member.name}'")
-                        global non_ctype_objects
-                        non_ctype_objects.append(member.data_type)
+                        global NON_CTYPE_OBJ_NAMES
+                        NON_CTYPE_OBJ_NAMES.append(member.data_type)
                         data_type = member.data_type
                 else:
                     data_type = member.data_type
@@ -720,7 +727,13 @@ def generate_pyfile(c_object, path):
                 if isinstance(member, CVariable):
                     is_ctype_type = bool(convert_to_ctype_object(member.data_type))
                     if not is_ctype_type:
-                        import_names.append(convert_to_snake_case(member.data_type))
+                        # Attempt to get the preferred name here.
+                        obj = get_object_from_name(member.data_type)
+                        if obj:
+                            actual_data_type = obj.preferred_name
+                        else:
+                            actual_data_type = member.data_type
+                        import_names.append(convert_to_snake_case(actual_data_type))
                 elif isinstance(member, CObject):
                     import_names.extend(get_c_object_imports(member))
             # anonymous/nameless objects put an empty string in the list, lets remove it here
