@@ -8,7 +8,7 @@ import sys
 import unittest
 
 MAJOR_VERSION = 905
-MINOR_VERSION = 999
+MINOR_VERSION = 10
 POST_VERSION = None
 
 if POST_VERSION:
