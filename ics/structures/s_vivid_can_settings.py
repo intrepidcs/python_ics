@@ -18,7 +18,6 @@ class flags(ctypes.Structure):
 
 class s_vivid_can_settings(ctypes.Structure):
     _pack_ = 2
-    _anonymous_  = ('flags',)
     _fields_ = [
         ('ecu_id', ctypes.c_uint32),
         ('can1', CAN_SETTINGS),

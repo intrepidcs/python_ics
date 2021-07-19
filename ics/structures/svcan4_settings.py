@@ -2,12 +2,12 @@
 import ctypes
 import enum
 
-from ics.structures.ethernet_settings import *
+from ics.structures.s_text_api_settings import *
 from ics.structures.canfd_settings import *
 from ics.structures.lin_settings import *
 from ics.structures.ethernet_settings2 import *
 from ics.structures.can_settings import *
-from ics.structures.s_text_api_settings import *
+from ics.structures.ethernet_settings import *
 from ics.structures.iso9141_keyword2000_settings import *
 
 
@@ -23,7 +23,6 @@ class flags(ctypes.Structure):
 
 class svcan4_settings(ctypes.Structure):
     _pack_ = 2
-    _anonymous_  = ('flags',)
     _fields_ = [
         ('perf_en', ctypes.c_uint16),
         ('can1', CAN_SETTINGS),

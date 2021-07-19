@@ -40,7 +40,7 @@
         ],
         "data_type": "Struct",
         "packing": 0,
-        "is_anonymous": true,
+        "is_anonymous": false,
         "members": [
             {
                 "name": "DeviceType",
@@ -207,7 +207,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 0,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "iNetworkID",
@@ -245,7 +245,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 0,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "iNetworkID",
@@ -487,7 +487,7 @@
         ],
         "data_type": "Struct",
         "packing": 2,
-        "is_anonymous": true,
+        "is_anonymous": false,
         "members": [
             {
                 "name": "Mode",
@@ -668,7 +668,7 @@
         ],
         "data_type": "Struct",
         "packing": 2,
-        "is_anonymous": true,
+        "is_anonymous": false,
         "members": [
             {
                 "name": "Mode",
@@ -833,7 +833,7 @@
         ],
         "data_type": "Struct",
         "packing": 2,
-        "is_anonymous": true,
+        "is_anonymous": false,
         "members": [
             {
                 "name": "time_500us",
@@ -867,7 +867,7 @@
         ],
         "data_type": "Struct",
         "packing": 2,
-        "is_anonymous": true,
+        "is_anonymous": false,
         "members": [
             {
                 "name": "Baudrate",
@@ -1080,7 +1080,7 @@
         ],
         "data_type": "Struct",
         "packing": 2,
-        "is_anonymous": true,
+        "is_anonymous": false,
         "members": [
             {
                 "name": "enable_convert_mode",
@@ -1166,7 +1166,7 @@
                 ],
                 "data_type": "Union",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "names": [],
@@ -1224,7 +1224,7 @@
                 ],
                 "data_type": "Union",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "names": [],
@@ -1290,7 +1290,7 @@
                 ],
                 "data_type": "Union",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "names": [],
@@ -1348,7 +1348,7 @@
                 ],
                 "data_type": "Union",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "names": [],
@@ -1409,7 +1409,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "mpic_maj",
@@ -1483,7 +1483,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "mpic_maj",
@@ -1557,7 +1557,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "mpic_maj",
@@ -1583,7 +1583,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "mpic_maj",
@@ -1609,7 +1609,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "zynq_core_major",
@@ -1635,7 +1635,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "zynq_core_major",
@@ -1661,7 +1661,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "mpic_maj",
@@ -1719,7 +1719,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "zynq_core_major",
@@ -1745,7 +1745,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "mchip_major",
@@ -1803,7 +1803,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "mchip_major",
@@ -1829,7 +1829,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "mchip_major",
@@ -1855,7 +1855,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "mchip_major",
@@ -1881,7 +1881,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "zynq_core_major",
@@ -1907,7 +1907,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "zynq_core_major",
@@ -1933,7 +1933,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "mchip_major",
@@ -1959,7 +1959,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "zynq_core_major",
@@ -1985,7 +1985,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "zynq_core_major",
@@ -2011,7 +2011,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "zynq_core_major",
@@ -2037,7 +2037,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "zynq_core_major",
@@ -2063,7 +2063,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "mchip_major",
@@ -2089,7 +2089,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "zchip_major",
@@ -2115,7 +2115,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "mchip_major",
@@ -2141,7 +2141,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "mchip_major",
@@ -2167,7 +2167,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "zynq_core_major",
@@ -2309,7 +2309,7 @@
                         ],
                         "data_type": "Struct",
                         "packing": 2,
-                        "is_anonymous": true,
+                        "is_anonymous": false,
                         "members": [
                             {
                                 "name": "bTapEnSwitch",
@@ -2701,7 +2701,7 @@
         ],
         "data_type": "Struct",
         "packing": 2,
-        "is_anonymous": true,
+        "is_anonymous": false,
         "members": [
             {
                 "name": "term_enabled",
@@ -2735,7 +2735,7 @@
         ],
         "data_type": "Struct",
         "packing": 2,
-        "is_anonymous": true,
+        "is_anonymous": false,
         "members": [
             {
                 "name": "MasterEnable",
@@ -4641,7 +4641,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "disableUsbCheckOnBoot",
@@ -5025,7 +5025,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "enableLatencyTest",
@@ -7190,7 +7190,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "hwComLatencyTestEn",
@@ -7758,7 +7758,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "hwComLatencyTestEn",
@@ -8163,7 +8163,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "hwComLatencyTestEn",
@@ -8416,7 +8416,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "disableUsbCheckOnBoot",
@@ -8581,7 +8581,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "",
@@ -8863,7 +8863,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "disableUsbCheckOnBoot",
@@ -9029,7 +9029,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "disableUsbCheckOnBoot",
@@ -9171,7 +9171,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "disableUsbCheckOnBoot",
@@ -9993,7 +9993,7 @@
                         ],
                         "data_type": "Struct",
                         "packing": 2,
-                        "is_anonymous": true,
+                        "is_anonymous": false,
                         "members": [
                             {
                                 "name": "macaddr",
@@ -10051,7 +10051,7 @@
                         ],
                         "data_type": "Struct",
                         "packing": 2,
-                        "is_anonymous": true,
+                        "is_anonymous": false,
                         "members": [
                             {
                                 "name": "vlid",
@@ -11082,7 +11082,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "disableUsbCheckOnBoot",
@@ -11143,7 +11143,7 @@
         ],
         "data_type": "Struct",
         "packing": 2,
-        "is_anonymous": true,
+        "is_anonymous": false,
         "members": [
             {
                 "name": "can1",
@@ -11306,7 +11306,7 @@
                 ],
                 "data_type": "Union",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "word",
@@ -11508,7 +11508,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "disableUsbCheckOnBoot",
@@ -11841,7 +11841,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "disableUsbCheckOnBoot",
@@ -11999,7 +11999,7 @@
                 ],
                 "data_type": "Union",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "word",
@@ -12057,7 +12057,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "disableUsbCheckOnBoot",
@@ -12385,7 +12385,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "disableUsbCheckOnBoot",
@@ -12518,7 +12518,7 @@
                 ],
                 "data_type": "Union",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "word",
@@ -12792,7 +12792,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "disableUsbCheckOnBoot",
@@ -12933,7 +12933,7 @@
         ],
         "data_type": "Struct",
         "packing": 2,
-        "is_anonymous": true,
+        "is_anonymous": false,
         "members": [
             {
                 "name": "perf_en",
@@ -12989,7 +12989,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "disableUsbCheckOnBoot",
@@ -13258,7 +13258,7 @@
                 ],
                 "data_type": "Struct",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "disableUsbCheckOnBoot",
@@ -13642,7 +13642,7 @@
                 ],
                 "data_type": "Union",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "red",
@@ -14169,7 +14169,7 @@
         ],
         "data_type": "Struct",
         "packing": 2,
-        "is_anonymous": true,
+        "is_anonymous": false,
         "members": [
             {
                 "name": "vs_netid",
@@ -14590,7 +14590,7 @@
         ],
         "data_type": "Struct",
         "packing": 0,
-        "is_anonymous": true,
+        "is_anonymous": false,
         "members": [
             {
                 "name": "StatusValue",
@@ -16079,7 +16079,7 @@
         ],
         "data_type": "Struct",
         "packing": 0,
-        "is_anonymous": true,
+        "is_anonymous": false,
         "members": [
             {
                 "name": "networkId",
@@ -16129,7 +16129,7 @@
         ],
         "data_type": "Struct",
         "packing": 0,
-        "is_anonymous": true,
+        "is_anonymous": false,
         "members": [
             {
                 "name": "backupPowerGood",
@@ -16179,7 +16179,7 @@
         ],
         "data_type": "Struct",
         "packing": 0,
-        "is_anonymous": true,
+        "is_anonymous": false,
         "members": [
             {
                 "name": "ethernetActivationLineEnabled",
@@ -16213,7 +16213,7 @@
         ],
         "data_type": "Struct",
         "packing": 0,
-        "is_anonymous": true,
+        "is_anonymous": false,
         "members": [
             {
                 "name": "ethernetActivationLineEnabled",
@@ -16247,7 +16247,7 @@
         ],
         "data_type": "Struct",
         "packing": 0,
-        "is_anonymous": true,
+        "is_anonymous": false,
         "members": [
             {
                 "name": "ethernetActivationLineEnabled",
@@ -16281,7 +16281,7 @@
         ],
         "data_type": "Struct",
         "packing": 0,
-        "is_anonymous": true,
+        "is_anonymous": false,
         "members": [
             {
                 "name": "ethernetActivationLineEnabled",
@@ -16315,7 +16315,7 @@
         ],
         "data_type": "Struct",
         "packing": 0,
-        "is_anonymous": true,
+        "is_anonymous": false,
         "members": [
             {
                 "name": "ethernetStatus",
@@ -16333,7 +16333,7 @@
         ],
         "data_type": "Struct",
         "packing": 0,
-        "is_anonymous": true,
+        "is_anonymous": false,
         "members": [
             {
                 "name": "ethernetStatus",
@@ -16351,7 +16351,7 @@
         ],
         "data_type": "Struct",
         "packing": 0,
-        "is_anonymous": true,
+        "is_anonymous": false,
         "members": [
             {
                 "name": "ethernetStatus",
@@ -16369,7 +16369,7 @@
         ],
         "data_type": "Struct",
         "packing": 0,
-        "is_anonymous": true,
+        "is_anonymous": false,
         "members": [
             {
                 "name": "ethernetStatus",
@@ -16387,7 +16387,7 @@
         ],
         "data_type": "Struct",
         "packing": 0,
-        "is_anonymous": true,
+        "is_anonymous": false,
         "members": [
             {
                 "name": "ethernetStatus",
@@ -16405,7 +16405,7 @@
         ],
         "data_type": "Union",
         "packing": 0,
-        "is_anonymous": true,
+        "is_anonymous": false,
         "members": [
             {
                 "name": "fire2Status",
@@ -16487,7 +16487,7 @@
         ],
         "data_type": "Struct",
         "packing": 0,
-        "is_anonymous": true,
+        "is_anonymous": false,
         "members": [
             {
                 "name": "szName",
