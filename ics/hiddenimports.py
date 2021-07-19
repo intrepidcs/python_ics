@@ -29,6 +29,9 @@ hidden_imports = [
     "ics.structures.s_disk_structure",
     "ics.structures.s_disk_details",
     "ics.structures.s_disk_format_progress",
+    "ics.structures.start_dhcp_server_command",
+    "ics.structures.stop_dhcp_server_command",
+    "ics.structures.extended_response_generic",
     "ics.structures.s_ext_sub_cmd_hdr",
     "ics.structures.s_ext_sub_cmd_comm",
     "ics.structures.serdescam_settings",
@@ -116,8 +119,11 @@ hidden_imports = [
     "ics.structures.op_eth_link_mode",
     "ics.structures.e_disk_format",
     "ics.structures.e_disk_layout",
+    "ics.structures.extended_response_code",
     "ics.structures.flex_vnet_mode",
     "ics.structures.e_device_settings_type",
     "ics.structures.e_plasma_ion_vnet_channel_t",
+    "ics.structures.s_phy_reg_pkt_status",
+    "ics.structures.s_phy_reg_pkt_rw",
 ]
 

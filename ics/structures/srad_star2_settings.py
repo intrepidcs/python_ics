@@ -2,16 +2,16 @@
 import ctypes
 import enum
 
-from ics.structures.s_text_api_settings import *
-from ics.structures.op_eth_general_settings import *
-from ics.structures.canfd_settings import *
-from ics.structures.lin_settings import *
-from ics.structures.ethernet_settings2 import *
-from ics.structures.can_settings import *
-from ics.structures.timesync_icshardware_settings import *
 from ics.structures.rad_reporting_settings import *
+from ics.structures.can_settings import *
+from ics.structures.ethernet_settings2 import *
+from ics.structures.s_text_api_settings import *
 from ics.structures.op_eth_settings import *
+from ics.structures.timesync_icshardware_settings import *
 from ics.structures.iso9141_keyword2000_settings import *
+from ics.structures.lin_settings import *
+from ics.structures.canfd_settings import *
+from ics.structures.op_eth_general_settings import *
 
 
 class srad_star2_settings(ctypes.Structure):

@@ -2,16 +2,16 @@
 import ctypes
 import enum
 
-from ics.structures.s_text_api_settings import *
-from ics.structures.canfd_settings import *
+from ics.structures.can_settings import *
 from ics.structures.disk_settings import *
 from ics.structures.ethernet_settings2 import *
-from ics.structures.can_settings import *
-from ics.structures.timesync_icshardware_settings import *
+from ics.structures.s_text_api_settings import *
 from ics.structures.ethernet_settings import *
+from ics.structures.timesync_icshardware_settings import *
+from ics.structures.canfd_settings import *
 
 
-class nameless51729(ctypes.Structure):
+class nameless54210(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
         ('network_enables', ctypes.c_uint16),
@@ -23,10 +23,10 @@ class nameless51729(ctypes.Structure):
 
 class network_enables(ctypes.Union):
     _pack_ = 2
-    _anonymous_  = ('nameless51729',)
+    _anonymous_  = ('nameless54210',)
     _fields_ = [
         ('word', ctypes.c_uint64),
-        ('nameless51729', nameless51729),
+        ('nameless54210', nameless54210),
     ]
 
 

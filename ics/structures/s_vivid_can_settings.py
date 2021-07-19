@@ -2,8 +2,8 @@
 import ctypes
 import enum
 
-from ics.structures.can_settings import *
 from ics.structures.swcan_settings import *
+from ics.structures.can_settings import *
 
 
 class flags(ctypes.Structure):

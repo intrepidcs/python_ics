@@ -3,27 +3,32 @@ import ctypes
 import enum
 
 from ics.structures.s_ext_sub_cmd_hdr import *
-from ics.structures.s_disk_structure import *
+from ics.structures.start_dhcp_server_command import *
+from ics.structures.stop_dhcp_server_command import *
 from ics.structures.s_disk_format_progress import *
+from ics.structures.s_disk_structure import *
 from ics.structures.s_disk_details import *
+from ics.structures.extended_response_generic import *
 
 
-class nameless34815(ctypes.Union):
+class extension(ctypes.Union):
     _pack_ = 2
     _fields_ = [
         ('structure', SDiskStructure),
         ('details', SDiskDetails),
         ('progress', SDiskFormatProgress),
+        ('startDHCPServer', StartDHCPServerCommand),
+        ('stopDHCPServer', StopDHCPServerCommand),
+        ('genericResponse', ExtendedResponseGeneric),
     ]
 
 
 
 class s_ext_sub_cmd_comm(ctypes.Structure):
     _pack_ = 2
-    _anonymous_  = ('nameless34815',)
     _fields_ = [
-        ('hdr', SExtSubCmdHdr),
-        ('nameless34815', nameless34815),
+        ('header', SExtSubCmdHdr),
+        ('extension', extension),
     ]
 
 

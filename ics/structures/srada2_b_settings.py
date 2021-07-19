@@ -2,14 +2,14 @@
 import ctypes
 import enum
 
+from ics.structures.rad_reporting_settings import *
+from ics.structures.can_settings import *
+from ics.structures.disk_settings import *
+from ics.structures.timesync_icshardware_settings import *
+from ics.structures.iso9141_keyword2000_settings import *
+from ics.structures.lin_settings import *
 from ics.structures.logger_settings import *
 from ics.structures.canfd_settings import *
-from ics.structures.disk_settings import *
-from ics.structures.lin_settings import *
-from ics.structures.can_settings import *
-from ics.structures.timesync_icshardware_settings import *
-from ics.structures.rad_reporting_settings import *
-from ics.structures.iso9141_keyword2000_settings import *
 
 
 class flags(ctypes.Structure):
