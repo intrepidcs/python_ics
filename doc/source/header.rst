@@ -10,8 +10,12 @@ This module is essentially just a wrapper around icsneo40.dll. For more document
 Whats New?
 ============================================================
 
-v903 is a new release that implements features that break existing API in some areas.
+-Updated icsnVC40.h to v905.10
+-Fixed a bunch of issues with setting structures. Script was essentially completely re-written with unit tests now.
 
+============================================================
+v903+ Compatibility Changes
+============================================================
 
 ISO 15765-2
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -118,7 +122,7 @@ Due to the added complexity underneath when building PyInstaller ``hidden_import
                  pathex=['.'],
                  binaries=[],
                  datas=[],
-                 hiddenimports=ics.hiddenimports.hidden_imports,
+                 hiddenimports=ics.hidden_imports,
                  hookspath=[],
                  runtime_hooks=[],
                  excludes=[],
