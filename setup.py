@@ -7,7 +7,7 @@ import platform
 import sys
 import unittest
 
-MAJOR_VERSION = 905
+MAJOR_VERSION = 906
 MINOR_VERSION = 999
 POST_VERSION = None
 
