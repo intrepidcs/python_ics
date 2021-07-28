@@ -45,7 +45,7 @@ class TestInnerStructure(unittest.TestCase):
 
 class TestTestStructure(unittest.TestCase):    
     def test_a(self):
-        t = a()
+        t = A()
         self.assertTrue(isinstance(t, ctypes.Structure))
         # default init
         self.assertEqual(t.a, 0)
@@ -67,7 +67,7 @@ class TestTestStructure(unittest.TestCase):
         self.assertEqual(t.c, 10)
     
     def test_b(self):
-        t = b()
+        t = B()
         self.assertTrue(isinstance(t, ctypes.Structure))
         # default init
         self.assertEqual(t.d, 0)
@@ -89,7 +89,7 @@ class TestTestStructure(unittest.TestCase):
         self.assertEqual(t.f, 1)
     
     def test_c(self):
-        t = c()
+        t = C()
         self.assertTrue(isinstance(t, ctypes.Union))
         # default init
         self.assertEqual(t.ghi, 0)
@@ -121,7 +121,7 @@ class TestTestStructure(unittest.TestCase):
         self.assertEqual(t.i, 1)
 
     def test_d(self):
-        t = d()
+        t = D()
         self.assertTrue(isinstance(t, ctypes.Union))
         # default init
         self.assertEqual(t.jkm, 0)
@@ -153,7 +153,7 @@ class TestTestStructure(unittest.TestCase):
         self.assertEqual(t.m, 1)
     
     def test_e(self):
-        t = e()
+        t = E()
         self.assertTrue(isinstance(t, ctypes.Structure))
         # default init
         self.assertEqual(t.n, 0)
@@ -179,7 +179,7 @@ class TestTestStructure(unittest.TestCase):
         self.assertEqual(t.q, 0)
 
     def test_f(self):
-        t = f()
+        t = F()
         self.assertTrue(isinstance(t, ctypes.Structure))
         # default init
         self.assertEqual(t.r, 0)
@@ -209,34 +209,34 @@ class TestTestStructure(unittest.TestCase):
         self.assertTrue(isinstance(t, ctypes.Structure))
 
         # test B
-        self.assertTrue(isinstance(t.b, ctypes.Structure))
+        self.assertTrue(isinstance(t.B, ctypes.Structure))
         # default init
         self.assertEqual(t._def, 0)
-        self.assertEqual(t.b.d, 0)
-        self.assertEqual(t.b.e, 0)
-        self.assertEqual(t.b.f, 0)
-        t.b.d = 1
+        self.assertEqual(t.B.d, 0)
+        self.assertEqual(t.B.e, 0)
+        self.assertEqual(t.B.f, 0)
+        t.B.d = 1
         self.assertEqual(t._def, 0x1)
-        self.assertEqual(t.b.d, 1)
-        self.assertEqual(t.b.e, 0)
-        self.assertEqual(t.b.f, 0)
-        t.b.d = 0
-        t.b.e = 1
+        self.assertEqual(t.B.d, 1)
+        self.assertEqual(t.B.e, 0)
+        self.assertEqual(t.B.f, 0)
+        t.B.d = 0
+        t.B.e = 1
         self.assertEqual(t._def, 0x2)
-        self.assertEqual(t.b.d, 0)
-        self.assertEqual(t.b.e, 1)
-        self.assertEqual(t.b.f, 0)
-        t.b.e = 0
-        t.b.f = 1
+        self.assertEqual(t.B.d, 0)
+        self.assertEqual(t.B.e, 1)
+        self.assertEqual(t.B.f, 0)
+        t.B.e = 0
+        t.B.f = 1
         self.assertEqual(t._def, 0x4)
-        self.assertEqual(t.b.d, 0)
-        self.assertEqual(t.b.e, 0)
-        self.assertEqual(t.b.f, 1)
+        self.assertEqual(t.B.d, 0)
+        self.assertEqual(t.B.e, 0)
+        self.assertEqual(t.B.f, 1)
         t._def = 0x7 
         self.assertEqual(t._def, 0x7)
-        self.assertEqual(t.b.d, 1)
-        self.assertEqual(t.b.e, 1)
-        self.assertEqual(t.b.f, 1)
+        self.assertEqual(t.B.d, 1)
+        self.assertEqual(t.B.e, 1)
+        self.assertEqual(t.B.f, 1)
 
 
 if __name__ == "__main__":
