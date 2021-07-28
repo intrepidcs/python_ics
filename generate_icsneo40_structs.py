@@ -108,12 +108,12 @@ class CObject(object):
             od['members'].append(member.to_ordered_dict())
         return od
 
-    def assign_preferred_name(self):
+    def assign_preferred_name(self, is_embedded=False):
         """This assigns a name to the object if we are nameless and anonymous, safe to call multiple times."""
         self.preferred_name = get_preferred_struct_name(self.names)
         if self.is_anonymous and not self.preferred_name:
             self.preferred_name = f"Nameless{get_unique_number()}"
-        if self.preferred_name:
+        if self.preferred_name and not is_embedded:
             self.preferred_name = convert_to_snake_case(self.preferred_name)
         
 
@@ -138,7 +138,7 @@ def get_object_from_name(name):
             return obj
     return None
 
-def parse_object(f, pos=-1, pack_size=None):
+def parse_object(f, pos=-1, pack_size=None, is_embedded=False):
     """
     takes a file object and returns a class with the object data.
     if pos is -1, don't reset position when finished
@@ -185,7 +185,7 @@ def parse_object(f, pos=-1, pack_size=None):
                 # Parse any embedded objects
                 if is_line_start_of_object(line):
                     f.seek(last_pos)
-                    embedded_object = parse_object(f, -1, pack_size)
+                    embedded_object = parse_object(f, -1, pack_size, True)
                     new_obj.members.append(embedded_object)
                     continue
                 opening_bracket_count += line.count('{')
@@ -220,7 +220,7 @@ def parse_object(f, pos=-1, pack_size=None):
                     last_pos = f.tell()
                     line = f.readline()
         new_obj.is_anonymous = not bool(new_obj.names)
-        new_obj.assign_preferred_name()
+        new_obj.assign_preferred_name(is_embedded)
         # Append the objects to a global list for parsing later
         global ALL_C_OBJECTS
         ALL_C_OBJECTS.append(new_obj)
@@ -744,10 +744,10 @@ def generate_pyfile(c_object, path):
                     import_names.extend(get_c_object_imports(member))
             # anonymous/nameless objects put an empty string in the list, lets remove it here
             import_names = [name for name in import_names if name]
-            return sorted(import_names)
+            return sorted(set(import_names))
         
         import_names = get_c_object_imports(c_object)
-        for import_name in list(set(import_names)):
+        for import_name in (import_names):
             f.write(f"from ics.structures.{import_name} import *\n")
         f.write('\n\n')
 
