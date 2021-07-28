@@ -14,6 +14,7 @@ __unique_numbers = []
 def get_unique_number():
     "Returns a unique integer"
     global __unique_numbers
+    random.seed(1234)
     while True:
         value = random.randint(0, 65535)
         if value not in __unique_numbers:
