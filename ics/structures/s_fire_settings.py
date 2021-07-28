@@ -3,12 +3,12 @@ import ctypes
 import enum
 
 from ics.structures.can_settings import *
-from ics.structures.s_text_api_settings import *
-from ics.structures.s_neo_most_gateway_settings import *
 from ics.structures.iso9141_keyword2000_settings import *
+from ics.structures.lin_settings import *
+from ics.structures.s_neo_most_gateway_settings import *
+from ics.structures.s_text_api_settings import *
 from ics.structures.swcan_settings import *
 from ics.structures.uart_settings import *
-from ics.structures.lin_settings import *
 
 
 class s_fire_settings(ctypes.Structure):

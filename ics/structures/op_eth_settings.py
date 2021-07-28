@@ -4,7 +4,7 @@ import enum
 
 
 
-class nameless46655(ctypes.Structure):
+class Nameless23998(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
         ('mac_addr1', ctypes.c_ubyte * 6),
@@ -18,11 +18,11 @@ class nameless46655(ctypes.Structure):
 
 
 
-class nameless45525(ctypes.Union):
+class Nameless14996(ctypes.Union):
     _pack_ = 2
-    _anonymous_  = ('nameless46655',)
+    _anonymous_  = ('Nameless23998',)
     _fields_ = [
-        ('nameless46655', nameless46655),
+        ('Nameless23998', Nameless23998),
         ('reserved0', ctypes.c_ubyte * 14),
     ]
 
@@ -30,11 +30,11 @@ class nameless45525(ctypes.Union):
 
 class op_eth_settings(ctypes.Structure):
     _pack_ = 2
-    _anonymous_  = ('nameless45525',)
+    _anonymous_  = ('Nameless14996',)
     _fields_ = [
         ('ucConfigMode', ctypes.c_uint8),
         ('preemption_en', ctypes.c_ubyte),
-        ('nameless45525', nameless45525),
+        ('Nameless14996', Nameless14996),
     ]
 
 

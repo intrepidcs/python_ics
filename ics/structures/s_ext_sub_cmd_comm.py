@@ -2,13 +2,13 @@
 import ctypes
 import enum
 
+from ics.structures.extended_response_generic import *
+from ics.structures.s_disk_details import *
+from ics.structures.s_disk_format_progress import *
+from ics.structures.s_disk_structure import *
 from ics.structures.s_ext_sub_cmd_hdr import *
 from ics.structures.start_dhcp_server_command import *
 from ics.structures.stop_dhcp_server_command import *
-from ics.structures.s_disk_format_progress import *
-from ics.structures.s_disk_structure import *
-from ics.structures.s_disk_details import *
-from ics.structures.extended_response_generic import *
 
 
 class extension(ctypes.Union):
