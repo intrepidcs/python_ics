@@ -4,17 +4,16 @@ import enum
 
 
 
-class can_options(ctypes.Structure):
+class CANOptions(ctypes.Structure):
     _fields_ = [
         ('iNetworkID', ctypes.c_int32),
     ]
 
 
-CANOptions = can_options
 
 class tag_options_open_neo_ex(ctypes.Union):
     _fields_ = [
-        ('can_options', can_options),
+        ('CANOptions', CANOptions),
         ('Reserved', ctypes.c_uint32 * 16),
     ]
 
