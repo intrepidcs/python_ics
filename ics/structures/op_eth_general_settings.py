@@ -14,7 +14,7 @@ class flags(ctypes.Structure):
 
 
 
-class nameless42639(ctypes.Union):
+class Nameless19471(ctypes.Union):
     _pack_ = 2
     _fields_ = [
         ('flags', flags),
@@ -25,7 +25,7 @@ class nameless42639(ctypes.Union):
 
 class op_eth_general_settings(ctypes.Structure):
     _pack_ = 2
-    _anonymous_  = ('nameless42639',)
+    _anonymous_  = ('Nameless19471',)
     _fields_ = [
         ('ucInterfaceType', ctypes.c_uint8),
         ('reserved0', ctypes.c_uint8 * 3),
@@ -35,7 +35,7 @@ class op_eth_general_settings(ctypes.Structure):
         ('tapPair3', ctypes.c_uint16),
         ('tapPair4', ctypes.c_uint16),
         ('tapPair5', ctypes.c_uint16),
-        ('nameless42639', nameless42639),
+        ('Nameless19471', Nameless19471),
     ]
 
 
