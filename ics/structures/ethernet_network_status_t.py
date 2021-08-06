@@ -5,6 +5,7 @@ import enum
 
 
 class ethernet_network_status_t(ctypes.Structure):
+    _pack_ = 1
     _fields_ = [
         ('networkId', ctypes.c_uint16),
         ('linkStatus', ctypes.c_uint8),

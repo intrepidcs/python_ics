@@ -481,7 +481,7 @@ def parse_header_file(filename):
                             pushed_last_pack_size = False
                         else:
                             pack_size = 0
-                    elif re.match('#pragma.*pack.*.*push.*', line):
+                    elif re.match('#pragma.*pack.*.*push.*', line) or re.match('#pragma.*pack\(\d\)', line):
                         try:
                             pack_size = int(re.search('\d{1,}', line).group(0))
                         except AttributeError:
