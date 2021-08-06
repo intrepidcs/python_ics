@@ -492,6 +492,22 @@
                 "bitfield_size": 0,
                 "is_enum": false,
                 "enum_value": null
+            },
+            {
+                "name": "OPETH_FUNC_RAW_MEDIA_CONVERTER2",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "OPETH_FUNC_RAW_MEDIA_CONVERTER2_LOW_LATENCY",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
             }
         ]
     },
@@ -637,6 +653,49 @@
                 "bitfield_size": 0,
                 "is_enum": false,
                 "enum_value": null
+            }
+        ]
+    },
+    {
+        "names": [
+            "_ExtendedResponseCode",
+            "ExtendedResponseCode"
+        ],
+        "data_type": "Enum",
+        "packing": 2,
+        "is_anonymous": false,
+        "members": [
+            {
+                "name": "EXTENDED_RESPONSE_OK ",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": 0
+            },
+            {
+                "name": "EXTENDED_RESPONSE_INVALID_COMMAND ",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": true,
+                "enum_value": -1
+            },
+            {
+                "name": "EXTENDED_RESPONSE_INVALID_STATE ",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": true,
+                "enum_value": -2
+            },
+            {
+                "name": "EXTENDED_RESPONSE_OPERATION_FAILED ",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": true,
+                "enum_value": -3
             }
         ]
     },
@@ -2042,13 +2101,123 @@
         ]
     },
     {
+        "names": [
+            "SPhyRegPktStatus",
+            "PhyRegPktStatus_t"
+        ],
+        "data_type": "Enum",
+        "packing": 0,
+        "is_anonymous": false,
+        "members": [
+            {
+                "name": "PHYREG_SUCCESS ",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": 0
+            },
+            {
+                "name": "PHYREG_FAILURE",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "PHYREG_INVALID_MDIO_BUS_INDEX",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "PHYREG_INVALID_PHY_ADDR",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "PHYREG_RESERVED0",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "PHYREG_RESERVED1",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "PHYREG_RESERVED2",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "PHYREG_RESERVED3",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            }
+        ]
+    },
+    {
+        "names": [
+            "SPhyRegPktRw",
+            "PhyRegPktRw_t"
+        ],
+        "data_type": "Enum",
+        "packing": 0,
+        "is_anonymous": false,
+        "members": [
+            {
+                "name": "PHYREG_READ ",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": 0
+            },
+            {
+                "name": "PHYREG_WRITE",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "PHYREG_BOTH",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            }
+        ]
+    },
+    {
         "names": [],
         "data_type": "Enum",
         "packing": 0,
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4018 ",
+                "name": "assert_line_4088 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2064,7 +2233,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4019 ",
+                "name": "assert_line_4089 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2080,7 +2249,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4020 ",
+                "name": "assert_line_4090 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2096,7 +2265,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4021 ",
+                "name": "assert_line_4091 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2112,7 +2281,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4022 ",
+                "name": "assert_line_4092 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2128,7 +2297,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4023 ",
+                "name": "assert_line_4093 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2144,7 +2313,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4024 ",
+                "name": "assert_line_4094 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2160,7 +2329,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4025 ",
+                "name": "assert_line_4095 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2176,7 +2345,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4026 ",
+                "name": "assert_line_4096 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2192,7 +2361,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4027 ",
+                "name": "assert_line_4097 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2208,7 +2377,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4028 ",
+                "name": "assert_line_4098 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2224,7 +2393,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4029 ",
+                "name": "assert_line_4099 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2240,7 +2409,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4030 ",
+                "name": "assert_line_4100 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2256,7 +2425,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4031 ",
+                "name": "assert_line_4101 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2272,7 +2441,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4032 ",
+                "name": "assert_line_4102 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2288,7 +2457,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4033 ",
+                "name": "assert_line_4103 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2304,7 +2473,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4034 ",
+                "name": "assert_line_4104 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2320,7 +2489,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4035 ",
+                "name": "assert_line_4105 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2336,7 +2505,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4036 ",
+                "name": "assert_line_4106 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2352,7 +2521,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4037 ",
+                "name": "assert_line_4107 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2368,7 +2537,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4038 ",
+                "name": "assert_line_4108 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2384,7 +2553,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4039 ",
+                "name": "assert_line_4109 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2400,7 +2569,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4040 ",
+                "name": "assert_line_4110 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2416,7 +2585,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4041 ",
+                "name": "assert_line_4111 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2432,7 +2601,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4042 ",
+                "name": "assert_line_4112 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2448,7 +2617,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4043 ",
+                "name": "assert_line_4113 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2464,7 +2633,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4044 ",
+                "name": "assert_line_4114 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2480,7 +2649,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4045 ",
+                "name": "assert_line_4115 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2496,7 +2665,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4046 ",
+                "name": "assert_line_4116 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2512,7 +2681,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4047 ",
+                "name": "assert_line_4117 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2528,7 +2697,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4048 ",
+                "name": "assert_line_4118 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2544,7 +2713,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4049 ",
+                "name": "assert_line_4119 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2560,7 +2729,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4050 ",
+                "name": "assert_line_4120 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2576,7 +2745,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4051 ",
+                "name": "assert_line_4121 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2592,7 +2761,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4052 ",
+                "name": "assert_line_4122 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2608,7 +2777,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4053 ",
+                "name": "assert_line_4123 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2624,7 +2793,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4054 ",
+                "name": "assert_line_4124 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2640,7 +2809,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4055 ",
+                "name": "assert_line_4125 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2656,7 +2825,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4056 ",
+                "name": "assert_line_4126 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2672,7 +2841,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4057 ",
+                "name": "assert_line_4127 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2688,7 +2857,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4058 ",
+                "name": "assert_line_4128 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2704,7 +2873,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4059 ",
+                "name": "assert_line_4129 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2720,7 +2889,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4060 ",
+                "name": "assert_line_4130 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2736,7 +2905,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4061 ",
+                "name": "assert_line_4131 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2752,7 +2921,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4062 ",
+                "name": "assert_line_4132 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2768,7 +2937,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4063 ",
+                "name": "assert_line_4133 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2784,7 +2953,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4064 ",
+                "name": "assert_line_4134 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2800,7 +2969,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4065 ",
+                "name": "assert_line_4135 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2816,7 +2985,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4066 ",
+                "name": "assert_line_4136 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2832,7 +3001,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4067 ",
+                "name": "assert_line_4137 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2848,7 +3017,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4068 ",
+                "name": "assert_line_4138 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2864,7 +3033,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4069 ",
+                "name": "assert_line_4139 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2880,7 +3049,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4070 ",
+                "name": "assert_line_4140 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2896,7 +3065,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4071 ",
+                "name": "assert_line_4141 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2912,7 +3081,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4072 ",
+                "name": "assert_line_4142 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2928,7 +3097,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4073 ",
+                "name": "assert_line_4143 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2944,7 +3113,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4074 ",
+                "name": "assert_line_4144 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2960,7 +3129,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4075 ",
+                "name": "assert_line_4145 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2976,7 +3145,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4076 ",
+                "name": "assert_line_4146 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2992,7 +3161,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4077 ",
+                "name": "assert_line_4147 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -3008,7 +3177,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4078 ",
+                "name": "assert_line_4148 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -3024,7 +3193,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4079 ",
+                "name": "assert_line_4149 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -3040,7 +3209,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4080 ",
+                "name": "assert_line_4150 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -3056,7 +3225,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4081 ",
+                "name": "assert_line_4151 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -3072,7 +3241,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4082 ",
+                "name": "assert_line_4152 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -3088,7 +3257,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4083 ",
+                "name": "assert_line_4153 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -3104,7 +3273,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4084 ",
+                "name": "assert_line_4154 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -3120,7 +3289,7 @@
         "is_anonymous": true,
         "members": [
             {
-                "name": "assert_line_4085 ",
+                "name": "assert_line_4155 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,

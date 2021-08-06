@@ -14,7 +14,6 @@ from ics.structures.ics_vcan4_industrial_device_status import *
 
 
 class ics_device_status(ctypes.Union):
-    _pack_ = 4
     _fields_ = [
         ('fire2Status', icsFire2DeviceStatus),
         ('vcan4Status', icsVcan4DeviceStatus),

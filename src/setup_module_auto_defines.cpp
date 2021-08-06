@@ -132,6 +132,12 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, NEODEVICE_RADEPSILON);
 	result += PyModule_AddIntMacro(module, NEODEVICE_OBD2_SIM_DOIP);
 	result += PyModule_AddIntMacro(module, NEODEVICE_OBD2_DEV);
+	result += PyModule_AddIntMacro(module, NEODEVICE_NEW_DEVICE_54);
+	result += PyModule_AddIntMacro(module, NEODEVICE_NEW_DEVICE_55);
+	result += PyModule_AddIntMacro(module, NEODEVICE_NEW_DEVICE_56);
+	result += PyModule_AddIntMacro(module, NEODEVICE_NEW_DEVICE_57);
+	result += PyModule_AddIntMacro(module, NEODEVICE_NEW_DEVICE_58);
+	result += PyModule_AddIntMacro(module, NEODEVICE_NEW_DEVICE_59);
 	result += PyModule_AddIntMacro(module, NEODEVICE_RED);
 	result += PyModule_AddIntMacro(module, NEODEVICE_ECU);
 	result += PyModule_AddIntMacro(module, NEODEVICE_IEVB);
@@ -446,6 +452,8 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, OPETH_FUNC_MEDIACONVERTER);
 	result += PyModule_AddIntMacro(module, OPETH_FUNC_TAP_LOW_LATENCY);
 	result += PyModule_AddIntMacro(module, OPETH_FUNC_RAW_MEDIA_CONVERTER);
+	result += PyModule_AddIntMacro(module, OPETH_FUNC_RAW_MEDIA_CONVERTER2);
+	result += PyModule_AddIntMacro(module, OPETH_FUNC_RAW_MEDIA_CONVERTER2_LOW_LATENCY);
 	// end of enum -  };
 
 	result += PyModule_AddIntMacro(module, OP_ETH_GENERAL_SETTINGS_SIZE);
@@ -501,6 +509,13 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, SDiskStructure_SIZE);
 	result += PyModule_AddIntMacro(module, SDiskDetails_SIZE);
 	result += PyModule_AddIntMacro(module, SDiskFormatProgress_SIZE);
+	// enum
+	result += PyModule_AddIntMacro(module, EXTENDED_RESPONSE_OK);
+	result += PyModule_AddIntMacro(module, EXTENDED_RESPONSE_INVALID_COMMAND);
+	result += PyModule_AddIntMacro(module, EXTENDED_RESPONSE_INVALID_STATE);
+	result += PyModule_AddIntMacro(module, EXTENDED_RESPONSE_OPERATION_FAILED);
+	// end of enum -  } ExtendedResponseCode;
+
 	result += PyModule_AddIntMacro(module, SExtSubCmdHdr_SIZE);
 	result += PyModule_AddIntMacro(module, SExtSubCmdComm_SIZE);
 	result += PyModule_AddIntMacro(module, SERDESCAM_SETTINGS_FLAG_ENABLE);
@@ -792,6 +807,23 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, PHY_REG_PKT_VERSION);
 	result += PyModule_AddIntMacro(module, MAX_PHY_SETTINGS_STRUCT);
 	result += PyModule_AddIntMacro(module, MAX_NUMBYTES_PHYSETTINGS);
+	// enum
+	result += PyModule_AddIntMacro(module, PHYREG_SUCCESS);
+	result += PyModule_AddIntMacro(module, PHYREG_FAILURE);
+	result += PyModule_AddIntMacro(module, PHYREG_INVALID_MDIO_BUS_INDEX);
+	result += PyModule_AddIntMacro(module, PHYREG_INVALID_PHY_ADDR);
+	result += PyModule_AddIntMacro(module, PHYREG_RESERVED0);
+	result += PyModule_AddIntMacro(module, PHYREG_RESERVED1);
+	result += PyModule_AddIntMacro(module, PHYREG_RESERVED2);
+	result += PyModule_AddIntMacro(module, PHYREG_RESERVED3);
+	// end of enum -  } PhyRegPktStatus_t;
+
+	// enum
+	result += PyModule_AddIntMacro(module, PHYREG_READ);
+	result += PyModule_AddIntMacro(module, PHYREG_WRITE);
+	result += PyModule_AddIntMacro(module, PHYREG_BOTH);
+	// end of enum -  } PhyRegPktRw_t;
+
 	// enum
 	// end of enum -  	}
 

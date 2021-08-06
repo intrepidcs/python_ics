@@ -6,7 +6,6 @@ from ics.structures.ethernet_network_status_t import *
 
 
 class ics_rad_moon_duo_device_status(ctypes.Structure):
-    _pack_ = 4
     _fields_ = [
         ('ethernetStatus', ethernetNetworkStatus_t * 4),
     ]

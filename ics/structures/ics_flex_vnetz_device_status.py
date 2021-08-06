@@ -6,7 +6,6 @@ from ics.structures.ethernet_network_status_t import *
 
 
 class ics_flex_vnetz_device_status(ctypes.Structure):
-    _pack_ = 4
     _fields_ = [
         ('ethernetActivationLineEnabled', ctypes.c_uint8),
         ('ethernetStatus', ethernetNetworkStatus_t),

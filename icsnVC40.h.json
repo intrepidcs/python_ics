@@ -2889,6 +2889,127 @@
     },
     {
         "names": [
+            "_StartDHCPServerCommand",
+            "StartDHCPServerCommand"
+        ],
+        "data_type": "Struct",
+        "packing": 2,
+        "is_anonymous": false,
+        "members": [
+            {
+                "name": "networkId",
+                "data_type": "uint16_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "serverIpAddress",
+                "data_type": "uint32_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "subnetMask",
+                "data_type": "uint32_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "gatewayAddress",
+                "data_type": "uint32_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "startAddress",
+                "data_type": "uint32_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "endAddress",
+                "data_type": "uint32_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "leaseTime",
+                "data_type": "uint32_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "overwrite",
+                "data_type": "uint32_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            }
+        ]
+    },
+    {
+        "names": [
+            "_StopDHCPServerCommand",
+            "StopDHCPServerCommand"
+        ],
+        "data_type": "Struct",
+        "packing": 2,
+        "is_anonymous": false,
+        "members": [
+            {
+                "name": "networkId",
+                "data_type": "uint16_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            }
+        ]
+    },
+    {
+        "names": [
+            "_ExtendedResponseGeneric",
+            "ExtendedResponseGeneric"
+        ],
+        "data_type": "Struct",
+        "packing": 2,
+        "is_anonymous": false,
+        "members": [
+            {
+                "name": "commandType",
+                "data_type": "uint16_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "returnCode",
+                "data_type": "int32_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            }
+        ]
+    },
+    {
+        "names": [
             "_SExtSubCmdHdr",
             "SExtSubCmdHdr"
         ],
@@ -2897,7 +3018,7 @@
         "is_anonymous": false,
         "members": [
             {
-                "name": "cmd",
+                "name": "command",
                 "data_type": "uint16_t",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2924,7 +3045,7 @@
         "is_anonymous": false,
         "members": [
             {
-                "name": "hdr",
+                "name": "header",
                 "data_type": "SExtSubCmdHdr",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -2932,10 +3053,12 @@
                 "enum_value": null
             },
             {
-                "names": [],
+                "names": [
+                    "extension"
+                ],
                 "data_type": "Union",
                 "packing": 2,
-                "is_anonymous": true,
+                "is_anonymous": false,
                 "members": [
                     {
                         "name": "structure",
@@ -2956,6 +3079,30 @@
                     {
                         "name": "progress",
                         "data_type": "SDiskFormatProgress",
+                        "array_length": 0,
+                        "bitfield_size": 0,
+                        "is_enum": false,
+                        "enum_value": null
+                    },
+                    {
+                        "name": "startDHCPServer",
+                        "data_type": "StartDHCPServerCommand",
+                        "array_length": 0,
+                        "bitfield_size": 0,
+                        "is_enum": false,
+                        "enum_value": null
+                    },
+                    {
+                        "name": "stopDHCPServer",
+                        "data_type": "StopDHCPServerCommand",
+                        "array_length": 0,
+                        "bitfield_size": 0,
+                        "is_enum": false,
+                        "enum_value": null
+                    },
+                    {
+                        "name": "genericResponse",
+                        "data_type": "ExtendedResponseGeneric",
                         "array_length": 0,
                         "bitfield_size": 0,
                         "is_enum": false,
@@ -8174,10 +8321,18 @@
                         "enum_value": null
                     },
                     {
+                        "name": "disableUsbCheckOnBoot",
+                        "data_type": "uint16_t",
+                        "array_length": 0,
+                        "bitfield_size": 1,
+                        "is_enum": false,
+                        "enum_value": null
+                    },
+                    {
                         "name": "reserved",
                         "data_type": "uint16_t",
                         "array_length": 0,
-                        "bitfield_size": 15,
+                        "bitfield_size": 14,
                         "is_enum": false,
                         "enum_value": null
                     }
@@ -16078,7 +16233,7 @@
             "ethernetNetworkStatus_t"
         ],
         "data_type": "Struct",
-        "packing": 0,
+        "packing": 1,
         "is_anonymous": false,
         "members": [
             {
@@ -16706,10 +16861,26 @@
                                 "enum_value": null
                             },
                             {
+                                "name": "status",
+                                "data_type": "uint16_t",
+                                "array_length": 0,
+                                "bitfield_size": 2,
+                                "is_enum": false,
+                                "enum_value": null
+                            },
+                            {
                                 "name": "reserved",
                                 "data_type": "uint16_t",
                                 "array_length": 0,
-                                "bitfield_size": 9,
+                                "bitfield_size": 3,
+                                "is_enum": false,
+                                "enum_value": null
+                            },
+                            {
+                                "name": "BusIndex",
+                                "data_type": "uint16_t",
+                                "array_length": 0,
+                                "bitfield_size": 4,
                                 "is_enum": false,
                                 "enum_value": null
                             },
