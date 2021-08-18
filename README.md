@@ -39,7 +39,7 @@ The handle normally returned from `icsneoOpenNeoDevice()` is stored inside `_Han
 
 # License - MIT
 
-Copyright (c) 2017 Intrepid Control Systems, Inc.
+Copyright (c) Intrepid Control Systems, Inc.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
