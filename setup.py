@@ -6,6 +6,7 @@ import os
 import platform
 import sys
 import unittest
+import shutil
 
 MAJOR_VERSION = 906
 MINOR_VERSION = 999
@@ -76,7 +77,13 @@ if 'LINUX' in platform.system().upper():
 else:
     compile_args = []
 
-    
+# Check for clang stuff here
+if not shutil.which('clang'):
+    raise RuntimeError("clang is required for building python_ics.")
+if not shutil.which('clang-format'):
+    raise RuntimeError("clang-format is required for building python_ics.")
+
+
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
     
