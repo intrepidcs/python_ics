@@ -237,18 +237,20 @@ libicsneo has a legacy library (``libicsneolegacy.so``) that can be loaded by ut
 Fedora Dependencies (FC28)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-``sudo dnf install redhat-rpm-config gcc g++ python3-devel``
+``sudo dnf install redhat-rpm-config gcc g++ python3-devel clang clang-tools-extra``
 
 Debian/Ubuntu Dependencies
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-``sudo apt install build-essential python-dev``
+``sudo apt install build-essential python-dev clang-format``
 
 Others (Required dependencies)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 - GCC
 - G++
 - Python Development packages (We Need to link to Python.h)
+- Clang (llvm)
+- clang-format
 
 
 Installation
