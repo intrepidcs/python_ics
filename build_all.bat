@@ -22,4 +22,4 @@ C:\Python36-64\python setup.py sdist bdist_wheel
 C:\Python37-64\python setup.py sdist bdist_wheel
 C:\Python38-64\python setup.py sdist bdist_wheel
 
-REM C:\Python34\scripts\twine upload dist/* -r pypitest
+REM C:\Python\Python37-32\scripts\twine upload dist/* -r pypitest
