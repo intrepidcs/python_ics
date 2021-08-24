@@ -10,7 +10,7 @@ class e_device_settings_type(enum.IntEnum):
     def from_param(cls, obj):
         return int(obj)
 
-    DeviceFireSettingsType = enum.auto()
+    DeviceFireSettingsType = 0
     DeviceFireVnetSettingsType = enum.auto()
     DeviceFire2SettingsType = enum.auto()
     DeviceVCAN3SettingsType = enum.auto()
