@@ -71,6 +71,7 @@ class CObject(object):
         self.names = []
         # list of CObject and CObjectMember
         self.members = []
+        self.enum_last_value = None
 
     def __repr__(self):
         if self.names:
@@ -656,7 +657,16 @@ def _write_c_object(f, c_object):
         if c_object.data_type == DataType.Enum:
             enum_value = member.enum_value
             if enum_value == None:
-                enum_value = 'enum.auto()'
+                if c_object.enum_last_value != None:
+                    enum_value = 'enum.auto()'
+                    c_object.enum_last_value += 1
+                else:
+                    # https://docs.python.org/3/library/enum.html#enum.auto
+                    # By default, the initial value starts at 1.
+                    c_object.enum_last_value = 0
+                    enum_value = '0'
+            elif c_object.enum_last_value == None:
+                c_object.enum_last_value = 0
             f.write(f'    {member.name} = {enum_value}\n')
         else:
             # Struct/Union
