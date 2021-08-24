@@ -10,7 +10,7 @@ class flex_vnet_mode(enum.IntEnum):
     def from_param(cls, obj):
         return int(obj)
 
-    flexVnetModeDisabled = enum.auto()
+    flexVnetModeDisabled = 0
     flexVnetModeOneSingle = enum.auto()
     flexVnetModeOneDual = enum.auto()
     flexVnetModeTwoSingle = enum.auto()

@@ -10,7 +10,7 @@ class e_plasma_ion_vnet_channel_t(enum.IntEnum):
     def from_param(cls, obj):
         return int(obj)
 
-    PlasmaIonVnetChannelMain = enum.auto()
+    PlasmaIonVnetChannelMain = 0
     PlasmaIonVnetChannelA = enum.auto()
     PlasmaIonVnetChannelB = enum.auto()
     eSoftCore = enum.auto()
