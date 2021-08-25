@@ -23,10 +23,22 @@ def get_unique_number():
 
 
 class DataType(Enum):
-    Unknown = auto()
+    Unknown = None
     Union = auto()
     Struct = auto()
     Enum = auto()
+
+    def __repr__(self):
+        # __repr__ is changing in 3.11, so be explicit here
+        return f"<{self.__class__.__name__}.{self.name}: {self.value}>"
+
+    def __str__(self):
+        # __str__ is changing in 3.11, so be explicit here
+        return f"{self.__class__.__name__}.{self.name}"
+
+    @classmethod
+    def _missing_(cls, value):
+        return cls.Unknown
 
 class CVariable(object):
     name = ""
@@ -71,35 +83,25 @@ class CObject(object):
         self.names = []
         # list of CObject and CObjectMember
         self.members = []
-        self.enum_last_value = None
+        self.enum_value = 0
 
     def __repr__(self):
         if self.names:
             name = self.names[-1]
         else:
             name = 'Anon'
-        
-        if self.data_type == DataType.Struct:
-            t_name = 'Struct'
-        elif self.data_type == DataType.Union:
-            t_name = 'Union'
-        elif self.data_type == DataType.Enum:
-            t_name = 'Enum'
-        else:
-            t_name = 'Unknown'
+
+        # self.data_type should always be a DataType enum, but run it through
+        # the enum lookup process just in case
+        t_name = DataType(self.data_type).name
 
         return f'<{self.__class__.__name__} {name} {t_name} {len(self.members)} members @ {hex(id(self))}>'
     
     def to_ordered_dict(self):
         od = OrderedDict()
-        if self.data_type == DataType.Struct:
-            t_name = 'Struct'
-        elif self.data_type == DataType.Union:
-            t_name = 'Union'
-        elif self.data_type == DataType.Enum:
-            t_name = 'Enum'
-        else:
-            t_name = 'Unknown'
+        # self.data_type should always be a DataType enum, but run it through
+        # the enum lookup process just in case
+        t_name = DataType(self.data_type).name
 
         od['names'] = self.names
         od['data_type'] = t_name
@@ -209,11 +211,11 @@ def parse_object(f, pos=-1, pack_size=None, is_embedded=False):
                 if re.match('.*{.*', line):
                     continue
                 # Parse the member
-                if new_obj.data_type == DataType.Enum:
+                if new_obj.data_type is DataType.Enum:
                     member = CEnum(*parse_enum_member(line))
-                elif new_obj.data_type == DataType.Struct:
+                elif new_obj.data_type is DataType.Struct:
                     member = CVariable(*parse_struct_member(line))
-                elif new_obj.data_type == DataType.Union:
+                elif new_obj.data_type is DataType.Union:
                     member = CVariable(*parse_struct_member(line))
                 new_obj.members.append(member)
             finally:
@@ -507,9 +509,9 @@ def parse_header_file(filename):
                     pos = f.tell()
                     f.seek(last_pos)
                     obj = parse_object(f, -1, pack_size)
-                    if obj.data_type == DataType.Struct:
+                    if obj.data_type is DataType.Struct:
                         obj.packing = pack_size
-                    if obj.data_type == DataType.Enum:
+                    if obj.data_type is DataType.Enum:
                         enum_objects.append(obj)
                     else:
                         c_objects.append(obj)
@@ -553,7 +555,7 @@ def generate(filename='include/ics/icsnVC40.h'):
     ignored_enum_count = 0
     for c_object in all_objects:
         # TODO: Bypass all anonymous enums
-        if c_object.data_type == DataType.Enum:
+        if c_object.data_type is DataType.Enum:
             if c_object.is_anonymous:
                 ignored_enum_count += 1
                 continue
@@ -624,11 +626,11 @@ def generate(filename='include/ics/icsnVC40.h'):
 
 def _write_c_object(f, c_object):
     # Write the header
-    if c_object.data_type == DataType.Struct:
+    if c_object.data_type is DataType.Struct:
         f.write(f'class {c_object.preferred_name}(ctypes.Structure):\n')
-    elif c_object.data_type == DataType.Union:
+    elif c_object.data_type is DataType.Union:
         f.write(f'class {c_object.preferred_name}(ctypes.Union):\n')
-    elif c_object.data_type == DataType.Enum:
+    elif c_object.data_type is DataType.Enum:
         f.write(f'class {c_object.preferred_name}(enum.IntEnum):\n')
         f.write('    """A ctypes-compatible IntEnum superclass."""\n')
         f.write('    @classmethod\n')
@@ -654,19 +656,10 @@ def _write_c_object(f, c_object):
     
     # Write the members
     for member in c_object.members:
-        if c_object.data_type == DataType.Enum:
-            enum_value = member.enum_value
-            if enum_value == None:
-                if c_object.enum_last_value != None:
-                    enum_value = 'enum.auto()'
-                    c_object.enum_last_value += 1
-                else:
-                    # https://docs.python.org/3/library/enum.html#enum.auto
-                    # By default, the initial value starts at 1.
-                    c_object.enum_last_value = 0
-                    enum_value = '0'
-            elif c_object.enum_last_value == None:
-                c_object.enum_last_value = 0
+        if c_object.data_type is DataType.Enum:
+            # write the actual value of the member
+            enum_value = member.enum_value or c_object.enum_value
+            c_object.enum_value = enum_value + 1
             f.write(f'    {member.name} = {enum_value}\n')
         else:
             # Struct/Union
@@ -681,7 +674,7 @@ def _write_c_object(f, c_object):
                         NON_CTYPE_OBJ_NAMES.append(member.data_type)
                         data_type = member.data_type
                     obj = get_object_from_name(member.data_type)
-                    if obj and obj.data_type == DataType.Enum:
+                    if obj and obj.data_type is DataType.Enum:
                         # C enum types can be char, unsigned, signed but seem to default to
                         # 4 byte integer on most systems (even 64-bit)
                         # This is a potential hole but nothing we can do here
