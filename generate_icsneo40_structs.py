@@ -545,7 +545,7 @@ def generate(filename='include/ics/icsnVC40.h'):
         shutil.rmtree(output_dir)
     except FileNotFoundError:
         pass
-    ignore_names = ['__fsid_t', '__darwin_pthread_handler_rec', '_mbstate_t' 'NeoDevice', 'neo_device', 'NeoDeviceEx', 'neo_device_ex', 'icsSpyMessage', 'icsSpyMessageJ1850', 'ics_spy_message', 'ics_spy_message_j1850'] 
+    ignore_names = ['__fsid_t', '__darwin_pthread_handler_rec', '_mbstate_t', 'NeoDevice', 'neo_device', 'NeoDeviceEx', 'neo_device_ex', 'icsSpyMessage', 'icsSpyMessageJ1850', 'ics_spy_message', 'ics_spy_message_j1850'] 
     file_names = []
     prefered_names = []
     all_objects = c_objects + enum_objects
