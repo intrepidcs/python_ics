@@ -121,12 +121,7 @@ class CObject(object):
 
 def is_line_start_of_object(line):
     "Returns True if we are a c object (enum, struct, union)"
-    def find_whole_word(w):
-        return re.compile(r'\b({0})\b'.format(w), flags=re.IGNORECASE).search
-    
-    object_names = ('enum', 'struct', 'union')
-    is_start = [x for x in object_names if find_whole_word(x)(line) != None]
-    return bool(is_start)
+    return bool(re.search('\btypedef struct$|struct$|struct \S*$|enum|union', line))
 
 # This contains all the objects that don't pass convert_to_ctype_object
 NON_CTYPE_OBJ_NAMES = []
