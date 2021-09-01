@@ -136,7 +136,7 @@ ALL_C_OBJECTS = []
 def get_object_from_name(name):
     global ALL_C_OBJECTS
     for obj in ALL_C_OBJECTS:
-        if name in obj.preferred_name or name in obj.names:
+        if name == obj.preferred_name or name in obj.names:
             return obj
     return None
 
