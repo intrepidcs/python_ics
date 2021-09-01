@@ -464,7 +464,7 @@ def parse_header_file(filename):
         last_pos = f.tell()
         c_objects = []
         enum_objects = []
-        pushed_last_pack_size = False
+        pack_size_stack = []
         line = f.readline()
         while line:
             try:
@@ -477,20 +477,21 @@ def parse_header_file(filename):
                 if line.startswith("#"):
                     # get the pack size
                     if re.match('#pragma.*pack.*.*pop.*', line):
-                        if pushed_last_pack_size:
-                            pack_size = last_pack_size
-                            pushed_last_pack_size = False
+                        if pack_size_stack:
+                            pack_size = pack_size_stack.pop()
                         else:
                             pack_size = 0
                     elif re.match('#pragma.*pack.*.*push.*', line) or re.match('#pragma.*pack\(\d\)', line):
+                        pushing = 'push' in line
                         try:
+                            last = pack_size
                             pack_size = int(re.search('\d{1,}', line).group(0))
+                            if pushing:
+                                pack_size_stack.append(last)
                         except AttributeError:
-                            if not 'push' in line:
+                            if not pushing:
                                 raise
-                            pushed_last_pack_size = True
-                            last_pack_size = pack_size
-                            pack_size = 0
+                            pack_size_stack.append(pack_size)
                         if debug_print:
                             print("PACK SIZE:", pack_size)
                     elif re.match('#define.*', line) and len(line.split(' ')) == 3 and not '\\' in line and not 'sizeof' in line:
