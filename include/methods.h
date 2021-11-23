@@ -133,7 +133,7 @@ PyObject* meth_get_disk_format_progress(PyObject* self, PyObject* args);
     "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
     "\tdevice (int): Serial Number of the device\n\n" \
     "\tnetwork_ids (List/Tuple): This is an array of number IDs which specify the NetworkID parameter of each network. This allows you to assign a custom network ID to each network. Normally, you will assign consecutive IDs to each of the networks. See NetworkIDList for a list of current network ID's. You may also set this parameter to NULL (zero) and the default network ID's will be used.\n\n" \
-    "\tbconfig_read (int): Specifies whether the DLL should read the neoVI's device configuration before enabling the device. It is recommended that this value be set to 1.\n\n" \
+    "\tconfig_read (int): Specifies whether the DLL should read the neoVI's device configuration before enabling the device. It is recommended that this value be set to 1.\n\n" \
     "\toptions (int): DEVICE_OPTION_* defines\n\n" \
     "\tnetwork_id (int): OptionsFindNeoEx.CANOptions.iNetworkID. Usually ics.NETID_CAN, if needed\n\n" \
     "\tuse_server (int): Defaults to False, Setting to True allows opening the same device more than once.\n\n" \
