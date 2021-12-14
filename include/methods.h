@@ -81,6 +81,7 @@ PyObject* meth_get_disk_details(PyObject* self, PyObject* args);
 PyObject* meth_disk_format(PyObject* self, PyObject* args);
 PyObject* meth_disk_format_cancel(PyObject* self, PyObject* args);
 PyObject* meth_get_disk_format_progress(PyObject* self, PyObject* args);
+PyObject* meth_enable_doip_line(PyObject* self, PyObject* args); //icsneoEnableDOIPLine
 
 #ifdef _cplusplus
 }
@@ -1346,6 +1347,27 @@ PyObject* meth_get_disk_format_progress(PyObject* self, PyObject* args);
     "\t>>> progress.sectorsRemaining\n" \
 	"\t>>> \n"
 
+#define _DOC_ENABLE_DOIP_LINE \
+    MODULE_NAME ".enable_doip_line(device, enable)\n" \
+    "\n" \
+    "Activate or De-activate DOIP Line.\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
+    "\n" \
+    "\tenable (:class:`bool`): :class:`bool`\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\tNone.\n" \
+    "\n" \
+    "\t>>> import ics\n" \
+    "\t>>> d = ics.open_device()\n" \
+    "\t>>> status = ics.enable_doip_line(d, True)\n" \
+    "\t>>> \n"
+
 static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("find_devices", "icsneoFindNeoDevices", "FindNeoDevices", (PyCFunction)meth_find_devices, METH_VARARGS | METH_KEYWORDS, _DOC_FIND_DEVICES),
     _EZ_ICS_STRUCT_METHOD("open_device", "icsneoOpenNeoDevice", "OpenNeoDevice", (PyCFunction)meth_open_device, METH_VARARGS | METH_KEYWORDS, _DOC_OPEN_DEVICES),
@@ -1411,7 +1433,7 @@ static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("set_bit_rate_ex", "icsneoSetBitRateEx", "SetBitRateEx", meth_set_bit_rate_ex, METH_VARARGS, _DOC_SET_BIT_RATE_EX),
     _EZ_ICS_STRUCT_METHOD("get_timestamp_for_msg", "icsneoGetTimeStampForMsg", "GetTimeStampForMsg", meth_get_timestamp_for_msg, METH_VARARGS, _DOC_GET_TIMESTAMP_FOR_MSG),
     _EZ_ICS_STRUCT_METHOD("get_device_status", "icsneoGetDeviceStatus", "GetDeviceStatus", meth_get_device_status, METH_VARARGS, _DOC_GET_DEVICE_STATUS),
-    
+
     _EZ_ICS_STRUCT_METHOD("enable_network_com", "icsneoEnableNetworkCom", "EnableNetworkCom", meth_enable_network_com, METH_VARARGS, _DOC_ENABLE_NETWORK_COM),
 
     _EZ_ICS_STRUCT_METHOD("enable_bus_voltage_monitor", "icsneoEnableBusVoltageMonitor", "EnableBusVoltageMonitor", meth_enable_bus_voltage_monitor, METH_VARARGS, _DOC_ENABLE_BUS_VOLTAGE_MONITOR),
@@ -1424,6 +1446,7 @@ static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("disk_format", "icsneoRequestDiskFormat", "RequestDiskFormat", meth_disk_format, METH_VARARGS, _DOC_DISK_FORMAT),
     _EZ_ICS_STRUCT_METHOD("disk_format_cancel", "icsneoRequestDiskFormatCancel", "RequestDiskFormatCancel", meth_disk_format_cancel, METH_VARARGS, _DOC_DISK_FORMAT_CANCEL),
     _EZ_ICS_STRUCT_METHOD("get_disk_format_progress", "icsneoRequestDiskFormatProgress", "RequestDiskFormatProgress", meth_get_disk_format_progress, METH_VARARGS, _DOC_DISK_FORMAT_PROGRESS),
+    _EZ_ICS_STRUCT_METHOD("enable_doip_line", "icsneoEnableDOIPLine", "EnableDOIPLine", meth_enable_doip_line, METH_VARARGS, _DOC_ENABLE_DOIP_LINE),
 
     {"override_library_name", (PyCFunction)meth_override_library_name, METH_VARARGS, _DOC_OVERRIDE_LIBRARY_NAME},
     {"get_library_path", (PyCFunction)meth_get_library_path, METH_NOARGS, ""},
