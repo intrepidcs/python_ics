@@ -187,8 +187,9 @@ static PyObject* spy_message_object_getattr(PyObject *o, PyObject *attr_name)
         unsigned char *ExtraDataPtr = (unsigned char*)obj->msg.ExtraDataPtr;
         if ((obj->msg.ExtraDataPtrEnabled && obj->msg.NumberBytesData && obj->msg.ExtraDataPtr) ||
 			(obj->msg.Protocol == SPY_PROTOCOL_ETHERNET && obj->msg.NumberBytesData && obj->msg.ExtraDataPtr)) {
-            PyObject *tuple = PyTuple_New(obj->msg.NumberBytesData);
-            for (int i=0; i < obj->msg.NumberBytesData; ++i) {
+            int size = obj->msg.NumberBytesData + (obj->msg.NumberBytesHeader << 8);
+            PyObject *tuple = PyTuple_New(size);
+            for (int i=0; i < size; ++i) {
                 PyTuple_SET_ITEM(tuple, i, PyLong_FromLong(ExtraDataPtr[i]));
             }
             return tuple;
