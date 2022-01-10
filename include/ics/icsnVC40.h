@@ -146,6 +146,8 @@ typedef unsigned __int64 uint64_t;
 #define NETID_I2C4 519
 #define NETID_ETHERNET2 520
 #define NETID_ETHERNET_TX_WRAP 521
+#define NETID_A2B_01 522
+#define NETID_A2B_02 523
 
 /* Upper boundry of Network IDs */
 #define NETID_MAX 100
@@ -163,7 +165,7 @@ typedef unsigned __int64 uint64_t;
 #define NEODEVICE_RADSUPERMOON (0x00000003)
 #define NEODEVICE_DW_VCAN (0x00000004)
 #define NEODEVICE_RADMOON2 (0x00000005)
-#define NEODEVICE_RADGIGALOG (0x00000006)
+#define NEODEVICE_RADGIGALOG (0x00000006) /* AKA RADMARS */
 #define NEODEVICE_VCAN41 (0x00000007)
 #define NEODEVICE_FIRE (0x00000008)
 #define NEODEVICE_RADPLUTO (0x00000009)
@@ -178,13 +180,13 @@ typedef unsigned __int64 uint64_t;
 #define NEODEVICE_VCAN4_IND (0x00000012)
 #define NEODEVICE_GIGASTAR (0x00000013)
 #define NEODEVICE_RED2 (0x00000014)
-#define NEODEVICE_ECU22 (0x00000015)
+#define NEODEVICE_FIRE2_REDLINE (0x00000015)
 #define NEODEVICE_ETHER_BADGE (0x00000016)
 #define NEODEVICE_RAD_A2B (0x00000017)
 #define NEODEVICE_RADEPSILON (0x00000018)
 #define NEODEVICE_OBD2_SIM_DOIP (0x00000019)
 #define NEODEVICE_OBD2_DEV (0x0000001a)
-#define NEODEVICE_NEW_DEVICE_54 (0x0000001b)
+#define NEODEVICE_ECU22 (0x0000001b)
 #define NEODEVICE_NEW_DEVICE_55 (0x0000001c)
 #define NEODEVICE_NEW_DEVICE_56 (0x0000001d)
 #define NEODEVICE_NEW_DEVICE_57 (0x0000001e)
@@ -285,6 +287,7 @@ typedef unsigned __int64 uint64_t;
 #define SPY_PROTOCOL_TCP 32
 #define SPY_PROTOCOL_UDP 33
 #define SPY_PROTOCOL_AUTOSAR 34
+#define SPY_PROTOCOL_A2B 35
 
 /* Bitmasks for StatusBitField member of icsSpyMessage */
 #define SPY_STATUS_GLOBAL_ERR 0x01
@@ -320,6 +323,8 @@ typedef unsigned __int64 uint64_t;
 #define SPY_STATUS_INIT_MESSAGE 0x20000000
 #define SPY_STATUS_LIN_MASTER 0x20000000
 #define SPY_STATUS_CANFD 0x20000000
+#define SPY_STATUS_A2B_MONITOR 0x20000000
+#define SPY_STATUS_A2B_UPSTREAM 0x40000000
 #define SPY_STATUS_PDU 0x10000000
 #define SPY_STATUS_FLEXRAY_PDU SPY_STATUS_PDU
 #define SPY_STATUS_HIGH_SPEED 0x40000000
@@ -927,6 +932,11 @@ typedef union _stChipVersions {
 	} radmoon2_versions;
 	struct
 	{
+		uint8_t zynq_core_major;
+		uint8_t zynq_core_minor;
+	} radmoon2_z7010_versions;
+	struct
+	{
 		uint8_t mchip_major;
 		uint8_t mchip_minor;
 	} pluto_versions;
@@ -964,6 +974,8 @@ typedef union _stChipVersions {
 	{
 		uint8_t zchip_major;
 		uint8_t zchip_minor;
+		uint8_t schip_major;
+		uint8_t schip_minor;
 	} fire3_versions;
 
 	struct
@@ -1028,6 +1040,39 @@ typedef struct OP_ETH_GENERAL_SETTINGS_t
 } OP_ETH_GENERAL_SETTINGS;
 #define OP_ETH_GENERAL_SETTINGS_SIZE 20
 
+#define RAD_GPTP_NUM_PORTS 1 // 1 because only supported as gPTP endpoint
+typedef struct SRAD_GPTP_SETTINGS_s
+{
+	uint32_t neighborPropDelayThresh;//ns
+	uint32_t sys_phc_sync_interval;//ns
+	int8_t logPDelayReqInterval;// log2ms
+	int8_t logSyncInterval;// log2ms
+	int8_t logAnnounceInterval;// log2ms
+	uint8_t profile;
+	uint8_t priority1;
+	uint8_t clockclass;
+	uint8_t clockaccuracy;
+	uint8_t priority2;
+	uint16_t offset_scaled_log_variance;
+	uint8_t gPTPportRole[RAD_GPTP_NUM_PORTS];
+	uint8_t portEnable[RAD_GPTP_NUM_PORTS];
+	uint8_t rsvd[16];
+} RAD_GPTP_SETTINGS;//36 Bytes with RAD_GPTP_NUM_PORTS = 1
+#define RAD_GPTP_SETTINGS_SIZE 36
+
+typedef struct SRAD_GPTP_AND_TAP_SETTINGS_s
+{
+	RAD_GPTP_SETTINGS gPTP;
+    OP_ETH_GENERAL_SETTINGS tap;
+} RAD_GPTP_AND_TAP_SETTINGS;
+#define RAD_GPTP_AND_TAP_SETTINGS_SIZE 40
+
+typedef struct HW_ETH_SETTINGS_t
+{
+	OP_ETH_GENERAL_SETTINGS General_Settings;
+} HW_ETH_SETTINGS;
+#define HW_ETH_SETTINGS_SIZE 20
+
 /* ucConfigMode in OP_ETH_SETTINGS */
 typedef enum _opEthLinkMode
 {
@@ -1079,6 +1124,7 @@ typedef struct ETHERNET_SETTINGS_t
 #define ETHERNET_SETTINGS2_FLAG_TCPIP_ENABLE 0x04
 #define ETHERNET_SETTINGS2_FLAG_RTSP_ENABLE  0x08
 #define ETHERNET_SETTINGS2_FLAG_DEVICE_HOSTING_ENABLE  0x10
+#define ETHERNET_SETTINGS2_FLAG_CONFIG_NOT_ALLOWED 0x20
 #define ETHERNET_SETTINGS2_FLAG_COMM_IN_USE  0x80
 
 typedef struct ETHERNET_SETTINGS2_t
@@ -1088,6 +1134,7 @@ typedef struct ETHERNET_SETTINGS2_t
 	 * bit2: enable tcp/ip stack
 	 * bit3: enable rtsp server
 	 * bit4: enable intepid device hosting (go online and log other devices)
+	 * bit5: config not allowed
 	 */
 	uint8_t flags;
 	uint8_t link_speed;//0=10, 1=100, 2=1000
@@ -2083,6 +2130,35 @@ typedef struct _SEEVBSettings
 } SEEVBSettings;
 #define SEEVBSettings_SIZE 32
 
+/* GPTP portEnable options */
+enum eGPTPPort
+{
+	ePortDisabled = 0,
+	ePortOpEth1 = 1,
+	ePortOpEth2 = 2,
+	ePortOpEth3 = 3,
+	ePortOpEth4 = 4,
+	ePortOpEth5 = 5,
+	ePortOpEth6 = 6,
+	ePortOpEth7 = 7,
+	ePortOpEth8 = 8,
+	ePortOpEth9 = 9,
+	ePortOpEth10 = 10,
+	ePortOpEth11 = 11,
+	ePortOpEth12 = 12,
+	ePortStdEth1 = 13,
+	ePortStdEth2 = 14,
+};
+
+/* GPTP port role options */
+enum eGPTPRole
+{
+	eRoleDisabled = 0,
+	eRolePassive = 1,
+	eRoleMaster = 2,
+	eRoleSlave = 3,
+};
+
 typedef struct _SRADGalaxySettings
 {
 	uint16_t perf_en;
@@ -2163,8 +2239,10 @@ typedef struct _SRADGalaxySettings
 	ETHERNET_SETTINGS2 ethernet1;// DAQ port on label, NETID_ETHERNET
 	ETHERNET_SETTINGS2 ethernet2;// LAN port on label, NETID_ETHERNET2
 	uint16_t network_enables_4;
+	
+	RAD_GPTP_SETTINGS gPTP;
 } SRADGalaxySettings;
-#define SRADGalaxySettings_SIZE 732
+#define SRADGalaxySettings_SIZE 768
 
 typedef struct _SRADStar2Settings
 {
@@ -2217,9 +2295,11 @@ typedef struct _SRADStar2Settings
 	uint16_t hwComLatencyTestEn;
 	RAD_REPORTING_SETTINGS reporting;
 	ETHERNET_SETTINGS2 ethernet;
+	
+	RAD_GPTP_SETTINGS gPTP;
 } SRADStar2Settings;
 
-#define SRADStar2Settings_SIZE 378
+#define SRADStar2Settings_SIZE 414
 
 typedef struct _SRADSuperMoonSettings
 {
@@ -2240,9 +2320,32 @@ typedef struct _SRADSuperMoonSettings
 	uint16_t hwComLatencyTestEn;
 
 	ETHERNET_SETTINGS2 Eth2;
+	
+	RAD_GPTP_SETTINGS gPTP;
 } SRADSuperMoonSettings;
 
-#define SRADSuperMoonSettings_SIZE 142
+#define SRADSuperMoonSettings_SIZE 178
+
+typedef enum
+{
+	tdmModeTDM2,
+	tdmModeTDM4,
+	tdmModeTDM8,
+	tdmModeTDM12,
+	tdmModeTDM16,
+	tdmModeTDM20,
+	tdmModeTDM24,
+	tdmModeTDM32,
+} A2BTDMMode;
+
+typedef struct
+{
+	uint8_t tdmMode; // see enum A2BTDMMode
+	uint8_t upstreamChannelOffset;
+	uint8_t downstreamChannelOffset;
+	uint8_t reserved[17];
+} A2BMonitorSettings;
+#define A2BMonitorSettings_SIZE 20
 
 typedef struct _SRADA2BSettings
 {
@@ -2269,9 +2372,10 @@ typedef struct _SRADA2BSettings
 	DISK_SETTINGS disk;
 	LOGGER_SETTINGS logger;
 	int16_t iso15765_separation_time_offset;
+	A2BMonitorSettings a2b_monitor;
 } SRADA2BSettings;
 
-#define SRADA2BSettings_SIZE 234
+#define SRADA2BSettings_SIZE 254
 
 typedef struct _SRADMoon2Settings
 {
@@ -2290,9 +2394,11 @@ typedef struct _SRADMoon2Settings
 	uint16_t pc_com_mode;
 	TIMESYNC_ICSHARDWARE_SETTINGS timeSyncSettings;
 	uint16_t hwComLatencyTestEn;
+	
+	RAD_GPTP_SETTINGS gPTP;
 } SRADMoon2Settings;
 
-#define SRADMoon2Settings_SIZE 126
+#define SRADMoon2Settings_SIZE 162
 
 typedef struct _SRADGigalogSettings
 {
@@ -2447,9 +2553,10 @@ typedef struct _SRADGigastarSettings
 	uint16_t network_enables_4;
 	SERDESGEN_SETTINGS serdesgen;
 
+	RAD_GPTP_SETTINGS gPTP;
 } SRADGigastarSettings;
 
-#define SRADGigastarSettings_SIZE 666
+#define SRADGigastarSettings_SIZE 702
 
 typedef struct _SVividCANSettings
 {
@@ -2900,6 +3007,9 @@ typedef struct SPluto_ClockSyncParams_s
 #define gPTP_PROFILE_STANDARD 0
 #define gPTP_PROFILE_AUTOMOTIVE 1
 
+#define gPTP_PORT_DISABLED 0
+#define gPTP_PORT_ENABLED 1
+
 typedef struct SPlutoPtpParams_s
 {
 	uint32_t neighborPropDelayThresh;//ns
@@ -2995,6 +3105,15 @@ typedef struct _RADPlutoSettings
 } SRADPlutoSettings;
 #define SRADPlutoSettings_SIZE 348
 
+typedef union {
+	uint32_t word;
+	struct 
+	{
+		unsigned can_sleep_command_id:29;
+		unsigned can_sleep_command_isExtended:1;
+		unsigned reserved:2;
+	} id;
+} SCANSleepID;
 typedef struct
 {
 	CAN_SETTINGS can1;
@@ -3006,8 +3125,9 @@ typedef struct
 	uint16_t network_enabled_on_boot;
 	int16_t iso15765_separation_time_offset;
 	uint32_t ecu_id;
+	SCANSleepID sleep_id;
 } CANHubSettings, SCANHubSettings;
-#define CANHubSettings_SIZE 52
+#define CANHubSettings_SIZE 56
 
 typedef struct _SFlexVnetzSettings
 {
@@ -3237,6 +3357,7 @@ typedef struct _SFire3Settings
 			uint16_t network_enables;
 			uint16_t network_enables_2;
 			uint16_t network_enables_3;
+			uint16_t network_enables_4;
 		};
 	} network_enables;
 	uint32_t pwr_man_timeout;
@@ -3264,7 +3385,7 @@ typedef struct _SFire3Settings
 	ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings_2;
 	uint16_t iso_parity_2;
 	uint16_t iso_msg_termination_2;
-	ETHERNET_SETTINGS ethernet;
+	ETHERNET_SETTINGS ethernet_1;
 	TIMESYNC_ICSHARDWARE_SETTINGS timeSync;
 	STextAPISettings text_api;
 	struct
@@ -3285,9 +3406,11 @@ typedef struct _SFire3Settings
 	uint16_t digitalIoThresholdEnable;
 	uint16_t misc_io_initial_ddr;
 	uint16_t misc_io_initial_latch;
-	ETHERNET_SETTINGS2 ethernet2;
+	ETHERNET_SETTINGS2 ethernet2_1;
+	ETHERNET_SETTINGS ethernet_2;
+	ETHERNET_SETTINGS2 ethernet2_2;
 }SFire3Settings;
-#define SFire3Settings_SIZE (600)
+#define SFire3Settings_SIZE (624)
 
 typedef struct
 {
@@ -3900,7 +4023,7 @@ typedef struct _icsSpyMessageVSB
 
 #pragma pack(push)
 #pragma pack(1)
-typedef struct
+typedef struct _ethernetNetworkStatus_t
 {
 	uint16_t networkId;
 	uint8_t linkStatus;
@@ -3954,7 +4077,7 @@ typedef struct
 
 typedef struct
 {
-	ethernetNetworkStatus_t ethernetStatus;
+	ethernetNetworkStatus_t ethernetStatus[RADJUPITER_NUM_PORTS-1];
 } icsRadJupiterDeviceStatus;
 
 typedef struct
@@ -3964,7 +4087,7 @@ typedef struct
 
 typedef struct
 {
-	ethernetNetworkStatus_t ethernetStatus;
+	ethernetNetworkStatus_t ethernetStatus[4];
 } icsRadPlutoDeviceStatus;
 
 typedef struct
@@ -3995,7 +4118,8 @@ typedef struct
 	unsigned char bIPV6_Address
 		[16];//The Ipv6 address assigned to the Network interface. No compressed or short form notation// If not available, all bytes are set to zero to imply the absence of an address.
 	unsigned char bIPV4_Address[4];// The Ipv4 address assigned to the Network interface. If not available, all bytes are set to zero.
-} J2534_ADAPTER_INFORMATION;
+	unsigned long EthernetPinConfig;
+} NDIS_ADAPTER_INFORMATION;
 
 #define MAX_PHY_REG_PKT_ENTRIES 128
 #define PHY_REG_PKT_VERSION 1
@@ -4153,6 +4277,7 @@ CHECK_STRUCT_SIZE(RadMoonDuoSettings);
 CHECK_STRUCT_SIZE(SFire3Settings);
 CHECK_STRUCT_SIZE(SEtherBadgeSettings);
 CHECK_STRUCT_SIZE(SRADA2BSettings);
+CHECK_STRUCT_SIZE(A2BMonitorSettings);
 #endif /* INTREPID_NO_CHECK_STRUCT_SIZE */
 
 #endif /* _ICSNVC40_H */
