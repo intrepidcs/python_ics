@@ -11,6 +11,7 @@ from ics.structures.op_eth_general_settings import *
 from ics.structures.op_eth_settings import *
 from ics.structures.rad_reporting_settings import *
 from ics.structures.s_text_api_settings import *
+from ics.structures.srad_gptp_settings_s import *
 from ics.structures.timesync_icshardware_settings import *
 
 
@@ -54,6 +55,7 @@ class srad_star2_settings(ctypes.Structure):
         ('hwComLatencyTestEn', ctypes.c_uint16),
         ('reporting', RAD_REPORTING_SETTINGS),
         ('ethernet', ETHERNET_SETTINGS2),
+        ('gPTP', RAD_GPTP_SETTINGS),
     ]
 
 

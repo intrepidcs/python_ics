@@ -150,6 +150,15 @@ class radmoon2_versions(ctypes.Structure):
 
 
 
+class radmoon2_z7010_versions(ctypes.Structure):
+    _pack_ = 2
+    _fields_ = [
+        ('zynq_core_major', ctypes.c_uint8),
+        ('zynq_core_minor', ctypes.c_uint8),
+    ]
+
+
+
 class pluto_versions(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
@@ -209,6 +218,8 @@ class fire3_versions(ctypes.Structure):
     _fields_ = [
         ('zchip_major', ctypes.c_uint8),
         ('zchip_minor', ctypes.c_uint8),
+        ('schip_major', ctypes.c_uint8),
+        ('schip_minor', ctypes.c_uint8),
     ]
 
 
@@ -257,6 +268,7 @@ class st_chip_versions(ctypes.Union):
         ('neoecu_avb_versions', neoecu_avb_versions),
         ('radsupermoon_versions', radsupermoon_versions),
         ('radmoon2_versions', radmoon2_versions),
+        ('radmoon2_z7010_versions', radmoon2_z7010_versions),
         ('pluto_versions', pluto_versions),
         ('radgigalog_versions', radgigalog_versions),
         ('radgigalog3_versions', radgigalog3_versions),

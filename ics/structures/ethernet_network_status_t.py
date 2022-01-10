@@ -15,5 +15,6 @@ class ethernet_network_status_t(ctypes.Structure):
     ]
 
 
+_ethernetNetworkStatus_t = ethernet_network_status_t
 ethernetNetworkStatus_t = ethernet_network_status_t
 

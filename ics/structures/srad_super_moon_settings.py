@@ -6,6 +6,7 @@ from ics.structures.ethernet_settings2 import *
 from ics.structures.op_eth_general_settings import *
 from ics.structures.op_eth_settings import *
 from ics.structures.s_text_api_settings import *
+from ics.structures.srad_gptp_settings_s import *
 from ics.structures.timesync_icshardware_settings import *
 
 
@@ -24,6 +25,7 @@ class srad_super_moon_settings(ctypes.Structure):
         ('timeSyncSettings', TIMESYNC_ICSHARDWARE_SETTINGS),
         ('hwComLatencyTestEn', ctypes.c_uint16),
         ('Eth2', ETHERNET_SETTINGS2),
+        ('gPTP', RAD_GPTP_SETTINGS),
     ]
 
 
