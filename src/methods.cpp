@@ -3462,7 +3462,7 @@ PyObject* meth_enable_doip_line(PyObject* self, PyObject* args)
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
-        ice::Function<int __stdcall (ICS_HANDLE, int)> icsneoEnableDOIPLine(lib, "icsneoEnableDOIPLine");
+        ice::Function<int __stdcall (ICS_HANDLE, bool)> icsneoEnableDOIPLine(lib, "icsneoEnableDOIPLine");
         Py_BEGIN_ALLOW_THREADS
         if (!icsneoEnableDOIPLine(handle, enable)) {
             Py_BLOCK_THREADS
