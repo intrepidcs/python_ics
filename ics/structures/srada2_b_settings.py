@@ -2,6 +2,7 @@
 import ctypes
 import enum
 
+from ics.structures.a2_b_monitor_settings import *
 from ics.structures.can_settings import *
 from ics.structures.canfd_settings import *
 from ics.structures.disk_settings import *
@@ -42,6 +43,7 @@ class srada2_b_settings(ctypes.Structure):
         ('disk', DISK_SETTINGS),
         ('logger', LOGGER_SETTINGS),
         ('iso15765_separation_time_offset', ctypes.c_int16),
+        ('a2b_monitor', A2BMonitorSettings),
     ]
 
 

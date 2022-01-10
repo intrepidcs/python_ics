@@ -13,6 +13,7 @@ from ics.structures.op_eth_general_settings import *
 from ics.structures.op_eth_settings import *
 from ics.structures.rad_reporting_settings import *
 from ics.structures.s_text_api_settings import *
+from ics.structures.srad_gptp_settings_s import *
 from ics.structures.swcan_settings import *
 from ics.structures.timesync_icshardware_settings import *
 
@@ -84,6 +85,7 @@ class srad_galaxy_settings(ctypes.Structure):
         ('ethernet1', ETHERNET_SETTINGS2),
         ('ethernet2', ETHERNET_SETTINGS2),
         ('network_enables_4', ctypes.c_uint16),
+        ('gPTP', RAD_GPTP_SETTINGS),
     ]
 
 

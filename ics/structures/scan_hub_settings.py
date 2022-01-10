@@ -4,6 +4,7 @@ import enum
 
 from ics.structures.can_settings import *
 from ics.structures.canfd_settings import *
+from ics.structures.scan_sleep_id import *
 
 
 class scan_hub_settings(ctypes.Structure):
@@ -18,6 +19,7 @@ class scan_hub_settings(ctypes.Structure):
         ('network_enabled_on_boot', ctypes.c_uint16),
         ('iso15765_separation_time_offset', ctypes.c_int16),
         ('ecu_id', ctypes.c_uint32),
+        ('sleep_id', SCANSleepID),
     ]
 
 

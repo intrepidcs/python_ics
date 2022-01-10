@@ -4,7 +4,7 @@ import enum
 
 
 
-class j2534_adapter_information(ctypes.Structure):
+class ndis_adapter_information(ctypes.Structure):
     _fields_ = [
         ('szName', ctypes.c_char * 128),
         ('szDeviceName', ctypes.c_char * 64),
@@ -12,8 +12,9 @@ class j2534_adapter_information(ctypes.Structure):
         ('bMAC_Address', ctypes.c_ubyte * 6),
         ('bIPV6_Address', ctypes.c_ubyte * 16),
         ('bIPV4_Address', ctypes.c_ubyte * 4),
+        ('EthernetPinConfig', ctypes.c_ulong),
     ]
 
 
-J2534_ADAPTER_INFORMATION = j2534_adapter_information
+NDIS_ADAPTER_INFORMATION = ndis_adapter_information
 

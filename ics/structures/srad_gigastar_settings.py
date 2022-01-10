@@ -16,6 +16,7 @@ from ics.structures.s_text_api_settings import *
 from ics.structures.serdescam_settings import *
 from ics.structures.serdesgen_settings import *
 from ics.structures.serdespoc_settings import *
+from ics.structures.srad_gptp_settings_s import *
 from ics.structures.timesync_icshardware_settings import *
 
 
@@ -80,6 +81,7 @@ class srad_gigastar_settings(ctypes.Structure):
         ('reporting', RAD_REPORTING_SETTINGS),
         ('network_enables_4', ctypes.c_uint16),
         ('serdesgen', SERDESGEN_SETTINGS),
+        ('gPTP', RAD_GPTP_SETTINGS),
     ]
 
 

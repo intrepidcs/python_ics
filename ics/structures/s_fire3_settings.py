@@ -19,6 +19,7 @@ class Nameless35335(ctypes.Structure):
         ('network_enables', ctypes.c_uint16),
         ('network_enables_2', ctypes.c_uint16),
         ('network_enables_3', ctypes.c_uint16),
+        ('network_enables_4', ctypes.c_uint16),
     ]
 
 
@@ -84,7 +85,7 @@ class s_fire3_settings(ctypes.Structure):
         ('iso9141_kwp_settings_2', ISO9141_KEYWORD2000_SETTINGS),
         ('iso_parity_2', ctypes.c_uint16),
         ('iso_msg_termination_2', ctypes.c_uint16),
-        ('ethernet', ETHERNET_SETTINGS),
+        ('ethernet_1', ETHERNET_SETTINGS),
         ('timeSync', TIMESYNC_ICSHARDWARE_SETTINGS),
         ('text_api', STextAPISettings),
         ('flags', flags),
@@ -96,7 +97,9 @@ class s_fire3_settings(ctypes.Structure):
         ('digitalIoThresholdEnable', ctypes.c_uint16),
         ('misc_io_initial_ddr', ctypes.c_uint16),
         ('misc_io_initial_latch', ctypes.c_uint16),
-        ('ethernet2', ETHERNET_SETTINGS2),
+        ('ethernet2_1', ETHERNET_SETTINGS2),
+        ('ethernet_2', ETHERNET_SETTINGS),
+        ('ethernet2_2', ETHERNET_SETTINGS2),
     ]
 
 

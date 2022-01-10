@@ -5,6 +5,7 @@ import enum
 from ics.structures.op_eth_general_settings import *
 from ics.structures.op_eth_settings import *
 from ics.structures.s_text_api_settings import *
+from ics.structures.srad_gptp_settings_s import *
 from ics.structures.timesync_icshardware_settings import *
 
 
@@ -22,6 +23,7 @@ class srad_moon2_settings(ctypes.Structure):
         ('pc_com_mode', ctypes.c_uint16),
         ('timeSyncSettings', TIMESYNC_ICSHARDWARE_SETTINGS),
         ('hwComLatencyTestEn', ctypes.c_uint16),
+        ('gPTP', RAD_GPTP_SETTINGS),
     ]
 
 
