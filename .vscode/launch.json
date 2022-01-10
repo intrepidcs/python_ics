@@ -28,6 +28,14 @@
             "cwd": "${workspaceFolder}/test",
             "console": "integratedTerminal",
             "args": [],
-        }
+        },
+        {
+            "name": "Python: extract icsneo40 defines",
+            "type": "python",
+            "request": "launch",
+            "program": "extract_icsneo40_defines.py",
+            "console": "integratedTerminal",
+            "args": ["include/ics/icsnVC40.h", ],
+        },
     ]
 }
