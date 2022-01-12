@@ -35,6 +35,7 @@ __all__ = [
     "start_dhcp_server_command",
     "stop_dhcp_server_command",
     "extended_response_generic",
+    "get_supported_features_response",
     "s_ext_sub_cmd_hdr",
     "s_ext_sub_cmd_comm",
     "serdescam_settings",
