@@ -8,7 +8,7 @@ import sys
 import unittest
 import shutil
 
-MAJOR_VERSION = 906
+MAJOR_VERSION = 908
 MINOR_VERSION = 999
 POST_VERSION = None
 
