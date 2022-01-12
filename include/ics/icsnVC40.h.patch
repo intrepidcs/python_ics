@@ -1,0 +1,23 @@
+diff --git a/include/ics/icsnVC40.h b/include/ics/icsnVC40.h
+index 5a5bc27..279ae0d 100644
+--- a/include/ics/icsnVC40.h
++++ b/include/ics/icsnVC40.h
+@@ -4046,6 +4046,9 @@ typedef struct _ethernetNetworkStatus_t
+ } ethernetNetworkStatus_t;
+ #pragma pack(pop)
+ 
++#pragma pack(push)
++#pragma pack(4)
++
+ typedef struct
+ {
+ 	uint8_t backupPowerGood;
+@@ -4119,7 +4122,7 @@ typedef union {
+ 	icsRadPlutoDeviceStatus plutoStatus;
+ 	icsVcan4IndustrialDeviceStatus vcan4indStatus;
+ } icsDeviceStatus;
+-
++#pragma pack(pop)
+ 
+ typedef struct
+ {
