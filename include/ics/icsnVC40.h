@@ -4047,6 +4047,9 @@ typedef struct _ethernetNetworkStatus_t
 } ethernetNetworkStatus_t;
 #pragma pack(pop)
 
+#pragma pack(push)
+#pragma pack(4)
+
 typedef struct
 {
 	uint8_t backupPowerGood;
@@ -4120,7 +4123,7 @@ typedef union {
 	icsRadPlutoDeviceStatus plutoStatus;
 	icsVcan4IndustrialDeviceStatus vcan4indStatus;
 } icsDeviceStatus;
-
+#pragma pack(pop)
 
 typedef struct
 {
