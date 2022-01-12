@@ -35,6 +35,7 @@ hidden_imports = [
     "ics.structures.start_dhcp_server_command",
     "ics.structures.stop_dhcp_server_command",
     "ics.structures.extended_response_generic",
+    "ics.structures.get_supported_features_response",
     "ics.structures.s_ext_sub_cmd_hdr",
     "ics.structures.s_ext_sub_cmd_comm",
     "ics.structures.serdescam_settings",

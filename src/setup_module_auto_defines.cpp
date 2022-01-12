@@ -105,6 +105,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, NETID_ETHERNET_TX_WRAP);
 	result += PyModule_AddIntMacro(module, NETID_A2B_01);
 	result += PyModule_AddIntMacro(module, NETID_A2B_02);
+	result += PyModule_AddIntMacro(module, NETID_ETHERNET3);
 	result += PyModule_AddIntMacro(module, NETID_MAX);
 	result += PyModule_AddIntMacro(module, NETID_INVALID);
 	result += PyModule_AddIntMacro(module, NEODEVICE_UNKNOWN);
@@ -140,6 +141,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, NEODEVICE_NEW_DEVICE_57);
 	result += PyModule_AddIntMacro(module, NEODEVICE_NEW_DEVICE_58);
 	result += PyModule_AddIntMacro(module, NEODEVICE_NEW_DEVICE_59);
+	result += PyModule_AddIntMacro(module, NEODEVICE_NEW_DEVICE_62);
 	result += PyModule_AddIntMacro(module, NEODEVICE_RED);
 	result += PyModule_AddIntMacro(module, NEODEVICE_ECU);
 	result += PyModule_AddIntMacro(module, NEODEVICE_IEVB);
@@ -260,6 +262,8 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, SPY_STATUS_INIT_MESSAGE);
 	result += PyModule_AddIntMacro(module, SPY_STATUS_LIN_MASTER);
 	result += PyModule_AddIntMacro(module, SPY_STATUS_CANFD);
+	result += PyModule_AddIntMacro(module, SPY_STATUS_A2B_CONTROL);
+	result += PyModule_AddIntMacro(module, SPY_STATUS_A2B_SCF_VALID_WAITING);
 	result += PyModule_AddIntMacro(module, SPY_STATUS_A2B_MONITOR);
 	result += PyModule_AddIntMacro(module, SPY_STATUS_A2B_UPSTREAM);
 	result += PyModule_AddIntMacro(module, SPY_STATUS_PDU);
@@ -525,6 +529,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, EXTENDED_RESPONSE_OPERATION_FAILED);
 	// end of enum -  } ExtendedResponseCode;
 
+	result += PyModule_AddIntMacro(module, GET_SUPPORTED_FEATURES_COMMAND_VERSION);
 	result += PyModule_AddIntMacro(module, SExtSubCmdHdr_SIZE);
 	result += PyModule_AddIntMacro(module, SExtSubCmdComm_SIZE);
 	result += PyModule_AddIntMacro(module, SERDESCAM_SETTINGS_FLAG_ENABLE);

@@ -3221,6 +3221,40 @@
     },
     {
         "names": [
+            "GetSupportedFeaturesResponse"
+        ],
+        "data_type": "Struct",
+        "packing": 2,
+        "is_anonymous": false,
+        "members": [
+            {
+                "name": "cmdVersion",
+                "data_type": "uint16_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "numValidBits",
+                "data_type": "uint16_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "featureBitfields",
+                "data_type": "uint32_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            }
+        ]
+    },
+    {
+        "names": [
             "_SExtSubCmdHdr",
             "SExtSubCmdHdr"
         ],
@@ -3306,6 +3340,14 @@
                     {
                         "name": "stopDHCPServer",
                         "data_type": "StopDHCPServerCommand",
+                        "array_length": 0,
+                        "bitfield_size": 0,
+                        "is_enum": false,
+                        "enum_value": null
+                    },
+                    {
+                        "name": "getSupportedFeatures",
+                        "data_type": "GetSupportedFeaturesResponse",
                         "array_length": 0,
                         "bitfield_size": 0,
                         "is_enum": false,
@@ -12384,6 +12426,14 @@
                         "enum_value": null
                     }
                 ]
+            },
+            {
+                "name": "reserved_field",
+                "data_type": "uint32_t",
+                "array_length": 2,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
             }
         ]
     },

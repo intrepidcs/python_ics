@@ -54,6 +54,7 @@ class s_neo_ecu12_settings(ctypes.Structure):
         ('iso15765_separation_time_offset', ctypes.c_int16),
         ('text_api', STextAPISettings),
         ('flags', flags),
+        ('reserved_field', ctypes.c_uint32 * 2),
     ]
 
 
