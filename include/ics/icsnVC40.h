@@ -134,7 +134,7 @@ typedef unsigned __int64 uint64_t;
 #define NETID_LIN6 98
 #define NETID_LSFTCAN2 99
 /**
- * To the next person to add a network, please make it 521!
+ * To the next person to add a network, please make it 523!
  */
 #define NETID_HW_COM_LATENCY_TEST 512
 #define NETID_DEVICE_STATUS 513
@@ -148,6 +148,7 @@ typedef unsigned __int64 uint64_t;
 #define NETID_ETHERNET_TX_WRAP 521
 #define NETID_A2B_01 522
 #define NETID_A2B_02 523
+#define NETID_ETHERNET3 524
 
 /* Upper boundry of Network IDs */
 #define NETID_MAX 100
@@ -193,6 +194,7 @@ typedef unsigned __int64 uint64_t;
 #define NEODEVICE_NEW_DEVICE_58 (0x0000001f)
 // I'm not sure what was 0x20 anymore, but we'll skip it to be safe
 #define NEODEVICE_NEW_DEVICE_59 (0x00000021)
+#define NEODEVICE_NEW_DEVICE_62 (0x00000022)
 #define NEODEVICE_RED (0x00000040)
 #define NEODEVICE_ECU (0x00000080)
 #define NEODEVICE_IEVB (0x00000100)
@@ -323,6 +325,8 @@ typedef unsigned __int64 uint64_t;
 #define SPY_STATUS_INIT_MESSAGE 0x20000000
 #define SPY_STATUS_LIN_MASTER 0x20000000
 #define SPY_STATUS_CANFD 0x20000000
+#define SPY_STATUS_A2B_CONTROL 0x80000
+#define SPY_STATUS_A2B_SCF_VALID_WAITING 0x08
 #define SPY_STATUS_A2B_MONITOR 0x20000000
 #define SPY_STATUS_A2B_UPSTREAM 0x40000000
 #define SPY_STATUS_PDU 0x10000000
@@ -1291,6 +1295,14 @@ typedef struct _ExtendedResponseGeneric
 	int32_t returnCode;
 } ExtendedResponseGeneric;
 
+#define GET_SUPPORTED_FEATURES_COMMAND_VERSION (1)
+typedef struct
+{
+	uint16_t cmdVersion;
+	uint16_t numValidBits;
+	uint32_t featureBitfields[0];
+} GetSupportedFeaturesResponse;
+
 typedef struct _SExtSubCmdHdr
 {
 	uint16_t command;
@@ -1307,6 +1319,7 @@ typedef struct _SExtSubCmdComm
 		SDiskFormatProgress progress;
 		StartDHCPServerCommand startDHCPServer;
 		StopDHCPServerCommand stopDHCPServer;
+		GetSupportedFeaturesResponse getSupportedFeatures;
 		ExtendedResponseGeneric genericResponse;
 		// Add additional extension commands to this union as needed.
 	} extension;
@@ -4033,8 +4046,6 @@ typedef struct _ethernetNetworkStatus_t
 } ethernetNetworkStatus_t;
 #pragma pack(pop)
 
-#pragma pack(4)
-
 typedef struct
 {
 	uint8_t backupPowerGood;
@@ -4108,7 +4119,7 @@ typedef union {
 	icsRadPlutoDeviceStatus plutoStatus;
 	icsVcan4IndustrialDeviceStatus vcan4indStatus;
 } icsDeviceStatus;
-#pragma pack(pop)
+
 
 typedef struct
 {
