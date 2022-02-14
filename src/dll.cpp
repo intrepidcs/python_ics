@@ -27,7 +27,8 @@ bool __initialize(char* name)
     }
     catch (ice::Exception& ex)
     {
-        strcpy(ERROR_MESSAGE, ex.whatString().c_str());
+        strncpy(ERROR_MESSAGE, ex.whatString().c_str(), sizeof(ERROR_MESSAGE)/sizeof(ERROR_MESSAGE[0]));
+        ERROR_MESSAGE[sizeof(ERROR_MESSAGE)/sizeof(ERROR_MESSAGE[0]) - 1] = '\0';
         return false;
     }
     return true;
