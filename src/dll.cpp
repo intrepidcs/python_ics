@@ -16,6 +16,8 @@ bool __initialize(char* name)
         {
 #if (defined(_WIN32) || defined(__WIN32__))
             LIBRARY = new ice::Library("icsneo40.dll");
+#elif (defined(__APPLE__))
+            LIBRARY = new ice::Library("@loader_path/libicsneolegacy.dylib");
 #else
             LIBRARY = new ice::Library("libicsneoapi.so");
 #endif
