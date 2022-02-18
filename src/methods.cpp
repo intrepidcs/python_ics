@@ -74,7 +74,9 @@ char* neodevice_to_string(unsigned long type)
     case NEODEVICE_RADPLUTO: return "RAD-Pluto";
     case NEODEVICE_VCAN42_EL: return "ValueCAN 4-2EL";
     case NEODEVICE_RADIO_CANHUB: return "neoRAD-IO2-CANHUB";
+#if defined(NEODEVICE_OBD2_LCBADGE)
     case NEODEVICE_OBD2_LCBADGE: return "neoOBD2-LC BADGE";
+#endif
     case NEODEVICE_RAD_MOON_DUO: return "RAD-Moon Duo";
     case NEODEVICE_VCAN3: return "ValueCAN 3";
 #if defined(NEODEVICE_ONYX)
@@ -3470,6 +3472,42 @@ PyObject* meth_enable_doip_line(PyObject* self, PyObject* args)
         }
         Py_END_ALLOW_THREADS
         Py_RETURN_NONE;
+    }
+    catch (ice::Exception& ex)
+    {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
+
+PyObject* meth_is_device_feature_supported(PyObject* self, PyObject* args)
+{
+    PyObject* obj = NULL;
+    unsigned int feature = NULL;
+    bool enable = false;
+    if (!PyArg_ParseTuple(args, arg_parse("OI:", __FUNCTION__), &obj, &feature)) {
+        return NULL;
+    }
+    if (!PyNeoDevice_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        unsigned int supported = 0;
+        ice::Function<int __stdcall (ICS_HANDLE, DeviceFeature, unsigned int*)> icsneoIsDeviceFeatureSupported(lib, "icsneoIsDeviceFeatureSupported");
+        Py_BEGIN_ALLOW_THREADS
+            if (!icsneoIsDeviceFeatureSupported(handle, (DeviceFeature)feature, &supported)) {
+                Py_BLOCK_THREADS
+                    return set_ics_exception(exception_runtime_error(), "icsneoIsDeviceFeatureSupported() Failed");
+            }
+        Py_END_ALLOW_THREADS
+        return Py_BuildValue("I", supported);
     }
     catch (ice::Exception& ex)
     {
