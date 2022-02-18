@@ -149,6 +149,8 @@ typedef unsigned __int64 uint64_t;
 #define NETID_A2B_01 522
 #define NETID_A2B_02 523
 #define NETID_ETHERNET3 524
+#define NETID_ISM_LOGGER 525
+#define NETID_CAN_SWITCH 526
 
 /* Upper boundry of Network IDs */
 #define NETID_MAX 100
@@ -173,7 +175,7 @@ typedef unsigned __int64 uint64_t;
 #define NEODEVICE_VCAN42_EL (0x0000000a)
 #define NEODEVICE_RADIO_CANHUB (0x0000000b)
 #define NEODEVICE_NEOECU12 (0x0000000c)
-#define NEODEVICE_OBD2_LCBADGE (0x0000000d)
+#define NEODEVICE_OBD2_LC (0x0000000d)
 #define NEODEVICE_RAD_MOON_DUO (0x0000000e)
 #define NEODEVICE_FIRE3 (0x0000000f)
 #define NEODEVICE_VCAN3 (0x00000010)
@@ -188,13 +190,13 @@ typedef unsigned __int64 uint64_t;
 #define NEODEVICE_OBD2_SIM_DOIP (0x00000019)
 #define NEODEVICE_OBD2_DEV (0x0000001a)
 #define NEODEVICE_ECU22 (0x0000001b)
-#define NEODEVICE_NEW_DEVICE_55 (0x0000001c)
-#define NEODEVICE_NEW_DEVICE_56 (0x0000001d)
-#define NEODEVICE_NEW_DEVICE_57 (0x0000001e)
+#define NEODEVICE_RADEPSILON_T (0x0000001c)
+#define NEODEVICE_RADEPSILON_EXPRESS (0x0000001d)
+#define NEODEVICE_RADPROXIMA (0x0000001e)
 #define NEODEVICE_NEW_DEVICE_58 (0x0000001f)
 // I'm not sure what was 0x20 anymore, but we'll skip it to be safe
 #define NEODEVICE_NEW_DEVICE_59 (0x00000021)
-#define NEODEVICE_NEW_DEVICE_62 (0x00000022)
+#define NEODEVICE_RAD_BMS (0x00000022)
 #define NEODEVICE_RED (0x00000040)
 #define NEODEVICE_ECU (0x00000080)
 #define NEODEVICE_IEVB (0x00000100)
@@ -252,6 +254,7 @@ typedef unsigned __int64 uint64_t;
 #define SCRIPT_LOCATION_INTERNAL_FLASH 2
 #define SCRIPT_LOCATION_SDCARD 1
 #define SCRIPT_LOCATION_VCAN3_MEM 4
+#define SCRIPT_LOCATION_EMMC 6
 
 /* Protocols -- value of Protocol member of icsSpyMessage */
 #define SPY_PROTOCOL_CUSTOM 0
@@ -495,6 +498,7 @@ typedef struct _NeoDeviceEx
 #define SLAVE_VNET_A (0x02)
 #define SLAVE_VNET_B (0x04)
 #define WIFI_CONNECTION (0x08)
+#define REGISTER_BY_SERIAL (0x10)
 	uint32_t Options;
 
 	void* pAvailWIFINetwork;
@@ -972,6 +976,13 @@ typedef union _stChipVersions {
 	{
 		uint8_t mchip_major;
 		uint8_t mchip_minor;
+		uint8_t schip_major;
+		uint8_t schip_minor;
+	} obd2lc_versions;
+	struct
+	{
+		uint8_t mchip_major;
+		uint8_t mchip_minor;
 	} jupiter_versions;
 
 	struct
@@ -992,6 +1003,14 @@ typedef union _stChipVersions {
 	{
 		uint8_t mchip_major;
 		uint8_t mchip_minor;
+		uint8_t schip_major;
+		uint8_t schip_minor;
+	} obd2dev_versions;
+
+	struct
+	{
+		uint8_t mchip_major;
+		uint8_t mchip_minor;
 	} ether_badge_versions;
 
 	struct
@@ -999,6 +1018,13 @@ typedef union _stChipVersions {
 		uint8_t zynq_core_major;
 		uint8_t zynq_core_minor;
 	} rad_a2b_versions;
+
+	struct
+	{
+		uint8_t mchip_major;
+		uint8_t mchip_minor;
+	} epsilon_versions;
+
 } stChipVersions;
 
 #define stChipVersions_SIZE 8
@@ -1044,7 +1070,6 @@ typedef struct OP_ETH_GENERAL_SETTINGS_t
 } OP_ETH_GENERAL_SETTINGS;
 #define OP_ETH_GENERAL_SETTINGS_SIZE 20
 
-#define RAD_GPTP_NUM_PORTS 1 // 1 because only supported as gPTP endpoint
 typedef struct SRAD_GPTP_SETTINGS_s
 {
 	uint32_t neighborPropDelayThresh;//ns
@@ -1058,10 +1083,10 @@ typedef struct SRAD_GPTP_SETTINGS_s
 	uint8_t clockaccuracy;
 	uint8_t priority2;
 	uint16_t offset_scaled_log_variance;
-	uint8_t gPTPportRole[RAD_GPTP_NUM_PORTS];
-	uint8_t portEnable[RAD_GPTP_NUM_PORTS];
+	uint8_t gPTPportRole;
+	uint8_t gptpEnabledPort;
 	uint8_t rsvd[16];
-} RAD_GPTP_SETTINGS;//36 Bytes with RAD_GPTP_NUM_PORTS = 1
+} RAD_GPTP_SETTINGS; //36 Bytes
 #define RAD_GPTP_SETTINGS_SIZE 36
 
 typedef struct SRAD_GPTP_AND_TAP_SETTINGS_s
@@ -1148,6 +1173,21 @@ typedef struct ETHERNET_SETTINGS2_t
 	uint8_t rsvd[2];
 } ETHERNET_SETTINGS2;
 #define ETHERNET_SETTINGS2_SIZE 16
+
+/* ETHERNET_SETTINGS2 link speed, duplex options */
+enum
+{
+	LINK_SPEED_AUTO_NEGOTIATION = 0,
+	LINK_SPEED_1GBPS_FULL_DUPLEX,
+	LINK_SPEED_1GBPS_HALF_DUPLEX,
+	LINK_SPEED_100MBPS_FULL_DUPLEX,
+	LINK_SPEED_100MBPS_HALF_DUPLEX,
+	LINK_SPEED_10MBPS_FULL_DUPLEX,
+	LINK_SPEED_10MBPS_HALF_DUPLEX,
+	// NOTE: new entries must be appended to maintain backwards compatibility
+	// insert new entries here
+	LINK_SPEED_COUNT,
+};
 
 #define ETHERNET_SETTINGS10G_FLAG_FULL_DUPLEX  0x01
 #define ETHERNET_SETTINGS10G_FLAG_AUTO_NEG     0x02
@@ -1310,6 +1350,58 @@ typedef struct _SExtSubCmdHdr
 } SExtSubCmdHdr;
 #define SExtSubCmdHdr_SIZE 4
 
+#pragma pack(push, 1)
+
+struct _timestamp
+{
+	uint16_t seconds_msb;
+	uint32_t seconds_lsb;
+	uint32_t nanoseconds;
+};
+
+typedef uint64_t _clock_identity;
+
+struct port_identity
+{
+	_clock_identity clock_identity;
+	uint16_t port_number;
+};
+struct _clock_quality
+{
+	uint8_t clock_class;
+	uint8_t clock_accuracy;
+	uint16_t offset_scaled_log_variance;
+};
+struct system_identity
+{
+	uint8_t priority_1;
+	struct _clock_quality clock_quality;
+	uint8_t priority_2;
+	_clock_identity clock_identity;
+};
+struct priority_vector
+{
+	struct system_identity sysid;
+	uint16_t steps_removed;
+	struct port_identity portid;
+	uint16_t port_number;
+};
+
+typedef struct _GPTPStatus
+{
+	struct _timestamp current_time;
+	struct priority_vector gm_priority;
+	int64_t ms_offset_ns;
+	uint8_t is_sync;
+
+	uint8_t link_status;
+	int64_t link_delay_ns;
+	uint8_t selected_role;
+	uint8_t as_capable;
+} GPTPStatus;
+
+#pragma pack(pop)
+
 typedef struct _SExtSubCmdComm
 {
 	SExtSubCmdHdr header;
@@ -1321,6 +1413,7 @@ typedef struct _SExtSubCmdComm
 		StopDHCPServerCommand stopDHCPServer;
 		GetSupportedFeaturesResponse getSupportedFeatures;
 		ExtendedResponseGeneric genericResponse;
+		GPTPStatus gptpStatus;
 		// Add additional extension commands to this union as needed.
 	} extension;
 } SExtSubCmdComm;
@@ -1542,6 +1635,7 @@ typedef struct _RadMoonDuoConverterSettings
 } RadMoonDuoConverterSettings;
 #define RADMOONDUO_CONVERTER_SETTINGS_SIZE (16)
 
+// clang-format off
 #define RAD_REPORTING_SETTINGS_FLAG_TEMP_ENABLE 		0x00000001
 #define RAD_REPORTING_SETTINGS_FLAG_MIC2_GPS_ENABLE 	0x00000002 // USB port 1
 #define RAD_REPORTING_SETTINGS_FLAG_INT_GPS_ENABLE 		0x00000004
@@ -1552,6 +1646,8 @@ typedef struct _RadMoonDuoConverterSettings
 #define RAD_REPORTING_SETTINGS_FLAG_MISC2_PWMIN 		0x00000080
 #define RAD_REPORTING_SETTINGS_FLAG_AIN1 				0x00000100
 #define RAD_REPORTING_SETTINGS_FLAG_SERDES_ENABLE 		0x00000200
+#define RAD_REPORTING_SETTINGS_FLAG_FAN_SPEED_ENABLE	0x00000400
+// clang-format on
 
 typedef struct RAD_REPORTING_SETTINGS_t
 {
@@ -1560,7 +1656,8 @@ typedef struct RAD_REPORTING_SETTINGS_t
 	uint16_t gps_interval_ms;
 	uint16_t serdes_interval_ms;
 	uint16_t io_interval_ms;
-	uint8_t rsvd[4];
+	uint16_t fan_speed_interval_ms;
+	uint8_t rsvd[2];
 } RAD_REPORTING_SETTINGS;
 #define RAD_REPORTING_SETTINGS_SIZE 16
 
@@ -3120,7 +3217,7 @@ typedef struct _RADPlutoSettings
 
 typedef union {
 	uint32_t word;
-	struct 
+	struct
 	{
 		unsigned can_sleep_command_id:29;
 		unsigned can_sleep_command_isExtended:1;
@@ -3191,7 +3288,7 @@ typedef struct _SFlexVnetzSettings
 		uint32_t enableDefaultUpload : 1;
 		uint32_t reserved : 26;
 	} flags;
-    DISK_SETTINGS disk;
+	DISK_SETTINGS disk;
 	ETHERNET_SETTINGS2 ethernet2;
 } SFlexVnetzSettings;
 #define SFlexVnetzSettings_Size (310)
@@ -3292,7 +3389,71 @@ typedef struct _VCAN4IndSettings
 } VCAN4IndSettings, SVCAN4IndSettings;
 #define VCAN4IndSettings_SIZE (228)
 
+typedef struct _SOBD2LCSettings
+{
+	/* Performance Test */
+	uint16_t perf_en;
+	CAN_SETTINGS can1;
+	CANFD_SETTINGS canfd1;
+	CAN_SETTINGS can2;
+	CANFD_SETTINGS canfd2;
+	CAN_SETTINGS can3;
+	CANFD_SETTINGS canfd3;
+	CAN_SETTINGS can4;
+	CANFD_SETTINGS canfd4;
+	SWCAN_SETTINGS swcan1;
+	LIN_SETTINGS lin1;
+	/* ISO9141 - Keyword */
+	ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings_1;
+	uint16_t iso_parity_1;
+	uint16_t iso_msg_termination_1;
+	union {
+		uint64_t word;
+		struct
+		{
+			uint16_t network_enables;
+			uint16_t network_enables_2;
+			uint16_t network_enables_3;
+		};
+	} network_enables;
+	uint32_t pwr_man_timeout;
+	uint16_t pwr_man_enable;
+	uint16_t network_enabled_on_boot;
+	/* ISO15765-2 Transport Layer */
+	int16_t iso15765_separation_time_offset;
+	STextAPISettings text_api;
+	struct
+	{
+		uint32_t disableUsbCheckOnBoot : 1;
+		uint32_t enableLatencyTest : 1;
+		uint32_t busMessagesToAndroid : 1;
+		uint32_t enablePcEthernetComm : 1;
+		uint32_t enableDefaultLogger : 1;
+		uint32_t enableDefaultUpload : 1;
+		uint32_t reserved : 26;
+	} flags;
+	uint16_t can_switch_mode;
+	uint16_t misc_io_on_report_events;
+	DISK_SETTINGS disk;
+	ETHERNET_SETTINGS ethernet;
+	ETHERNET_SETTINGS2 ethernet2; // supercedes ethernet settings
+} OBD2LCSettings, SOBD2LCSettings;
+#define OBD2LCSettings_SIZE 360
+
 #define RADJUPITER_NUM_PORTS 8
+
+#define JUPITER_PTP_ROLE_DISABLED 0
+#define JUPITER_PTP_ROLE_MASTER 1
+#define JUPITER_PTP_ROLE_SLAVE 2
+typedef struct SJupiterPtpParams_s
+{
+	uint32_t neighborPropDelay;//ns
+	int8_t initLogPDelayReqInterval;// log2ms
+	int8_t initLogSyncInterval;// log2ms
+	int8_t operationLogPDelayReqInterval;// log2ms
+	int8_t operationLogSyncInterval;// log2ms
+	uint8_t gPTPportRole[RADJUPITER_NUM_PORTS];// the 6th port is used for SAM
+} JupiterPtpParams_t;//16
 
 typedef struct _SRADJupiterSwitchSettings
 {
@@ -3305,7 +3466,8 @@ typedef struct _SRADJupiterSwitchSettings
 	uint8_t spoofMacFlag;
 	uint8_t spoofedMac[6];
 	uint8_t pad;
-} SRADJupiterSwitchSettings;//28
+	JupiterPtpParams_t ptpParams;//16
+} SRADJupiterSwitchSettings;//44
 
 typedef struct _SRADJupiterSettings
 {
@@ -3348,11 +3510,11 @@ typedef struct _SRADJupiterSettings
 		uint32_t reserved : 29;
 	} flags;//4
 
-	SRADJupiterSwitchSettings switchSettings;//28
+	SRADJupiterSwitchSettings switchSettings;//44
 	ETHERNET_SETTINGS2 ethernet2;
-} SRADJupiterSettings;//332
+} SRADJupiterSettings;//348
 
-#define SRADJupiterSettings_SIZE 332
+#define SRADJupiterSettings_SIZE 348
 
 typedef struct _SFire3Settings
 {
@@ -3496,6 +3658,117 @@ typedef struct _SEtherBadgeSettings
 
 #define SEtherBadgeSettings_SIZE 316
 
+#define RADEPSILON_MAX_PHY 18
+
+typedef struct _SRADEpsilonSwitchSettings
+{
+	uint8_t phyMode[RADEPSILON_MAX_PHY];
+	uint8_t enablePhy[RADEPSILON_MAX_PHY];
+	uint8_t speed[RADEPSILON_MAX_PHY];
+	uint8_t legacy[RADEPSILON_MAX_PHY];
+	uint8_t spoofedMac[6];
+	uint8_t spoofMacFlag;
+	uint8_t pad;
+}SRADEpsilonSwitchSettings;//80
+
+typedef struct _SRADEpsilonSettings
+{
+	/* Performance Test */
+	uint16_t perf_en;//2
+
+	CAN_SETTINGS can1;//12
+	CANFD_SETTINGS canfd1;//10
+	CAN_SETTINGS can2;//12
+	CANFD_SETTINGS canfd2;//10
+	LIN_SETTINGS lin1;//10
+
+	uint16_t network_enables;//2
+	uint16_t network_enables_2;//2
+	uint16_t network_enables_3;//2
+	uint64_t termination_enables;//8
+	uint16_t misc_io_analog_enable;//2
+
+	uint32_t pwr_man_timeout;//4
+	uint16_t pwr_man_enable;//2
+
+	uint16_t network_enabled_on_boot;//2
+
+	/* ISO15765-2 Transport Layer */
+	int16_t iso15765_separation_time_offset;//2
+	uint16_t iso9141_kwp_enable_reserved;//2
+	uint16_t iso_tester_pullup_enable;//2
+	uint16_t iso_parity;//2
+	uint16_t iso_msg_termination;//2
+	ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings;//114
+	ETHERNET_SETTINGS ethernet;//8
+
+	STextAPISettings text_api;//72
+
+	struct
+	{
+		uint32_t disableUsbCheckOnBoot : 1;
+		uint32_t enableLatencyTest : 1;
+		uint32_t enablePcEthernetComm : 1;
+		uint32_t reserved : 29;
+	} flags;//4
+
+	SRADEpsilonSwitchSettings switchSettings;//80
+	ETHERNET_SETTINGS2 ethernet2;//16
+}SRADEpsilonSettings;//384
+#define SRADEpsilonSettings_SIZE 384
+
+typedef union
+{
+	uint64_t dword;
+	struct
+	{
+		unsigned can_id:29;
+		unsigned can_id_isExtended:1;
+		uint16_t tcp_port;
+		unsigned reserved:18;
+	}config;
+} SWILBridgeConfig;
+
+typedef struct _SRADBMSSettings
+{
+        /* Performance Test */
+	uint16_t perf_en;//2
+
+	uint64_t termination_enables;
+
+	CAN_SETTINGS can1;
+    CANFD_SETTINGS canfd1;
+
+    CAN_SETTINGS can2;
+    CANFD_SETTINGS canfd2;
+
+	uint16_t network_enables;
+	uint16_t network_enables_2;
+	uint16_t network_enables_3;
+
+	/* ISO15765-2 Transport Layer */
+	int16_t iso15765_separation_time_offset;//2
+
+    struct
+	{
+		uint32_t disableUsbCheckOnBoot : 1;
+		uint32_t enableLatencyTest : 1;
+		uint32_t enablePcEthernetComm : 1;
+		uint32_t reserved : 29;
+	} flags;//4
+
+	ETHERNET_SETTINGS ethernet;
+	ETHERNET_SETTINGS2 ethernet2;
+
+	uint32_t pwr_man_timeout;
+	uint16_t pwr_man_enable;
+	uint16_t network_enabled_on_boot;
+
+	//WIL wrapped CAN and ETHERNET
+	SWILBridgeConfig wil_config;
+} SRADBMSSettings;
+#define SRADBMSSettings_SIZE 108
+
 #define GS_VERSION 5
 typedef struct _GLOBAL_SETTINGS
 {
@@ -3530,13 +3803,16 @@ typedef struct _GLOBAL_SETTINGS
 		SEEVBSettings eevb;
 		SFlexVnetzSettings flexvnetz;
 		SVividCANSettings vividcan;
-		VCAN4IndSettings vcan4_ind;
+		SVCAN4IndSettings vcan4_ind;
 		SRADGigastarSettings radgigastar;
 		SRADJupiterSettings jupiter;
 		SFire3Settings fire3;
 		SRadMoonDuoSettings radmoonduo;
 		SEtherBadgeSettings etherBadge;
 		SRADA2BSettings rad_a2b;
+		SRADEpsilonSettings epsilon;
+		SOBD2LCSettings obd2lc;
+		SRADBMSSettings rad_bms;
 		// Make sure SDeviceSettings matches this
 	};
 } GLOBAL_SETTINGS;
@@ -3578,6 +3854,9 @@ typedef enum _EDeviceSettingsType
 	DeviceRadMoonDuoSettingsType,
 	DeviceEtherBadgeSettingsType,
 	DeviceRADA2BSettingsType,
+	DeviceRADEpsilonSettingsType,
+	DeviceOBD2LCSettingsType,
+	DeviceRADBMSSettingsType,
 	// add new settings type here
 	// Also add to map inside cicsneoVI::Init()
 	DeviceSettingsTypeMax,
@@ -3617,12 +3896,15 @@ typedef struct _SDeviceSettings
 		SFlexVnetzSettings flexvnetz;
 		SVividCANSettings vividcan;
 		SVCAN4IndSettings vcan4_ind;
+		SOBD2LCSettings obd2lc;
 		SRADGigastarSettings radgigastar;
 		SRADJupiterSettings jupiter;
 		SFire3Settings fire3;
 		SRadMoonDuoSettings radmoon_duo;
 		SEtherBadgeSettings etherBadge;
 		SRADA2BSettings rad_a2b;
+		SRADEpsilonSettings epsilon;
+		SRADBMSSettings rad_bms;
 		// Make sure GLOBAL_SETTINGS matches this
 		// NOTE: When adding new structures here implement inside icsneoGetDeviceSettings and icsneoSetDeviceSettings also.	} Settings;
 	} Settings;
@@ -4112,6 +4394,16 @@ typedef struct
 	ethernetNetworkStatus_t ethernetStatus;
 } icsVcan4IndustrialDeviceStatus;
 
+typedef struct
+{
+	ethernetNetworkStatus_t ethernetStatus;
+} icsRadEpsilonDeviceStatus;
+
+typedef struct
+{
+	ethernetNetworkStatus_t ethernetStatus;
+} icsRadBMSDeviceStatus;
+
 typedef union {
 	icsFire2DeviceStatus fire2Status;
 	icsVcan4DeviceStatus vcan4Status;
@@ -4122,6 +4414,7 @@ typedef union {
 	icsOBD2ProDeviceStatus obd2proStatus;
 	icsRadPlutoDeviceStatus plutoStatus;
 	icsVcan4IndustrialDeviceStatus vcan4indStatus;
+	icsRadBMSDeviceStatus radBMSStatus;
 } icsDeviceStatus;
 #pragma pack(pop)
 
@@ -4207,6 +4500,32 @@ typedef struct SPhyRegPkt
 		PhyRegPktClause45Mess_t clause45;
 	};
 }PhyRegPkt_t;
+
+typedef enum
+{
+	networkDWCAN01,
+	networkDWCAN02,
+	networkDWCAN03,
+	networkDWCAN04,
+	networkDWCAN05,
+	networkDWCAN06,
+	networkDWCAN07,
+	networkDWCAN08,
+	networkTerminationDWCAN01,
+	networkTerminationDWCAN02,
+	networkTerminationDWCAN03,
+	networkTerminationDWCAN04,
+	networkTerminationDWCAN05,
+	networkTerminationDWCAN06,
+	networkTerminationDWCAN07,
+	networkTerminationDWCAN08,
+	NUM_VALID_DEVICE_FEATURES,
+	supportedFeatureMax = 0xFFFF,
+} DeviceFeature;
+// Update this assert when we add features to this enum
+//static_assert(NUM_VALID_DEVICE_FEATURES == (networkTerminationDWCAN08 + 1));
+//static_assert(NUM_VALID_DEVICE_FEATURES <= supportedFeatureMax);
+#define NUM_DEVICE_FEATURE_BITFIELDS ((NUM_VALID_DEVICE_FEATURES + 31) / 32)
 
 
 #ifndef INTREPID_NO_CHECK_STRUCT_SIZE
@@ -4295,6 +4614,9 @@ CHECK_STRUCT_SIZE(SFire3Settings);
 CHECK_STRUCT_SIZE(SEtherBadgeSettings);
 CHECK_STRUCT_SIZE(SRADA2BSettings);
 CHECK_STRUCT_SIZE(A2BMonitorSettings);
+CHECK_STRUCT_SIZE(SRADEpsilonSettings);
+CHECK_STRUCT_SIZE(RAD_GPTP_SETTINGS);
+CHECK_STRUCT_SIZE(SRADBMSSettings);
 #endif /* INTREPID_NO_CHECK_STRUCT_SIZE */
 
 #endif /* _ICSNVC40_H */
