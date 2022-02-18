@@ -18,8 +18,8 @@ class srad_gptp_settings_s(ctypes.Structure):
         ('clockaccuracy', ctypes.c_uint8),
         ('priority2', ctypes.c_uint8),
         ('offset_scaled_log_variance', ctypes.c_uint16),
-        ('gPTPportRole', ctypes.c_uint8 * 1),
-        ('portEnable', ctypes.c_uint8 * 1),
+        ('gPTPportRole', ctypes.c_uint8),
+        ('gptpEnabledPort', ctypes.c_uint8),
         ('rsvd', ctypes.c_uint8 * 16),
     ]
 

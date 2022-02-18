@@ -19,8 +19,10 @@ from ics.structures.secu_avb_settings import *
 from ics.structures.secu_settings import *
 from ics.structures.seevb_settings import *
 from ics.structures.sievb_settings import *
+from ics.structures.sobd2_lc_settings import *
 from ics.structures.sobd2_pro_settings import *
 from ics.structures.sobd2_sim_settings import *
+from ics.structures.srad_epsilon_settings import *
 from ics.structures.srad_galaxy_settings import *
 from ics.structures.srad_gigalog_settings import *
 from ics.structures.srad_gigastar_settings import *
@@ -30,6 +32,7 @@ from ics.structures.srad_pluto_settings import *
 from ics.structures.srad_star2_settings import *
 from ics.structures.srad_super_moon_settings import *
 from ics.structures.srada2_b_settings import *
+from ics.structures.sradbms_settings import *
 from ics.structures.svcan3_settings import *
 from ics.structures.svcan412_settings import *
 from ics.structures.svcan4_ind_settings import *
@@ -37,7 +40,7 @@ from ics.structures.svcan4_settings import *
 from ics.structures.svcanrf_settings import *
 
 
-class Nameless8267(ctypes.Union):
+class Nameless63050(ctypes.Union):
     _pack_ = 2
     _fields_ = [
         ('red', SRedSettings),
@@ -67,25 +70,28 @@ class Nameless8267(ctypes.Union):
         ('eevb', SEEVBSettings),
         ('flexvnetz', SFlexVnetzSettings),
         ('vividcan', SVividCANSettings),
-        ('vcan4_ind', VCAN4IndSettings),
+        ('vcan4_ind', SVCAN4IndSettings),
         ('radgigastar', SRADGigastarSettings),
         ('jupiter', SRADJupiterSettings),
         ('fire3', SFire3Settings),
         ('radmoonduo', SRadMoonDuoSettings),
         ('etherBadge', SEtherBadgeSettings),
         ('rad_a2b', SRADA2BSettings),
+        ('epsilon', SRADEpsilonSettings),
+        ('obd2lc', SOBD2LCSettings),
+        ('rad_bms', SRADBMSSettings),
     ]
 
 
 
 class global_settings(ctypes.Structure):
     _pack_ = 2
-    _anonymous_  = ('Nameless8267',)
+    _anonymous_  = ('Nameless63050',)
     _fields_ = [
         ('version', ctypes.c_uint16),
         ('len', ctypes.c_uint16),
         ('chksum', ctypes.c_uint16),
-        ('Nameless8267', Nameless8267),
+        ('Nameless63050', Nameless63050),
     ]
 
 

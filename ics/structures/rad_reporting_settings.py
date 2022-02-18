@@ -12,7 +12,8 @@ class rad_reporting_settings(ctypes.Structure):
         ('gps_interval_ms', ctypes.c_uint16),
         ('serdes_interval_ms', ctypes.c_uint16),
         ('io_interval_ms', ctypes.c_uint16),
-        ('rsvd', ctypes.c_uint8 * 4),
+        ('fan_speed_interval_ms', ctypes.c_uint16),
+        ('rsvd', ctypes.c_uint8 * 2),
     ]
 
 

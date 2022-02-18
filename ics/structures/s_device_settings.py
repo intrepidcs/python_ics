@@ -21,8 +21,10 @@ from ics.structures.secu_avb_settings import *
 from ics.structures.secu_settings import *
 from ics.structures.seevb_settings import *
 from ics.structures.sievb_settings import *
+from ics.structures.sobd2_lc_settings import *
 from ics.structures.sobd2_pro_settings import *
 from ics.structures.sobd2_sim_settings import *
+from ics.structures.srad_epsilon_settings import *
 from ics.structures.srad_galaxy_settings import *
 from ics.structures.srad_gigalog_settings import *
 from ics.structures.srad_gigastar_settings import *
@@ -32,6 +34,7 @@ from ics.structures.srad_pluto_settings import *
 from ics.structures.srad_star2_settings import *
 from ics.structures.srad_super_moon_settings import *
 from ics.structures.srada2_b_settings import *
+from ics.structures.sradbms_settings import *
 from ics.structures.svcan3_settings import *
 from ics.structures.svcan412_settings import *
 from ics.structures.svcan4_ind_settings import *
@@ -71,12 +74,15 @@ class Settings(ctypes.Union):
         ('flexvnetz', SFlexVnetzSettings),
         ('vividcan', SVividCANSettings),
         ('vcan4_ind', SVCAN4IndSettings),
+        ('obd2lc', SOBD2LCSettings),
         ('radgigastar', SRADGigastarSettings),
         ('jupiter', SRADJupiterSettings),
         ('fire3', SFire3Settings),
         ('radmoon_duo', SRadMoonDuoSettings),
         ('etherBadge', SEtherBadgeSettings),
         ('rad_a2b', SRADA2BSettings),
+        ('epsilon', SRADEpsilonSettings),
+        ('rad_bms', SRADBMSSettings),
     ]
 
 
