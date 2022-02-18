@@ -2,6 +2,7 @@
 import ctypes
 import enum
 
+from ics.structures.s_jupiter_ptp_params_s import *
 
 
 class srad_jupiter_switch_settings(ctypes.Structure):
@@ -16,6 +17,7 @@ class srad_jupiter_switch_settings(ctypes.Structure):
         ('spoofMacFlag', ctypes.c_uint8),
         ('spoofedMac', ctypes.c_uint8 * 6),
         ('pad', ctypes.c_uint8),
+        ('ptpParams', JupiterPtpParams_t),
     ]
 
 

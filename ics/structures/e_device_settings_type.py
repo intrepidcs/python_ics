@@ -42,6 +42,9 @@ class e_device_settings_type(enum.IntEnum):
     DeviceRadMoonDuoSettingsType = enum.auto()
     DeviceEtherBadgeSettingsType = enum.auto()
     DeviceRADA2BSettingsType = enum.auto()
+    DeviceRADEpsilonSettingsType = enum.auto()
+    DeviceOBD2LCSettingsType = enum.auto()
+    DeviceRADBMSSettingsType = enum.auto()
     DeviceSettingsTypeMax = enum.auto()
     DeviceSettingsNone  = 4294967295
 

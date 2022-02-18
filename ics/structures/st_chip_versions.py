@@ -204,6 +204,17 @@ class radgigastar_usbz_versions(ctypes.Structure):
 
 
 
+class obd2lc_versions(ctypes.Structure):
+    _pack_ = 2
+    _fields_ = [
+        ('mchip_major', ctypes.c_uint8),
+        ('mchip_minor', ctypes.c_uint8),
+        ('schip_major', ctypes.c_uint8),
+        ('schip_minor', ctypes.c_uint8),
+    ]
+
+
+
 class jupiter_versions(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
@@ -233,6 +244,17 @@ class rad_moon_duo_versions(ctypes.Structure):
 
 
 
+class obd2dev_versions(ctypes.Structure):
+    _pack_ = 2
+    _fields_ = [
+        ('mchip_major', ctypes.c_uint8),
+        ('mchip_minor', ctypes.c_uint8),
+        ('schip_major', ctypes.c_uint8),
+        ('schip_minor', ctypes.c_uint8),
+    ]
+
+
+
 class ether_badge_versions(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
@@ -247,6 +269,15 @@ class rad_a2b_versions(ctypes.Structure):
     _fields_ = [
         ('zynq_core_major', ctypes.c_uint8),
         ('zynq_core_minor', ctypes.c_uint8),
+    ]
+
+
+
+class epsilon_versions(ctypes.Structure):
+    _pack_ = 2
+    _fields_ = [
+        ('mchip_major', ctypes.c_uint8),
+        ('mchip_minor', ctypes.c_uint8),
     ]
 
 
@@ -274,11 +305,14 @@ class st_chip_versions(ctypes.Union):
         ('radgigalog3_versions', radgigalog3_versions),
         ('radgigastar_versions', radgigastar_versions),
         ('radgigastar_usbz_versions', radgigastar_usbz_versions),
+        ('obd2lc_versions', obd2lc_versions),
         ('jupiter_versions', jupiter_versions),
         ('fire3_versions', fire3_versions),
         ('rad_moon_duo_versions', rad_moon_duo_versions),
+        ('obd2dev_versions', obd2dev_versions),
         ('ether_badge_versions', ether_badge_versions),
         ('rad_a2b_versions', rad_a2b_versions),
+        ('epsilon_versions', epsilon_versions),
     ]
 
 

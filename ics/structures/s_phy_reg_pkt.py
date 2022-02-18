@@ -6,7 +6,7 @@ from ics.structures.s_phy_reg_pkt_clause22_mess import *
 from ics.structures.s_phy_reg_pkt_clause45_mess import *
 
 
-class Nameless9872(ctypes.Structure):
+class Nameless18906(ctypes.Structure):
     _fields_ = [
         ('Enabled', ctypes.c_uint16, 1),
         ('WriteEnable', ctypes.c_uint16, 1),
@@ -19,16 +19,16 @@ class Nameless9872(ctypes.Structure):
 
 
 
-class Nameless28192(ctypes.Union):
-    _anonymous_  = ('Nameless9872',)
+class Nameless3555(ctypes.Union):
+    _anonymous_  = ('Nameless18906',)
     _fields_ = [
-        ('Nameless9872', Nameless9872),
+        ('Nameless18906', Nameless18906),
         ('flags', ctypes.c_uint16),
     ]
 
 
 
-class Nameless18906(ctypes.Union):
+class Nameless45381(ctypes.Union):
     _fields_ = [
         ('clause22', PhyRegPktClause22Mess_t),
         ('clause45', PhyRegPktClause45Mess_t),
@@ -37,10 +37,10 @@ class Nameless18906(ctypes.Union):
 
 
 class s_phy_reg_pkt(ctypes.Structure):
-    _anonymous_  = ('Nameless28192', 'Nameless18906')
+    _anonymous_  = ('Nameless3555', 'Nameless45381')
     _fields_ = [
-        ('Nameless28192', Nameless28192),
-        ('Nameless18906', Nameless18906),
+        ('Nameless3555', Nameless3555),
+        ('Nameless45381', Nameless45381),
     ]
 
 
