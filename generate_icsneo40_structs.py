@@ -117,10 +117,17 @@ class CObject(object):
             self.preferred_name = f"Nameless{get_unique_number()}"
         if self.preferred_name and not is_embedded:
             self.preferred_name = convert_to_snake_case(self.preferred_name)
-        
+
+
+_start_of_obj_blacklist = (
+    re.compile(r'''struct [aA-zZ\\_]+ [aA-zZ\\_]+;'''), # struct some_random_struct_name value;
+)
 
 def is_line_start_of_object(line):
     "Returns True if we are a c object (enum, struct, union)"
+    for regex in _start_of_obj_blacklist:
+        if bool(regex.search(line)):
+            return False
     return bool(re.search('\btypedef struct$|struct$|struct \S*$|enum|union', line))
 
 # This contains all the objects that don't pass convert_to_ctype_object
@@ -296,7 +303,7 @@ def parse_struct_member(buffered_line):
 
     # remove stuff that shouldn't be in the name
     data_name = re.sub('{|{|}|\s*', '', data_name)
-    data_type = re.sub('union|{|{|}', '', data_type)
+    data_type = re.sub('union|{|{|}|^struct', '', data_type)
     data_type = data_type.strip()
     if not data_type:
         data_name = ''
@@ -417,6 +424,7 @@ def convert_to_ctype_object(data_type):
     
     # This is dirty but we don't parse typedefs...
     ctype_types["c_uint16"] = ctype_types["c_uint16"] + ("descIdType",)
+    ctype_types["c_uint64"] = ctype_types["c_uint64"] + ("_clock_identity",)
 
     is_pointer = '*' in data_type and not 'void' in data_type
     for ctype_type, c_types in ctype_types.items():
