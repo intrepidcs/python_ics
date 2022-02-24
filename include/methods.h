@@ -1372,7 +1372,7 @@ PyObject* meth_is_device_feature_supported(PyObject* self, PyObject* args); // i
 #define _DOC_IS_DEVICE_FEATURE_SUPPORTED \
     MODULE_NAME ".is_device_feature_supported(device, feature)\n" \
     "\n" \
-    "Activate or De-activate DOIP Line.\n" \
+    "Polls firmware in device to see if the feature is supported. As of 908 only ValueCAN4-2EL, ValueCAN4-4 and ValueCAN4-Industrial are supported.\n" \
     "\n" \
     "Args:\n" \
     "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
@@ -1386,8 +1386,9 @@ PyObject* meth_is_device_feature_supported(PyObject* self, PyObject* args); // i
     "\tNone.\n" \
     "\n" \
     "\t>>> import ics\n" \
+    "\t>>> from ics.structures.device_feature import DeviceFeature\n" \
     "\t>>> d = ics.open_device()\n" \
-    "\t>>> supported = ics.is_device_feature_supported(d, feature)\n" \
+    "\t>>> supported = ics.is_device_feature_supported(d, DeviceFeature.networkTerminationDWCAN01)\n" \
     "\t>>> \n"
 
 static PyMethodDef IcsMethods[] = {
