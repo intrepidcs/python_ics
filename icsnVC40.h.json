@@ -3392,7 +3392,8 @@
     },
     {
         "names": [
-            "_timestamp"
+            "_timestamp",
+            "timestamp_"
         ],
         "data_type": "Struct",
         "packing": 1,
@@ -3452,7 +3453,8 @@
     },
     {
         "names": [
-            "_clock_quality"
+            "_clock_quality",
+            "clock_quality_"
         ],
         "data_type": "Struct",
         "packing": 1,
@@ -3502,7 +3504,7 @@
             },
             {
                 "name": "clock_quality",
-                "data_type": "_clock_quality",
+                "data_type": "clock_quality_",
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": false,
@@ -3579,7 +3581,7 @@
         "members": [
             {
                 "name": "current_time",
-                "data_type": "_timestamp",
+                "data_type": "timestamp_",
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": false,
