@@ -4,7 +4,7 @@ import enum
 
 
 
-class _timestamp(ctypes.Structure):
+class timestamp_(ctypes.Structure):
     _pack_ = 1
     _fields_ = [
         ('seconds_msb', ctypes.c_uint16),
@@ -13,4 +13,5 @@ class _timestamp(ctypes.Structure):
     ]
 
 
+_timestamp = timestamp_
 

@@ -113,6 +113,11 @@ class CObject(object):
     def assign_preferred_name(self, is_embedded=False):
         """This assigns a name to the object if we are nameless and anonymous, safe to call multiple times."""
         self.preferred_name = get_preferred_struct_name(self.names)
+        # Any object that starts with _ won't be imported with import * statement so lets push it to the end
+        if self.preferred_name and self.preferred_name.startswith('_'):
+            modified_name = reverse_leading_underscores(self.preferred_name)
+            self.names.append(modified_name)
+            self.preferred_name = get_preferred_struct_name(self.names)
         if self.is_anonymous and not self.preferred_name:
             self.preferred_name = f"Nameless{get_unique_number()}"
         if self.preferred_name and not is_embedded:
@@ -234,6 +239,13 @@ def parse_object(f, pos=-1, pack_size=None, is_embedded=False):
             f.seek(pos)
     raise RuntimeError("parse_object(): Failure. This is a bug and we shouldn't be here!")
 
+def reverse_leading_underscores(value: str):
+    """Take a string starting with underscores and moves them to the end. Returns a string"""
+    if value.startswith('_'):
+        underscore_count = len(value) - len(value.lstrip('_'))
+        return value.lstrip('_') + '_'*underscore_count
+    # We didn't have underscores in the value
+    return value
 
 
 def parse_struct_member(buffered_line):
@@ -307,7 +319,9 @@ def parse_struct_member(buffered_line):
     data_type = data_type.strip()
     if not data_type:
         data_name = ''
-
+    # Any object that starts with _ won't be imported with import * statement so lets push it to the end
+    if data_type.startswith('_') and not convert_to_ctype_object(data_type):
+        data_type = reverse_leading_underscores(data_type)
     return re.sub('\[.*\]|;', '', data_name), data_type, array_length, bitwise_length
 
 

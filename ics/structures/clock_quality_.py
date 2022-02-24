@@ -4,7 +4,7 @@ import enum
 
 
 
-class _clock_quality(ctypes.Structure):
+class clock_quality_(ctypes.Structure):
     _pack_ = 1
     _fields_ = [
         ('clock_class', ctypes.c_uint8),
@@ -13,4 +13,5 @@ class _clock_quality(ctypes.Structure):
     ]
 
 
+_clock_quality = clock_quality_
 
