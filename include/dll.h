@@ -1,13 +1,17 @@
 #ifndef _DLL_H_
 #define _DLL_H_
 
-
-
+#ifdef _MSC_VER
 #pragma warning( disable : 4290 )
+#endif
+
 #include "ice/ice_library.h"
 #include "ice/ice_exception.h"
 #include "ice/ice_function.h"
+
+#ifdef _MSC_VER
 #pragma warning( default : 4290 )
+#endif
 
 #ifdef _cplusplus
 extern "C" {
