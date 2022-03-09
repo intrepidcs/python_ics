@@ -542,7 +542,7 @@ def generate(filename='include/ics/icsnVC40.h'):
     except FileNotFoundError:
         pass
     ignore_names = [
-        '__fsid_t', '__darwin_pthread_handler_rec', '_mbstate_t',
+        '__fsid_t', '__darwin_pthread_handler_rec', '_mbstate_t', 'mbstate_t_',
         '_opaque_pthread_attr_t', '_opaque_pthread_cond_t', '_opaque_pthread_condattr_t',
         '_opaque_pthread_mutex_t', '_opaque_pthread_mutexattr_t', '_opaque_pthread_once_t',
         '_opaque_pthread_rwlock_t', '_opaque_pthread_rwlockattr_t', '_opaque_pthread_t',
