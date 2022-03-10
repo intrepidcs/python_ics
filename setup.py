@@ -56,6 +56,11 @@ class build(build_module.build):
         import extract_icsneo40_defines # there should be a better way to do this...
         import generate_icsneo40_structs
         generate_icsneo40_structs.generate()
+        if 'DARWIN' in platform.system().upper():
+            import build_libicsneo
+            build_libicsneo.checkout()
+            build_libicsneo.build()
+            build_libicsneo.copy()
         build_module.build.run(self)
 
 home_path = os.path.expanduser('~')
@@ -95,6 +100,10 @@ ics_extension = Extension('ics.ics',
   sources = source_files,
   extra_compile_args=compile_args)
 
+package_data = {}
+if 'DARWIN' in platform.system().upper():
+    package_data['ics'] = ['*.dylib']
+
 setup (name = 'python_ics',
        version = VERSION_STRING,
        description = 'Library for interfacing with Intrepid devices in Python',
@@ -108,6 +117,8 @@ setup (name = 'python_ics',
        cmdclass = { 'build': build, 'test': UnitTests, },
        download_url = 'https://github.com/intrepidcs/python_ics/releases',
        packages = ['ics', 'ics.structures'],
+       package_data = package_data,
+       include_package_data = True,
        ext_modules = [ics_extension],
        classifiers = [
         'Programming Language :: Python :: 3',
