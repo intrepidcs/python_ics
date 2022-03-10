@@ -92,3 +92,11 @@ ENV/
 msvc/Debug*
 msvc/Release*
 msvc/ipch*
+
+# macOS
+.DS_Store
+*.dylib
+
+# in-tree builds
+/libusb
+/libicsneo
