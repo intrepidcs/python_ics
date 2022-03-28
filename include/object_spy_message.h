@@ -185,11 +185,17 @@ static PyObject* spy_message_object_getattr(PyObject *o, PyObject *attr_name)
         Py_DECREF(attr_name);
         spy_message_j1850_object* obj = (spy_message_j1850_object*)o;
         unsigned char *ExtraDataPtr = (unsigned char*)obj->msg.ExtraDataPtr;
-        if ((obj->msg.ExtraDataPtrEnabled && obj->msg.NumberBytesData && obj->msg.ExtraDataPtr) ||
-			(obj->msg.Protocol == SPY_PROTOCOL_ETHERNET && obj->msg.NumberBytesData && obj->msg.ExtraDataPtr)) {
-            int size = obj->msg.NumberBytesData + (obj->msg.NumberBytesHeader << 8);
-            PyObject *tuple = PyTuple_New(size);
-            for (int i=0; i < size; ++i) {
+        if (obj->msg.ExtraDataPtrEnabled && obj->msg.NumberBytesData && obj->msg.ExtraDataPtr) {
+            int actual_size = 0;
+            // Some newer protocols are packing the length into NumberBytesHeader also so lets handle it here...
+            if (obj->msg.Protocol == SPY_PROTOCOL_A2B || obj->msg.Protocol == SPY_PROTOCOL_ETHERNET) {
+                actual_size = (obj->msg.NumberBytesHeader << 8) | obj->msg.NumberBytesData;
+            }
+            else {
+                actual_size = obj->msg.NumberBytesData;
+            }
+            PyObject *tuple = PyTuple_New(actual_size);
+            for (int i=0; i < actual_size; ++i) {
                 PyTuple_SET_ITEM(tuple, i, PyLong_FromLong(ExtraDataPtr[i]));
             }
             return tuple;
