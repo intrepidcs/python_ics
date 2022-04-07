@@ -3,10 +3,13 @@ from __future__ import print_function
 import os.path
 import re
 from subprocess import run, PIPE
-import pathlib, shutil
+import pathlib
+import shutil
 
 # Shamelessly stolen from generate_icsneo40_structs.py
 # At some point this entire file should probably be collasped into the other
+
+
 def format_file(filename, preprocessor=False):
     import os
     processed_fname = os.path.basename(filename)
@@ -22,7 +25,7 @@ def format_file(filename, preprocessor=False):
         original_path = pathlib.Path(filename)
         new_path = pathlib.Path(processed_fname)
         shutil.copy(str(original_path), str(new_path))
-        
+
     # Format the file
     result = run(["clang-format", "-i", "--style",
                   "{BasedOnStyle: Mozilla, ColumnLimit: '200'}", processed_fname], stdout=PIPE, stderr=PIPE)
@@ -31,7 +34,7 @@ def format_file(filename, preprocessor=False):
     return processed_fname
 
 
-if __name__ == "__main__":
+def extract():
     use_internal = False
     if os.path.isfile('include/ics/icsnVC40Internal.h'):
         use_internal = True
@@ -44,7 +47,7 @@ if __name__ == "__main__":
 //
 """
 
-    #write the header file first
+    # write the header file first
     with open('include/setup_module_auto_defines.h', 'w') as f:
         print("#ifndef __SETUP_MODULE_AUTO_DEFINES_H__", file=f)
         print("#define __SETUP_MODULE_AUTO_DEFINES_H__", file=f)
@@ -54,7 +57,8 @@ if __name__ == "__main__":
         print("\nint setup_module_auto_defines(PyObject * module);\n", file=f)
         print("#endif // __SETUP_MODULE_AUTO_DEFINES_H__", file=f)
 
-    ignores = ('(', '#endif', '#define', 'icscm_', 'GCC_MODIFIER', 'VS_MODIFIER', '{', 'ICSNVC40_H', 'ICSNVC40INTERNAL__H_', 'SYellowSettings_SIZE', 'IS_64BIT_SYSTEM')
+    ignores = ('(', '#endif', '#define', 'icscm_', 'GCC_MODIFIER', 'VS_MODIFIER',
+               '{', 'ICSNVC40_H', 'ICSNVC40INTERNAL__H_', 'SYellowSettings_SIZE', 'IS_64BIT_SYSTEM')
     use_enums = True
     with open('src/setup_module_auto_defines.cpp', 'w') as f:
         print(boiler_plate, file=f)
@@ -71,7 +75,7 @@ if __name__ == "__main__":
             fnames.append(format_file('include/ics/icsnVC40Internal.h'))
         # Let's get to work here!
         for header_file in fnames:
-            #if not os.path.isfile(header_file) and 'Internal' in header_file:
+            # if not os.path.isfile(header_file) and 'Internal' in header_file:
             #    # Ignore this file
             #    continue
             with open(header_file, 'r') as fname:
@@ -113,11 +117,14 @@ if __name__ == "__main__":
                             continue
                         if len(sline) >= 3 and re.match("^\d+?\.\d+?$", sline[2]) is not None:
                             # Value is a float
-                            print('\tresult += PyModule_AddObject(module, "{0}", PyFloat_FromDouble({0}));'.format(sline[1]), file=f)
+                            print(
+                                '\tresult += PyModule_AddObject(module, "{0}", PyFloat_FromDouble({0}));'.format(sline[1]), file=f)
                         elif len(sline) == 2:
-                            # There is no value, this is used for preprocessor only 
+                            # There is no value, this is used for preprocessor only
                             # and really shouldn't care about it in python. Going to set it as 0 "just in case"
-                            print('\tresult += PyModule_AddObject(module, "{}", PyLong_FromLong(0));'.format(sline[1]), file=f)
+                            print(
+                                '\tresult += PyModule_AddObject(module, "{}", PyLong_FromLong(0));'.format(sline[1]),
+                                file=f)
                         else:
                             print('\tresult += PyModule_AddIntMacro(module, %s);' % sline[1], file=f)
 
@@ -141,3 +148,7 @@ if __name__ == "__main__":
                     print("\n#endif // _USE_INTERNAL_HEADER_\n", file=f)
 
         print("\n\treturn result == 0 ? 1 : 0;\n}", file=f)
+
+
+if __name__ == "__main__":
+    extract()
