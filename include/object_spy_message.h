@@ -185,7 +185,12 @@ static PyObject* spy_message_object_getattr(PyObject *o, PyObject *attr_name)
         Py_DECREF(attr_name);
         spy_message_j1850_object* obj = (spy_message_j1850_object*)o;
         unsigned char *ExtraDataPtr = (unsigned char*)obj->msg.ExtraDataPtr;
-        if (obj->msg.ExtraDataPtrEnabled && obj->msg.NumberBytesData && obj->msg.ExtraDataPtr) {
+        bool extra_data_ptr_enabled = obj->msg.ExtraDataPtrEnabled != 0;
+        // Ethernet protocol uses the ExtraDataPtrEnabled reversed internally
+        if (obj->msg.Protocol == SPY_PROTOCOL_ETHERNET && obj->msg.ExtraDataPtr != NULL) {
+            extra_data_ptr_enabled = true;
+        }
+        if (extra_data_ptr_enabled && obj->msg.NumberBytesData && obj->msg.ExtraDataPtr) {
             int actual_size = 0;
             // Some newer protocols are packing the length into NumberBytesHeader also so lets handle it here...
             if (obj->msg.Protocol == SPY_PROTOCOL_A2B || obj->msg.Protocol == SPY_PROTOCOL_ETHERNET) {
