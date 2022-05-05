@@ -1085,7 +1085,8 @@ typedef struct SRAD_GPTP_SETTINGS_s
 	uint16_t offset_scaled_log_variance;
 	uint8_t gPTPportRole;
 	uint8_t gptpEnabledPort;
-	uint8_t rsvd[16];
+	uint8_t enableClockSyntonization;
+	uint8_t rsvd[15];
 } RAD_GPTP_SETTINGS; //36 Bytes
 #define RAD_GPTP_SETTINGS_SIZE 36
 
@@ -1398,6 +1399,9 @@ typedef struct _GPTPStatus
 	int64_t link_delay_ns;
 	uint8_t selected_role;
 	uint8_t as_capable;
+
+	uint8_t is_syntonized;
+	uint8_t reserved[8];
 } GPTPStatus;
 
 #pragma pack(pop)
@@ -2438,7 +2442,7 @@ typedef struct _SRADSuperMoonSettings
 
 typedef enum
 {
-	tdmModeTDM2,
+	tdmModeTDM2 = 0,
 	tdmModeTDM4,
 	tdmModeTDM8,
 	tdmModeTDM12,
@@ -2448,12 +2452,26 @@ typedef enum
 	tdmModeTDM32,
 } A2BTDMMode;
 
+typedef enum
+{
+	a2bNodeTypeMonitor = 0,
+	a2bNodeTypeMaster,
+	a2bNodeTypeSlave,
+} A2BNodeType;
+
+#define A2B_SETTINGS_FLAG_16BIT 0x01
+
 typedef struct
 {
 	uint8_t tdmMode; // see enum A2BTDMMode
 	uint8_t upstreamChannelOffset;
 	uint8_t downstreamChannelOffset;
-	uint8_t reserved[17];
+	uint8_t nodeType; // see enum A2BNodeType
+	/* 
+	 * bit0: 16-bit channel width
+	 */
+	uint8_t flags;
+	uint8_t reserved[15];
 } A2BMonitorSettings;
 #define A2BMonitorSettings_SIZE 20
 
@@ -2483,9 +2501,10 @@ typedef struct _SRADA2BSettings
 	LOGGER_SETTINGS logger;
 	int16_t iso15765_separation_time_offset;
 	A2BMonitorSettings a2b_monitor;
+	A2BMonitorSettings a2b_node;
 } SRADA2BSettings;
 
-#define SRADA2BSettings_SIZE 254
+#define SRADA2BSettings_SIZE 274
 
 typedef struct _SRADMoon2Settings
 {
@@ -4416,6 +4435,7 @@ typedef union {
 	icsVcan4IndustrialDeviceStatus vcan4indStatus;
 	icsRadBMSDeviceStatus radBMSStatus;
 } icsDeviceStatus;
+
 #pragma pack(pop)
 
 typedef struct
@@ -4500,32 +4520,6 @@ typedef struct SPhyRegPkt
 		PhyRegPktClause45Mess_t clause45;
 	};
 }PhyRegPkt_t;
-
-typedef enum
-{
-	networkDWCAN01,
-	networkDWCAN02,
-	networkDWCAN03,
-	networkDWCAN04,
-	networkDWCAN05,
-	networkDWCAN06,
-	networkDWCAN07,
-	networkDWCAN08,
-	networkTerminationDWCAN01,
-	networkTerminationDWCAN02,
-	networkTerminationDWCAN03,
-	networkTerminationDWCAN04,
-	networkTerminationDWCAN05,
-	networkTerminationDWCAN06,
-	networkTerminationDWCAN07,
-	networkTerminationDWCAN08,
-	NUM_VALID_DEVICE_FEATURES,
-	supportedFeatureMax = 0xFFFF,
-} DeviceFeature;
-// Update this assert when we add features to this enum
-//static_assert(NUM_VALID_DEVICE_FEATURES == (networkTerminationDWCAN08 + 1));
-//static_assert(NUM_VALID_DEVICE_FEATURES <= supportedFeatureMax);
-#define NUM_DEVICE_FEATURE_BITFIELDS ((NUM_VALID_DEVICE_FEATURES + 31) / 32)
 
 
 #ifndef INTREPID_NO_CHECK_STRUCT_SIZE
