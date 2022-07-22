@@ -1061,11 +1061,13 @@ typedef struct OP_ETH_GENERAL_SETTINGS_t
 	union {
 		struct
 		{
-			unsigned bTapEnSwitch : 1;
-			unsigned bTapEnPtp : 1;
-			unsigned bEnReportLinkQuality : 1;
+			uint32_t bTapEnSwitch : 1;
+			uint32_t bTapEnPtp : 1;
+			uint32_t bEnReportLinkQuality : 1;
+			uint32_t bEnTapTxReceipts : 1;
+			uint32_t reserved : 28;
 		} flags;
-		unsigned uFlags;
+		uint32_t uFlags;
 	};
 } OP_ETH_GENERAL_SETTINGS;
 #define OP_ETH_GENERAL_SETTINGS_SIZE 20
@@ -1328,6 +1330,10 @@ typedef enum _ExtendedResponseCode
 	EXTENDED_RESPONSE_INVALID_STATE = -2,
 	// Operation failed
 	EXTENDED_RESPONSE_OPERATION_FAILED = -3,
+	// Response code for a non-blocking command that is successfully queued but still in progress
+	EXTENDED_RESPONSE_OPERATION_PENDING = -4,
+	// One or more invalid parameters were supplied
+	EXTENDED_RESPONSE_INVALID_PARAMETER = -5,
 } ExtendedResponseCode;
 
 typedef struct _ExtendedResponseGeneric
@@ -1343,6 +1349,49 @@ typedef struct
 	uint16_t numValidBits;
 	uint32_t featureBitfields[0];
 } GetSupportedFeaturesResponse;
+
+typedef struct _VersionReport
+{
+	uint8_t valid;
+	uint8_t expansionSlot; // aka vnet slot
+	uint8_t componentInfo; // used for any component specific data (e.g. Linux: boot device)
+	uint8_t reserved;
+	uint32_t identifier;
+	uint32_t dotVersion; // major.minor.release.build
+	uint32_t commitHash;
+} VersionReport;
+
+typedef struct _GetComponentVersions
+{
+	uint32_t reserved[2];
+} GetComponentVersions;
+
+#define MAX_REPORTED_VERSIONS (16)
+#define EXT_GET_VERSIONS_RESPONSE_SIZE(numVers) (((numVers) * sizeof(VersionReport)) + sizeof(SExtSubCmdHdr) + sizeof(uint16_t))
+typedef struct _ExtendedGetVersionsResponse
+{
+	uint16_t numVersions;
+	VersionReport versions[MAX_REPORTED_VERSIONS];
+} GetComponentVersionsResponse;
+
+enum
+{
+	swUpdateWrite,
+	swUpdateErase,
+	swUpdateGetProgress,
+	swUpdateValidateAll,
+	swUpdateGetBufferSize,
+	swUpdateCheckVersion,
+};
+
+typedef struct
+{
+	uint32_t componentIdentifier; // unique id for the software component - analogous to what used to be "chip id"
+	uint8_t commandType; // See enum
+	uint32_t offset;
+	uint32_t commandSizeOrProgress; // size
+	uint8_t commandData[0]; // max size TBD or per-device
+} SoftwareUpdateCommand;
 
 typedef struct _SExtSubCmdHdr
 {
@@ -1418,10 +1467,13 @@ typedef struct _SExtSubCmdComm
 		GetSupportedFeaturesResponse getSupportedFeatures;
 		ExtendedResponseGeneric genericResponse;
 		GPTPStatus gptpStatus;
+		GetComponentVersions getComponentVersions;
+		SoftwareUpdateCommand softwareUpdate;
+		GetComponentVersionsResponse getComponentVersionsResponse;
 		// Add additional extension commands to this union as needed.
 	} extension;
 } SExtSubCmdComm;
-#define SExtSubCmdComm_SIZE 188
+#define SExtSubCmdComm_SIZE 262
 
 #define SERDESCAM_SETTINGS_FLAG_ENABLE 0x0001
 #define SERDESCAM_SETTINGS_FLAG_RTSP_ENABLE 0x0002
@@ -2502,9 +2554,11 @@ typedef struct _SRADA2BSettings
 	int16_t iso15765_separation_time_offset;
 	A2BMonitorSettings a2b_monitor;
 	A2BMonitorSettings a2b_node;
+	uint32_t pwr_man_timeout;
+	uint16_t pwr_man_enable;
 } SRADA2BSettings;
 
-#define SRADA2BSettings_SIZE 274
+#define SRADA2BSettings_SIZE 280
 
 typedef struct _SRADMoon2Settings
 {
@@ -3535,6 +3589,13 @@ typedef struct _SRADJupiterSettings
 
 #define SRADJupiterSettings_SIZE 348
 
+typedef struct
+{
+	uint8_t allowBoot;
+	uint8_t useExternalWifiAntenna; // 0 for internal, 1 for external
+	uint8_t reserved[6];
+} Fire3LinuxSettings;
+
 typedef struct _SFire3Settings
 {
 	uint16_t perf_en;
@@ -3604,8 +3665,9 @@ typedef struct _SFire3Settings
 	ETHERNET_SETTINGS2 ethernet2_1;
 	ETHERNET_SETTINGS ethernet_2;
 	ETHERNET_SETTINGS2 ethernet2_2;
+	Fire3LinuxSettings os_settings;
 }SFire3Settings;
-#define SFire3Settings_SIZE (624)
+#define SFire3Settings_SIZE (632)
 
 typedef struct
 {
@@ -4101,7 +4163,7 @@ typedef struct
 } spyFilterLong;
 #define spyFilterLong_SIZE 72
 
-#if !defined(VSPY3_GUI) && !defined(WIVI_EXPORT) && !defined(VS4A) && !defined(CORELIB_CMAKE)
+#if !defined(VSPY3_GUI) && !defined(WIVI_EXPORT) && !defined(VS4A) && !defined(CORELIB_CMAKE) && !defined(NEOVI3GEXPLORER)
 typedef int16_t descIdType;
 #else
 typedef uint32_t descIdType;
@@ -4202,7 +4264,7 @@ typedef struct _icsSpyMessageFlexRay
 	uint8_t Reserved[3];
 } icsSpyMessageFlexRay;
 
-#if defined(VSPY3_GUI) || defined(WIVI_EXPORT) || defined(VS4A) || defined(CORELIB_CMAKE)
+#if defined(VSPY3_GUI) || defined(WIVI_EXPORT) || defined(VS4A) || defined(CORELIB_CMAKE) || defined(NEOVI3GEXPLORER)
 #if defined(IS_64BIT_SYSTEM)
 #define icsSpyMessage_SIZE 80
 #else
@@ -4348,9 +4410,6 @@ typedef struct _ethernetNetworkStatus_t
 } ethernetNetworkStatus_t;
 #pragma pack(pop)
 
-#pragma pack(push)
-#pragma pack(4)
-
 typedef struct
 {
 	uint8_t backupPowerGood;
@@ -4422,6 +4481,9 @@ typedef struct
 {
 	ethernetNetworkStatus_t ethernetStatus;
 } icsRadBMSDeviceStatus;
+
+#pragma pack(push)
+#pragma pack(4)
 
 typedef union {
 	icsFire2DeviceStatus fire2Status;
