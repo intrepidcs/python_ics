@@ -8,8 +8,8 @@ import sys
 import unittest
 import shutil
 
-MAJOR_VERSION = 909
-MINOR_VERSION = 8
+MAJOR_VERSION = 910
+MINOR_VERSION = 999
 POST_VERSION = None
 
 if POST_VERSION:
