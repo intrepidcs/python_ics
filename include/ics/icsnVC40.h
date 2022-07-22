@@ -41,7 +41,9 @@ typedef unsigned __int64 uint64_t;
 #include <stdint.h>
 #endif
 
-
+#if defined(_MSC_VER)
+#pragma warning(disable : 4200)
+#endif
 
 // MSVC++ 10.0 _MSC_VER == 1600 64-bit version doesn't allow multi-line #if directives...
 #if defined(_WIN64) || defined(__x86_64__) || defined(__aarch64__) || defined(__x86_64__) || defined(__LP64__) || defined(_M_AMD64) || \
@@ -151,6 +153,7 @@ typedef unsigned __int64 uint64_t;
 #define NETID_ETHERNET3 524
 #define NETID_ISM_LOGGER 525
 #define NETID_CAN_SWITCH 526
+#define NETID_WBMS 532
 
 /* Upper boundry of Network IDs */
 #define NETID_MAX 100
@@ -293,6 +296,7 @@ typedef unsigned __int64 uint64_t;
 #define SPY_PROTOCOL_UDP 33
 #define SPY_PROTOCOL_AUTOSAR 34
 #define SPY_PROTOCOL_A2B 35
+#define SPY_PROTOCOL_WBMS 36
 
 /* Bitmasks for StatusBitField member of icsSpyMessage */
 #define SPY_STATUS_GLOBAL_ERR 0x01
@@ -407,6 +411,10 @@ typedef unsigned __int64 uint64_t;
 /* CAN/CAN-FD Specific - check protocol before handling */
 #define SPY_STATUS2_CAN_ISO15765_LOGICAL_FRAME 0x200000
 #define SPY_STATUS2_CAN_HAVE_LINK_DATA 0x400000
+
+/* wBMS Specific - check protocol before handling  */
+#define SPY_STATUS2_WBMS_NODE_DISCONNECTED 0x200000
+#define SPY_STATUS2_I2C_NODE_FAULT 0x400000
 
 /* CAN-FD Specific - check protocol before handling */
 #define SPY_STATUS3_CANFD_ESI 0x01
@@ -1342,6 +1350,21 @@ typedef struct _ExtendedResponseGeneric
 	int32_t returnCode;
 } ExtendedResponseGeneric;
 
+typedef struct _WILFunctionStatus
+{
+    uint8_t functionID; 
+	uint8_t functionError; // command type we're responding to
+    uint8_t processing;
+	uint8_t calbackError;
+} WILFunctionStatus;
+
+typedef struct _WILFunctionData
+{
+    uint8_t functionID;
+    uint8_t parameters[194]; 
+	uint8_t resevered;
+} WILFunctionData;
+
 #define GET_SUPPORTED_FEATURES_COMMAND_VERSION (1)
 typedef struct
 {
@@ -1399,7 +1422,6 @@ typedef struct _SExtSubCmdHdr
 	uint16_t length;
 } SExtSubCmdHdr;
 #define SExtSubCmdHdr_SIZE 4
-
 #pragma pack(push, 1)
 
 struct _timestamp
@@ -1467,6 +1489,8 @@ typedef struct _SExtSubCmdComm
 		GetSupportedFeaturesResponse getSupportedFeatures;
 		ExtendedResponseGeneric genericResponse;
 		GPTPStatus gptpStatus;
+        WILFunctionStatus wilStatus;
+        WILFunctionData wilData;		
 		GetComponentVersions getComponentVersions;
 		SoftwareUpdateCommand softwareUpdate;
 		GetComponentVersionsResponse getComponentVersionsResponse;
@@ -3806,6 +3830,7 @@ typedef union
 		unsigned can_id:29;
 		unsigned can_id_isExtended:1;
 		uint16_t tcp_port;
+		unsigned manager_onboard_external : 1;
 		unsigned reserved:18;
 	}config;
 } SWILBridgeConfig;
