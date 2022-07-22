@@ -17,6 +17,8 @@ class gptp_status(ctypes.Structure):
         ('link_delay_ns', ctypes.c_int64),
         ('selected_role', ctypes.c_uint8),
         ('as_capable', ctypes.c_uint8),
+        ('is_syntonized', ctypes.c_uint8),
+        ('reserved', ctypes.c_uint8 * 8),
     ]
 
 

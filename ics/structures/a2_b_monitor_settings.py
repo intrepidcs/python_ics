@@ -10,7 +10,9 @@ class a2_b_monitor_settings(ctypes.Structure):
         ('tdmMode', ctypes.c_uint8),
         ('upstreamChannelOffset', ctypes.c_uint8),
         ('downstreamChannelOffset', ctypes.c_uint8),
-        ('reserved', ctypes.c_uint8 * 17),
+        ('nodeType', ctypes.c_uint8),
+        ('flags', ctypes.c_uint8),
+        ('reserved', ctypes.c_uint8 * 15),
     ]
 
 

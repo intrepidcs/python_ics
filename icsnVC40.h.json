@@ -2615,9 +2615,17 @@
                 "enum_value": null
             },
             {
+                "name": "enableClockSyntonization",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
                 "name": "rsvd",
                 "data_type": "uint8_t",
-                "array_length": 16,
+                "array_length": 15,
                 "bitfield_size": 0,
                 "is_enum": false,
                 "enum_value": null
@@ -3639,6 +3647,22 @@
                 "name": "as_capable",
                 "data_type": "uint8_t",
                 "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "is_syntonized",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "reserved",
+                "data_type": "uint8_t",
+                "array_length": 8,
                 "bitfield_size": 0,
                 "is_enum": false,
                 "enum_value": null
@@ -8005,9 +8029,25 @@
                 "enum_value": null
             },
             {
+                "name": "nodeType",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "flags",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
                 "name": "reserved",
                 "data_type": "uint8_t",
-                "array_length": 17,
+                "array_length": 15,
                 "bitfield_size": 0,
                 "is_enum": false,
                 "enum_value": null
@@ -8187,6 +8227,14 @@
             },
             {
                 "name": "a2b_monitor",
+                "data_type": "A2BMonitorSettings",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "a2b_node",
                 "data_type": "A2BMonitorSettings",
                 "array_length": 0,
                 "bitfield_size": 0,

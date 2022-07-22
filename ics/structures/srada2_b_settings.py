@@ -44,6 +44,7 @@ class srada2_b_settings(ctypes.Structure):
         ('logger', LOGGER_SETTINGS),
         ('iso15765_separation_time_offset', ctypes.c_int16),
         ('a2b_monitor', A2BMonitorSettings),
+        ('a2b_node', A2BMonitorSettings),
     ]
 
 
