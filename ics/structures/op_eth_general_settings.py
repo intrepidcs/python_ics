@@ -7,9 +7,11 @@ import enum
 class flags(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
-        ('bTapEnSwitch', ctypes.c_uint, 1),
-        ('bTapEnPtp', ctypes.c_uint, 1),
-        ('bEnReportLinkQuality', ctypes.c_uint, 1),
+        ('bTapEnSwitch', ctypes.c_uint32, 1),
+        ('bTapEnPtp', ctypes.c_uint32, 1),
+        ('bEnReportLinkQuality', ctypes.c_uint32, 1),
+        ('bEnTapTxReceipts', ctypes.c_uint32, 1),
+        ('reserved', ctypes.c_uint32, 28),
     ]
 
 
@@ -18,7 +20,7 @@ class Nameless19471(ctypes.Union):
     _pack_ = 2
     _fields_ = [
         ('flags', flags),
-        ('uFlags', ctypes.c_uint),
+        ('uFlags', ctypes.c_uint32),
     ]
 
 

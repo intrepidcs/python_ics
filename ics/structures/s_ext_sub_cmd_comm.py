@@ -3,12 +3,15 @@ import ctypes
 import enum
 
 from ics.structures.extended_response_generic import *
+from ics.structures.get_component_versions import *
+from ics.structures.get_component_versions_response import *
 from ics.structures.get_supported_features_response import *
 from ics.structures.gptp_status import *
 from ics.structures.s_disk_details import *
 from ics.structures.s_disk_format_progress import *
 from ics.structures.s_disk_structure import *
 from ics.structures.s_ext_sub_cmd_hdr import *
+from ics.structures.software_update_command import *
 from ics.structures.start_dhcp_server_command import *
 from ics.structures.stop_dhcp_server_command import *
 
@@ -24,6 +27,9 @@ class extension(ctypes.Union):
         ('getSupportedFeatures', GetSupportedFeaturesResponse),
         ('genericResponse', ExtendedResponseGeneric),
         ('gptpStatus', GPTPStatus),
+        ('getComponentVersions', GetComponentVersions),
+        ('softwareUpdate', SoftwareUpdateCommand),
+        ('getComponentVersionsResponse', GetComponentVersionsResponse),
     ]
 
 

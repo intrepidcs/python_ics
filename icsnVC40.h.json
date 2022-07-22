@@ -2465,7 +2465,7 @@
                         "members": [
                             {
                                 "name": "bTapEnSwitch",
-                                "data_type": "unsigned",
+                                "data_type": "uint32_t",
                                 "array_length": 0,
                                 "bitfield_size": 1,
                                 "is_enum": false,
@@ -2473,7 +2473,7 @@
                             },
                             {
                                 "name": "bTapEnPtp",
-                                "data_type": "unsigned",
+                                "data_type": "uint32_t",
                                 "array_length": 0,
                                 "bitfield_size": 1,
                                 "is_enum": false,
@@ -2481,9 +2481,25 @@
                             },
                             {
                                 "name": "bEnReportLinkQuality",
-                                "data_type": "unsigned",
+                                "data_type": "uint32_t",
                                 "array_length": 0,
                                 "bitfield_size": 1,
+                                "is_enum": false,
+                                "enum_value": null
+                            },
+                            {
+                                "name": "bEnTapTxReceipts",
+                                "data_type": "uint32_t",
+                                "array_length": 0,
+                                "bitfield_size": 1,
+                                "is_enum": false,
+                                "enum_value": null
+                            },
+                            {
+                                "name": "reserved",
+                                "data_type": "uint32_t",
+                                "array_length": 0,
+                                "bitfield_size": 28,
                                 "is_enum": false,
                                 "enum_value": null
                             }
@@ -2491,7 +2507,7 @@
                     },
                     {
                         "name": "uFlags",
-                        "data_type": "unsigned",
+                        "data_type": "uint32_t",
                         "array_length": 0,
                         "bitfield_size": 0,
                         "is_enum": false,
@@ -3373,6 +3389,169 @@
     },
     {
         "names": [
+            "_VersionReport",
+            "VersionReport"
+        ],
+        "data_type": "Struct",
+        "packing": 2,
+        "is_anonymous": false,
+        "members": [
+            {
+                "name": "valid",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "expansionSlot",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "componentInfo",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "reserved",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "identifier",
+                "data_type": "uint32_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "dotVersion",
+                "data_type": "uint32_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "commitHash",
+                "data_type": "uint32_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            }
+        ]
+    },
+    {
+        "names": [
+            "_GetComponentVersions",
+            "GetComponentVersions"
+        ],
+        "data_type": "Struct",
+        "packing": 2,
+        "is_anonymous": false,
+        "members": [
+            {
+                "name": "reserved",
+                "data_type": "uint32_t",
+                "array_length": 2,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            }
+        ]
+    },
+    {
+        "names": [
+            "_ExtendedGetVersionsResponse",
+            "GetComponentVersionsResponse"
+        ],
+        "data_type": "Struct",
+        "packing": 2,
+        "is_anonymous": false,
+        "members": [
+            {
+                "name": "numVersions",
+                "data_type": "uint16_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "versions",
+                "data_type": "VersionReport",
+                "array_length": 16,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            }
+        ]
+    },
+    {
+        "names": [
+            "SoftwareUpdateCommand"
+        ],
+        "data_type": "Struct",
+        "packing": 2,
+        "is_anonymous": false,
+        "members": [
+            {
+                "name": "componentIdentifier",
+                "data_type": "uint32_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "commandType",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "offset",
+                "data_type": "uint32_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "commandSizeOrProgress",
+                "data_type": "uint32_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "commandData",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            }
+        ]
+    },
+    {
+        "names": [
             "_SExtSubCmdHdr",
             "SExtSubCmdHdr"
         ],
@@ -3753,6 +3932,30 @@
                     {
                         "name": "gptpStatus",
                         "data_type": "GPTPStatus",
+                        "array_length": 0,
+                        "bitfield_size": 0,
+                        "is_enum": false,
+                        "enum_value": null
+                    },
+                    {
+                        "name": "getComponentVersions",
+                        "data_type": "GetComponentVersions",
+                        "array_length": 0,
+                        "bitfield_size": 0,
+                        "is_enum": false,
+                        "enum_value": null
+                    },
+                    {
+                        "name": "softwareUpdate",
+                        "data_type": "SoftwareUpdateCommand",
+                        "array_length": 0,
+                        "bitfield_size": 0,
+                        "is_enum": false,
+                        "enum_value": null
+                    },
+                    {
+                        "name": "getComponentVersionsResponse",
+                        "data_type": "GetComponentVersionsResponse",
                         "array_length": 0,
                         "bitfield_size": 0,
                         "is_enum": false,
@@ -8236,6 +8439,22 @@
             {
                 "name": "a2b_node",
                 "data_type": "A2BMonitorSettings",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "pwr_man_timeout",
+                "data_type": "uint32_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "pwr_man_enable",
+                "data_type": "uint16_t",
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": false,
@@ -13823,6 +14042,40 @@
     },
     {
         "names": [
+            "Fire3LinuxSettings"
+        ],
+        "data_type": "Struct",
+        "packing": 2,
+        "is_anonymous": false,
+        "members": [
+            {
+                "name": "allowBoot",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "useExternalWifiAntenna",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "reserved",
+                "data_type": "uint8_t",
+                "array_length": 6,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            }
+        ]
+    },
+    {
+        "names": [
             "_SFire3Settings",
             "SFire3Settings"
         ],
@@ -14325,6 +14578,14 @@
             {
                 "name": "ethernet2_2",
                 "data_type": "ETHERNET_SETTINGS2",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "os_settings",
+                "data_type": "Fire3LinuxSettings",
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": false,
@@ -18136,7 +18397,7 @@
             "icsFire2DeviceStatus"
         ],
         "data_type": "Struct",
-        "packing": 4,
+        "packing": 0,
         "is_anonymous": false,
         "members": [
             {
@@ -18186,7 +18447,7 @@
             "icsFire2VnetDeviceStatus"
         ],
         "data_type": "Struct",
-        "packing": 4,
+        "packing": 0,
         "is_anonymous": false,
         "members": [
             {
@@ -18220,7 +18481,7 @@
             "icsVcan4DeviceStatus"
         ],
         "data_type": "Struct",
-        "packing": 4,
+        "packing": 0,
         "is_anonymous": false,
         "members": [
             {
@@ -18254,7 +18515,7 @@
             "icsFlexVnetzDeviceStatus"
         ],
         "data_type": "Struct",
-        "packing": 4,
+        "packing": 0,
         "is_anonymous": false,
         "members": [
             {
@@ -18288,7 +18549,7 @@
             "icsFire3DeviceStatus"
         ],
         "data_type": "Struct",
-        "packing": 4,
+        "packing": 0,
         "is_anonymous": false,
         "members": [
             {
@@ -18322,7 +18583,7 @@
             "icsRadMoonDuoDeviceStatus"
         ],
         "data_type": "Struct",
-        "packing": 4,
+        "packing": 0,
         "is_anonymous": false,
         "members": [
             {
@@ -18340,7 +18601,7 @@
             "icsRadJupiterDeviceStatus"
         ],
         "data_type": "Struct",
-        "packing": 4,
+        "packing": 0,
         "is_anonymous": false,
         "members": [
             {
@@ -18358,7 +18619,7 @@
             "icsOBD2ProDeviceStatus"
         ],
         "data_type": "Struct",
-        "packing": 4,
+        "packing": 0,
         "is_anonymous": false,
         "members": [
             {
@@ -18376,7 +18637,7 @@
             "icsRadPlutoDeviceStatus"
         ],
         "data_type": "Struct",
-        "packing": 4,
+        "packing": 0,
         "is_anonymous": false,
         "members": [
             {
@@ -18394,7 +18655,7 @@
             "icsVcan4IndustrialDeviceStatus"
         ],
         "data_type": "Struct",
-        "packing": 4,
+        "packing": 0,
         "is_anonymous": false,
         "members": [
             {
@@ -18412,7 +18673,7 @@
             "icsRadEpsilonDeviceStatus"
         ],
         "data_type": "Struct",
-        "packing": 4,
+        "packing": 0,
         "is_anonymous": false,
         "members": [
             {
@@ -18430,7 +18691,7 @@
             "icsRadBMSDeviceStatus"
         ],
         "data_type": "Struct",
-        "packing": 4,
+        "packing": 0,
         "is_anonymous": false,
         "members": [
             {
@@ -18448,7 +18709,7 @@
             "icsDeviceStatus"
         ],
         "data_type": "Union",
-        "packing": 4,
+        "packing": 0,
         "is_anonymous": false,
         "members": [
             {
