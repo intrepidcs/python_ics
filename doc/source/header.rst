@@ -10,7 +10,7 @@ This module is essentially just a wrapper around icsneo40.dll. For more document
 Whats New?
 ============================================================
 
-v903 is a new release that implements features that break existing API in some areas.
+v903+ is a new release that implements features that break existing API in some areas.
 
 
 ISO 15765-2
@@ -63,43 +63,6 @@ v903 and up have converted over to a new auto generation of ``icsnVC40.h``. This
     settings.vcan3.can1.Baudrate = 1
     ics.set_device_settings(device, settings)
 
-
-Setting support for the following devices:
-
-- red:  s_red_settings 
-- fire:  s_fire_settings 
-- firevnet:  s_fire_vnet_settings 
-- cyan:  s_cyan_settings (FIRE2) 
-- vcan3:  svcan3_settings 
-- vcan4:  svcan4_settings 
-- ecu:  secu_settings 
-- ievb:  sievb_settings 
-- pendant:  s_pendant_settings 
-- radgalaxy:  srad_galaxy_settings 
-- radstar2:  srad_star2_settings 
-- neoobd2_sim:  sobd2_sim_settings 
-- cmprobe:  s_cm_probe_settings 
-- obd2pro:  sobd2_pro_settings 
-- vcan412:  svcan412_settings 
-- vcan4_12:  svcan412_settings 
-- neoecu_avb:  secu_avb_settings 
-- radsupermoon:  srad_super_moon_settings 
-- radmoon2:  srad_moon2_settings 
-- pluto:  srad_pluto_settings 
-- plutoswitch:  s_pluto_switch_settings_s 
-- radgigalog:  srad_gigalog_settings 
-- canhub:  scan_hub_settings 
-- neoecu12:  s_neo_ecu12_settings 
-- vcanrf:  svcanrf_settings 
-- eevb:  seevb_settings 
-- flexvnetz:  s_flex_vnetz_settings 
-- vividcan:  s_vivid_can_settings 
-- vcan4_ind:  svcan4_ind_settings 
-- radgigastar:  srad_gigastar_settings 
-- jupiter:  srad_jupiter_settings 
-- fire3:  s_fire3_settings 
-- radmoon_duo:  s_rad_moon_duo_settings
-
 PyInstaller
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -146,25 +109,6 @@ Due to the added complexity underneath when building PyInstaller ``hidden_import
                    upx=True,
                    upx_exclude=[],
                    name='test')
-
-
-
-Other Fixes and Changes
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-- Expanded documentation.
-- Adding support for Python 3.8 and Python 3.9.
-- Updated iso15765 example to utilize new flags.
-- Updated documentation to mention libicsneolegacy.so
-- Fixed an issue when get_messages() timeout was 0 no messages were returned.
-- Updated documentation and added use_server option for opening devices.
-- Added read_jupiter_firmware and write_jupiter_firmware methods.
-- Fixed a memory leak in find_devices()
-- Add methods for Gigalog/Gigastar disk formatting
-- Fixed a documentation issue per issue #90
-- Fixed month being offset by 1 in ics.get_rtc().
-- Fixed transmit_messages() to handle extended network ids.
-- Fixed code related to meth_get_backup_power_ready() internally.
 
 ============================================================
 Versioning Information
