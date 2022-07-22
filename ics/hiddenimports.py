@@ -143,11 +143,11 @@ hidden_imports = [
     "ics.structures.e_gptp_port",
     "ics.structures.e_gptp_role",
     "ics.structures.a2_btdm_mode",
+    "ics.structures.a2_b_node_type",
     "ics.structures.flex_vnet_mode",
     "ics.structures.e_device_settings_type",
     "ics.structures.e_plasma_ion_vnet_channel_t",
     "ics.structures.s_phy_reg_pkt_status",
     "ics.structures.s_phy_reg_pkt_rw",
-    "ics.structures.device_feature",
 ]
 

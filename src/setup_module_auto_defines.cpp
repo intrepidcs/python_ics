@@ -763,6 +763,13 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, tdmModeTDM32);
 	// end of enum -  } A2BTDMMode;
 
+	// enum
+	result += PyModule_AddIntMacro(module, a2bNodeTypeMonitor);
+	result += PyModule_AddIntMacro(module, a2bNodeTypeMaster);
+	result += PyModule_AddIntMacro(module, a2bNodeTypeSlave);
+	// end of enum -  } A2BNodeType;
+
+	result += PyModule_AddIntMacro(module, A2B_SETTINGS_FLAG_16BIT);
 	result += PyModule_AddIntMacro(module, A2BMonitorSettings_SIZE);
 	result += PyModule_AddIntMacro(module, SRADA2BSettings_SIZE);
 	result += PyModule_AddIntMacro(module, SRADMoon2Settings_SIZE);
@@ -902,28 +909,6 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, PHYREG_BOTH);
 	// end of enum -  } PhyRegPktRw_t;
 
-	// enum
-	result += PyModule_AddIntMacro(module, networkDWCAN01);
-	result += PyModule_AddIntMacro(module, networkDWCAN02);
-	result += PyModule_AddIntMacro(module, networkDWCAN03);
-	result += PyModule_AddIntMacro(module, networkDWCAN04);
-	result += PyModule_AddIntMacro(module, networkDWCAN05);
-	result += PyModule_AddIntMacro(module, networkDWCAN06);
-	result += PyModule_AddIntMacro(module, networkDWCAN07);
-	result += PyModule_AddIntMacro(module, networkDWCAN08);
-	result += PyModule_AddIntMacro(module, networkTerminationDWCAN01);
-	result += PyModule_AddIntMacro(module, networkTerminationDWCAN02);
-	result += PyModule_AddIntMacro(module, networkTerminationDWCAN03);
-	result += PyModule_AddIntMacro(module, networkTerminationDWCAN04);
-	result += PyModule_AddIntMacro(module, networkTerminationDWCAN05);
-	result += PyModule_AddIntMacro(module, networkTerminationDWCAN06);
-	result += PyModule_AddIntMacro(module, networkTerminationDWCAN07);
-	result += PyModule_AddIntMacro(module, networkTerminationDWCAN08);
-	result += PyModule_AddIntMacro(module, NUM_VALID_DEVICE_FEATURES);
-	result += PyModule_AddIntMacro(module, supportedFeatureMax);
-	// end of enum -  } DeviceFeature;
-
-	result += PyModule_AddIntMacro(module, NUM_DEVICE_FEATURE_BITFIELDS);
 	// enum
 	// end of enum -    }
 

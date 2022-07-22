@@ -10,7 +10,7 @@ class a2_btdm_mode(enum.IntEnum):
     def from_param(cls, obj):
         return int(obj)
 
-    tdmModeTDM2 = 0
+    tdmModeTDM2  = 0
     tdmModeTDM4 = enum.auto()
     tdmModeTDM8 = enum.auto()
     tdmModeTDM12 = enum.auto()

@@ -143,10 +143,10 @@ __all__ = [
     "e_gptp_port",
     "e_gptp_role",
     "a2_btdm_mode",
+    "a2_b_node_type",
     "flex_vnet_mode",
     "e_device_settings_type",
     "e_plasma_ion_vnet_channel_t",
     "s_phy_reg_pkt_status",
     "s_phy_reg_pkt_rw",
-    "device_feature",
 ]

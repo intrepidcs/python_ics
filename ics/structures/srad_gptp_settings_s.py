@@ -20,7 +20,8 @@ class srad_gptp_settings_s(ctypes.Structure):
         ('offset_scaled_log_variance', ctypes.c_uint16),
         ('gPTPportRole', ctypes.c_uint8),
         ('gptpEnabledPort', ctypes.c_uint8),
-        ('rsvd', ctypes.c_uint8 * 16),
+        ('enableClockSyntonization', ctypes.c_uint8),
+        ('rsvd', ctypes.c_uint8 * 15),
     ]
 
 
