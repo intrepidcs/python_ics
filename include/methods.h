@@ -82,7 +82,7 @@ PyObject* meth_disk_format(PyObject* self, PyObject* args);
 PyObject* meth_disk_format_cancel(PyObject* self, PyObject* args);
 PyObject* meth_get_disk_format_progress(PyObject* self, PyObject* args);
 PyObject* meth_enable_doip_line(PyObject* self, PyObject* args); //icsneoEnableDOIPLine
-PyObject* meth_is_device_feature_supported(PyObject* self, PyObject* args); // icsneoIsDeviceFeatureSupported
+//PyObject* meth_is_device_feature_supported(PyObject* self, PyObject* args); // icsneoIsDeviceFeatureSupported
 
 #ifdef _cplusplus
 }
@@ -1470,9 +1470,8 @@ static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("disk_format_cancel", "icsneoRequestDiskFormatCancel", "RequestDiskFormatCancel", meth_disk_format_cancel, METH_VARARGS, _DOC_DISK_FORMAT_CANCEL),
     _EZ_ICS_STRUCT_METHOD("get_disk_format_progress", "icsneoRequestDiskFormatProgress", "RequestDiskFormatProgress", meth_get_disk_format_progress, METH_VARARGS, _DOC_DISK_FORMAT_PROGRESS),
     _EZ_ICS_STRUCT_METHOD("enable_doip_line", "icsneoEnableDOIPLine", "EnableDOIPLine", meth_enable_doip_line, METH_VARARGS, _DOC_ENABLE_DOIP_LINE),
-
-    _EZ_ICS_STRUCT_METHOD("is_device_feature_supported", "icsneoIsDeviceFeatureSupported", "IsDeviceFeatureSupported", meth_is_device_feature_supported, METH_VARARGS, _DOC_IS_DEVICE_FEATURE_SUPPORTED),
-
+    // not in official builds yet...
+    //_EZ_ICS_STRUCT_METHOD("is_device_feature_supported", "icsneoIsDeviceFeatureSupported", "IsDeviceFeatureSupported", meth_is_device_feature_supported, METH_VARARGS, _DOC_IS_DEVICE_FEATURE_SUPPORTED),
 
     {"override_library_name", (PyCFunction)meth_override_library_name, METH_VARARGS, _DOC_OVERRIDE_LIBRARY_NAME},
     {"get_library_path", (PyCFunction)meth_get_library_path, METH_NOARGS, ""},

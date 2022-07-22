@@ -3480,6 +3480,7 @@ PyObject* meth_enable_doip_line(PyObject* self, PyObject* args)
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
+#if 0
 PyObject* meth_is_device_feature_supported(PyObject* self, PyObject* args)
 {
     PyObject* obj = NULL;
@@ -3515,3 +3516,4 @@ PyObject* meth_is_device_feature_supported(PyObject* self, PyObject* args)
     }
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
+#endif
