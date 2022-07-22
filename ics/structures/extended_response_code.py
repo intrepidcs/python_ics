@@ -14,6 +14,8 @@ class extended_response_code(enum.IntEnum):
     EXTENDED_RESPONSE_INVALID_COMMAND  = -1
     EXTENDED_RESPONSE_INVALID_STATE  = -2
     EXTENDED_RESPONSE_OPERATION_FAILED  = -3
+    EXTENDED_RESPONSE_OPERATION_PENDING  = -4
+    EXTENDED_RESPONSE_INVALID_PARAMETER  = -5
 
 
 _ExtendedResponseCode = extended_response_code

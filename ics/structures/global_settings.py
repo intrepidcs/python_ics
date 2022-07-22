@@ -40,7 +40,7 @@ from ics.structures.svcan4_settings import *
 from ics.structures.svcanrf_settings import *
 
 
-class Nameless63050(ctypes.Union):
+class Nameless46561(ctypes.Union):
     _pack_ = 2
     _fields_ = [
         ('red', SRedSettings),
@@ -86,12 +86,12 @@ class Nameless63050(ctypes.Union):
 
 class global_settings(ctypes.Structure):
     _pack_ = 2
-    _anonymous_  = ('Nameless63050',)
+    _anonymous_  = ('Nameless46561',)
     _fields_ = [
         ('version', ctypes.c_uint16),
         ('len', ctypes.c_uint16),
         ('chksum', ctypes.c_uint16),
-        ('Nameless63050', Nameless63050),
+        ('Nameless46561', Nameless46561),
     ]
 
 

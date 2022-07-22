@@ -541,9 +541,21 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, EXTENDED_RESPONSE_INVALID_COMMAND);
 	result += PyModule_AddIntMacro(module, EXTENDED_RESPONSE_INVALID_STATE);
 	result += PyModule_AddIntMacro(module, EXTENDED_RESPONSE_OPERATION_FAILED);
+	result += PyModule_AddIntMacro(module, EXTENDED_RESPONSE_OPERATION_PENDING);
+	result += PyModule_AddIntMacro(module, EXTENDED_RESPONSE_INVALID_PARAMETER);
 	// end of enum -  } ExtendedResponseCode;
 
 	result += PyModule_AddIntMacro(module, GET_SUPPORTED_FEATURES_COMMAND_VERSION);
+	result += PyModule_AddIntMacro(module, MAX_REPORTED_VERSIONS);
+	// enum
+	result += PyModule_AddIntMacro(module, swUpdateWrite);
+	result += PyModule_AddIntMacro(module, swUpdateErase);
+	result += PyModule_AddIntMacro(module, swUpdateGetProgress);
+	result += PyModule_AddIntMacro(module, swUpdateValidateAll);
+	result += PyModule_AddIntMacro(module, swUpdateGetBufferSize);
+	result += PyModule_AddIntMacro(module, swUpdateCheckVersion);
+	// end of enum -  };
+
 	result += PyModule_AddIntMacro(module, SExtSubCmdHdr_SIZE);
 	result += PyModule_AddIntMacro(module, SExtSubCmdComm_SIZE);
 	result += PyModule_AddIntMacro(module, SERDESCAM_SETTINGS_FLAG_ENABLE);

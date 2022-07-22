@@ -6,7 +6,6 @@ from ics.structures.ethernet_network_status_t import *
 
 
 class ics_fire2_device_status(ctypes.Structure):
-    _pack_ = 4
     _fields_ = [
         ('backupPowerGood', ctypes.c_uint8),
         ('backupPowerEnabled', ctypes.c_uint8),
