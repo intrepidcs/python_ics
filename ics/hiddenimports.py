@@ -35,6 +35,8 @@ hidden_imports = [
     "ics.structures.start_dhcp_server_command",
     "ics.structures.stop_dhcp_server_command",
     "ics.structures.extended_response_generic",
+    "ics.structures.wil_function_status",
+    "ics.structures.wil_function_data",
     "ics.structures.get_supported_features_response",
     "ics.structures.version_report",
     "ics.structures.get_component_versions",

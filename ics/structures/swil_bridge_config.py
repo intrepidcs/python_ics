@@ -10,6 +10,7 @@ class config(ctypes.Structure):
         ('can_id', ctypes.c_uint, 29),
         ('can_id_isExtended', ctypes.c_uint, 1),
         ('tcp_port', ctypes.c_uint16),
+        ('manager_onboard_external', ctypes.c_uint, 1),
         ('reserved', ctypes.c_uint, 18),
     ]
 

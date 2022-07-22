@@ -108,6 +108,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, NETID_ETHERNET3);
 	result += PyModule_AddIntMacro(module, NETID_ISM_LOGGER);
 	result += PyModule_AddIntMacro(module, NETID_CAN_SWITCH);
+	result += PyModule_AddIntMacro(module, NETID_WBMS);
 	result += PyModule_AddIntMacro(module, NETID_MAX);
 	result += PyModule_AddIntMacro(module, NETID_INVALID);
 	result += PyModule_AddIntMacro(module, NEODEVICE_UNKNOWN);
@@ -232,6 +233,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, SPY_PROTOCOL_UDP);
 	result += PyModule_AddIntMacro(module, SPY_PROTOCOL_AUTOSAR);
 	result += PyModule_AddIntMacro(module, SPY_PROTOCOL_A2B);
+	result += PyModule_AddIntMacro(module, SPY_PROTOCOL_WBMS);
 	result += PyModule_AddIntMacro(module, SPY_STATUS_GLOBAL_ERR);
 	result += PyModule_AddIntMacro(module, SPY_STATUS_TX_MSG);
 	result += PyModule_AddIntMacro(module, SPY_STATUS_XTD_FRAME);
@@ -328,6 +330,8 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, SPY_STATUS2_FLEXRAY_NO_HEADERCRC);
 	result += PyModule_AddIntMacro(module, SPY_STATUS2_CAN_ISO15765_LOGICAL_FRAME);
 	result += PyModule_AddIntMacro(module, SPY_STATUS2_CAN_HAVE_LINK_DATA);
+	result += PyModule_AddIntMacro(module, SPY_STATUS2_WBMS_NODE_DISCONNECTED);
+	result += PyModule_AddIntMacro(module, SPY_STATUS2_I2C_NODE_FAULT);
 	result += PyModule_AddIntMacro(module, SPY_STATUS3_CANFD_ESI);
 	result += PyModule_AddIntMacro(module, SPY_STATUS3_CANFD_IDE);
 	result += PyModule_AddIntMacro(module, SPY_STATUS3_CANFD_RTR);

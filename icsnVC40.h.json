@@ -3355,6 +3355,84 @@
     },
     {
         "names": [
+            "_WILFunctionStatus",
+            "WILFunctionStatus"
+        ],
+        "data_type": "Struct",
+        "packing": 2,
+        "is_anonymous": false,
+        "members": [
+            {
+                "name": "functionID",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "functionError",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "processing",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "calbackError",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            }
+        ]
+    },
+    {
+        "names": [
+            "_WILFunctionData",
+            "WILFunctionData"
+        ],
+        "data_type": "Struct",
+        "packing": 2,
+        "is_anonymous": false,
+        "members": [
+            {
+                "name": "functionID",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "parameters",
+                "data_type": "uint8_t",
+                "array_length": 194,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "resevered",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            }
+        ]
+    },
+    {
+        "names": [
             "GetSupportedFeaturesResponse"
         ],
         "data_type": "Struct",
@@ -3932,6 +4010,22 @@
                     {
                         "name": "gptpStatus",
                         "data_type": "GPTPStatus",
+                        "array_length": 0,
+                        "bitfield_size": 0,
+                        "is_enum": false,
+                        "enum_value": null
+                    },
+                    {
+                        "name": "wilStatus",
+                        "data_type": "WILFunctionStatus",
+                        "array_length": 0,
+                        "bitfield_size": 0,
+                        "is_enum": false,
+                        "enum_value": null
+                    },
+                    {
+                        "name": "wilData",
+                        "data_type": "WILFunctionData",
                         "array_length": 0,
                         "bitfield_size": 0,
                         "is_enum": false,
@@ -15332,6 +15426,14 @@
                         "enum_value": null
                     },
                     {
+                        "name": "manager_onboard_external",
+                        "data_type": "unsigned",
+                        "array_length": 0,
+                        "bitfield_size": 1,
+                        "is_enum": false,
+                        "enum_value": null
+                    },
+                    {
                         "name": "reserved",
                         "data_type": "unsigned",
                         "array_length": 0,
@@ -18709,7 +18811,7 @@
             "icsDeviceStatus"
         ],
         "data_type": "Union",
-        "packing": 0,
+        "packing": 4,
         "is_anonymous": false,
         "members": [
             {
