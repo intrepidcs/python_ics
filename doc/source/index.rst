@@ -296,7 +296,19 @@ Module Structures
             :members:
             :undoc-members:
 
+    .. autoclass:: ics.structures.fire3_linux_settings.fire3_linux_settings
+            :members:
+            :undoc-members:
+
     .. autoclass:: ics.structures.flex_vnet_mode.flex_vnet_mode
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.get_component_versions.get_component_versions
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.get_component_versions_response.get_component_versions_response
             :members:
             :undoc-members:
 
@@ -672,6 +684,10 @@ Module Structures
             :members:
             :undoc-members:
 
+    .. autoclass:: ics.structures.software_update_command.software_update_command
+            :members:
+            :undoc-members:
+
     .. autoclass:: ics.structures.spy_filter_long.spy_filter_long
             :members:
             :undoc-members:
@@ -816,6 +832,10 @@ Module Structures
             :members:
             :undoc-members:
 
+    .. autoclass:: ics.structures.version_report.version_report
+            :members:
+            :undoc-members:
+
 
 
 ============================================================
@@ -898,7 +918,7 @@ Module Variables
             :annotation: = 6
 
     .. py:data:: BUILD_DATETIME
-            :annotation: = Jul 22 2022 11:56:22
+            :annotation: = Jul 22 2022 13:14:03
 
     .. py:data:: CANFD_BRS_ENABLED
             :annotation: = 2
@@ -1005,6 +1025,9 @@ Module Variables
     .. py:data:: EXTENDED_RESPONSE_INVALID_COMMAND
             :annotation: = -1
 
+    .. py:data:: EXTENDED_RESPONSE_INVALID_PARAMETER
+            :annotation: = -5
+
     .. py:data:: EXTENDED_RESPONSE_INVALID_STATE
             :annotation: = -2
 
@@ -1013,6 +1036,9 @@ Module Variables
 
     .. py:data:: EXTENDED_RESPONSE_OPERATION_FAILED
             :annotation: = -3
+
+    .. py:data:: EXTENDED_RESPONSE_OPERATION_PENDING
+            :annotation: = -4
 
     .. py:data:: FAST_MODE
             :annotation: = 3
@@ -1157,6 +1183,9 @@ Module Variables
 
     .. py:data:: MAX_PHY_SETTINGS_STRUCT
             :annotation: = 128
+
+    .. py:data:: MAX_REPORTED_VERSIONS
+            :annotation: = 16
 
     .. py:data:: MAX_VL_FORWARDING_ENTRIES
             :annotation: = 1024
