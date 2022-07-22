@@ -35,6 +35,8 @@ __all__ = [
     "start_dhcp_server_command",
     "stop_dhcp_server_command",
     "extended_response_generic",
+    "wil_function_status",
+    "wil_function_data",
     "get_supported_features_response",
     "version_report",
     "get_component_versions",

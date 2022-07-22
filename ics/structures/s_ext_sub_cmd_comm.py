@@ -14,6 +14,8 @@ from ics.structures.s_ext_sub_cmd_hdr import *
 from ics.structures.software_update_command import *
 from ics.structures.start_dhcp_server_command import *
 from ics.structures.stop_dhcp_server_command import *
+from ics.structures.wil_function_data import *
+from ics.structures.wil_function_status import *
 
 
 class extension(ctypes.Union):
@@ -27,6 +29,8 @@ class extension(ctypes.Union):
         ('getSupportedFeatures', GetSupportedFeaturesResponse),
         ('genericResponse', ExtendedResponseGeneric),
         ('gptpStatus', GPTPStatus),
+        ('wilStatus', WILFunctionStatus),
+        ('wilData', WILFunctionData),
         ('getComponentVersions', GetComponentVersions),
         ('softwareUpdate', SoftwareUpdateCommand),
         ('getComponentVersionsResponse', GetComponentVersionsResponse),
