@@ -56,7 +56,7 @@ copyright = '2022, Intrepid Control Systems, Inc.'
 # built documents.
 #
 # The short X.Y version.
-version = '908.12'
+version = '909.8'
 # The full version, including alpha/beta/rc tags.
 release = version
 
