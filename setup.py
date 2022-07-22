@@ -86,11 +86,12 @@ if 'LINUX' in platform.system().upper():
 else:
     compile_args = []
 
-# Check for clang stuff here
-if not shutil.which('clang'):
-    raise RuntimeError("clang is required for building python_ics.")
-if not shutil.which('clang-format'):
-    raise RuntimeError("clang-format is required for building python_ics.")
+# Check for clang stuff here, read the docs doesn't have this so use what is in the repo
+if not os.getenv("READTHEDOCS"):
+    if not shutil.which('clang'):
+        raise RuntimeError("clang is required for building python_ics.")
+    if not shutil.which('clang-format'):
+        raise RuntimeError("clang-format is required for building python_ics.")
 
 
 def read(fname):
