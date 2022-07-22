@@ -33,7 +33,7 @@
     "\n" \
     "It should be noted that :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "` is used a little bit differently than the C API.\n" \
     ":class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "` contains two extra members:\n" \
-    "\t:class:`" MODULE_NAME"." NEO_DEVICE_OBJECT_NAME ".AutoHandleClose` and :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "._Handle`\n" \
+    ":class:`" MODULE_NAME"." NEO_DEVICE_OBJECT_NAME ".AutoHandleClose` and :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "._Handle`\n\n" \
     "The handle normally returned from `icsneoOpenNeoDevice()` is stored inside _Handle and setting AutoHandleClose to True (Default)\n" \
     "will automatically close the handle when the :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "` goes out of scope.\n" \
     "\n" \
