@@ -37,6 +37,7 @@ Module Functions
     ics.disk_format
     ics.disk_format_cancel
     ics.enable_bus_voltage_monitor
+    ics.enable_doip_line
     ics.enable_network_com
     ics.find_devices
     ics.firmware_update_required
@@ -86,6 +87,7 @@ Module Functions
     ics.write_sdcard
     ics.ClosePort
     ics.EnableBusVoltageMonitor
+    ics.EnableDOIPLine
     ics.EnableNetworkCom
     ics.FindNeoDevices
     ics.FirmwareUpdateRequired
@@ -146,6 +148,7 @@ Module Functions
     ics.base36enc
     ics.icsneoClosePort
     ics.icsneoEnableBusVoltageMonitor
+    ics.icsneoEnableDOIPLine
     ics.icsneoEnableNetworkCom
     ics.icsneoFindNeoDevices
     ics.icsneoFirmwareUpdateRequired
@@ -213,6 +216,18 @@ Module Functions
 Module Structures
 ============================================================
 
+    .. autoclass:: ics.structures.a2_b_monitor_settings.a2_b_monitor_settings
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.a2_b_node_type.a2_b_node_type
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.a2_btdm_mode.a2_btdm_mode
+            :members:
+            :undoc-members:
+
     .. autoclass:: ics.structures.can_settings.can_settings
             :members:
             :undoc-members:
@@ -222,6 +237,10 @@ Module Structures
             :undoc-members:
 
     .. autoclass:: ics.structures.canterm_settings.canterm_settings
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.clock_quality_.clock_quality_
             :members:
             :undoc-members:
 
@@ -238,6 +257,14 @@ Module Structures
             :undoc-members:
 
     .. autoclass:: ics.structures.e_disk_layout.e_disk_layout
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.e_gptp_port.e_gptp_port
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.e_gptp_role.e_gptp_role
             :members:
             :undoc-members:
 
@@ -261,11 +288,31 @@ Module Structures
             :members:
             :undoc-members:
 
+    .. autoclass:: ics.structures.extended_response_code.extended_response_code
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.extended_response_generic.extended_response_generic
+            :members:
+            :undoc-members:
+
     .. autoclass:: ics.structures.flex_vnet_mode.flex_vnet_mode
             :members:
             :undoc-members:
 
+    .. autoclass:: ics.structures.get_supported_features_response.get_supported_features_response
+            :members:
+            :undoc-members:
+
     .. autoclass:: ics.structures.global_settings.global_settings
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.gptp_status.gptp_status
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.hw_eth_settings.hw_eth_settings
             :members:
             :undoc-members:
 
@@ -293,6 +340,14 @@ Module Structures
             :members:
             :undoc-members:
 
+    .. autoclass:: ics.structures.ics_rad_bms_device_status.ics_rad_bms_device_status
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.ics_rad_epsilon_device_status.ics_rad_epsilon_device_status
+            :members:
+            :undoc-members:
+
     .. autoclass:: ics.structures.ics_rad_jupiter_device_status.ics_rad_jupiter_device_status
             :members:
             :undoc-members:
@@ -305,15 +360,7 @@ Module Structures
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.ics_spy_message.ics_spy_message
-            :members:
-            :undoc-members:
-
     .. autoclass:: ics.structures.ics_spy_message_flex_ray.ics_spy_message_flex_ray
-            :members:
-            :undoc-members:
-
-    .. autoclass:: ics.structures.ics_spy_message_j1850.ics_spy_message_j1850
             :members:
             :undoc-members:
 
@@ -349,10 +396,6 @@ Module Structures
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.j2534_adapter_information.j2534_adapter_information
-            :members:
-            :undoc-members:
-
     .. autoclass:: ics.structures.lin_settings.lin_settings
             :members:
             :undoc-members:
@@ -361,11 +404,7 @@ Module Structures
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.neo_device.neo_device
-            :members:
-            :undoc-members:
-
-    .. autoclass:: ics.structures.neo_device_ex.neo_device_ex
+    .. autoclass:: ics.structures.ndis_adapter_information.ndis_adapter_information
             :members:
             :undoc-members:
 
@@ -378,6 +417,14 @@ Module Structures
             :undoc-members:
 
     .. autoclass:: ics.structures.op_eth_settings.op_eth_settings
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.port_identity.port_identity
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.priority_vector.priority_vector
             :members:
             :undoc-members:
 
@@ -417,6 +464,10 @@ Module Structures
             :members:
             :undoc-members:
 
+    .. autoclass:: ics.structures.s_ether_badge_settings.s_ether_badge_settings
+            :members:
+            :undoc-members:
+
     .. autoclass:: ics.structures.s_ext_sub_cmd_comm.s_ext_sub_cmd_comm
             :members:
             :undoc-members:
@@ -445,6 +496,10 @@ Module Structures
             :members:
             :undoc-members:
 
+    .. autoclass:: ics.structures.s_jupiter_ptp_params_s.s_jupiter_ptp_params_s
+            :members:
+            :undoc-members:
+
     .. autoclass:: ics.structures.s_neo_ecu12_settings.s_neo_ecu12_settings
             :members:
             :undoc-members:
@@ -470,6 +525,14 @@ Module Structures
             :undoc-members:
 
     .. autoclass:: ics.structures.s_phy_reg_pkt_hdr.s_phy_reg_pkt_hdr
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.s_phy_reg_pkt_rw.s_phy_reg_pkt_rw
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.s_phy_reg_pkt_status.s_phy_reg_pkt_status
             :members:
             :undoc-members:
 
@@ -510,6 +573,10 @@ Module Structures
             :undoc-members:
 
     .. autoclass:: ics.structures.s_pluto_mac_config_s.s_pluto_mac_config_s
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.s_pluto_ptp_params_s.s_pluto_ptp_params_s
             :members:
             :undoc-members:
 
@@ -561,6 +628,10 @@ Module Structures
             :members:
             :undoc-members:
 
+    .. autoclass:: ics.structures.scan_sleep_id.scan_sleep_id
+            :members:
+            :undoc-members:
+
     .. autoclass:: ics.structures.secu_avb_settings.secu_avb_settings
             :members:
             :undoc-members:
@@ -577,11 +648,19 @@ Module Structures
             :members:
             :undoc-members:
 
+    .. autoclass:: ics.structures.serdesgen_settings.serdesgen_settings
+            :members:
+            :undoc-members:
+
     .. autoclass:: ics.structures.serdespoc_settings.serdespoc_settings
             :members:
             :undoc-members:
 
     .. autoclass:: ics.structures.sievb_settings.sievb_settings
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.sobd2_lc_settings.sobd2_lc_settings
             :members:
             :undoc-members:
 
@@ -597,6 +676,14 @@ Module Structures
             :members:
             :undoc-members:
 
+    .. autoclass:: ics.structures.srad_epsilon_settings.srad_epsilon_settings
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.srad_epsilon_switch_settings.srad_epsilon_switch_settings
+            :members:
+            :undoc-members:
+
     .. autoclass:: ics.structures.srad_galaxy_settings.srad_galaxy_settings
             :members:
             :undoc-members:
@@ -606,6 +693,14 @@ Module Structures
             :undoc-members:
 
     .. autoclass:: ics.structures.srad_gigastar_settings.srad_gigastar_settings
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.srad_gptp_and_tap_settings_s.srad_gptp_and_tap_settings_s
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.srad_gptp_settings_s.srad_gptp_settings_s
             :members:
             :undoc-members:
 
@@ -633,6 +728,14 @@ Module Structures
             :members:
             :undoc-members:
 
+    .. autoclass:: ics.structures.srada2_b_settings.srada2_b_settings
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.sradbms_settings.sradbms_settings
+            :members:
+            :undoc-members:
+
     .. autoclass:: ics.structures.st_api_firmware_info.st_api_firmware_info
             :members:
             :undoc-members:
@@ -646,6 +749,14 @@ Module Structures
             :undoc-members:
 
     .. autoclass:: ics.structures.st_cm_iso157652_tx_message.st_cm_iso157652_tx_message
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.start_dhcp_server_command.start_dhcp_server_command
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.stop_dhcp_server_command.stop_dhcp_server_command
             :members:
             :undoc-members:
 
@@ -673,6 +784,14 @@ Module Structures
             :members:
             :undoc-members:
 
+    .. autoclass:: ics.structures.swil_bridge_config.swil_bridge_config
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.system_identity.system_identity
+            :members:
+            :undoc-members:
+
     .. autoclass:: ics.structures.tag_options_find_neo_ex.tag_options_find_neo_ex
             :members:
             :undoc-members:
@@ -682,6 +801,10 @@ Module Structures
             :undoc-members:
 
     .. autoclass:: ics.structures.tagicsneo_vi_command.tagicsneo_vi_command
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.timestamp_.timestamp_
             :members:
             :undoc-members:
 
@@ -698,6 +821,9 @@ Module Structures
 ============================================================
 Module Variables
 ============================================================
+
+    .. py:data:: A2B_SETTINGS_FLAG_16BIT
+            :annotation: = 1
 
     .. py:data:: AUTO
             :annotation: = 0
@@ -772,7 +898,7 @@ Module Variables
             :annotation: = 6
 
     .. py:data:: BUILD_DATETIME
-            :annotation: = Apr  5 2021 10:56:06
+            :annotation: = Jul 22 2022 11:56:22
 
     .. py:data:: CANFD_BRS_ENABLED
             :annotation: = 2
@@ -855,6 +981,9 @@ Module Variables
     .. py:data:: ETHERNET_SETTINGS2_FLAG_COMM_IN_USE
             :annotation: = 128
 
+    .. py:data:: ETHERNET_SETTINGS2_FLAG_CONFIG_NOT_ALLOWED
+            :annotation: = 32
+
     .. py:data:: ETHERNET_SETTINGS2_FLAG_DEVICE_HOSTING_ENABLE
             :annotation: = 16
 
@@ -873,11 +1002,26 @@ Module Variables
     .. py:data:: ETHERNET_SETTINGS_SIZE
             :annotation: = 8
 
+    .. py:data:: EXTENDED_RESPONSE_INVALID_COMMAND
+            :annotation: = -1
+
+    .. py:data:: EXTENDED_RESPONSE_INVALID_STATE
+            :annotation: = -2
+
+    .. py:data:: EXTENDED_RESPONSE_OK
+            :annotation: = 0
+
+    .. py:data:: EXTENDED_RESPONSE_OPERATION_FAILED
+            :annotation: = -3
+
     .. py:data:: FAST_MODE
             :annotation: = 3
 
+    .. py:data:: GET_SUPPORTED_FEATURES_COMMAND_VERSION
+            :annotation: = 1
+
     .. py:data:: GLOBAL_SETTINGS_SIZE
-            :annotation: = 926
+            :annotation: = 942
 
     .. py:data:: GS_VERSION
             :annotation: = 5
@@ -911,6 +1055,9 @@ Module Variables
 
     .. py:data:: HARDWARE_TIMESTAMP_ID_VSI
             :annotation: = 1
+
+    .. py:data:: HW_ETH_SETTINGS_SIZE
+            :annotation: = 20
 
     .. py:data:: ISO15765_2_NETWORK_HSCAN
             :annotation: = 1
@@ -950,6 +1097,39 @@ Module Variables
 
     .. py:data:: J1708_SETTINGS_SIZE
             :annotation: = 2
+
+    .. py:data:: JUPITER_PTP_ROLE_DISABLED
+            :annotation: = 0
+
+    .. py:data:: JUPITER_PTP_ROLE_MASTER
+            :annotation: = 1
+
+    .. py:data:: JUPITER_PTP_ROLE_SLAVE
+            :annotation: = 2
+
+    .. py:data:: LINK_SPEED_100MBPS_FULL_DUPLEX
+            :annotation: = 3
+
+    .. py:data:: LINK_SPEED_100MBPS_HALF_DUPLEX
+            :annotation: = 4
+
+    .. py:data:: LINK_SPEED_10MBPS_FULL_DUPLEX
+            :annotation: = 5
+
+    .. py:data:: LINK_SPEED_10MBPS_HALF_DUPLEX
+            :annotation: = 6
+
+    .. py:data:: LINK_SPEED_1GBPS_FULL_DUPLEX
+            :annotation: = 1
+
+    .. py:data:: LINK_SPEED_1GBPS_HALF_DUPLEX
+            :annotation: = 2
+
+    .. py:data:: LINK_SPEED_AUTO_NEGOTIATION
+            :annotation: = 0
+
+    .. py:data:: LINK_SPEED_COUNT
+            :annotation: = 7
 
     .. py:data:: LIN_SETTINGS_SIZE
             :annotation: = 10
@@ -1018,7 +1198,7 @@ Module Variables
             :annotation: = 128
 
     .. py:data:: NEODEVICE_ECU22
-            :annotation: = 21
+            :annotation: = 27
 
     .. py:data:: NEODEVICE_ECUCHIP_UART
             :annotation: = 2048
@@ -1029,11 +1209,17 @@ Module Variables
     .. py:data:: NEODEVICE_EEVB
             :annotation: = 16777216
 
+    .. py:data:: NEODEVICE_ETHER_BADGE
+            :annotation: = 22
+
     .. py:data:: NEODEVICE_FIRE
             :annotation: = 8
 
     .. py:data:: NEODEVICE_FIRE2
             :annotation: = 67108864
+
+    .. py:data:: NEODEVICE_FIRE2_REDLINE
+            :annotation: = 21
 
     .. py:data:: NEODEVICE_FIRE3
             :annotation: = 15
@@ -1059,7 +1245,16 @@ Module Variables
     .. py:data:: NEODEVICE_NEOECUCHIP
             :annotation: = 256
 
-    .. py:data:: NEODEVICE_OBD2_LCBADGE
+    .. py:data:: NEODEVICE_NEW_DEVICE_58
+            :annotation: = 31
+
+    .. py:data:: NEODEVICE_NEW_DEVICE_59
+            :annotation: = 33
+
+    .. py:data:: NEODEVICE_OBD2_DEV
+            :annotation: = 26
+
+    .. py:data:: NEODEVICE_OBD2_LC
             :annotation: = 13
 
     .. py:data:: NEODEVICE_OBD2_PRO
@@ -1068,11 +1263,23 @@ Module Variables
     .. py:data:: NEODEVICE_OBD2_SIM
             :annotation: = -2147483648
 
+    .. py:data:: NEODEVICE_OBD2_SIM_DOIP
+            :annotation: = 25
+
     .. py:data:: NEODEVICE_PENDANT
             :annotation: = 512
 
     .. py:data:: NEODEVICE_PLASMA
             :annotation: = 4096
+
+    .. py:data:: NEODEVICE_RADEPSILON
+            :annotation: = 24
+
+    .. py:data:: NEODEVICE_RADEPSILON_EXPRESS
+            :annotation: = 29
+
+    .. py:data:: NEODEVICE_RADEPSILON_T
+            :annotation: = 28
 
     .. py:data:: NEODEVICE_RADGALAXY
             :annotation: = 268435456
@@ -1092,6 +1299,9 @@ Module Variables
     .. py:data:: NEODEVICE_RADPLUTO
             :annotation: = 9
 
+    .. py:data:: NEODEVICE_RADPROXIMA
+            :annotation: = 30
+
     .. py:data:: NEODEVICE_RADSTAR
             :annotation: = 524288
 
@@ -1100,6 +1310,12 @@ Module Variables
 
     .. py:data:: NEODEVICE_RADSUPERMOON
             :annotation: = 3
+
+    .. py:data:: NEODEVICE_RAD_A2B
+            :annotation: = 23
+
+    .. py:data:: NEODEVICE_RAD_BMS
+            :annotation: = 34
 
     .. py:data:: NEODEVICE_RAD_MOON_DUO
             :annotation: = 14
@@ -1150,7 +1366,7 @@ Module Variables
             :annotation: = 0.065536
 
     .. py:data:: NEOVI_3G_MAX_SETTINGS_SIZE
-            :annotation: = 926
+            :annotation: = 942
 
     .. py:data:: NEOVI_COMMTYPE_FIRE_USB
             :annotation: = 5
@@ -1242,11 +1458,20 @@ Module Variables
     .. py:data:: NETID_3G_RESET_STATUS
             :annotation: = 54
 
+    .. py:data:: NETID_A2B_01
+            :annotation: = 522
+
+    .. py:data:: NETID_A2B_02
+            :annotation: = 523
+
     .. py:data:: NETID_AUTOSAR
             :annotation: = 515
 
     .. py:data:: NETID_AUX
             :annotation: = 7
+
+    .. py:data:: NETID_CAN_SWITCH
+            :annotation: = 526
 
     .. py:data:: NETID_CGI
             :annotation: = 53
@@ -1266,8 +1491,14 @@ Module Variables
     .. py:data:: NETID_ETHERNET2
             :annotation: = 520
 
+    .. py:data:: NETID_ETHERNET3
+            :annotation: = 524
+
     .. py:data:: NETID_ETHERNET_DAQ
             :annotation: = 69
+
+    .. py:data:: NETID_ETHERNET_TX_WRAP
+            :annotation: = 521
 
     .. py:data:: NETID_FLEXRAY
             :annotation: = 85
@@ -1334,6 +1565,9 @@ Module Variables
 
     .. py:data:: NETID_INVALID
             :annotation: = 65535
+
+    .. py:data:: NETID_ISM_LOGGER
+            :annotation: = 525
 
     .. py:data:: NETID_ISO
             :annotation: = 9
@@ -1500,6 +1734,12 @@ Module Variables
     .. py:data:: OPETH_FUNC_RAW_MEDIA_CONVERTER
             :annotation: = 3
 
+    .. py:data:: OPETH_FUNC_RAW_MEDIA_CONVERTER2
+            :annotation: = 4
+
+    .. py:data:: OPETH_FUNC_RAW_MEDIA_CONVERTER2_LOW_LATENCY
+            :annotation: = 5
+
     .. py:data:: OPETH_FUNC_TAP
             :annotation: = 0
 
@@ -1526,6 +1766,39 @@ Module Variables
 
     .. py:data:: OP_ETH_SETTINGS_SIZE
             :annotation: = 16
+
+    .. py:data:: PHYREG_BOTH
+            :annotation: = 2
+
+    .. py:data:: PHYREG_FAILURE
+            :annotation: = 1
+
+    .. py:data:: PHYREG_INVALID_MDIO_BUS_INDEX
+            :annotation: = 2
+
+    .. py:data:: PHYREG_INVALID_PHY_ADDR
+            :annotation: = 3
+
+    .. py:data:: PHYREG_READ
+            :annotation: = 0
+
+    .. py:data:: PHYREG_RESERVED0
+            :annotation: = 4
+
+    .. py:data:: PHYREG_RESERVED1
+            :annotation: = 5
+
+    .. py:data:: PHYREG_RESERVED2
+            :annotation: = 6
+
+    .. py:data:: PHYREG_RESERVED3
+            :annotation: = 7
+
+    .. py:data:: PHYREG_SUCCESS
+            :annotation: = 0
+
+    .. py:data:: PHYREG_WRITE
+            :annotation: = 1
 
     .. py:data:: PHY_REG_PKT_VERSION
             :annotation: = 1
@@ -1566,8 +1839,14 @@ Module Variables
     .. py:data:: PLUTO_MAX_VLAN_LOOKUP
             :annotation: = 4096
 
+    .. py:data:: PLUTO_NUM_PORTS
+            :annotation: = 5
+
     .. py:data:: PLUTO_NUM_PRIORITY
             :annotation: = 8
+
+    .. py:data:: RADEPSILON_MAX_PHY
+            :annotation: = 18
 
     .. py:data:: RADJUPITER_NUM_PORTS
             :annotation: = 8
@@ -1575,11 +1854,17 @@ Module Variables
     .. py:data:: RADMOONDUO_CONVERTER_SETTINGS_SIZE
             :annotation: = 16
 
+    .. py:data:: RAD_GPTP_AND_TAP_SETTINGS_SIZE
+            :annotation: = 40
+
+    .. py:data:: RAD_GPTP_SETTINGS_SIZE
+            :annotation: = 36
+
     .. py:data:: RAD_REPORTING_SETTINGS_FLAG_AIN1
             :annotation: = 256
 
-    .. py:data:: RAD_REPORTING_SETTINGS_FLAG_AIN2
-            :annotation: = 512
+    .. py:data:: RAD_REPORTING_SETTINGS_FLAG_FAN_SPEED_ENABLE
+            :annotation: = 1024
 
     .. py:data:: RAD_REPORTING_SETTINGS_FLAG_INT_GPS_ENABLE
             :annotation: = 4
@@ -1602,10 +1887,16 @@ Module Variables
     .. py:data:: RAD_REPORTING_SETTINGS_FLAG_MISC2_PWMIN
             :annotation: = 128
 
+    .. py:data:: RAD_REPORTING_SETTINGS_FLAG_SERDES_ENABLE
+            :annotation: = 512
+
     .. py:data:: RAD_REPORTING_SETTINGS_FLAG_TEMP_ENABLE
             :annotation: = 1
 
     .. py:data:: RAD_REPORTING_SETTINGS_SIZE
+            :annotation: = 16
+
+    .. py:data:: REGISTER_BY_SERIAL
             :annotation: = 16
 
     .. py:data:: REPORT_ON_GPS
@@ -1659,6 +1950,9 @@ Module Variables
     .. py:data:: RESISTOR_ON
             :annotation: = 0
 
+    .. py:data:: SCRIPT_LOCATION_EMMC
+            :annotation: = 6
+
     .. py:data:: SCRIPT_LOCATION_FLASH_MEM
             :annotation: = 0
 
@@ -1677,20 +1971,20 @@ Module Variables
     .. py:data:: SCRIPT_STATUS_STOPPED
             :annotation: = 0
 
-    .. py:data:: SERDESCAM_CONFIG_MODE_EXTERNAL_OVER_TAP
-            :annotation: = 0
+    .. py:data:: SERDESCAM_MODE_COUNT
+            :annotation: = 4
 
-    .. py:data:: SERDESCAM_CONFIG_MODE_LOCAL_SCRIPT
-            :annotation: = 1
+    .. py:data:: SERDESCAM_MODE_CUSTOM
+            :annotation: = 3
 
-    .. py:data:: SERDESCAM_MODE_PASSTHROUGH
-            :annotation: = 0
-
-    .. py:data:: SERDESCAM_MODE_PLAYBACK
+    .. py:data:: SERDESCAM_MODE_LOG_ONLY
             :annotation: = 2
 
-    .. py:data:: SERDESCAM_MODE_TAP
+    .. py:data:: SERDESCAM_MODE_SPLITTER
             :annotation: = 1
+
+    .. py:data:: SERDESCAM_MODE_TAP_REPEATER
+            :annotation: = 0
 
     .. py:data:: SERDESCAM_PIXEL_BIT_POS_0
             :annotation: = 0
@@ -1704,17 +1998,32 @@ Module Variables
     .. py:data:: SERDESCAM_PIXEL_BIT_POS_3
             :annotation: = 3
 
-    .. py:data:: SERDESCAM_SETTINGS_AUTO_DETECT_ENABLE
+    .. py:data:: SERDESCAM_SETTINGS_FLAG_AUTO_DET_RES_ENABLE
             :annotation: = 4
 
-    .. py:data:: SERDESCAM_SETTINGS_CONFIG_ENABLE
+    .. py:data:: SERDESCAM_SETTINGS_FLAG_CONFIG_ENABLE
             :annotation: = 8
 
     .. py:data:: SERDESCAM_SETTINGS_FLAG_ENABLE
             :annotation: = 1
 
-    .. py:data:: SERDESCAM_SETTINGS_RTSP_ENABLE
+    .. py:data:: SERDESCAM_SETTINGS_FLAG_LOGGING_ENABLE
+            :annotation: = 16
+
+    .. py:data:: SERDESCAM_SETTINGS_FLAG_RTSP_ENABLE
             :annotation: = 2
+
+    .. py:data:: SERDESCAM_SETTINGS_FLAG_TX0_ENABLE
+            :annotation: = 32
+
+    .. py:data:: SERDESCAM_SETTINGS_FLAG_TX1_ENABLE
+            :annotation: = 64
+
+    .. py:data:: SERDESCAM_SETTINGS_FLAG_TX2_ENABLE
+            :annotation: = 128
+
+    .. py:data:: SERDESCAM_SETTINGS_FLAG_TX3_ENABLE
+            :annotation: = 256
 
     .. py:data:: SERDESCAM_SETTINGS_SIZE
             :annotation: = 32
@@ -1734,8 +2043,53 @@ Module Variables
     .. py:data:: SERDESCAM_VIDEO_FORMAT_BAYER_BGGR_8
             :annotation: = 4
 
-    .. py:data:: SERDESCAM_VIDEO_FORMAT_COUNT
+    .. py:data:: SERDESCAM_VIDEO_FORMAT_BAYER_GBRG_10LE_PACKED
+            :annotation: = 74
+
+    .. py:data:: SERDESCAM_VIDEO_FORMAT_BAYER_GBRG_12LE_PACKED
+            :annotation: = 75
+
+    .. py:data:: SERDESCAM_VIDEO_FORMAT_BAYER_GBRG_16BE
+            :annotation: = 77
+
+    .. py:data:: SERDESCAM_VIDEO_FORMAT_BAYER_GBRG_16LE
+            :annotation: = 76
+
+    .. py:data:: SERDESCAM_VIDEO_FORMAT_BAYER_GBRG_8
+            :annotation: = 73
+
+    .. py:data:: SERDESCAM_VIDEO_FORMAT_BAYER_GRBG_10LE_PACKED
+            :annotation: = 82
+
+    .. py:data:: SERDESCAM_VIDEO_FORMAT_BAYER_GRBG_12LE_PACKED
+            :annotation: = 83
+
+    .. py:data:: SERDESCAM_VIDEO_FORMAT_BAYER_GRBG_16BE
+            :annotation: = 85
+
+    .. py:data:: SERDESCAM_VIDEO_FORMAT_BAYER_GRBG_16LE
+            :annotation: = 84
+
+    .. py:data:: SERDESCAM_VIDEO_FORMAT_BAYER_GRBG_8
+            :annotation: = 81
+
+    .. py:data:: SERDESCAM_VIDEO_FORMAT_BAYER_RGGB_10LE_PACKED
+            :annotation: = 66
+
+    .. py:data:: SERDESCAM_VIDEO_FORMAT_BAYER_RGGB_12LE_PACKED
+            :annotation: = 67
+
+    .. py:data:: SERDESCAM_VIDEO_FORMAT_BAYER_RGGB_16BE
+            :annotation: = 69
+
+    .. py:data:: SERDESCAM_VIDEO_FORMAT_BAYER_RGGB_16LE
+            :annotation: = 68
+
+    .. py:data:: SERDESCAM_VIDEO_FORMAT_BAYER_RGGB_8
             :annotation: = 65
+
+    .. py:data:: SERDESCAM_VIDEO_FORMAT_COUNT
+            :annotation: = 89
 
     .. py:data:: SERDESCAM_VIDEO_FORMAT_CSI2_BAYER_BGGR_10LE_PACKED
             :annotation: = 51
@@ -1745,6 +2099,33 @@ Module Variables
 
     .. py:data:: SERDESCAM_VIDEO_FORMAT_CSI2_BAYER_BGGR_8
             :annotation: = 50
+
+    .. py:data:: SERDESCAM_VIDEO_FORMAT_CSI2_BAYER_GBRG_10LE_PACKED
+            :annotation: = 79
+
+    .. py:data:: SERDESCAM_VIDEO_FORMAT_CSI2_BAYER_GBRG_12LE_PACKED
+            :annotation: = 80
+
+    .. py:data:: SERDESCAM_VIDEO_FORMAT_CSI2_BAYER_GBRG_8
+            :annotation: = 78
+
+    .. py:data:: SERDESCAM_VIDEO_FORMAT_CSI2_BAYER_GRBG_10LE_PACKED
+            :annotation: = 87
+
+    .. py:data:: SERDESCAM_VIDEO_FORMAT_CSI2_BAYER_GRBG_12LE_PACKED
+            :annotation: = 88
+
+    .. py:data:: SERDESCAM_VIDEO_FORMAT_CSI2_BAYER_GRBG_8
+            :annotation: = 86
+
+    .. py:data:: SERDESCAM_VIDEO_FORMAT_CSI2_BAYER_RGGB_10LE_PACKED
+            :annotation: = 71
+
+    .. py:data:: SERDESCAM_VIDEO_FORMAT_CSI2_BAYER_RGGB_12LE_PACKED
+            :annotation: = 72
+
+    .. py:data:: SERDESCAM_VIDEO_FORMAT_CSI2_BAYER_RGGB_8
+            :annotation: = 70
 
     .. py:data:: SERDESCAM_VIDEO_FORMAT_CSI2_RAW_10
             :annotation: = 54
@@ -1908,6 +2289,18 @@ Module Variables
     .. py:data:: SERDESCAM_VIDEO_FORMAT_YVYU_422_8
             :annotation: = 2
 
+    .. py:data:: SERDESGEN_MOD_ID_NONE
+            :annotation: = 0
+
+    .. py:data:: SERDESGEN_MOD_ID_UNKNOWN
+            :annotation: = -1
+
+    .. py:data:: SERDESGEN_SETTINGS_FLAG_TX_PATGEN_ENABLE
+            :annotation: = 1
+
+    .. py:data:: SERDESGEN_SETTINGS_SIZE
+            :annotation: = 32
+
     .. py:data:: SERDESPOC_SETTINGS_MODE_DISABLED
             :annotation: = 0
 
@@ -1931,6 +2324,9 @@ Module Variables
 
     .. py:data:: SLOW_MODE
             :annotation: = 1
+
+    .. py:data:: SPY_PROTOCOL_A2B
+            :annotation: = 35
 
     .. py:data:: SPY_PROTOCOL_AUTOSAR
             :annotation: = 34
@@ -2049,17 +2445,23 @@ Module Variables
     .. py:data:: SPY_STATUS2_ETHERNET_CRC_ERROR
             :annotation: = 2097152
 
-    .. py:data:: SPY_STATUS2_ETHERNET_FCS_AVAILABLE
-            :annotation: = 8388608
+    .. py:data:: SPY_STATUS2_ETHERNET_FCS_VERIFIED
+            :annotation: = 268435456
 
     .. py:data:: SPY_STATUS2_ETHERNET_FRAME_TOO_SHORT
             :annotation: = 4194304
+
+    .. py:data:: SPY_STATUS2_ETHERNET_MANUALFCS_ENABLED
+            :annotation: = 134217728
 
     .. py:data:: SPY_STATUS2_ETHERNET_NO_PADDING
             :annotation: = 16777216
 
     .. py:data:: SPY_STATUS2_ETHERNET_PREEMPTION_ENABLED
             :annotation: = 33554432
+
+    .. py:data:: SPY_STATUS2_ETHERNET_UPDATE_CHECKSUMS
+            :annotation: = 67108864
 
     .. py:data:: SPY_STATUS2_FLEXRAY_NO_CRC
             :annotation: = 33554432
@@ -2201,6 +2603,18 @@ Module Variables
 
     .. py:data:: SPY_STATUS3_LIN_SLAVE_DATA_TOO_SHORT
             :annotation: = 2
+
+    .. py:data:: SPY_STATUS_A2B_CONTROL
+            :annotation: = 524288
+
+    .. py:data:: SPY_STATUS_A2B_MONITOR
+            :annotation: = 536870912
+
+    .. py:data:: SPY_STATUS_A2B_SCF_VALID_WAITING
+            :annotation: = 8
+
+    .. py:data:: SPY_STATUS_A2B_UPSTREAM
+            :annotation: = 1073741824
 
     .. py:data:: SPY_STATUS_ANALOG_DIGITAL_INPUT
             :annotation: = 16777216
