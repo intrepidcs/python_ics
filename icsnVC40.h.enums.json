@@ -2659,418 +2659,156 @@
         ]
     },
     {
-        "names": [],
+        "names": [
+            "DeviceFeature"
+        ],
         "data_type": "Enum",
         "packing": 0,
-        "is_anonymous": true,
+        "is_anonymous": false,
         "members": [
             {
-                "name": "assert_line_4629 ",
+                "name": "networkDWCAN01",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "networkDWCAN02",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "networkDWCAN03",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "networkDWCAN04",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "networkDWCAN05",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "networkDWCAN06",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "networkDWCAN07",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "networkDWCAN08",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "networkTerminationDWCAN01",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "networkTerminationDWCAN02",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "networkTerminationDWCAN03",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "networkTerminationDWCAN04",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "networkTerminationDWCAN05",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "networkTerminationDWCAN06",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "networkTerminationDWCAN07",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "networkTerminationDWCAN08",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "NUM_VALID_DEVICE_FEATURES",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "supportedFeatureMax ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(CAN_SETTINGS)"
-            }
-        ]
-    },
-    {
-        "names": [],
-        "data_type": "Enum",
-        "packing": 0,
-        "is_anonymous": true,
-        "members": [
-            {
-                "name": "assert_line_4630 ",
-                "data_type": "int",
-                "array_length": 0,
-                "bitfield_size": 0,
-                "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(CANFD_SETTINGS)"
-            }
-        ]
-    },
-    {
-        "names": [],
-        "data_type": "Enum",
-        "packing": 0,
-        "is_anonymous": true,
-        "members": [
-            {
-                "name": "assert_line_4631 ",
-                "data_type": "int",
-                "array_length": 0,
-                "bitfield_size": 0,
-                "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(SWCAN_SETTINGS)"
-            }
-        ]
-    },
-    {
-        "names": [],
-        "data_type": "Enum",
-        "packing": 0,
-        "is_anonymous": true,
-        "members": [
-            {
-                "name": "assert_line_4632 ",
-                "data_type": "int",
-                "array_length": 0,
-                "bitfield_size": 0,
-                "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(LIN_SETTINGS)"
-            }
-        ]
-    },
-    {
-        "names": [],
-        "data_type": "Enum",
-        "packing": 0,
-        "is_anonymous": true,
-        "members": [
-            {
-                "name": "assert_line_4633 ",
-                "data_type": "int",
-                "array_length": 0,
-                "bitfield_size": 0,
-                "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(ISO9141_KEYWORD2000__INIT_STEP)"
-            }
-        ]
-    },
-    {
-        "names": [],
-        "data_type": "Enum",
-        "packing": 0,
-        "is_anonymous": true,
-        "members": [
-            {
-                "name": "assert_line_4634 ",
-                "data_type": "int",
-                "array_length": 0,
-                "bitfield_size": 0,
-                "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(ISO9141_KEYWORD2000_SETTINGS)"
-            }
-        ]
-    },
-    {
-        "names": [],
-        "data_type": "Enum",
-        "packing": 0,
-        "is_anonymous": true,
-        "members": [
-            {
-                "name": "assert_line_4635 ",
-                "data_type": "int",
-                "array_length": 0,
-                "bitfield_size": 0,
-                "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(UART_SETTINGS)"
-            }
-        ]
-    },
-    {
-        "names": [],
-        "data_type": "Enum",
-        "packing": 0,
-        "is_anonymous": true,
-        "members": [
-            {
-                "name": "assert_line_4636 ",
-                "data_type": "int",
-                "array_length": 0,
-                "bitfield_size": 0,
-                "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(J1708_SETTINGS)"
-            }
-        ]
-    },
-    {
-        "names": [],
-        "data_type": "Enum",
-        "packing": 0,
-        "is_anonymous": true,
-        "members": [
-            {
-                "name": "assert_line_4637 ",
-                "data_type": "int",
-                "array_length": 0,
-                "bitfield_size": 0,
-                "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(SRedSettings)"
-            }
-        ]
-    },
-    {
-        "names": [],
-        "data_type": "Enum",
-        "packing": 0,
-        "is_anonymous": true,
-        "members": [
-            {
-                "name": "assert_line_4638 ",
-                "data_type": "int",
-                "array_length": 0,
-                "bitfield_size": 0,
-                "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(STextAPISettings)"
-            }
-        ]
-    },
-    {
-        "names": [],
-        "data_type": "Enum",
-        "packing": 0,
-        "is_anonymous": true,
-        "members": [
-            {
-                "name": "assert_line_4639 ",
-                "data_type": "int",
-                "array_length": 0,
-                "bitfield_size": 0,
-                "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(stChipVersions)"
-            }
-        ]
-    },
-    {
-        "names": [],
-        "data_type": "Enum",
-        "packing": 0,
-        "is_anonymous": true,
-        "members": [
-            {
-                "name": "assert_line_4640 ",
-                "data_type": "int",
-                "array_length": 0,
-                "bitfield_size": 0,
-                "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(SNeoMostGatewaySettings)"
-            }
-        ]
-    },
-    {
-        "names": [],
-        "data_type": "Enum",
-        "packing": 0,
-        "is_anonymous": true,
-        "members": [
-            {
-                "name": "assert_line_4641 ",
-                "data_type": "int",
-                "array_length": 0,
-                "bitfield_size": 0,
-                "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(OP_ETH_GENERAL_SETTINGS)"
-            }
-        ]
-    },
-    {
-        "names": [],
-        "data_type": "Enum",
-        "packing": 0,
-        "is_anonymous": true,
-        "members": [
-            {
-                "name": "assert_line_4642 ",
-                "data_type": "int",
-                "array_length": 0,
-                "bitfield_size": 0,
-                "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(OP_ETH_SETTINGS)"
-            }
-        ]
-    },
-    {
-        "names": [],
-        "data_type": "Enum",
-        "packing": 0,
-        "is_anonymous": true,
-        "members": [
-            {
-                "name": "assert_line_4643 ",
-                "data_type": "int",
-                "array_length": 0,
-                "bitfield_size": 0,
-                "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(ETHERNET_SETTINGS)"
-            }
-        ]
-    },
-    {
-        "names": [],
-        "data_type": "Enum",
-        "packing": 0,
-        "is_anonymous": true,
-        "members": [
-            {
-                "name": "assert_line_4644 ",
-                "data_type": "int",
-                "array_length": 0,
-                "bitfield_size": 0,
-                "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(ETHERNET_SETTINGS2)"
-            }
-        ]
-    },
-    {
-        "names": [],
-        "data_type": "Enum",
-        "packing": 0,
-        "is_anonymous": true,
-        "members": [
-            {
-                "name": "assert_line_4645 ",
-                "data_type": "int",
-                "array_length": 0,
-                "bitfield_size": 0,
-                "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(ETHERNET10G_SETTINGS)"
-            }
-        ]
-    },
-    {
-        "names": [],
-        "data_type": "Enum",
-        "packing": 0,
-        "is_anonymous": true,
-        "members": [
-            {
-                "name": "assert_line_4646 ",
-                "data_type": "int",
-                "array_length": 0,
-                "bitfield_size": 0,
-                "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(LOGGER_SETTINGS)"
-            }
-        ]
-    },
-    {
-        "names": [],
-        "data_type": "Enum",
-        "packing": 0,
-        "is_anonymous": true,
-        "members": [
-            {
-                "name": "assert_line_4647 ",
-                "data_type": "int",
-                "array_length": 0,
-                "bitfield_size": 0,
-                "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(DISK_SETTINGS)"
-            }
-        ]
-    },
-    {
-        "names": [],
-        "data_type": "Enum",
-        "packing": 0,
-        "is_anonymous": true,
-        "members": [
-            {
-                "name": "assert_line_4648 ",
-                "data_type": "int",
-                "array_length": 0,
-                "bitfield_size": 0,
-                "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(SERDESCAM_SETTINGS)"
-            }
-        ]
-    },
-    {
-        "names": [],
-        "data_type": "Enum",
-        "packing": 0,
-        "is_anonymous": true,
-        "members": [
-            {
-                "name": "assert_line_4649 ",
-                "data_type": "int",
-                "array_length": 0,
-                "bitfield_size": 0,
-                "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(SERDESPOC_SETTINGS)"
-            }
-        ]
-    },
-    {
-        "names": [],
-        "data_type": "Enum",
-        "packing": 0,
-        "is_anonymous": true,
-        "members": [
-            {
-                "name": "assert_line_4650 ",
-                "data_type": "int",
-                "array_length": 0,
-                "bitfield_size": 0,
-                "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(SERDESGEN_SETTINGS)"
-            }
-        ]
-    },
-    {
-        "names": [],
-        "data_type": "Enum",
-        "packing": 0,
-        "is_anonymous": true,
-        "members": [
-            {
-                "name": "assert_line_4651 ",
-                "data_type": "int",
-                "array_length": 0,
-                "bitfield_size": 0,
-                "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(RAD_REPORTING_SETTINGS)"
-            }
-        ]
-    },
-    {
-        "names": [],
-        "data_type": "Enum",
-        "packing": 0,
-        "is_anonymous": true,
-        "members": [
-            {
-                "name": "assert_line_4652 ",
-                "data_type": "int",
-                "array_length": 0,
-                "bitfield_size": 0,
-                "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(CANTERM_SETTINGS)"
-            }
-        ]
-    },
-    {
-        "names": [],
-        "data_type": "Enum",
-        "packing": 0,
-        "is_anonymous": true,
-        "members": [
-            {
-                "name": "assert_line_4653 ",
-                "data_type": "int",
-                "array_length": 0,
-                "bitfield_size": 0,
-                "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(SFireSettings)"
-            }
-        ]
-    },
-    {
-        "names": [],
-        "data_type": "Enum",
-        "packing": 0,
-        "is_anonymous": true,
-        "members": [
-            {
-                "name": "assert_line_4654 ",
-                "data_type": "int",
-                "array_length": 0,
-                "bitfield_size": 0,
-                "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(SFireVnetSettings)"
+                "enum_value": 65535
             }
         ]
     },
@@ -3086,7 +2824,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(SCyanSettings)"
+                "enum_value": "1/(int)(!!(sizeof(CAN_SETTINGS)"
             }
         ]
     },
@@ -3102,7 +2840,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(SVCAN3Settings)"
+                "enum_value": "1/(int)(!!(sizeof(CANFD_SETTINGS)"
             }
         ]
     },
@@ -3118,7 +2856,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(SVCAN4Settings)"
+                "enum_value": "1/(int)(!!(sizeof(SWCAN_SETTINGS)"
             }
         ]
     },
@@ -3134,7 +2872,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(SVCANRFSettings)"
+                "enum_value": "1/(int)(!!(sizeof(LIN_SETTINGS)"
             }
         ]
     },
@@ -3150,7 +2888,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(SECUSettings)"
+                "enum_value": "1/(int)(!!(sizeof(ISO9141_KEYWORD2000__INIT_STEP)"
             }
         ]
     },
@@ -3166,7 +2904,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(SPendantSettings)"
+                "enum_value": "1/(int)(!!(sizeof(ISO9141_KEYWORD2000_SETTINGS)"
             }
         ]
     },
@@ -3182,7 +2920,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(SIEVBSettings)"
+                "enum_value": "1/(int)(!!(sizeof(UART_SETTINGS)"
             }
         ]
     },
@@ -3198,7 +2936,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(SEEVBSettings)"
+                "enum_value": "1/(int)(!!(sizeof(J1708_SETTINGS)"
             }
         ]
     },
@@ -3214,7 +2952,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(SRADGalaxySettings)"
+                "enum_value": "1/(int)(!!(sizeof(SRedSettings)"
             }
         ]
     },
@@ -3230,7 +2968,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(SRADStar2Settings)"
+                "enum_value": "1/(int)(!!(sizeof(STextAPISettings)"
             }
         ]
     },
@@ -3246,7 +2984,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(SOBD2SimSettings)"
+                "enum_value": "1/(int)(!!(sizeof(stChipVersions)"
             }
         ]
     },
@@ -3262,7 +3000,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(CmProbeSettings)"
+                "enum_value": "1/(int)(!!(sizeof(SNeoMostGatewaySettings)"
             }
         ]
     },
@@ -3278,7 +3016,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(GLOBAL_SETTINGS)"
+                "enum_value": "1/(int)(!!(sizeof(OP_ETH_GENERAL_SETTINGS)"
             }
         ]
     },
@@ -3294,7 +3032,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(stCM_ISO157652_TxMessage)"
+                "enum_value": "1/(int)(!!(sizeof(OP_ETH_SETTINGS)"
             }
         ]
     },
@@ -3310,7 +3048,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(stCM_ISO157652_RxMessage)"
+                "enum_value": "1/(int)(!!(sizeof(ETHERNET_SETTINGS)"
             }
         ]
     },
@@ -3326,7 +3064,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(spyFilterLong)"
+                "enum_value": "1/(int)(!!(sizeof(ETHERNET_SETTINGS2)"
             }
         ]
     },
@@ -3342,7 +3080,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(icsSpyMessage)"
+                "enum_value": "1/(int)(!!(sizeof(ETHERNET10G_SETTINGS)"
             }
         ]
     },
@@ -3358,7 +3096,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(icsSpyMessageLong)"
+                "enum_value": "1/(int)(!!(sizeof(LOGGER_SETTINGS)"
             }
         ]
     },
@@ -3374,7 +3112,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(icsSpyMessageJ1850)"
+                "enum_value": "1/(int)(!!(sizeof(DISK_SETTINGS)"
             }
         ]
     },
@@ -3390,7 +3128,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(icsSpyMessageVSB)"
+                "enum_value": "1/(int)(!!(sizeof(SERDESCAM_SETTINGS)"
             }
         ]
     },
@@ -3406,7 +3144,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(OBD2ProSettings)"
+                "enum_value": "1/(int)(!!(sizeof(SERDESPOC_SETTINGS)"
             }
         ]
     },
@@ -3422,7 +3160,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(ISO15765_2015_TxMessage)"
+                "enum_value": "1/(int)(!!(sizeof(SERDESGEN_SETTINGS)"
             }
         ]
     },
@@ -3438,7 +3176,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(TIMESYNC_ICSHARDWARE_SETTINGS)"
+                "enum_value": "1/(int)(!!(sizeof(RAD_REPORTING_SETTINGS)"
             }
         ]
     },
@@ -3454,7 +3192,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(SRADSuperMoonSettings)"
+                "enum_value": "1/(int)(!!(sizeof(CANTERM_SETTINGS)"
             }
         ]
     },
@@ -3470,7 +3208,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(SRADMoon2Settings)"
+                "enum_value": "1/(int)(!!(sizeof(SFireSettings)"
             }
         ]
     },
@@ -3486,7 +3224,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(SRADGigalogSettings)"
+                "enum_value": "1/(int)(!!(sizeof(SFireVnetSettings)"
             }
         ]
     },
@@ -3502,7 +3240,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(SRADGigastarSettings)"
+                "enum_value": "1/(int)(!!(sizeof(SCyanSettings)"
             }
         ]
     },
@@ -3518,7 +3256,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(SExtSubCmdHdr)"
+                "enum_value": "1/(int)(!!(sizeof(SVCAN3Settings)"
             }
         ]
     },
@@ -3534,7 +3272,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(SDiskStructure)"
+                "enum_value": "1/(int)(!!(sizeof(SVCAN4Settings)"
             }
         ]
     },
@@ -3550,7 +3288,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(SDiskFormatProgress)"
+                "enum_value": "1/(int)(!!(sizeof(SVCANRFSettings)"
             }
         ]
     },
@@ -3566,7 +3304,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(SDiskStatus)"
+                "enum_value": "1/(int)(!!(sizeof(SECUSettings)"
             }
         ]
     },
@@ -3582,7 +3320,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(SExtSubCmdComm)"
+                "enum_value": "1/(int)(!!(sizeof(SPendantSettings)"
             }
         ]
     },
@@ -3598,7 +3336,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(SRADPlutoSettings)"
+                "enum_value": "1/(int)(!!(sizeof(SIEVBSettings)"
             }
         ]
     },
@@ -3614,7 +3352,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(CANHubSettings)"
+                "enum_value": "1/(int)(!!(sizeof(SEEVBSettings)"
             }
         ]
     },
@@ -3630,7 +3368,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(SNeoECU12Settings)"
+                "enum_value": "1/(int)(!!(sizeof(SRADGalaxySettings)"
             }
         ]
     },
@@ -3646,7 +3384,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(SPlutoSwitchSettings)"
+                "enum_value": "1/(int)(!!(sizeof(SRADStar2Settings)"
             }
         ]
     },
@@ -3662,7 +3400,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(VCAN4IndSettings)"
+                "enum_value": "1/(int)(!!(sizeof(SOBD2SimSettings)"
             }
         ]
     },
@@ -3678,7 +3416,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(SRADJupiterSettings)"
+                "enum_value": "1/(int)(!!(sizeof(CmProbeSettings)"
             }
         ]
     },
@@ -3694,7 +3432,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(RadMoonDuoSettings)"
+                "enum_value": "1/(int)(!!(sizeof(GLOBAL_SETTINGS)"
             }
         ]
     },
@@ -3710,7 +3448,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(SFire3Settings)"
+                "enum_value": "1/(int)(!!(sizeof(stCM_ISO157652_TxMessage)"
             }
         ]
     },
@@ -3726,7 +3464,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(SEtherBadgeSettings)"
+                "enum_value": "1/(int)(!!(sizeof(stCM_ISO157652_RxMessage)"
             }
         ]
     },
@@ -3742,7 +3480,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(SRADA2BSettings)"
+                "enum_value": "1/(int)(!!(sizeof(spyFilterLong)"
             }
         ]
     },
@@ -3758,7 +3496,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(A2BMonitorSettings)"
+                "enum_value": "1/(int)(!!(sizeof(icsSpyMessage)"
             }
         ]
     },
@@ -3774,7 +3512,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(SRADEpsilonSettings)"
+                "enum_value": "1/(int)(!!(sizeof(icsSpyMessageLong)"
             }
         ]
     },
@@ -3790,7 +3528,7 @@
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(RAD_GPTP_SETTINGS)"
+                "enum_value": "1/(int)(!!(sizeof(icsSpyMessageJ1850)"
             }
         ]
     },
@@ -3802,6 +3540,422 @@
         "members": [
             {
                 "name": "assert_line_4700 ",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": true,
+                "enum_value": "1/(int)(!!(sizeof(icsSpyMessageVSB)"
+            }
+        ]
+    },
+    {
+        "names": [],
+        "data_type": "Enum",
+        "packing": 0,
+        "is_anonymous": true,
+        "members": [
+            {
+                "name": "assert_line_4701 ",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": true,
+                "enum_value": "1/(int)(!!(sizeof(OBD2ProSettings)"
+            }
+        ]
+    },
+    {
+        "names": [],
+        "data_type": "Enum",
+        "packing": 0,
+        "is_anonymous": true,
+        "members": [
+            {
+                "name": "assert_line_4702 ",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": true,
+                "enum_value": "1/(int)(!!(sizeof(ISO15765_2015_TxMessage)"
+            }
+        ]
+    },
+    {
+        "names": [],
+        "data_type": "Enum",
+        "packing": 0,
+        "is_anonymous": true,
+        "members": [
+            {
+                "name": "assert_line_4703 ",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": true,
+                "enum_value": "1/(int)(!!(sizeof(TIMESYNC_ICSHARDWARE_SETTINGS)"
+            }
+        ]
+    },
+    {
+        "names": [],
+        "data_type": "Enum",
+        "packing": 0,
+        "is_anonymous": true,
+        "members": [
+            {
+                "name": "assert_line_4704 ",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": true,
+                "enum_value": "1/(int)(!!(sizeof(SRADSuperMoonSettings)"
+            }
+        ]
+    },
+    {
+        "names": [],
+        "data_type": "Enum",
+        "packing": 0,
+        "is_anonymous": true,
+        "members": [
+            {
+                "name": "assert_line_4705 ",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": true,
+                "enum_value": "1/(int)(!!(sizeof(SRADMoon2Settings)"
+            }
+        ]
+    },
+    {
+        "names": [],
+        "data_type": "Enum",
+        "packing": 0,
+        "is_anonymous": true,
+        "members": [
+            {
+                "name": "assert_line_4706 ",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": true,
+                "enum_value": "1/(int)(!!(sizeof(SRADGigalogSettings)"
+            }
+        ]
+    },
+    {
+        "names": [],
+        "data_type": "Enum",
+        "packing": 0,
+        "is_anonymous": true,
+        "members": [
+            {
+                "name": "assert_line_4707 ",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": true,
+                "enum_value": "1/(int)(!!(sizeof(SRADGigastarSettings)"
+            }
+        ]
+    },
+    {
+        "names": [],
+        "data_type": "Enum",
+        "packing": 0,
+        "is_anonymous": true,
+        "members": [
+            {
+                "name": "assert_line_4708 ",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": true,
+                "enum_value": "1/(int)(!!(sizeof(SExtSubCmdHdr)"
+            }
+        ]
+    },
+    {
+        "names": [],
+        "data_type": "Enum",
+        "packing": 0,
+        "is_anonymous": true,
+        "members": [
+            {
+                "name": "assert_line_4709 ",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": true,
+                "enum_value": "1/(int)(!!(sizeof(SDiskStructure)"
+            }
+        ]
+    },
+    {
+        "names": [],
+        "data_type": "Enum",
+        "packing": 0,
+        "is_anonymous": true,
+        "members": [
+            {
+                "name": "assert_line_4710 ",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": true,
+                "enum_value": "1/(int)(!!(sizeof(SDiskFormatProgress)"
+            }
+        ]
+    },
+    {
+        "names": [],
+        "data_type": "Enum",
+        "packing": 0,
+        "is_anonymous": true,
+        "members": [
+            {
+                "name": "assert_line_4711 ",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": true,
+                "enum_value": "1/(int)(!!(sizeof(SDiskStatus)"
+            }
+        ]
+    },
+    {
+        "names": [],
+        "data_type": "Enum",
+        "packing": 0,
+        "is_anonymous": true,
+        "members": [
+            {
+                "name": "assert_line_4712 ",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": true,
+                "enum_value": "1/(int)(!!(sizeof(SExtSubCmdComm)"
+            }
+        ]
+    },
+    {
+        "names": [],
+        "data_type": "Enum",
+        "packing": 0,
+        "is_anonymous": true,
+        "members": [
+            {
+                "name": "assert_line_4713 ",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": true,
+                "enum_value": "1/(int)(!!(sizeof(SRADPlutoSettings)"
+            }
+        ]
+    },
+    {
+        "names": [],
+        "data_type": "Enum",
+        "packing": 0,
+        "is_anonymous": true,
+        "members": [
+            {
+                "name": "assert_line_4714 ",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": true,
+                "enum_value": "1/(int)(!!(sizeof(CANHubSettings)"
+            }
+        ]
+    },
+    {
+        "names": [],
+        "data_type": "Enum",
+        "packing": 0,
+        "is_anonymous": true,
+        "members": [
+            {
+                "name": "assert_line_4715 ",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": true,
+                "enum_value": "1/(int)(!!(sizeof(SNeoECU12Settings)"
+            }
+        ]
+    },
+    {
+        "names": [],
+        "data_type": "Enum",
+        "packing": 0,
+        "is_anonymous": true,
+        "members": [
+            {
+                "name": "assert_line_4716 ",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": true,
+                "enum_value": "1/(int)(!!(sizeof(SPlutoSwitchSettings)"
+            }
+        ]
+    },
+    {
+        "names": [],
+        "data_type": "Enum",
+        "packing": 0,
+        "is_anonymous": true,
+        "members": [
+            {
+                "name": "assert_line_4717 ",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": true,
+                "enum_value": "1/(int)(!!(sizeof(VCAN4IndSettings)"
+            }
+        ]
+    },
+    {
+        "names": [],
+        "data_type": "Enum",
+        "packing": 0,
+        "is_anonymous": true,
+        "members": [
+            {
+                "name": "assert_line_4718 ",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": true,
+                "enum_value": "1/(int)(!!(sizeof(SRADJupiterSettings)"
+            }
+        ]
+    },
+    {
+        "names": [],
+        "data_type": "Enum",
+        "packing": 0,
+        "is_anonymous": true,
+        "members": [
+            {
+                "name": "assert_line_4719 ",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": true,
+                "enum_value": "1/(int)(!!(sizeof(RadMoonDuoSettings)"
+            }
+        ]
+    },
+    {
+        "names": [],
+        "data_type": "Enum",
+        "packing": 0,
+        "is_anonymous": true,
+        "members": [
+            {
+                "name": "assert_line_4720 ",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": true,
+                "enum_value": "1/(int)(!!(sizeof(SFire3Settings)"
+            }
+        ]
+    },
+    {
+        "names": [],
+        "data_type": "Enum",
+        "packing": 0,
+        "is_anonymous": true,
+        "members": [
+            {
+                "name": "assert_line_4721 ",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": true,
+                "enum_value": "1/(int)(!!(sizeof(SEtherBadgeSettings)"
+            }
+        ]
+    },
+    {
+        "names": [],
+        "data_type": "Enum",
+        "packing": 0,
+        "is_anonymous": true,
+        "members": [
+            {
+                "name": "assert_line_4722 ",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": true,
+                "enum_value": "1/(int)(!!(sizeof(SRADA2BSettings)"
+            }
+        ]
+    },
+    {
+        "names": [],
+        "data_type": "Enum",
+        "packing": 0,
+        "is_anonymous": true,
+        "members": [
+            {
+                "name": "assert_line_4723 ",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": true,
+                "enum_value": "1/(int)(!!(sizeof(A2BMonitorSettings)"
+            }
+        ]
+    },
+    {
+        "names": [],
+        "data_type": "Enum",
+        "packing": 0,
+        "is_anonymous": true,
+        "members": [
+            {
+                "name": "assert_line_4724 ",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": true,
+                "enum_value": "1/(int)(!!(sizeof(SRADEpsilonSettings)"
+            }
+        ]
+    },
+    {
+        "names": [],
+        "data_type": "Enum",
+        "packing": 0,
+        "is_anonymous": true,
+        "members": [
+            {
+                "name": "assert_line_4725 ",
+                "data_type": "int",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": true,
+                "enum_value": "1/(int)(!!(sizeof(RAD_GPTP_SETTINGS)"
+            }
+        ]
+    },
+    {
+        "names": [],
+        "data_type": "Enum",
+        "packing": 0,
+        "is_anonymous": true,
+        "members": [
+            {
+                "name": "assert_line_4726 ",
                 "data_type": "int",
                 "array_length": 0,
                 "bitfield_size": 0,

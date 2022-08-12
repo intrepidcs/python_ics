@@ -4608,6 +4608,32 @@ typedef struct SPhyRegPkt
 	};
 }PhyRegPkt_t;
 
+typedef enum
+{
+	networkDWCAN01,
+	networkDWCAN02,
+	networkDWCAN03,
+	networkDWCAN04,
+	networkDWCAN05,
+	networkDWCAN06,
+	networkDWCAN07,
+	networkDWCAN08,
+	networkTerminationDWCAN01,
+	networkTerminationDWCAN02,
+	networkTerminationDWCAN03,
+	networkTerminationDWCAN04,
+	networkTerminationDWCAN05,
+	networkTerminationDWCAN06,
+	networkTerminationDWCAN07,
+	networkTerminationDWCAN08,
+	NUM_VALID_DEVICE_FEATURES,
+	supportedFeatureMax = 0xFFFF,
+} DeviceFeature;
+// Update this assert when we add features to this enum
+//static_assert(NUM_VALID_DEVICE_FEATURES == (networkTerminationDWCAN08 + 1));
+//static_assert(NUM_VALID_DEVICE_FEATURES <= supportedFeatureMax);
+#define NUM_DEVICE_FEATURE_BITFIELDS ((NUM_VALID_DEVICE_FEATURES + 31) / 32)
+
 
 #ifndef INTREPID_NO_CHECK_STRUCT_SIZE
 

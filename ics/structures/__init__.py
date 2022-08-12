@@ -156,4 +156,5 @@ __all__ = [
     "e_plasma_ion_vnet_channel_t",
     "s_phy_reg_pkt_status",
     "s_phy_reg_pkt_rw",
+    "device_feature",
 ]
