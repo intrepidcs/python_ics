@@ -926,6 +926,28 @@ int setup_module_auto_defines(PyObject * module)
 	// end of enum -  } PhyRegPktRw_t;
 
 	// enum
+	result += PyModule_AddIntMacro(module, networkDWCAN01);
+	result += PyModule_AddIntMacro(module, networkDWCAN02);
+	result += PyModule_AddIntMacro(module, networkDWCAN03);
+	result += PyModule_AddIntMacro(module, networkDWCAN04);
+	result += PyModule_AddIntMacro(module, networkDWCAN05);
+	result += PyModule_AddIntMacro(module, networkDWCAN06);
+	result += PyModule_AddIntMacro(module, networkDWCAN07);
+	result += PyModule_AddIntMacro(module, networkDWCAN08);
+	result += PyModule_AddIntMacro(module, networkTerminationDWCAN01);
+	result += PyModule_AddIntMacro(module, networkTerminationDWCAN02);
+	result += PyModule_AddIntMacro(module, networkTerminationDWCAN03);
+	result += PyModule_AddIntMacro(module, networkTerminationDWCAN04);
+	result += PyModule_AddIntMacro(module, networkTerminationDWCAN05);
+	result += PyModule_AddIntMacro(module, networkTerminationDWCAN06);
+	result += PyModule_AddIntMacro(module, networkTerminationDWCAN07);
+	result += PyModule_AddIntMacro(module, networkTerminationDWCAN08);
+	result += PyModule_AddIntMacro(module, NUM_VALID_DEVICE_FEATURES);
+	result += PyModule_AddIntMacro(module, supportedFeatureMax);
+	// end of enum -  } DeviceFeature;
+
+	result += PyModule_AddIntMacro(module, NUM_DEVICE_FEATURE_BITFIELDS);
+	// enum
 	// end of enum -    }
 
 
