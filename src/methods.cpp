@@ -3519,7 +3519,7 @@ PyObject* meth_is_device_feature_supported(PyObject* self, PyObject* args)
 PyObject* meth_get_pcb_serial_number(PyObject* self, PyObject* args)
 {
     PyObject* obj = NULL;
-    if (!PyArg_ParseTuple(args, arg_parse("O", __FUNCTION__), &obj)) {
+    if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
         return NULL;
     }
     if (!PyNeoDevice_CheckExact(obj)) {
@@ -3534,7 +3534,7 @@ PyObject* meth_get_pcb_serial_number(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         char pcbsn[32] = {0};
-        size_t length = 0;
+        size_t length = sizeof pcbsn / sizeof pcbsn[0];
         ice::Function<int __stdcall (ICS_HANDLE, char*, size_t*)> icsneoGetPCBSerialNumber(lib, "icsneoGetPCBSerialNumber");
         Py_BEGIN_ALLOW_THREADS
             if (!icsneoGetPCBSerialNumber(handle, pcbsn, &length)) {
@@ -3557,7 +3557,7 @@ PyObject* meth_set_led_property(PyObject* self, PyObject* args)
     unsigned int led = 0;
     unsigned int prop = 0;
     unsigned int value = 0;
-    if (!PyArg_ParseTuple(args, arg_parse("OIII", __FUNCTION__), &obj, &led, &prop, &value)) {
+    if (!PyArg_ParseTuple(args, arg_parse("OIII:", __FUNCTION__), &obj, &led, &prop, &value)) {
         return NULL;
     }
     if (!PyNeoDevice_CheckExact(obj)) {
@@ -3600,7 +3600,7 @@ PyObject* meth_start_dhcp_server(PyObject* self, PyObject* args)
     bool bOverwriteDHCPSettings = false;
     uint32_t leaseTime;
     uint8_t reserved = 0;
-    if (!PyArg_ParseTuple(args, arg_parse("OIsssssbI|b", __FUNCTION__), &obj, &NetworkID, &pDeviceIPAddress, &pSubnetmask, &pGateway, &pStartaddress, &pEndaddress, &bOverwriteDHCPSettings, &leaseTime, &reserved)) {
+    if (!PyArg_ParseTuple(args, arg_parse("OIsssssbI|b:", __FUNCTION__), &obj, &NetworkID, &pDeviceIPAddress, &pSubnetmask, &pGateway, &pStartaddress, &pEndaddress, &bOverwriteDHCPSettings, &leaseTime, &reserved)) {
         return NULL;
     }
     if (!PyNeoDevice_CheckExact(obj)) {
@@ -3638,7 +3638,7 @@ PyObject* meth_stop_dhcp_server(PyObject* self, PyObject* args)
 {
     PyObject* obj = NULL;
     unsigned int NetworkID = 0;
-    if (!PyArg_ParseTuple(args, arg_parse("OI", __FUNCTION__), &obj, &NetworkID)) {
+    if (!PyArg_ParseTuple(args, arg_parse("OI:", __FUNCTION__), &obj, &NetworkID)) {
         return NULL;
     }
     if (!PyNeoDevice_CheckExact(obj)) {
