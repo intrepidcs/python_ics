@@ -82,7 +82,11 @@ PyObject* meth_disk_format(PyObject* self, PyObject* args);
 PyObject* meth_disk_format_cancel(PyObject* self, PyObject* args);
 PyObject* meth_get_disk_format_progress(PyObject* self, PyObject* args);
 PyObject* meth_enable_doip_line(PyObject* self, PyObject* args); //icsneoEnableDOIPLine
-//PyObject* meth_is_device_feature_supported(PyObject* self, PyObject* args); // icsneoIsDeviceFeatureSupported
+PyObject* meth_is_device_feature_supported(PyObject* self, PyObject* args); // icsneoIsDeviceFeatureSupported
+PyObject* meth_get_pcb_serial_number(PyObject* self, PyObject* args);
+PyObject* meth_set_led_property(PyObject* self, PyObject* args);
+PyObject* meth_start_dhcp_server(PyObject* self, PyObject* args);
+PyObject* meth_stop_dhcp_server(PyObject* self, PyObject* args);
 
 #ifdef _cplusplus
 }
@@ -1391,6 +1395,96 @@ PyObject* meth_enable_doip_line(PyObject* self, PyObject* args); //icsneoEnableD
     "\t>>> supported = ics.is_device_feature_supported(d, DeviceFeature.networkTerminationDWCAN01)\n" \
     "\t>>> \n"
 
+
+#define _DOC_GET_PCB_SERIAL_NUMBER \
+    MODULE_NAME ".get_pcb_serial_number(device)\n" \
+    "\n" \
+    "Gets the unique PCB serial number of the device.\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\t(:class:`str`): PCB Serial Number\n" \
+    "\n" \
+    "\t>>> import ics\n" \
+    "\t>>> d = ics.open_device()\n" \
+    "\t>>> pcb_sn = ics.get_pcb_serial_number(d)\n" \
+    "\t>>> \n"
+
+#define _DOC_SET_LED_PROPERTY \
+    MODULE_NAME ".set_led_property(device, led, prop, value)\n" \
+    "\n" \
+    "Sets the LED property on the device.\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
+    "\tled (:class:`int`): Index or position of the LED\n\n" \
+    "\tprop (:class:`int`): Property of the LED\n\n" \
+    "\tvalue (:class:`int`): Value of the LED Property\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\tNone.\n" \
+    "\n" \
+    "\t>>> import ics\n" \
+    "\t>>> d = ics.open_device()\n" \
+    "\t>>> ics.set_led_property(d, TODO, TODO, TODO)\n" \
+    "\t>>> \n"
+
+#define _DOC_START_DHCP_SERVER \
+    MODULE_NAME ".start_dhcp_server(device, network_id, device_ip_address, subnet_mask, gateway, start_address, end_address, overwrite_dhcp_settings, lease_time, reserved)\n" \
+    "\n" \
+    "Starts a DHCP Server.\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
+    "\tnetwork_id (:class:`int`): NetworkID\n\n" \
+    "\tdevice_ip_address (:class:`str`): Device IP Address\n\n" \
+    "\tsubnet_mask (:class:`str`): Subnet Mask\n\n" \
+    "\tgateway (:class:`str`): Gateway\n\n" \
+    "\tstart_address (:class:`str`): Start Address\n\n" \
+    "\tend_address (:class:`str`): End Address\n\n" \
+    "\toverwrite_dhcp_settings (:class:`bool`): Overwrite DHCP Settings\n\n" \
+    "\tlease_time (:class:`int`): Lease time\n\n" \
+    "\treserved (:class:`int`): (Optional) Reserved, set to 0\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\tNone.\n" \
+    "\n" \
+    "\t>>> import ics\n" \
+    "\t>>> d = ics.open_device()\n" \
+    "\t>>> ics.start_dhcp_server(d, TODO)\n" \
+    "\t>>> \n"
+
+#define _DOC_STOP_DHCP_SERVER \
+    MODULE_NAME ".stop_dhcp_server(device, network_id)\n" \
+    "\n" \
+    "Stops the DHCP Server\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
+    "\tnetwork_id (:class:`int`): NetworkID\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\tNone.\n" \
+    "\n" \
+    "\t>>> import ics\n" \
+    "\t>>> d = ics.open_device()\n" \
+    "\t>>> ics.stop_dhcp_server(d, TODO)\n" \
+    "\t>>> \n"
+
 static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("find_devices", "icsneoFindNeoDevices", "FindNeoDevices", (PyCFunction)meth_find_devices, METH_VARARGS | METH_KEYWORDS, _DOC_FIND_DEVICES),
     _EZ_ICS_STRUCT_METHOD("open_device", "icsneoOpenNeoDevice", "OpenNeoDevice", (PyCFunction)meth_open_device, METH_VARARGS | METH_KEYWORDS, _DOC_OPEN_DEVICES),
@@ -1470,8 +1564,11 @@ static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("disk_format_cancel", "icsneoRequestDiskFormatCancel", "RequestDiskFormatCancel", meth_disk_format_cancel, METH_VARARGS, _DOC_DISK_FORMAT_CANCEL),
     _EZ_ICS_STRUCT_METHOD("get_disk_format_progress", "icsneoRequestDiskFormatProgress", "RequestDiskFormatProgress", meth_get_disk_format_progress, METH_VARARGS, _DOC_DISK_FORMAT_PROGRESS),
     _EZ_ICS_STRUCT_METHOD("enable_doip_line", "icsneoEnableDOIPLine", "EnableDOIPLine", meth_enable_doip_line, METH_VARARGS, _DOC_ENABLE_DOIP_LINE),
-    // not in official builds yet...
-    //_EZ_ICS_STRUCT_METHOD("is_device_feature_supported", "icsneoIsDeviceFeatureSupported", "IsDeviceFeatureSupported", meth_is_device_feature_supported, METH_VARARGS, _DOC_IS_DEVICE_FEATURE_SUPPORTED),
+    _EZ_ICS_STRUCT_METHOD("is_device_feature_supported", "icsneoIsDeviceFeatureSupported", "IsDeviceFeatureSupported", meth_is_device_feature_supported, METH_VARARGS, _DOC_IS_DEVICE_FEATURE_SUPPORTED),
+    _EZ_ICS_STRUCT_METHOD("get_pcb_serial_number", "icsneoGetPCBSerialNumber", "GetPCBSerialNumber", meth_get_pcb_serial_number, METH_VARARGS, _DOC_GET_PCB_SERIAL_NUMBER),
+    _EZ_ICS_STRUCT_METHOD("set_led_property", "icsneoSetLedProperty", "SetLedProperty", meth_set_led_property, METH_VARARGS, _DOC_SET_LED_PROPERTY),
+    _EZ_ICS_STRUCT_METHOD("start_dhcp_server", "icsneoStartDHCPServer", "StartDHCPServer", meth_start_dhcp_server, METH_VARARGS, _DOC_START_DHCP_SERVER),
+    _EZ_ICS_STRUCT_METHOD("stop_dhcp_server", "icsneoStopDHCPServer", "StopDHCPServer", meth_stop_dhcp_server, METH_VARARGS, _DOC_STOP_DHCP_SERVER),
 
     {"override_library_name", (PyCFunction)meth_override_library_name, METH_VARARGS, _DOC_OVERRIDE_LIBRARY_NAME},
     {"get_library_path", (PyCFunction)meth_get_library_path, METH_NOARGS, ""},

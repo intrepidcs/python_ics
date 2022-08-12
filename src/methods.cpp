@@ -3480,7 +3480,6 @@ PyObject* meth_enable_doip_line(PyObject* self, PyObject* args)
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
-#if 0
 PyObject* meth_is_device_feature_supported(PyObject* self, PyObject* args)
 {
     PyObject* obj = NULL;
@@ -3516,4 +3515,156 @@ PyObject* meth_is_device_feature_supported(PyObject* self, PyObject* args)
     }
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
-#endif
+
+PyObject* meth_get_pcb_serial_number(PyObject* self, PyObject* args)
+{
+    PyObject* obj = NULL;
+    if (!PyArg_ParseTuple(args, arg_parse("O", __FUNCTION__), &obj)) {
+        return NULL;
+    }
+    if (!PyNeoDevice_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        char pcbsn[32] = {0};
+        size_t length = 0;
+        ice::Function<int __stdcall (ICS_HANDLE, char*, size_t*)> icsneoGetPCBSerialNumber(lib, "icsneoGetPCBSerialNumber");
+        Py_BEGIN_ALLOW_THREADS
+            if (!icsneoGetPCBSerialNumber(handle, pcbsn, &length)) {
+                Py_BLOCK_THREADS
+                    return set_ics_exception(exception_runtime_error(), "icsneoGetPCBSerialNumber() Failed");
+            }
+        Py_END_ALLOW_THREADS
+        return Py_BuildValue("s", pcbsn);
+    }
+    catch (ice::Exception& ex)
+    {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
+
+PyObject* meth_set_led_property(PyObject* self, PyObject* args)
+{
+    PyObject* obj = NULL;
+    unsigned int led = 0;
+    unsigned int prop = 0;
+    unsigned int value = 0;
+    if (!PyArg_ParseTuple(args, arg_parse("OIII", __FUNCTION__), &obj, &led, &prop, &value)) {
+        return NULL;
+    }
+    if (!PyNeoDevice_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        unsigned int supported = 0;
+        ice::Function<int __stdcall (ICS_HANDLE, unsigned int, unsigned int, unsigned int)> icsneoSetLedProperty(lib, "icsneoSetLedProperty");
+        Py_BEGIN_ALLOW_THREADS
+            if (!icsneoSetLedProperty(handle, led, prop, value)) {
+                Py_BLOCK_THREADS
+                    return set_ics_exception(exception_runtime_error(), "icsneoSetLedProperty() Failed");
+            }
+        Py_END_ALLOW_THREADS
+        Py_RETURN_NONE;
+    }
+    catch (ice::Exception& ex)
+    {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
+
+PyObject* meth_start_dhcp_server(PyObject* self, PyObject* args)
+{
+    PyObject* obj = NULL;
+    unsigned int NetworkID = 0;
+    const char* pDeviceIPAddress = NULL;
+    const char* pSubnetmask = NULL;
+    const char* pGateway = NULL;
+    const char* pStartaddress = NULL;
+    const char* pEndaddress = NULL;
+    bool bOverwriteDHCPSettings = false;
+    uint32_t leaseTime;
+    uint8_t reserved = 0;
+    if (!PyArg_ParseTuple(args, arg_parse("OIsssssbI|b", __FUNCTION__), &obj, &NetworkID, &pDeviceIPAddress, &pSubnetmask, &pGateway, &pStartaddress, &pEndaddress, &bOverwriteDHCPSettings, &leaseTime, &reserved)) {
+        return NULL;
+    }
+    if (!PyNeoDevice_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        unsigned int supported = 0;
+        // int _stdcall icsneoStartDHCPServer(void* hObject, unsigned int NetworkID, const char* pDeviceIPAddress,const char* pSubnetmask,
+		//      const char* pGateway,const char* pStartaddress,
+		//      const char* pEndaddress,bool bOverwriteDHCPSettings,uint32_t leaseTime,uint8_t reserved)
+        ice::Function<int __stdcall (ICS_HANDLE, unsigned int, const char*, const char*, const char*, const char*, const char*, bool, uint32_t, uint8_t)> icsneoStartDHCPServer(lib, "icsneoStartDHCPServer");
+        Py_BEGIN_ALLOW_THREADS
+            if (!icsneoStartDHCPServer(handle, NetworkID, pDeviceIPAddress, pSubnetmask, pGateway, pStartaddress, pEndaddress, bOverwriteDHCPSettings, leaseTime, reserved)) {
+                Py_BLOCK_THREADS
+                    return set_ics_exception(exception_runtime_error(), "icsneoStartDHCPServer() Failed");
+            }
+        Py_END_ALLOW_THREADS
+        Py_RETURN_NONE;
+    }
+    catch (ice::Exception& ex)
+    {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
+
+PyObject* meth_stop_dhcp_server(PyObject* self, PyObject* args)
+{
+    PyObject* obj = NULL;
+    unsigned int NetworkID = 0;
+    if (!PyArg_ParseTuple(args, arg_parse("OI", __FUNCTION__), &obj, &NetworkID)) {
+        return NULL;
+    }
+    if (!PyNeoDevice_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        unsigned int supported = 0;
+        ice::Function<int __stdcall (ICS_HANDLE, unsigned int)> icsneoStopDHCPServer(lib, "icsneoStopDHCPServer");
+        Py_BEGIN_ALLOW_THREADS
+            if (!icsneoStopDHCPServer(handle, NetworkID)) {
+                Py_BLOCK_THREADS
+                    return set_ics_exception(exception_runtime_error(), "icsneoStopDHCPServer() Failed");
+            }
+        Py_END_ALLOW_THREADS
+        Py_RETURN_NONE;
+    }
+    catch (ice::Exception& ex)
+    {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
