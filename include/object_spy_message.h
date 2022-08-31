@@ -65,14 +65,14 @@ static PyMemberDef spy_message_object_members[] = {
     { "NetworkID2", T_UBYTE, offsetof(spy_message_object, msg.NetworkID2), 0, "This value is used to identify which network this message was received on." },
     { "DescriptionID", T_SHORT, offsetof(spy_message_object, msg.DescriptionID), 0, "Not Used" },
     { "ArbIDOrHeader", T_UINT, offsetof(spy_message_object, msg.ArbIDOrHeader), 0, "" },
-    { "Data", T_OBJECT_EX, NULL, 0, "" },
+    { "Data", T_OBJECT_EX, 0, 0, "" },
     { "StatusBitField3", T_UINT, offsetof(spy_message_object, msg.StatusBitField3), 0, "StatusBitField3" },
     { "StatusBitField4", T_UINT, offsetof(spy_message_object, msg.StatusBitField4), 0, "StatusBitField4" },
-    { "AckBytes", T_OBJECT_EX, NULL, 0, "" },
+    { "AckBytes", T_OBJECT_EX, 0, 0, "" },
     { "ExtraDataPtr", T_OBJECT_EX, offsetof(spy_message_object, msg.ExtraDataPtr), 0, "" },
     { "MiscData", T_UBYTE, offsetof(spy_message_object, msg.MiscData), 0, "" },
     { "noExtraDataPtrCleanup", T_BOOL, offsetof(spy_message_object, noExtraDataPtrCleanup), 0, "Tells Python to not clean up ExtraDataPtrMemory, If this is enabled. Ignore, if unsure." },
-    { NULL, 0, 0, 0, 0 },
+    { NULL, 0, 0, 0, NULL },
 };
 
 static PyMemberDef spy_message_j1850_object_members[] = {
@@ -93,15 +93,15 @@ static PyMemberDef spy_message_j1850_object_members[] = {
     { "NumberBytesData", T_UBYTE, offsetof(spy_message_j1850_object, msg.NumberBytesData), 0, "Holds the number of bytes in the Data(1 to 8) array or the number of bytes in a CAN remote frame (The DLC)." },
     { "NetworkID2", T_UBYTE, offsetof(spy_message_object, msg.NetworkID2), 0, "This value is used to identify which network this message was received on." },
     { "DescriptionID", T_SHORT, offsetof(spy_message_j1850_object, msg.DescriptionID), 0, "Not Used" },
-    { "Header", T_OBJECT_EX, NULL, 0, "" },
-    { "Data", T_OBJECT_EX, NULL, 0, "" },
+    { "Header", T_OBJECT_EX, 0, 0, "" },
+    { "Data", T_OBJECT_EX, 0, 0, "" },
     { "StatusBitField3", T_UINT, offsetof(spy_message_j1850_object, msg.StatusBitField3), 0, "StatusBitField3" },
     { "StatusBitField4", T_UINT, offsetof(spy_message_j1850_object, msg.StatusBitField4), 0, "StatusBitField4" },
-    { "AckBytes", T_OBJECT_EX, NULL, 0, "" },
+    { "AckBytes", T_OBJECT_EX, 0, 0, "" },
     { "ExtraDataPtr", T_OBJECT_EX, offsetof(spy_message_j1850_object, msg.ExtraDataPtr), 0, "" },
     { "MiscData", T_UBYTE, offsetof(spy_message_j1850_object, msg.MiscData), 0, "" },
     { "noExtraDataPtrCleanup", T_BOOL, offsetof(spy_message_object, noExtraDataPtrCleanup), 0, "Tells Python to not clean up ExtraDataPtrMemory, If this is enabled. Ignore, if unsure." },
-    { NULL, 0, 0, 0, 0 },
+    { NULL, 0, 0, 0, NULL },
 };
 
 
