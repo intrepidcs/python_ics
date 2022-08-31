@@ -76,7 +76,7 @@ for root, dirs, files in os.walk('src'):
             source_files.append(os.path.join(root, file))
 
 # Set compiler flags here
-if 'LINUX' in platform.system().upper():
+if 'LINUX' in platform.system().upper() or "MSC" not in sys.version:
     compile_args = [
         '-fpermissive',
         '-Wno-unused-variable',
