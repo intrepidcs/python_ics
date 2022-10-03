@@ -170,10 +170,6 @@ Installation on Linux
 ============================================================
 python_ics does not provide binaries for linux distributions so we will have to compile from source. This can be easily achieved by utilzing Python's PIP. First we need to make sure we have some base packages installed.
 
-libicsneo is a newer library and has wider support for Intrepid Products under linux (https://github.com/intrepidcs/libicsneo).
-libicsneo has a legacy library (``libicsneolegacy.so``) that can be loaded by utilizing ``ics.override_library_name("libicsneolegacy.so")``.
-
-
 Fedora Dependencies (FC28)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -183,6 +179,11 @@ Debian/Ubuntu Dependencies
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ``sudo apt install build-essential python-dev clang-format``
+
+libicsneo library
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The legacy version of libicsneo library (``libicsneolegacy.so``) is required, see the specific repo for details: https://github.com/intrepidcs/libicsneo
 
 Others (Required dependencies)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -201,10 +202,6 @@ After dependencies are installed we can run the following pip command:
 ``pip install python_ics``
 
     **Note:** A lot of distributions have Python 2 and 3 installed side by side. As of this writing without a version suffix the commands still default to version 2 of the Python binaries. In order to utilize the Python 3 binaries you must append a 3 after the binary names (python3 and pip3 instead of just python and pip).
-
-Intrepid libicsneoapi.so Library
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Please see https://github.com/intrepidcs/icsneoapi for more details.
 
 
 ============================================================
