@@ -3355,16 +3355,51 @@
     },
     {
         "names": [
-            "_WILFunctionStatus",
-            "WILFunctionStatus"
+            "_GenericAPISelector",
+            "GenericAPISelector"
         ],
         "data_type": "Struct",
         "packing": 2,
         "is_anonymous": false,
         "members": [
             {
+                "name": "apiIndex",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "instance",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
                 "name": "functionID",
                 "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            }
+        ]
+    },
+    {
+        "names": [
+            "_GenericAPIStatus",
+            "GenericAPIStatus"
+        ],
+        "data_type": "Struct",
+        "packing": 2,
+        "is_anonymous": false,
+        "members": [
+            {
+                "name": "api",
+                "data_type": "GenericAPISelector",
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": false,
@@ -3379,7 +3414,7 @@
                 "enum_value": null
             },
             {
-                "name": "processing",
+                "name": "calbackError",
                 "data_type": "uint8_t",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -3387,7 +3422,7 @@
                 "enum_value": null
             },
             {
-                "name": "calbackError",
+                "name": "finishedProcessing",
                 "data_type": "uint8_t",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -3398,15 +3433,50 @@
     },
     {
         "names": [
-            "_WILFunctionData",
-            "WILFunctionData"
+            "_GenericAPIData",
+            "GenericAPIData"
         ],
         "data_type": "Struct",
         "packing": 2,
         "is_anonymous": false,
         "members": [
             {
-                "name": "functionID",
+                "name": "api",
+                "data_type": "GenericAPISelector",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "bData",
+                "data_type": "uint8_t",
+                "array_length": 513,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "length",
+                "data_type": "uint16_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            }
+        ]
+    },
+    {
+        "names": [
+            "_wBMSManagerSetLock",
+            "wBMSManagerSetLock"
+        ],
+        "data_type": "Struct",
+        "packing": 2,
+        "is_anonymous": false,
+        "members": [
+            {
+                "name": "managerIndex",
                 "data_type": "uint8_t",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -3414,17 +3484,133 @@
                 "enum_value": null
             },
             {
-                "name": "parameters",
+                "name": "setLock",
                 "data_type": "uint8_t",
-                "array_length": 194,
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            }
+        ]
+    },
+    {
+        "names": [
+            "_wBMSManagerReset",
+            "wBMSManagerReset"
+        ],
+        "data_type": "Struct",
+        "packing": 2,
+        "is_anonymous": false,
+        "members": [
+            {
+                "name": "managerIndex",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            }
+        ]
+    },
+    {
+        "names": [
+            "_UartPortData",
+            "UartPortData"
+        ],
+        "data_type": "Struct",
+        "packing": 2,
+        "is_anonymous": false,
+        "members": [
+            {
+                "name": "len",
+                "data_type": "uint16_t",
+                "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": false,
                 "enum_value": null
             },
             {
-                "name": "resevered",
+                "name": "port",
                 "data_type": "uint8_t",
                 "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "bData",
+                "data_type": "uint8_t",
+                "array_length": 256,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            }
+        ]
+    },
+    {
+        "names": [
+            "_UartPortPortBytes",
+            "UartPortPortBytes"
+        ],
+        "data_type": "Struct",
+        "packing": 2,
+        "is_anonymous": false,
+        "members": [
+            {
+                "name": "len",
+                "data_type": "uint16_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "port",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "flag",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            }
+        ]
+    },
+    {
+        "names": [
+            "_UartPortConfig",
+            "UartPortConfig"
+        ],
+        "data_type": "Struct",
+        "packing": 2,
+        "is_anonymous": false,
+        "members": [
+            {
+                "name": "baudrate",
+                "data_type": "uint32_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "port",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "reserve",
+                "data_type": "uint8_t",
+                "array_length": 7,
                 "bitfield_size": 0,
                 "is_enum": false,
                 "enum_value": null
@@ -4016,16 +4202,24 @@
                         "enum_value": null
                     },
                     {
-                        "name": "wilStatus",
-                        "data_type": "WILFunctionStatus",
+                        "name": "apiStatus",
+                        "data_type": "GenericAPIStatus",
                         "array_length": 0,
                         "bitfield_size": 0,
                         "is_enum": false,
                         "enum_value": null
                     },
                     {
-                        "name": "wilData",
-                        "data_type": "WILFunctionData",
+                        "name": "apiData",
+                        "data_type": "GenericAPIData",
+                        "array_length": 0,
+                        "bitfield_size": 0,
+                        "is_enum": false,
+                        "enum_value": null
+                    },
+                    {
+                        "name": "apiSelector",
+                        "data_type": "GenericAPISelector",
                         "array_length": 0,
                         "bitfield_size": 0,
                         "is_enum": false,
@@ -4050,6 +4244,46 @@
                     {
                         "name": "getComponentVersionsResponse",
                         "data_type": "GetComponentVersionsResponse",
+                        "array_length": 0,
+                        "bitfield_size": 0,
+                        "is_enum": false,
+                        "enum_value": null
+                    },
+                    {
+                        "name": "wbmsManagerToLockUnlock",
+                        "data_type": "wBMSManagerSetLock",
+                        "array_length": 0,
+                        "bitfield_size": 0,
+                        "is_enum": false,
+                        "enum_value": null
+                    },
+                    {
+                        "name": "wbmsManagerToReset",
+                        "data_type": "wBMSManagerReset",
+                        "array_length": 0,
+                        "bitfield_size": 0,
+                        "is_enum": false,
+                        "enum_value": null
+                    },
+                    {
+                        "name": "uartData",
+                        "data_type": "UartPortData",
+                        "array_length": 0,
+                        "bitfield_size": 0,
+                        "is_enum": false,
+                        "enum_value": null
+                    },
+                    {
+                        "name": "uartBytesLen",
+                        "data_type": "UartPortPortBytes",
+                        "array_length": 0,
+                        "bitfield_size": 0,
+                        "is_enum": false,
+                        "enum_value": null
+                    },
+                    {
+                        "name": "uartConfig",
+                        "data_type": "UartPortConfig",
                         "array_length": 0,
                         "bitfield_size": 0,
                         "is_enum": false,
@@ -8549,6 +8783,14 @@
             {
                 "name": "pwr_man_enable",
                 "data_type": "uint16_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "ethernet",
+                "data_type": "ETHERNET_SETTINGS2",
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": false,
@@ -14159,9 +14401,17 @@
                 "enum_value": null
             },
             {
+                "name": "ethConfigurationPort",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
                 "name": "reserved",
                 "data_type": "uint8_t",
-                "array_length": 6,
+                "array_length": 5,
                 "bitfield_size": 0,
                 "is_enum": false,
                 "enum_value": null

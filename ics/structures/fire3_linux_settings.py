@@ -9,7 +9,8 @@ class fire3_linux_settings(ctypes.Structure):
     _fields_ = [
         ('allowBoot', ctypes.c_uint8),
         ('useExternalWifiAntenna', ctypes.c_uint8),
-        ('reserved', ctypes.c_uint8 * 6),
+        ('ethConfigurationPort', ctypes.c_uint8),
+        ('reserved', ctypes.c_uint8 * 5),
     ]
 
 
