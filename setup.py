@@ -9,7 +9,7 @@ import unittest
 import shutil
 
 MAJOR_VERSION = 910
-MINOR_VERSION = 999
+MINOR_VERSION = 10
 POST_VERSION = None
 
 if POST_VERSION:
