@@ -3572,7 +3572,6 @@ PyObject* meth_set_led_property(PyObject* self, PyObject* args)
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
-        unsigned int supported = 0;
         ice::Function<int __stdcall (ICS_HANDLE, unsigned int, unsigned int, unsigned int)> icsneoSetLedProperty(lib, "icsneoSetLedProperty");
         Py_BEGIN_ALLOW_THREADS
             if (!icsneoSetLedProperty(handle, led, prop, value)) {
@@ -3615,7 +3614,6 @@ PyObject* meth_start_dhcp_server(PyObject* self, PyObject* args)
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
-        unsigned int supported = 0;
         // int _stdcall icsneoStartDHCPServer(void* hObject, unsigned int NetworkID, const char* pDeviceIPAddress,const char* pSubnetmask,
 		//      const char* pGateway,const char* pStartaddress,
 		//      const char* pEndaddress,bool bOverwriteDHCPSettings,uint32_t leaseTime,uint8_t reserved)
@@ -3653,7 +3651,6 @@ PyObject* meth_stop_dhcp_server(PyObject* self, PyObject* args)
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
-        unsigned int supported = 0;
         ice::Function<int __stdcall (ICS_HANDLE, unsigned int)> icsneoStopDHCPServer(lib, "icsneoStopDHCPServer");
         Py_BEGIN_ALLOW_THREADS
             if (!icsneoStopDHCPServer(handle, NetworkID)) {
@@ -3689,7 +3686,6 @@ PyObject* meth_wbms_manager_write_lock(PyObject* self, PyObject* args)
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
-        unsigned int supported = 0;
         ice::Function<int __stdcall (ICS_HANDLE, const EwBMSManagerPort_t, const EwBMSManagerLockState_t)> icsneowBMSManagerWriteLock(lib, "icsneowBMSManagerWriteLock");
         Py_BEGIN_ALLOW_THREADS
             if (!icsneowBMSManagerWriteLock(handle, manager, lock_state)) {
@@ -3724,7 +3720,6 @@ PyObject* meth_wbms_manager_reset(PyObject* self, PyObject* args)
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
-        unsigned int supported = 0;
         ice::Function<int __stdcall (ICS_HANDLE, const EwBMSManagerPort_t)> icsneowBMSManagerReset(lib, "icsneowBMSManagerReset");
         Py_BEGIN_ALLOW_THREADS
             if (!icsneowBMSManagerReset(handle, manager)) {
@@ -3736,6 +3731,61 @@ PyObject* meth_wbms_manager_reset(PyObject* self, PyObject* args)
     }
     catch (ice::Exception& ex)
     {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
+
+PyObject* meth_uart_write(PyObject* self, PyObject* args)
+{
+    PyObject* obj = NULL;
+    EUartPort_t port = eUART0;
+    PyObject* data = NULL;
+    uint8_t flags = 0;
+    bool check_size = true;
+    if (!PyArg_ParseTuple(args, arg_parse("OIy*|bp:", __FUNCTION__), &obj, &port, &data, &flags, &check_size)) {
+        return NULL;
+    }
+    // Check if the data buffer is valid and grab the buffer
+    if (!PyObject_CheckBuffer(data)) {
+        return set_ics_exception(exception_runtime_error(), "Argument 'data' must be of type 'bytes'");
+    }
+    Py_buffer data_buffer = {};
+    PyObject_GetBuffer(data, &data_buffer, PyBUF_C_CONTIGUOUS | PyBUF_WRITABLE);
+
+    // Get the device handle
+    if (!PyNeoDevice_CheckExact(obj)) {
+        PyBuffer_Release(&data_buffer);
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        // int _stdcall icsneoUartWrite(void* hObject, const EUartPort_t uart, const void* bData, const size_t bytesToSend, size_t* bytesActuallySent, uint8_t* flags)
+        size_t bytesActuallySent = 0;
+        ice::Function<int __stdcall (ICS_HANDLE, const EUartPort_t, const void*, const size_t, size_t*, uint8_t*)> icsneoUartWrite(lib, "icsneoUartWrite");
+        Py_BEGIN_ALLOW_THREADS
+            if (!icsneoUartWrite(handle, port, data_buffer.buf, data_buffer.len, &bytesActuallySent, &flags)) {
+                Py_BLOCK_THREADS
+                    PyBuffer_Release(&data_buffer);
+                    return set_ics_exception(exception_runtime_error(), "icsneoUartWrite() Failed");
+            }
+        Py_END_ALLOW_THREADS
+        if (check_size && data_buffer.len != bytesActuallySent) {
+            PyBuffer_Release(&data_buffer);
+            return set_ics_exception(exception_runtime_error(), "Bytes actually sent didn't match bytes to send length");
+        }
+        PyBuffer_Release(&data_buffer);
+        return Py_BuildValue("i", bytesActuallySent);
+    }
+    catch (ice::Exception& ex)
+    {
+        PyBuffer_Release(&data_buffer);
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
