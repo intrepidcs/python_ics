@@ -89,9 +89,10 @@ PyObject* meth_start_dhcp_server(PyObject* self, PyObject* args);
 PyObject* meth_stop_dhcp_server(PyObject* self, PyObject* args);
 PyObject* meth_wbms_manager_write_lock(PyObject* self, PyObject* args);
 PyObject* meth_wbms_manager_reset(PyObject* self, PyObject* args);
-/*
+
 PyObject* meth_uart_write(PyObject* self, PyObject* args);
-PyObject* meth_uart_read(PyObject* self, PyObject* args);
+//PyObject* meth_uart_read(PyObject* self, PyObject* args);
+/*
 PyObject* meth_uart_set_baudrate(PyObject* self, PyObject* args);
 PyObject* meth_uart_get_baudrate(PyObject* self, PyObject* args);
 PyObject* meth_generic_api_send_command(PyObject* self, PyObject* args);
@@ -1540,6 +1541,28 @@ PyObject* meth_generic_api_get_status(PyObject* self, PyObject* args);
     "\t>>> ics.wbms_manager_reset(d, ew_bms_manager_port_t.eManagerPortA.value)\n" \
     "\t>>> \n"    
 
+#define _DOC_UART_WRITE \
+    MODULE_NAME ".uart_write(device, port, data, flags)\n" \
+    "\n" \
+    "Writes UART on the given port\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
+    "\tport (:class:`" MODULE_NAME ".structures.e_uart_port_t.e_uart_port_t`): :class:`" MODULE_NAME ".structures.e_uart_port_t.e_uart_port_t`\n\n" \
+    "\tdata (:class:`bytes): :class:`bytes\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\tNone.\n" \
+    "\n" \
+    "\t>>> import ics\n" \
+    "\t>>> from ics.structures.e_uart_port_t import e_uart_port_t\n" \
+    "\t>>> d = ics.open_device()\n" \
+    "\t>>> ics.uart_write(d, e_uart_port_t.eUART0, b'my uart data goes here')\n" \
+    "\t>>> \n"    
+
 static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("find_devices", "icsneoFindNeoDevices", "FindNeoDevices", (PyCFunction)meth_find_devices, METH_VARARGS | METH_KEYWORDS, _DOC_FIND_DEVICES),
     _EZ_ICS_STRUCT_METHOD("open_device", "icsneoOpenNeoDevice", "OpenNeoDevice", (PyCFunction)meth_open_device, METH_VARARGS | METH_KEYWORDS, _DOC_OPEN_DEVICES),
@@ -1627,6 +1650,7 @@ static PyMethodDef IcsMethods[] = {
 
     _EZ_ICS_STRUCT_METHOD("wbms_manager_write_lock", "icsneowBMSManagerWriteLock", "wBMSManagerWriteLock", meth_wbms_manager_write_lock, METH_VARARGS, _DOC_WBMS_MANAGER_WRITE_LOCK),
     _EZ_ICS_STRUCT_METHOD("wbms_manager_reset", "icsneowBMSManagerReset", "wBMSManagerReset", meth_wbms_manager_reset, METH_VARARGS, _DOC_WBMS_MANAGER_RESET),
+    _EZ_ICS_STRUCT_METHOD("uart_write", "icsneoUartWrite", "UartWrite", meth_uart_write, METH_VARARGS, _DOC_UART_WRITE),
 
     
 
