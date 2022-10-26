@@ -3763,6 +3763,7 @@ PyObject* meth_uart_write(PyObject* self, PyObject* args)
     {
         ice::Library* lib = dll_get_library();
         if (!lib) {
+            PyBuffer_Release(&data_buffer);
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
@@ -3814,6 +3815,8 @@ PyObject* meth_uart_read(PyObject* self, PyObject* args)
     {
         ice::Library* lib = dll_get_library();
         if (!lib) {
+            free(buffer);
+            buffer = NULL;
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
@@ -3914,6 +3917,67 @@ PyObject* meth_uart_get_baudrate(PyObject* self, PyObject* args)
     }
     catch (ice::Exception& ex)
     {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
+
+PyObject* meth_generic_api_send_command(PyObject* self, PyObject* args)
+{
+    PyObject* obj = NULL;
+    unsigned char apiIndex = 0;
+    unsigned char instanceIndex = 0;
+    unsigned char functionIndex = 0;
+    PyObject* data = NULL;
+    unsigned int length = 0;
+    unsigned char functionError = 0;
+    if (!PyArg_ParseTuple(args, arg_parse("Obbby*b:", __FUNCTION__), &obj, &apiIndex, &instanceIndex, &functionIndex, data, &functionError)) {
+        return NULL;
+    }
+    // Check if the data buffer is valid and grab the buffer
+    if (!PyObject_CheckBuffer(data)) {
+        return set_ics_exception(exception_runtime_error(), "Argument 'data' must be of type 'bytes'");
+    }
+    Py_buffer data_buffer = {};
+    PyObject_GetBuffer(data, &data_buffer, PyBUF_C_CONTIGUOUS | PyBUF_WRITABLE);
+    // Get the device handle
+    if (!PyNeoDevice_CheckExact(obj)) {
+        PyBuffer_Release(&data_buffer);
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            PyBuffer_Release(&data_buffer);
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        /*
+        int _stdcall icsneoGenericAPISendCommand(void* hObject,
+            unsigned char apiIndex,
+            unsigned char instanceIndex,
+            unsigned char functionIndex,
+            void* bData,
+            unsigned int length,
+            unsigned char* functionError)
+        */
+        ice::Function<int __stdcall (ICS_HANDLE, unsigned char, unsigned char, unsigned char, void*, unsigned int, unsigned char*)> icsneoGenericAPISendCommand(lib, "icsneoGenericAPISendCommand");
+        Py_BEGIN_ALLOW_THREADS
+            if (!icsneoGenericAPISendCommand(handle, apiIndex, instanceIndex, functionIndex, data_buffer.buf, data_buffer.len, &functionError)) {
+                PyBuffer_Release(&data_buffer);
+                Py_BLOCK_THREADS
+                return set_ics_exception(exception_runtime_error(), "icsneoGenericAPISendCommand() Failed");
+            }
+        Py_END_ALLOW_THREADS
+        PyBuffer_Release(&data_buffer);
+        return Py_BuildValue("i", functionError);
+
+    }
+    catch (ice::Exception& ex)
+    {
+        PyBuffer_Release(&data_buffer);
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
