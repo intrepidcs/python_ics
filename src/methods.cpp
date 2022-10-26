@@ -74,24 +74,26 @@ char* neodevice_to_string(unsigned long type)
     case NEODEVICE_RADPLUTO: return "RAD-Pluto";
     case NEODEVICE_VCAN42_EL: return "ValueCAN 4-2EL";
     case NEODEVICE_RADIO_CANHUB: return "neoRAD-IO2-CANHUB";
-#if defined(NEODEVICE_OBD2_LCBADGE)
-    case NEODEVICE_OBD2_LCBADGE: return "neoOBD2-LC BADGE";
-#endif
+    case NEODEVICE_NEOECU12: return "neoECU12";
+    case NEODEVICE_OBD2_LC: return "neoOBD2-LC";
     case NEODEVICE_RAD_MOON_DUO: return "RAD-Moon Duo";
     case NEODEVICE_VCAN3: return "ValueCAN 3";
-#if defined(NEODEVICE_ONYX)
-    case NEODEVICE_ONYX: return "neoVI FIRE 3";
-#endif
     case NEODEVICE_FIRE3: return "neoVI FIRE 3";
-#if defined(NEODEVICE_JUPITER)
-    case NEODEVICE_JUPITER: return "RAD-Jupiter";
-#elif defined(NEODEVICE_RADJUPITER)
     case NEODEVICE_RADJUPITER: return "RAD-Jupiter";
-#endif
     case NEODEVICE_VCAN4_IND: return "ValueCAN 4 Industrial";
     case NEODEVICE_GIGASTAR: return "RAD-Gigastar";
     case NEODEVICE_RED2: return "neoVI RED 2";
+    case NEODEVICE_ETHER_BADGE: return "EtherBADGE";
+    case NEODEVICE_RAD_A2B: return "RAD-A2B";
+    case NEODEVICE_RADEPSILON: return "RAD-Epsilon";
+    case NEODEVICE_OBD2_SIM_DOIP: return "neoOBD2-SIM";
+    case NEODEVICE_OBD2_DEV: return "neoOBD2-DEV";
     case NEODEVICE_ECU22: return "neoECU22";
+    case NEODEVICE_RADEPSILON_T: return "RAD-EpsilonT";
+    case NEODEVICE_RADEPSILON_EXPRESS: return "RAD-Epsilon Express";
+    case NEODEVICE_RADPROXIMA: return "RAD-Proxima";
+    case NEODEVICE_RAD_BMS: return "RAD-wBMS";
+    case NEODEVICE_RADMOON3: return "RAD-Moon3"
     case NEODEVICE_RED: return "neoVI RED";
     case NEODEVICE_ECU: return "neoECU";
     case NEODEVICE_IEVB: return "IEVB";
@@ -113,9 +115,8 @@ char* neodevice_to_string(unsigned long type)
     case NEODEVICE_RADGALAXY: return "RAD-Galaxy";
     case NEODEVICE_RADSTAR2: return "RAD-Star 2";
     case NEODEVICE_VIVIDCAN: return "VividCAN";
-    case NEODEVICE_OBD2_SIM: return "neoOBD2 Sim";
     };
-    return "Unknown";
+    return "Intrepid Device";
 }
 
 bool _convertListOrTupleToArray(PyObject* obj, std::vector<PyObject*>* results)
