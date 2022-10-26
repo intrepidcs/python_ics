@@ -200,6 +200,7 @@ typedef unsigned __int64 uint64_t;
 // I'm not sure what was 0x20 anymore, but we'll skip it to be safe
 #define NEODEVICE_NEW_DEVICE_59 (0x00000021)
 #define NEODEVICE_RAD_BMS (0x00000022)
+#define NEODEVICE_RADMOON3 (0x00000023)
 #define NEODEVICE_RED (0x00000040)
 #define NEODEVICE_ECU (0x00000080)
 #define NEODEVICE_IEVB (0x00000100)
@@ -230,6 +231,8 @@ typedef unsigned __int64 uint64_t;
 #define NEODEVICE_ANY_ION (NEODEVICE_ION)
 #define NEODEVICE_NEOECUCHIP NEODEVICE_IEVB
 //clang-format on
+
+#define DEVICECOUNT_FOR_EXPLORER 42  //this value will be checked by the NeoViExplorer after #6453!
 
 #define ISO15765_2_NETWORK_HSCAN 0x01
 #define ISO15765_2_NETWORK_MSCAN 0x02
@@ -1350,20 +1353,62 @@ typedef struct _ExtendedResponseGeneric
 	int32_t returnCode;
 } ExtendedResponseGeneric;
 
-typedef struct _WILFunctionStatus
+typedef struct _GenericAPISelector
 {
-    uint8_t functionID; 
-	uint8_t functionError; // command type we're responding to
-    uint8_t processing;
-	uint8_t calbackError;
-} WILFunctionStatus;
+	uint8_t apiIndex;
+	uint8_t instance;
+	uint8_t functionID;
+} GenericAPISelector;
 
-typedef struct _WILFunctionData
+typedef struct _GenericAPIStatus
 {
-    uint8_t functionID;
-    uint8_t parameters[194]; 
-	uint8_t resevered;
-} WILFunctionData;
+	GenericAPISelector api;
+	uint8_t functionError;
+	uint8_t calbackError;
+	uint8_t finishedProcessing;
+} GenericAPIStatus;
+
+#define GENERIC_API_DATA_BUFFER_SIZE 513
+
+typedef struct _GenericAPIData
+{
+	GenericAPISelector api;
+	uint8_t bData[GENERIC_API_DATA_BUFFER_SIZE];
+	uint16_t length;
+} GenericAPIData;
+
+
+typedef struct _wBMSManagerSetLock
+{
+	uint8_t managerIndex;
+	uint8_t setLock;	
+}wBMSManagerSetLock;
+
+typedef struct _wBMSManagerReset
+{
+	uint8_t managerIndex;
+}wBMSManagerReset;
+
+typedef struct _UartPortData
+{
+	uint16_t len;
+	uint8_t port;
+	uint8_t bData[256];
+} UartPortData;
+
+typedef struct _UartPortPortBytes
+{
+	uint16_t len;
+	uint8_t port;
+	uint8_t flag;
+} UartPortPortBytes;
+
+typedef struct _UartPortConfig
+{
+	uint32_t baudrate;
+	uint8_t port;
+	uint8_t reserve[7];
+} UartPortConfig;
 
 #define GET_SUPPORTED_FEATURES_COMMAND_VERSION (1)
 typedef struct
@@ -1489,15 +1534,21 @@ typedef struct _SExtSubCmdComm
 		GetSupportedFeaturesResponse getSupportedFeatures;
 		ExtendedResponseGeneric genericResponse;
 		GPTPStatus gptpStatus;
-        WILFunctionStatus wilStatus;
-        WILFunctionData wilData;		
+		GenericAPIStatus apiStatus;
+		GenericAPIData apiData;
+		GenericAPISelector apiSelector;
 		GetComponentVersions getComponentVersions;
 		SoftwareUpdateCommand softwareUpdate;
 		GetComponentVersionsResponse getComponentVersionsResponse;
+		wBMSManagerSetLock wbmsManagerToLockUnlock;
+		wBMSManagerReset wbmsManagerToReset;	
+		UartPortData uartData;
+		UartPortPortBytes uartBytesLen;
+		UartPortConfig uartConfig;
 		// Add additional extension commands to this union as needed.
 	} extension;
 } SExtSubCmdComm;
-#define SExtSubCmdComm_SIZE 262
+#define SExtSubCmdComm_SIZE 522
 
 #define SERDESCAM_SETTINGS_FLAG_ENABLE 0x0001
 #define SERDESCAM_SETTINGS_FLAG_RTSP_ENABLE 0x0002
@@ -2580,9 +2631,10 @@ typedef struct _SRADA2BSettings
 	A2BMonitorSettings a2b_node;
 	uint32_t pwr_man_timeout;
 	uint16_t pwr_man_enable;
+	ETHERNET_SETTINGS2 ethernet;
 } SRADA2BSettings;
 
-#define SRADA2BSettings_SIZE 280
+#define SRADA2BSettings_SIZE 296
 
 typedef struct _SRADMoon2Settings
 {
@@ -3613,11 +3665,20 @@ typedef struct _SRADJupiterSettings
 
 #define SRADJupiterSettings_SIZE 348
 
+#define LINUX_BOOT_ALLOWED (1)
+
+#define WIFI_ANTENNA_INTERNAL (0)
+#define WIFI_ANTENNA_EXTERNAL (1)
+
+#define LINUX_CONFIG_PORT_NONE (0)
+#define LINUX_CONFIG_PORT_ETH_01 (1)
+#define LINUX_CONFIG_PORT_ETH_02 (2)
 typedef struct
 {
-	uint8_t allowBoot;
-	uint8_t useExternalWifiAntenna; // 0 for internal, 1 for external
-	uint8_t reserved[6];
+	uint8_t allowBoot; // 0 - disable booting Linux, 1 - enable booting Linux, Others - Disable booting linux
+	uint8_t useExternalWifiAntenna; // 0 for internal, 1 for external, Others - Internal
+	uint8_t ethConfigurationPort; // 0 - both ports used by logger, 1 - ETH 01 for Linux Configuration, 2 - ETH 02 for Linux Configuration, Others - both ports used by logger
+	uint8_t reserved[5];
 } Fire3LinuxSettings;
 
 typedef struct _SFire3Settings
@@ -4025,6 +4086,36 @@ typedef enum _EPlasmaIonVnetChannel_t
 	eSoftCore,
 	eFpgaStatusResp,
 } EPlasmaIonVnetChannel_t;
+
+typedef enum _EwBMSManagerPort_t
+{
+	eManagerPortA = 0,
+	eManagerPortB,
+} EwBMSManagerPort_t;
+
+typedef enum _EwBMSManagerLockState_t
+{
+	eLockManager = 0,
+	eUnlockManager,
+} EwBMSManagerLockState_t;
+
+typedef enum _EUartPort_t
+{
+	eUART0 = 0,
+	eUART1,
+} EUartPort_t;
+
+typedef enum _eGenericAPIOptions
+{
+	eGENERIC_API = 0,
+	eADI_WIL_API = 1,
+} eGenericAPIOptions;
+
+typedef enum _EwBMSInstance_t
+{
+	ewBMSInstance0 = 0,
+	ewBMSInstance1,
+} EwBMSInstance_t;
 
 typedef struct _stCM_ISO157652_TxMessage
 {
