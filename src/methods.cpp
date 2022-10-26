@@ -3505,7 +3505,7 @@ PyObject* meth_is_device_feature_supported(PyObject* self, PyObject* args)
         Py_BEGIN_ALLOW_THREADS
             if (!icsneoIsDeviceFeatureSupported(handle, (DeviceFeature)feature, &supported)) {
                 Py_BLOCK_THREADS
-                    return set_ics_exception(exception_runtime_error(), "icsneoIsDeviceFeatureSupported() Failed");
+                return set_ics_exception(exception_runtime_error(), "icsneoIsDeviceFeatureSupported() Failed");
             }
         Py_END_ALLOW_THREADS
         return Py_BuildValue("I", supported);
@@ -3540,7 +3540,7 @@ PyObject* meth_get_pcb_serial_number(PyObject* self, PyObject* args)
         Py_BEGIN_ALLOW_THREADS
             if (!icsneoGetPCBSerialNumber(handle, pcbsn, &length)) {
                 Py_BLOCK_THREADS
-                    return set_ics_exception(exception_runtime_error(), "icsneoGetPCBSerialNumber() Failed");
+                return set_ics_exception(exception_runtime_error(), "icsneoGetPCBSerialNumber() Failed");
             }
         Py_END_ALLOW_THREADS
         return Py_BuildValue("s", pcbsn);
@@ -3576,7 +3576,7 @@ PyObject* meth_set_led_property(PyObject* self, PyObject* args)
         Py_BEGIN_ALLOW_THREADS
             if (!icsneoSetLedProperty(handle, led, prop, value)) {
                 Py_BLOCK_THREADS
-                    return set_ics_exception(exception_runtime_error(), "icsneoSetLedProperty() Failed");
+                return set_ics_exception(exception_runtime_error(), "icsneoSetLedProperty() Failed");
             }
         Py_END_ALLOW_THREADS
         Py_RETURN_NONE;
@@ -3621,7 +3621,7 @@ PyObject* meth_start_dhcp_server(PyObject* self, PyObject* args)
         Py_BEGIN_ALLOW_THREADS
             if (!icsneoStartDHCPServer(handle, NetworkID, pDeviceIPAddress, pSubnetmask, pGateway, pStartaddress, pEndaddress, bOverwriteDHCPSettings, leaseTime, reserved)) {
                 Py_BLOCK_THREADS
-                    return set_ics_exception(exception_runtime_error(), "icsneoStartDHCPServer() Failed");
+                return set_ics_exception(exception_runtime_error(), "icsneoStartDHCPServer() Failed");
             }
         Py_END_ALLOW_THREADS
         Py_RETURN_NONE;
@@ -3655,7 +3655,7 @@ PyObject* meth_stop_dhcp_server(PyObject* self, PyObject* args)
         Py_BEGIN_ALLOW_THREADS
             if (!icsneoStopDHCPServer(handle, NetworkID)) {
                 Py_BLOCK_THREADS
-                    return set_ics_exception(exception_runtime_error(), "icsneoStopDHCPServer() Failed");
+                return set_ics_exception(exception_runtime_error(), "icsneoStopDHCPServer() Failed");
             }
         Py_END_ALLOW_THREADS
         Py_RETURN_NONE;
@@ -3690,7 +3690,7 @@ PyObject* meth_wbms_manager_write_lock(PyObject* self, PyObject* args)
         Py_BEGIN_ALLOW_THREADS
             if (!icsneowBMSManagerWriteLock(handle, manager, lock_state)) {
                 Py_BLOCK_THREADS
-                    return set_ics_exception(exception_runtime_error(), "icsneowBMSManagerWriteLock() Failed");
+                return set_ics_exception(exception_runtime_error(), "icsneowBMSManagerWriteLock() Failed");
             }
         Py_END_ALLOW_THREADS
         Py_RETURN_NONE;
@@ -3724,7 +3724,7 @@ PyObject* meth_wbms_manager_reset(PyObject* self, PyObject* args)
         Py_BEGIN_ALLOW_THREADS
             if (!icsneowBMSManagerReset(handle, manager)) {
                 Py_BLOCK_THREADS
-                    return set_ics_exception(exception_runtime_error(), "icsneowBMSManagerReset() Failed");
+                return set_ics_exception(exception_runtime_error(), "icsneowBMSManagerReset() Failed");
             }
         Py_END_ALLOW_THREADS
         Py_RETURN_NONE;
@@ -3772,8 +3772,8 @@ PyObject* meth_uart_write(PyObject* self, PyObject* args)
         Py_BEGIN_ALLOW_THREADS
             if (!icsneoUartWrite(handle, port, data_buffer.buf, data_buffer.len, &bytesActuallySent, &flags)) {
                 Py_BLOCK_THREADS
-                    PyBuffer_Release(&data_buffer);
-                    return set_ics_exception(exception_runtime_error(), "icsneoUartWrite() Failed");
+                PyBuffer_Release(&data_buffer);
+                return set_ics_exception(exception_runtime_error(), "icsneoUartWrite() Failed");
             }
         Py_END_ALLOW_THREADS
         if (check_size && data_buffer.len != bytesActuallySent) {
@@ -3823,9 +3823,9 @@ PyObject* meth_uart_read(PyObject* self, PyObject* args)
         Py_BEGIN_ALLOW_THREADS
             if (!icsneoUartRead(handle, port, (void*)buffer, bytesToRead, &bytesActuallyRead, &flags)) {
                 Py_BLOCK_THREADS
-                    free(buffer);
-                    buffer = NULL;
-                    return set_ics_exception(exception_runtime_error(), "icsneoUartRead() Failed");
+                free(buffer);
+                buffer = NULL;
+                return set_ics_exception(exception_runtime_error(), "icsneoUartRead() Failed");
             }
         Py_END_ALLOW_THREADS
         PyObject* value = Py_BuildValue("y#", buffer, bytesActuallyRead);
@@ -3842,3 +3842,105 @@ PyObject* meth_uart_read(PyObject* self, PyObject* args)
     }
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
+
+PyObject* meth_uart_set_baudrate(PyObject* self, PyObject* args)
+{
+    PyObject* obj = NULL;
+    EUartPort_t port = eUART0;
+    unsigned int baudrate = 0;
+    if (!PyArg_ParseTuple(args, arg_parse("OII:", __FUNCTION__), &obj, &port, &baudrate)) {
+        return NULL;
+    }
+    // Get the device handle
+    if (!PyNeoDevice_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        //int _stdcall icsneoUartSetBaudrate(void* hObject, const EUartPort_t uart, const uint32_t baudrate)
+        ice::Function<int __stdcall (ICS_HANDLE, const EUartPort_t, const uint32_t)> icsneoUartSetBaudrate(lib, "icsneoUartSetBaudrate");
+        Py_BEGIN_ALLOW_THREADS
+            if (!icsneoUartSetBaudrate(handle, port, baudrate)) {
+                Py_BLOCK_THREADS
+                return set_ics_exception(exception_runtime_error(), "icsneoUartSetBaudrate() Failed");
+            }
+        Py_END_ALLOW_THREADS
+        Py_RETURN_NONE;
+
+    }
+    catch (ice::Exception& ex)
+    {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
+
+PyObject* meth_uart_get_baudrate(PyObject* self, PyObject* args)
+{
+    PyObject* obj = NULL;
+    EUartPort_t port = eUART0;
+    if (!PyArg_ParseTuple(args, arg_parse("OII:", __FUNCTION__), &obj, &port)) {
+        return NULL;
+    }
+    // Get the device handle
+    if (!PyNeoDevice_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        uint32_t baudrate = 0;
+        //int _stdcall icsneoUartGetBaudrate(void* hObject, const EUartPort_t uart, uint32_t* baudrate)
+        ice::Function<int __stdcall (ICS_HANDLE, const EUartPort_t, uint32_t*)> icsneoUartGetBaudrate(lib, "icsneoUartGetBaudrate");
+        Py_BEGIN_ALLOW_THREADS
+            if (!icsneoUartGetBaudrate(handle, port, &baudrate)) {
+                Py_BLOCK_THREADS
+                return set_ics_exception(exception_runtime_error(), "icsneoUartGetBaudrate() Failed");
+            }
+        Py_END_ALLOW_THREADS
+        return Py_BuildValue("I", baudrate);
+
+    }
+    catch (ice::Exception& ex)
+    {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
+
+/*
+
+int _stdcall icsneoGenericAPISendCommand(void* hObject,
+    unsigned char apiIndex,
+    unsigned char instanceIndex,
+    unsigned char functionIndex,
+    void* bData,
+    unsigned int length,
+    unsigned char* functionError)
+
+int _stdcall icsneoGenericAPIReadData(void* hObject,
+    unsigned char apiIndex,
+    unsigned char instanceIndex,
+    unsigned char* functionIndex,
+    unsigned char* bData,
+    unsigned int* length)
+
+int _stdcall icsneoGenericAPIGetStatus(void* hObject,
+    unsigned char apiIndex,
+    unsigned char instanceIndex,
+    unsigned char* functionIndex,
+    unsigned char* callbackError,
+    unsigned char* finsihedProcessing)
+
+*/
