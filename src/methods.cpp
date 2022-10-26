@@ -93,7 +93,7 @@ char* neodevice_to_string(unsigned long type)
     case NEODEVICE_RADEPSILON_EXPRESS: return "RAD-Epsilon Express";
     case NEODEVICE_RADPROXIMA: return "RAD-Proxima";
     case NEODEVICE_RAD_BMS: return "RAD-wBMS";
-    case NEODEVICE_RADMOON3: return "RAD-Moon3"
+    case NEODEVICE_RADMOON3: return "RAD-Moon3";
     case NEODEVICE_RED: return "neoVI RED";
     case NEODEVICE_ECU: return "neoECU";
     case NEODEVICE_IEVB: return "IEVB";
