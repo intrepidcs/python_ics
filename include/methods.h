@@ -87,6 +87,17 @@ PyObject* meth_get_pcb_serial_number(PyObject* self, PyObject* args);
 PyObject* meth_set_led_property(PyObject* self, PyObject* args);
 PyObject* meth_start_dhcp_server(PyObject* self, PyObject* args);
 PyObject* meth_stop_dhcp_server(PyObject* self, PyObject* args);
+PyObject* meth_wbms_manager_write_lock(PyObject* self, PyObject* args);
+/*
+PyObject* meth_wbms_manager_reset(PyObject* self, PyObject* args);
+PyObject* meth_uart_write(PyObject* self, PyObject* args);
+PyObject* meth_uart_read(PyObject* self, PyObject* args);
+PyObject* meth_uart_set_baudrate(PyObject* self, PyObject* args);
+PyObject* meth_uart_get_baudrate(PyObject* self, PyObject* args);
+PyObject* meth_generic_api_send_command(PyObject* self, PyObject* args);
+PyObject* meth_generic_api_read_data(PyObject* self, PyObject* args);
+PyObject* meth_generic_api_get_status(PyObject* self, PyObject* args);
+*/
 
 #ifdef _cplusplus
 }
@@ -1485,6 +1496,29 @@ PyObject* meth_stop_dhcp_server(PyObject* self, PyObject* args);
     "\t>>> ics.stop_dhcp_server(d, TODO)\n" \
     "\t>>> \n"
 
+#define _DOC_WBMS_MANAGER_WRITE_LOCK \
+    MODULE_NAME ".wbms_manager_write_lock(device, manager, lock_state)\n" \
+    "\n" \
+    "Sets the lock state on the manager\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
+    "\tmanager (:class:`" MODULE_NAME ".structures.ew_bms_manager_port_t.ew_bms_manager_port_t`): :class:`" MODULE_NAME ".structures.ew_bms_manager_port_t.ew_bms_manager_port_t`\n\n" \
+    "\tlock_state (:class:`" MODULE_NAME ".structures.ew_bms_manager_lock_state_t.ew_bms_manager_lock_state_t`): :class:`" MODULE_NAME ".structures.ew_bms_manager_lock_state_t.ew_bms_manager_lock_state_t`\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\tNone.\n" \
+    "\n" \
+    "\t>>> import ics\n" \
+    "\t>>> from ics.structures.ew_bms_manager_port_t import ew_bms_manager_port_t\n" \
+    "\t>>> from ics.structures.ew_bms_manager_lock_state_t import ew_bms_manager_lock_state_t\n" \
+    "\t>>> d = ics.open_device()\n" \
+    "\t>>> ics.wbms_manager_write_lock(d, ew_bms_manager_port_t.eManagerPortA.value, ew_bms_manager_lock_state_t.eLockManager.value)\n" \
+    "\t>>> \n"    
+
 static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("find_devices", "icsneoFindNeoDevices", "FindNeoDevices", (PyCFunction)meth_find_devices, METH_VARARGS | METH_KEYWORDS, _DOC_FIND_DEVICES),
     _EZ_ICS_STRUCT_METHOD("open_device", "icsneoOpenNeoDevice", "OpenNeoDevice", (PyCFunction)meth_open_device, METH_VARARGS | METH_KEYWORDS, _DOC_OPEN_DEVICES),
@@ -1569,6 +1603,10 @@ static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("set_led_property", "icsneoSetLedProperty", "SetLedProperty", meth_set_led_property, METH_VARARGS, _DOC_SET_LED_PROPERTY),
     _EZ_ICS_STRUCT_METHOD("start_dhcp_server", "icsneoStartDHCPServer", "StartDHCPServer", meth_start_dhcp_server, METH_VARARGS, _DOC_START_DHCP_SERVER),
     _EZ_ICS_STRUCT_METHOD("stop_dhcp_server", "icsneoStopDHCPServer", "StopDHCPServer", meth_stop_dhcp_server, METH_VARARGS, _DOC_STOP_DHCP_SERVER),
+
+    _EZ_ICS_STRUCT_METHOD("wbms_manager_write_lock", "icsneowBMSManagerWriteLock", "wBMSManagerWriteLock", meth_wbms_manager_write_lock, METH_VARARGS, _DOC_WBMS_MANAGER_WRITE_LOCK),
+
+    
 
     {"override_library_name", (PyCFunction)meth_override_library_name, METH_VARARGS, _DOC_OVERRIDE_LIBRARY_NAME},
     {"get_library_path", (PyCFunction)meth_get_library_path, METH_NOARGS, ""},
