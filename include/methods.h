@@ -97,8 +97,8 @@ PyObject* meth_uart_set_baudrate(PyObject* self, PyObject* args);
 PyObject* meth_uart_get_baudrate(PyObject* self, PyObject* args);
 
 PyObject* meth_generic_api_send_command(PyObject* self, PyObject* args);
-/*
 PyObject* meth_generic_api_read_data(PyObject* self, PyObject* args);
+/*
 PyObject* meth_generic_api_get_status(PyObject* self, PyObject* args);
 */
 
@@ -1724,7 +1724,10 @@ static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("uart_read", "icsneoUartRead", "UartRead", meth_uart_read, METH_VARARGS, _DOC_UART_READ),
     _EZ_ICS_STRUCT_METHOD("uart_set_baudrate", "icsneoUartSetBaudrate", "UartSetBaudrate", meth_uart_set_baudrate, METH_VARARGS, _DOC_UART_SET_BAUDRATE),
     _EZ_ICS_STRUCT_METHOD("uart_get_baudrate", "icsneoUartGetBaudrate", "UartGetBaudrate", meth_uart_get_baudrate, METH_VARARGS, _DOC_UART_GET_BAUDRATE),
-    _EZ_ICS_STRUCT_METHOD("generic_api_send_command", "icsneoGenericAPISendCommand", "GenericAPISendCommand", meth_generic_api_send_command, METH_VARARGS, _DOC_UART_GET_BAUDRATE),    
+    _EZ_ICS_STRUCT_METHOD("generic_api_send_command", "icsneoGenericAPISendCommand", "GenericAPISendCommand", meth_generic_api_send_command, METH_VARARGS, _DOC_UART_GET_BAUDRATE),   
+    _EZ_ICS_STRUCT_METHOD("generic_api_read_data", "icsneoGenericAPIReadData", "GenericAPIReadData", meth_generic_api_read_data, METH_VARARGS, _DOC_UART_GET_BAUDRATE),   
+
+     
 
     {"override_library_name", (PyCFunction)meth_override_library_name, METH_VARARGS, _DOC_OVERRIDE_LIBRARY_NAME},
     {"get_library_path", (PyCFunction)meth_get_library_path, METH_NOARGS, ""},

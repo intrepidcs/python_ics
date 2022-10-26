@@ -3983,15 +3983,68 @@ PyObject* meth_generic_api_send_command(PyObject* self, PyObject* args)
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
-/*
+PyObject* meth_generic_api_read_data(PyObject* self, PyObject* args)
+{
+    PyObject* obj = NULL;
+    unsigned char apiIndex = 0;
+    unsigned char instanceIndex = 0;
+    unsigned char functionIndex = 0;
+    //PyObject* data = NULL;
+    unsigned int length = 0;
+    if (!PyArg_ParseTuple(args, arg_parse("ObbbI:", __FUNCTION__), &obj, &apiIndex, &instanceIndex, &functionIndex, &length)) {
+        return NULL;
+    }
+    // Get the device handle
+    if (!PyNeoDevice_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+    unsigned char* buffer = (unsigned char*)malloc(length*sizeof(unsigned char));
+    if (!buffer) {
+        return NULL;
+    }
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            free(buffer);
+            buffer = NULL;
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        /*
+        int _stdcall icsneoGenericAPIReadData(void* hObject,
+            unsigned char apiIndex,
+            unsigned char instanceIndex,
+            unsigned char* functionIndex,
+            unsigned char* bData,
+            unsigned int* length)
+        */
+        ice::Function<int __stdcall (ICS_HANDLE, unsigned char, unsigned char, unsigned char*, unsigned char*, unsigned int*)> icsneoGenericAPIReadData(lib, "icsneoGenericAPIReadData");
+        Py_BEGIN_ALLOW_THREADS
+            if (!icsneoGenericAPIReadData(handle, apiIndex, instanceIndex, &functionIndex, buffer, &length)) {
+                Py_BLOCK_THREADS
+                free(buffer);
+                buffer = NULL;
+                return set_ics_exception(exception_runtime_error(), "icsneoGenericAPIReadData() Failed");
+            }
+        Py_END_ALLOW_THREADS
+        
+        PyObject* value = Py_BuildValue("Iy#", functionIndex, buffer, length);
+        free(buffer);
+        buffer = NULL;
+        return value;
+    }
+    catch (ice::Exception& ex)
+    {
+        free(buffer);
+        buffer = NULL;
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
 
-int _stdcall icsneoGenericAPISendCommand(void* hObject,
-    unsigned char apiIndex,
-    unsigned char instanceIndex,
-    unsigned char functionIndex,
-    void* bData,
-    unsigned int length,
-    unsigned char* functionError)
+/*
 
 int _stdcall icsneoGenericAPIReadData(void* hObject,
     unsigned char apiIndex,
