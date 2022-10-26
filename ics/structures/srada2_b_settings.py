@@ -6,6 +6,7 @@ from ics.structures.a2_b_monitor_settings import *
 from ics.structures.can_settings import *
 from ics.structures.canfd_settings import *
 from ics.structures.disk_settings import *
+from ics.structures.ethernet_settings2 import *
 from ics.structures.iso9141_keyword2000_settings import *
 from ics.structures.lin_settings import *
 from ics.structures.logger_settings import *
@@ -47,6 +48,7 @@ class srada2_b_settings(ctypes.Structure):
         ('a2b_node', A2BMonitorSettings),
         ('pwr_man_timeout', ctypes.c_uint32),
         ('pwr_man_enable', ctypes.c_uint16),
+        ('ethernet', ETHERNET_SETTINGS2),
     ]
 
 

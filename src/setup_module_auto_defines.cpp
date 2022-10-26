@@ -145,6 +145,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, NEODEVICE_NEW_DEVICE_58);
 	result += PyModule_AddIntMacro(module, NEODEVICE_NEW_DEVICE_59);
 	result += PyModule_AddIntMacro(module, NEODEVICE_RAD_BMS);
+	result += PyModule_AddIntMacro(module, NEODEVICE_RADMOON3);
 	result += PyModule_AddIntMacro(module, NEODEVICE_RED);
 	result += PyModule_AddIntMacro(module, NEODEVICE_ECU);
 	result += PyModule_AddIntMacro(module, NEODEVICE_IEVB);
@@ -174,6 +175,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, NEODEVICE_ANY_PLASMA);
 	result += PyModule_AddIntMacro(module, NEODEVICE_ANY_ION);
 	result += PyModule_AddIntMacro(module, NEODEVICE_NEOECUCHIP);
+	result += PyModule_AddIntMacro(module, DEVICECOUNT_FOR_EXPLORER);
 	result += PyModule_AddIntMacro(module, ISO15765_2_NETWORK_HSCAN);
 	result += PyModule_AddIntMacro(module, ISO15765_2_NETWORK_MSCAN);
 	result += PyModule_AddIntMacro(module, ISO15765_2_NETWORK_HSCAN2);
@@ -549,6 +551,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, EXTENDED_RESPONSE_INVALID_PARAMETER);
 	// end of enum -  } ExtendedResponseCode;
 
+	result += PyModule_AddIntMacro(module, GENERIC_API_DATA_BUFFER_SIZE);
 	result += PyModule_AddIntMacro(module, GET_SUPPORTED_FEATURES_COMMAND_VERSION);
 	result += PyModule_AddIntMacro(module, MAX_REPORTED_VERSIONS);
 	// enum
@@ -836,6 +839,12 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, JUPITER_PTP_ROLE_MASTER);
 	result += PyModule_AddIntMacro(module, JUPITER_PTP_ROLE_SLAVE);
 	result += PyModule_AddIntMacro(module, SRADJupiterSettings_SIZE);
+	result += PyModule_AddIntMacro(module, LINUX_BOOT_ALLOWED);
+	result += PyModule_AddIntMacro(module, WIFI_ANTENNA_INTERNAL);
+	result += PyModule_AddIntMacro(module, WIFI_ANTENNA_EXTERNAL);
+	result += PyModule_AddIntMacro(module, LINUX_CONFIG_PORT_NONE);
+	result += PyModule_AddIntMacro(module, LINUX_CONFIG_PORT_ETH_01);
+	result += PyModule_AddIntMacro(module, LINUX_CONFIG_PORT_ETH_02);
 	result += PyModule_AddIntMacro(module, SFire3Settings_SIZE);
 	result += PyModule_AddIntMacro(module, RadMoonDuoSettings_SIZE);
 	result += PyModule_AddIntMacro(module, SEtherBadgeSettings_SIZE);
@@ -892,6 +901,31 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, eSoftCore);
 	result += PyModule_AddIntMacro(module, eFpgaStatusResp);
 	// end of enum -  } EPlasmaIonVnetChannel_t;
+
+	// enum
+	result += PyModule_AddIntMacro(module, eManagerPortA);
+	result += PyModule_AddIntMacro(module, eManagerPortB);
+	// end of enum -  } EwBMSManagerPort_t;
+
+	// enum
+	result += PyModule_AddIntMacro(module, eLockManager);
+	result += PyModule_AddIntMacro(module, eUnlockManager);
+	// end of enum -  } EwBMSManagerLockState_t;
+
+	// enum
+	result += PyModule_AddIntMacro(module, eUART0);
+	result += PyModule_AddIntMacro(module, eUART1);
+	// end of enum -  } EUartPort_t;
+
+	// enum
+	result += PyModule_AddIntMacro(module, eGENERIC_API);
+	result += PyModule_AddIntMacro(module, eADI_WIL_API);
+	// end of enum -  } eGenericAPIOptions;
+
+	// enum
+	result += PyModule_AddIntMacro(module, ewBMSInstance0);
+	result += PyModule_AddIntMacro(module, ewBMSInstance1);
+	// end of enum -  } EwBMSInstance_t;
 
 	result += PyModule_AddIntMacro(module, stCM_ISO157652_TxMessage_SIZE);
 	result += PyModule_AddIntMacro(module, ISO15765_2015_TxMessage_SIZE);
