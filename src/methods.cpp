@@ -3669,3 +3669,39 @@ PyObject* meth_stop_dhcp_server(PyObject* self, PyObject* args)
     }
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
+
+PyObject* meth_wbms_manager_write_lock(PyObject* self, PyObject* args)
+{
+    PyObject* obj = NULL;
+    EwBMSManagerPort_t manager = eManagerPortA;
+    EwBMSManagerLockState_t lock_state = eLockManager;
+    if (!PyArg_ParseTuple(args, arg_parse("OII:", __FUNCTION__), &obj, &manager, &lock_state)) {
+        return NULL;
+    }
+    if (!PyNeoDevice_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        unsigned int supported = 0;
+        ice::Function<int __stdcall (ICS_HANDLE, const EwBMSManagerPort_t, const EwBMSManagerLockState_t)> icsneowBMSManagerWriteLock(lib, "icsneowBMSManagerWriteLock");
+        Py_BEGIN_ALLOW_THREADS
+            if (!icsneowBMSManagerWriteLock(handle, manager, lock_state)) {
+                Py_BLOCK_THREADS
+                    return set_ics_exception(exception_runtime_error(), "icsneowBMSManagerWriteLock() Failed");
+            }
+        Py_END_ALLOW_THREADS
+        Py_RETURN_NONE;
+    }
+    catch (ice::Exception& ex)
+    {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
