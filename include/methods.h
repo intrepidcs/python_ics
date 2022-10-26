@@ -91,7 +91,7 @@ PyObject* meth_wbms_manager_write_lock(PyObject* self, PyObject* args);
 PyObject* meth_wbms_manager_reset(PyObject* self, PyObject* args);
 
 PyObject* meth_uart_write(PyObject* self, PyObject* args);
-//PyObject* meth_uart_read(PyObject* self, PyObject* args);
+PyObject* meth_uart_read(PyObject* self, PyObject* args);
 /*
 PyObject* meth_uart_set_baudrate(PyObject* self, PyObject* args);
 PyObject* meth_uart_get_baudrate(PyObject* self, PyObject* args);
@@ -217,7 +217,7 @@ PyObject* meth_generic_api_get_status(PyObject* self, PyObject* args);
     "\n" \
     "Args:\n" \
     "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
-    "\time (:class:`datetime.datetime`): Optional. Sets to current time, if omitted.\n\n" \
+    "\ttime (:class:`datetime.datetime`): Optional. Sets to current time, if omitted.\n\n" \
     "\n" \
     "Raises:\n" \
     "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
@@ -349,7 +349,7 @@ PyObject* meth_generic_api_get_status(PyObject* self, PyObject* args);
     "Args:\n" \
     "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
     "\tj1850 (:class:`bool`): Return :class:`" MODULE_NAME "." SPY_MESSAGE_J1850_OBJECT_NAME "` instead.\n\n" \
-    "\timeout (:class:`float`): Optional timeout to wait for messages in seconds (0.1 = 100ms).\n\n" \
+    "\ttimeout (:class:`float`): Optional timeout to wait for messages in seconds (0.1 = 100ms).\n\n" \
     "\n" \
     "Raises:\n" \
     "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
@@ -1561,7 +1561,31 @@ PyObject* meth_generic_api_get_status(PyObject* self, PyObject* args);
     "\t>>> from ics.structures.e_uart_port_t import e_uart_port_t\n" \
     "\t>>> d = ics.open_device()\n" \
     "\t>>> ics.uart_write(d, e_uart_port_t.eUART0, b'my uart data goes here')\n" \
-    "\t>>> \n"    
+    "\t>>> \n"
+
+#define _DOC_UART_READ \
+    MODULE_NAME ".uart_read(device, port, bytes_to_read, flags)\n" \
+    "\n" \
+    "Reads UART on the given port. \n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
+    "\tport (:class:`" MODULE_NAME ".structures.e_uart_port_t.e_uart_port_t`): :class:`" MODULE_NAME ".structures.e_uart_port_t.e_uart_port_t`\n\n" \
+    "\tbytes_to_read (:class:`int`): Optional. How many bytes to read from the UART, 256 if omitted.\n\n" \
+    "\tflags (:class:`int`): Optional. Flags to be used. Don't use if unsure.\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\tNone.\n" \
+    "\n" \
+    "\t>>> import ics\n" \
+    "\t>>> from ics.structures.e_uart_port_t import e_uart_port_t\n" \
+    "\t>>> d = ics.open_device()\n" \
+    "\t>>> data = ics.uart_read(d, e_uart_port_t.eUART0)\n" \
+    "\t>>> print(f\"Read {len(data)} bytes: {data}\")\n" \
+    "\t>>> \n"
 
 static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("find_devices", "icsneoFindNeoDevices", "FindNeoDevices", (PyCFunction)meth_find_devices, METH_VARARGS | METH_KEYWORDS, _DOC_FIND_DEVICES),
@@ -1651,6 +1675,7 @@ static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("wbms_manager_write_lock", "icsneowBMSManagerWriteLock", "wBMSManagerWriteLock", meth_wbms_manager_write_lock, METH_VARARGS, _DOC_WBMS_MANAGER_WRITE_LOCK),
     _EZ_ICS_STRUCT_METHOD("wbms_manager_reset", "icsneowBMSManagerReset", "wBMSManagerReset", meth_wbms_manager_reset, METH_VARARGS, _DOC_WBMS_MANAGER_RESET),
     _EZ_ICS_STRUCT_METHOD("uart_write", "icsneoUartWrite", "UartWrite", meth_uart_write, METH_VARARGS, _DOC_UART_WRITE),
+    _EZ_ICS_STRUCT_METHOD("meth_uart_read", "icsneoUartRead", "UartRead", meth_uart_read, METH_VARARGS, _DOC_UART_READ),
 
     
 

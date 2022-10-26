@@ -3790,3 +3790,55 @@ PyObject* meth_uart_write(PyObject* self, PyObject* args)
     }
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
+
+
+PyObject* meth_uart_read(PyObject* self, PyObject* args)
+{
+    PyObject* obj = NULL;
+    EUartPort_t port = eUART0;
+    unsigned int bytesToRead = 256;
+    uint8_t flags = 0;
+    if (!PyArg_ParseTuple(args, arg_parse("OI|Is:", __FUNCTION__), &obj, &port, &bytesToRead, &flags)) {
+        return NULL;
+    }
+    // Get the device handle
+    if (!PyNeoDevice_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+    uint8_t* buffer = (uint8_t*)malloc(bytesToRead*sizeof(uint8_t));
+    if (!buffer) {
+        return NULL;
+    }
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        size_t bytesActuallyRead = 0;
+        //int _stdcall icsneoUartRead(void* hObject, const EUartPort_t uart, void* bData, const size_t bytesToRead, size_t* bytesActuallyRead, uint8_t* flags)
+        ice::Function<int __stdcall (ICS_HANDLE, const EUartPort_t, const void*, const size_t, size_t*, uint8_t*)> icsneoUartRead(lib, "icsneoUartRead");
+        Py_BEGIN_ALLOW_THREADS
+            if (!icsneoUartRead(handle, port, (void*)buffer, bytesToRead, &bytesActuallyRead, &flags)) {
+                Py_BLOCK_THREADS
+                    free(buffer);
+                    buffer = NULL;
+                    return set_ics_exception(exception_runtime_error(), "icsneoUartRead() Failed");
+            }
+        Py_END_ALLOW_THREADS
+        PyObject* value = Py_BuildValue("y#", buffer, bytesActuallyRead);
+        free(buffer);
+        buffer = NULL;
+        return value;
+
+    }
+    catch (ice::Exception& ex)
+    {
+        free(buffer);
+        buffer = NULL;
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
