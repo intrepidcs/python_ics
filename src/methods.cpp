@@ -3929,9 +3929,7 @@ PyObject* meth_generic_api_send_command(PyObject* self, PyObject* args)
     unsigned char instanceIndex = 0;
     unsigned char functionIndex = 0;
     PyObject* data = NULL;
-    unsigned int length = 0;
-    unsigned char functionError = 0;
-    if (!PyArg_ParseTuple(args, arg_parse("Obbby*b:", __FUNCTION__), &obj, &apiIndex, &instanceIndex, &functionIndex, data, &functionError)) {
+    if (!PyArg_ParseTuple(args, arg_parse("Obbby*:", __FUNCTION__), &obj, &apiIndex, &instanceIndex, &functionIndex, data)) {
         return NULL;
     }
     // Check if the data buffer is valid and grab the buffer
@@ -3964,6 +3962,7 @@ PyObject* meth_generic_api_send_command(PyObject* self, PyObject* args)
             unsigned char* functionError)
         */
         ice::Function<int __stdcall (ICS_HANDLE, unsigned char, unsigned char, unsigned char, void*, unsigned int, unsigned char*)> icsneoGenericAPISendCommand(lib, "icsneoGenericAPISendCommand");
+        unsigned char functionError = 0;
         Py_BEGIN_ALLOW_THREADS
             if (!icsneoGenericAPISendCommand(handle, apiIndex, instanceIndex, functionIndex, data_buffer.buf, data_buffer.len, &functionError)) {
                 PyBuffer_Release(&data_buffer);
@@ -3988,10 +3987,9 @@ PyObject* meth_generic_api_read_data(PyObject* self, PyObject* args)
     PyObject* obj = NULL;
     unsigned char apiIndex = 0;
     unsigned char instanceIndex = 0;
-    unsigned char functionIndex = 0;
     //PyObject* data = NULL;
     unsigned int length = 0;
-    if (!PyArg_ParseTuple(args, arg_parse("ObbbI:", __FUNCTION__), &obj, &apiIndex, &instanceIndex, &functionIndex, &length)) {
+    if (!PyArg_ParseTuple(args, arg_parse("ObbI:", __FUNCTION__), &obj, &apiIndex, &instanceIndex, &length)) {
         return NULL;
     }
     // Get the device handle
@@ -4021,6 +4019,7 @@ PyObject* meth_generic_api_read_data(PyObject* self, PyObject* args)
             unsigned int* length)
         */
         ice::Function<int __stdcall (ICS_HANDLE, unsigned char, unsigned char, unsigned char*, unsigned char*, unsigned int*)> icsneoGenericAPIReadData(lib, "icsneoGenericAPIReadData");
+        unsigned char functionIndex = 0;
         Py_BEGIN_ALLOW_THREADS
             if (!icsneoGenericAPIReadData(handle, apiIndex, instanceIndex, &functionIndex, buffer, &length)) {
                 Py_BLOCK_THREADS
@@ -4044,20 +4043,52 @@ PyObject* meth_generic_api_read_data(PyObject* self, PyObject* args)
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
-/*
+PyObject* meth_generic_api_get_status(PyObject* self, PyObject* args)
+{
+    PyObject* obj = NULL;
+    unsigned char apiIndex = 0;
+    unsigned char instanceIndex = 0;
 
-int _stdcall icsneoGenericAPIReadData(void* hObject,
-    unsigned char apiIndex,
-    unsigned char instanceIndex,
-    unsigned char* functionIndex,
-    unsigned char* bData,
-    unsigned int* length)
-
-int _stdcall icsneoGenericAPIGetStatus(void* hObject,
-    unsigned char apiIndex,
-    unsigned char instanceIndex,
-    unsigned char* functionIndex,
-    unsigned char* callbackError,
-    unsigned char* finsihedProcessing)
-
-*/
+    if (!PyArg_ParseTuple(args, arg_parse("Obb:", __FUNCTION__), &obj, &apiIndex, &instanceIndex)) {
+        return NULL;
+    }
+    // Get the device handle
+    if (!PyNeoDevice_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        /*
+        int _stdcall icsneoGenericAPIGetStatus(void* hObject,
+            unsigned char apiIndex,
+            unsigned char instanceIndex,
+            unsigned char* functionIndex,
+            unsigned char* callbackError,
+            unsigned char* finishedProcessing)
+        */
+        ice::Function<int __stdcall (ICS_HANDLE, unsigned char, unsigned char, unsigned char*, unsigned char*, unsigned char*)> icsneoGenericAPIGetStatus(lib, "icsneoGenericAPIGetStatus");
+        unsigned char functionIndex = 0;
+        unsigned char callbackError = 0;
+        unsigned char finishedProcessing = 0;
+        Py_BEGIN_ALLOW_THREADS
+            if (!icsneoGenericAPIGetStatus(handle, apiIndex, instanceIndex, &functionIndex, &callbackError, &finishedProcessing)) {
+                Py_BLOCK_THREADS
+                return set_ics_exception(exception_runtime_error(), "icsneoGenericAPIGetStatus() Failed");
+            }
+        Py_END_ALLOW_THREADS
+        
+        PyObject* value = Py_BuildValue("III", functionIndex, callbackError, finishedProcessing);
+        return value;
+    }
+    catch (ice::Exception& ex)
+    {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
