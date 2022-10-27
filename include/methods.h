@@ -89,18 +89,14 @@ PyObject* meth_start_dhcp_server(PyObject* self, PyObject* args);
 PyObject* meth_stop_dhcp_server(PyObject* self, PyObject* args);
 PyObject* meth_wbms_manager_write_lock(PyObject* self, PyObject* args);
 PyObject* meth_wbms_manager_reset(PyObject* self, PyObject* args);
-
 PyObject* meth_uart_write(PyObject* self, PyObject* args);
 PyObject* meth_uart_read(PyObject* self, PyObject* args);
-
 PyObject* meth_uart_set_baudrate(PyObject* self, PyObject* args);
 PyObject* meth_uart_get_baudrate(PyObject* self, PyObject* args);
-
 PyObject* meth_generic_api_send_command(PyObject* self, PyObject* args);
 PyObject* meth_generic_api_read_data(PyObject* self, PyObject* args);
-/*
 PyObject* meth_generic_api_get_status(PyObject* self, PyObject* args);
-*/
+
 
 #ifdef _cplusplus
 }
@@ -1633,6 +1629,63 @@ PyObject* meth_generic_api_get_status(PyObject* self, PyObject* args);
     "\t>>> baudrate = ics.uart_set_baudrate(d, e_uart_port_t.eUART0)\n" \
     "\t>>> \n"
 
+#define _DOC_GENERIC_API_SEND_COMMAND \
+    MODULE_NAME ".generic_api_send_command(device, api_index, instance_index, function_index, data)\n" \
+    "\n" \
+    "Sends a command in a generic way.\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
+    "\tapi_index (:class:`int`): api_index.\n\n" \
+    "\tinstance_index (:class:`int`): instance_index.\n\n" \
+    "\tfunction_index (:class:`int`): function_index.\n\n" \
+    "\tdata (:class:`bytes`): Data to be passed in.\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\tfunctionError (:class:`int`): functionError.\n\n" \
+    "\n"
+
+// if (!PyArg_ParseTuple(args, arg_parse("ObbI:", __FUNCTION__), &obj, &apiIndex, &instanceIndex, &length)) {
+#define _DOC_GENERIC_API_READ_DATA \
+    MODULE_NAME ".generic_api_send_command(device, api_index, instance_index, length)\n" \
+    "\n" \
+    "Reads data in a generic way.\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
+    "\tapi_index (:class:`int`): api_index.\n\n" \
+    "\tinstance_index (:class:`int`): instance_index.\n\n" \
+    "\tfunction_index (:class:`int`): function_index.\n\n" \
+    "\tlength (:class:`int`): Length of the data to read.\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\ttuple of (functionError, data) \n\n" \
+    "\n"
+
+// if (!PyArg_ParseTuple(args, arg_parse("Obb:", __FUNCTION__), &obj, &apiIndex, &instanceIndex)) {
+#define _DOC_GENERIC_API_GET_STATUS \
+    MODULE_NAME ".generic_api_get_status(device, api_index, instance_index)\n" \
+    "\n" \
+    "Reads data in a generic way.\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
+    "\tapi_index (:class:`int`): api_index.\n\n" \
+    "\tinstance_index (:class:`int`): instance_index.\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\ttuple of (:class:`int`): (functionIndex, callbackError, finishedProcessing) \n\n" \
+    "\n"
+
 static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("find_devices", "icsneoFindNeoDevices", "FindNeoDevices", (PyCFunction)meth_find_devices, METH_VARARGS | METH_KEYWORDS, _DOC_FIND_DEVICES),
     _EZ_ICS_STRUCT_METHOD("open_device", "icsneoOpenNeoDevice", "OpenNeoDevice", (PyCFunction)meth_open_device, METH_VARARGS | METH_KEYWORDS, _DOC_OPEN_DEVICES),
@@ -1724,10 +1777,9 @@ static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("uart_read", "icsneoUartRead", "UartRead", meth_uart_read, METH_VARARGS, _DOC_UART_READ),
     _EZ_ICS_STRUCT_METHOD("uart_set_baudrate", "icsneoUartSetBaudrate", "UartSetBaudrate", meth_uart_set_baudrate, METH_VARARGS, _DOC_UART_SET_BAUDRATE),
     _EZ_ICS_STRUCT_METHOD("uart_get_baudrate", "icsneoUartGetBaudrate", "UartGetBaudrate", meth_uart_get_baudrate, METH_VARARGS, _DOC_UART_GET_BAUDRATE),
-    _EZ_ICS_STRUCT_METHOD("generic_api_send_command", "icsneoGenericAPISendCommand", "GenericAPISendCommand", meth_generic_api_send_command, METH_VARARGS, _DOC_UART_GET_BAUDRATE),   
-    _EZ_ICS_STRUCT_METHOD("generic_api_read_data", "icsneoGenericAPIReadData", "GenericAPIReadData", meth_generic_api_read_data, METH_VARARGS, _DOC_UART_GET_BAUDRATE),   
-
-     
+    _EZ_ICS_STRUCT_METHOD("generic_api_send_command", "icsneoGenericAPISendCommand", "GenericAPISendCommand", meth_generic_api_send_command, METH_VARARGS, _DOC_GENERIC_API_SEND_COMMAND),   
+    _EZ_ICS_STRUCT_METHOD("generic_api_read_data", "icsneoGenericAPIReadData", "GenericAPIReadData", meth_generic_api_read_data, METH_VARARGS, _DOC_GENERIC_API_READ_DATA),   
+    _EZ_ICS_STRUCT_METHOD("generic_api_get_status", "icsneoGenericAPIGetStatus", "GenericAPIGetStatus", meth_generic_api_get_status, METH_VARARGS, _DOC_GENERIC_API_GET_STATUS),   
 
     {"override_library_name", (PyCFunction)meth_override_library_name, METH_VARARGS, _DOC_OVERRIDE_LIBRARY_NAME},
     {"get_library_path", (PyCFunction)meth_get_library_path, METH_NOARGS, ""},
