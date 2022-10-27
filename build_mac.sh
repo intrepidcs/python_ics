@@ -1,7 +1,7 @@
 #!/bin/sh
 
 python_directory="/Library/Frameworks/Python.framework/Versions"
-python_versions=("3.7" "3.8" "3.9" "3.10")
+python_versions=("3.7" "3.8" "3.9" "3.10" "3.11")
 
 # libusb dependencies
 brew install automake libtool cmake clang-format
