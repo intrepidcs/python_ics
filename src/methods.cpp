@@ -4004,8 +4004,10 @@ PyObject* meth_generic_api_read_data(PyObject* self, PyObject* args)
                 return set_ics_exception(exception_runtime_error(), "icsneoGenericAPIReadData() Failed");
             }
         Py_END_ALLOW_THREADS
-        
-        PyObject* value = Py_BuildValue("Iy#", functionIndex, buffer, length);
+
+        PyObject* ba = PyByteArray_FromStringAndSize((const char*)buffer, length);
+        PyObject* value = Py_BuildValue("IO", functionIndex, ba);
+        Py_DecRef(ba);
         free(buffer);
         buffer = NULL;
         return value;
