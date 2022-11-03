@@ -3820,11 +3820,10 @@ PyObject* meth_uart_read(PyObject* self, PyObject* args)
             }
         Py_END_ALLOW_THREADS
         PyObject* ba_result = PyByteArray_FromStringAndSize((const char*)buffer, bytesActuallyRead);
-        PyObject* value = Py_BuildValue("Y", ba_result);
+        //PyObject* value = Py_BuildValue("O", ba_result);
         free(buffer);
         buffer = NULL;
-        Py_DECREF(ba_result);
-        return value;
+        return ba_result;
     }
     catch (ice::Exception& ex)
     {
