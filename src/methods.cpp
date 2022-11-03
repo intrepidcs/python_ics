@@ -3740,11 +3740,10 @@ PyObject* meth_uart_write(PyObject* self, PyObject* args)
 {
     PyObject* obj = NULL;
     EUartPort_t port = eUART0;
-    const char* data = NULL;
-    Py_ssize_t data_len = 0;
+    Py_buffer data = {};
     uint8_t flags = 0;
     bool check_size = true;
-    if (!PyArg_ParseTuple(args, arg_parse("OIy#|bp:", __FUNCTION__), &obj, &port, &data, &data_len, &flags, &check_size)) {
+    if (!PyArg_ParseTuple(args, arg_parse("OIy*|bp:", __FUNCTION__), &obj, &port, &data, &flags, &check_size)) {
         return NULL;
     }
 
@@ -3764,12 +3763,12 @@ PyObject* meth_uart_write(PyObject* self, PyObject* args)
         size_t bytesActuallySent = 0;
         ice::Function<int __stdcall (ICS_HANDLE, const EUartPort_t, const void*, const size_t, size_t*, uint8_t*)> icsneoUartWrite(lib, "icsneoUartWrite");
         Py_BEGIN_ALLOW_THREADS
-            if (!icsneoUartWrite(handle, port, data, data_len, &bytesActuallySent, &flags)) {
+            if (!icsneoUartWrite(handle, port, data.buf, data.len, &bytesActuallySent, &flags)) {
                 Py_BLOCK_THREADS
                 return set_ics_exception(exception_runtime_error(), "icsneoUartWrite() Failed");
             }
         Py_END_ALLOW_THREADS
-        if (check_size && data_len != bytesActuallySent) {
+        if (check_size && data.len != bytesActuallySent) {
             return set_ics_exception(exception_runtime_error(), "Bytes actually sent didn't match bytes to send length");
         }
         return Py_BuildValue("i", bytesActuallySent);
@@ -3917,9 +3916,8 @@ PyObject* meth_generic_api_send_command(PyObject* self, PyObject* args)
     unsigned char apiIndex = 0;
     unsigned char instanceIndex = 0;
     unsigned char functionIndex = 0;
-    const char* data = NULL;
-    Py_ssize_t data_len = 0;
-    if (!PyArg_ParseTuple(args, arg_parse("Obbby#:", __FUNCTION__), &obj, &apiIndex, &instanceIndex, &functionIndex, data, &data_len)) {
+    Py_buffer data = {};
+    if (!PyArg_ParseTuple(args, arg_parse("Obbby*:", __FUNCTION__), &obj, &apiIndex, &instanceIndex, &functionIndex, &data)) {
         return NULL;
     }
     // Get the device handle
@@ -3946,7 +3944,7 @@ PyObject* meth_generic_api_send_command(PyObject* self, PyObject* args)
         ice::Function<int __stdcall (ICS_HANDLE, unsigned char, unsigned char, unsigned char, void*, unsigned int, unsigned char*)> icsneoGenericAPISendCommand(lib, "icsneoGenericAPISendCommand");
         unsigned char functionError = 0;
         Py_BEGIN_ALLOW_THREADS
-            if (!icsneoGenericAPISendCommand(handle, apiIndex, instanceIndex, functionIndex, (void*)data, data_len, &functionError)) {
+            if (!icsneoGenericAPISendCommand(handle, apiIndex, instanceIndex, functionIndex, (void*)data.buf, data.len, &functionError)) {
                 Py_BLOCK_THREADS
                 return set_ics_exception(exception_runtime_error(), "icsneoGenericAPISendCommand() Failed");
             }
