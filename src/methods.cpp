@@ -3819,11 +3819,12 @@ PyObject* meth_uart_read(PyObject* self, PyObject* args)
                 return set_ics_exception(exception_runtime_error(), "icsneoUartRead() Failed");
             }
         Py_END_ALLOW_THREADS
-        PyObject* value = Py_BuildValue("y#", buffer, bytesActuallyRead);
+        PyObject* ba_result = PyByteArray_FromStringAndSize((const char*)buffer, bytesActuallyRead);
+        PyObject* value = Py_BuildValue("Y", ba_result);
         free(buffer);
         buffer = NULL;
+        Py_DECREF(ba_result);
         return value;
-
     }
     catch (ice::Exception& ex)
     {
