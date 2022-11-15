@@ -1650,7 +1650,7 @@ PyObject* meth_generic_api_get_status(PyObject* self, PyObject* args);
 
 // if (!PyArg_ParseTuple(args, arg_parse("ObbI:", __FUNCTION__), &obj, &apiIndex, &instanceIndex, &length)) {
 #define _DOC_GENERIC_API_READ_DATA \
-    MODULE_NAME ".generic_api_send_command(device, api_index, instance_index, length)\n" \
+    MODULE_NAME ".generic_api_read_data(device, api_index, instance_index, [length])\n" \
     "\n" \
     "Reads data in a generic way.\n" \
     "\n" \
@@ -1659,7 +1659,7 @@ PyObject* meth_generic_api_get_status(PyObject* self, PyObject* args);
     "\tapi_index (:class:`int`): api_index.\n\n" \
     "\tinstance_index (:class:`int`): instance_index.\n\n" \
     "\tfunction_index (:class:`int`): function_index.\n\n" \
-    "\tlength (:class:`int`): Length of the data to read.\n\n" \
+    "\tlength (:class:`int`): (optional) Length of the data to read. defaults to `GENERIC_API_DATA_BUFFER_SIZE`\n\n" \
     "\n" \
     "Raises:\n" \
     "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
