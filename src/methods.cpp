@@ -3964,8 +3964,8 @@ PyObject* meth_generic_api_read_data(PyObject* self, PyObject* args)
     PyObject* obj = NULL;
     unsigned char apiIndex = 0;
     unsigned char instanceIndex = 0;
-    unsigned int length = 0;
-    if (!PyArg_ParseTuple(args, arg_parse("ObbI:", __FUNCTION__), &obj, &apiIndex, &instanceIndex, &length)) {
+    unsigned int length = GENERIC_API_DATA_BUFFER_SIZE;
+    if (!PyArg_ParseTuple(args, arg_parse("Obb|I:", __FUNCTION__), &obj, &apiIndex, &instanceIndex, &length)) {
         return NULL;
     }
     // Get the device handle
