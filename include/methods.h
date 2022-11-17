@@ -1665,7 +1665,7 @@ PyObject* meth_generic_api_get_status(PyObject* self, PyObject* args);
     "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
     "\n" \
     "Returns:\n" \
-    "\ttuple of (functionError, data) \n\n" \
+    "\ttuple of (functionIndex, data) \n\n" \
     "\n"
 
 // if (!PyArg_ParseTuple(args, arg_parse("Obb:", __FUNCTION__), &obj, &apiIndex, &instanceIndex)) {
