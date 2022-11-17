@@ -1547,7 +1547,7 @@ PyObject* meth_generic_api_get_status(PyObject* self, PyObject* args);
     "Args:\n" \
     "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
     "\tport (:class:`" MODULE_NAME ".structures.e_uart_port_t.e_uart_port_t`): :class:`" MODULE_NAME ".structures.e_uart_port_t.e_uart_port_t`\n\n" \
-    "\tdata (:class:`bytes): :class:`bytes\n\n" \
+    "\tdata (:class:`bytes`): :class:`bytes`\n\n" \
     "\n" \
     "Raises:\n" \
     "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
