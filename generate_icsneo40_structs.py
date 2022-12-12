@@ -464,7 +464,7 @@ def format_file(filename):
     #processed_fname = "icsnVC40_processed.h"
     # Run it through the preprocessor
     # clang -E -P .\include\ics\icsnVC40.h -o output.h
-    result = run(["clang", "-E", "-P", filename, "-o", processed_fname], stdout=PIPE, stderr=PIPE)
+    result = run(["clang", "-DEXTERNAL_PROJECT", "-E", "-P", filename, "-o", processed_fname], stdout=PIPE, stderr=PIPE)
     result.check_returncode()
 
     # Format the file
@@ -518,7 +518,23 @@ def parse_header_file(filename):
                         if debug_print:
                             print("ADDING {} to globals with value of {}".format(
                                 words[1], words[2]))
-                        globals()[words[1]] = eval(words[2])
+                        try:
+                            globals()[words[1]] = eval(words[2])
+                        except SyntaxError as ex:
+                            # This happens when we have an integer literal
+                            # https://en.cppreference.com/w/cpp/language/integer_literal
+                            # TODO: 0x1p5
+                            literals = ('u', 'U', 'l', 'L', 'z', 'Z', 'f', 'F')
+                            modified_word = words[2]
+                            while modified_word.endswith(literals):
+                                for literal in literals:
+                                    modified_word = modified_word.rstrip(literal)
+                            globals()[words[1]] = eval(modified_word)
+                        except NameError as ex:
+                            # Python interpreter can't parse this word value so lets convert it to a string and be done...
+                            # Line: #57: "#define __INTMAX_C_SUFFIX__ LL"
+                            globals()[words[1]] = eval(f'"{modified_word}"')
+
                     continue
                 # Process the object
                 if is_line_start_of_object(line):
@@ -531,6 +547,9 @@ def parse_header_file(filename):
                         enum_objects.append(obj)
                     else:
                         c_objects.append(obj)
+            except Exception as ex:
+                print(f'Line: #{line_count}: "{line}"')
+                raise ex
             finally:
                 last_pos = f.tell()
                 line = f.readline()
@@ -797,13 +816,34 @@ def generate_pyfile(c_object, path):
         _write_c_object(f, c_object)
     return fname, fname_with_path
 
-if __name__ == '__main__':
+
+def generate_all_files():
     import sys
     import os
+    import pathlib
+
     try:
+        # Grab the filename from the command line
         filename = sys.argv[1]
         filename = os.path.normpath(filename)
         print(f"Parsing '{filename}'...")
     except IndexError as _:
+        # use our default path if it isn't supplied
         filename = 'include/ics/icsnVC40.h' 
     generate(filename)
+
+    # Internal Header
+    try:
+        # Grab the filename from the command line
+        filename_internal = sys.argv[2]
+        filename_internal = os.path.normpath(filename_internal)
+        print(f"Parsing '{filename_internal}'...")
+    except IndexError as _:
+        # use our default path if it isn't supplied
+        filename_internal = 'include/ics/icsnVC40Internal.h'
+    if pathlib.Path(filename_internal).exists():
+        print("WARNING: Generating internal header!")
+        generate(filename_internal)
+
+if __name__ == '__main__':
+    generate_all_files()
