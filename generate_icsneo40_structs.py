@@ -11,6 +11,8 @@ import ctypes
 debug_print = False
 
 __unique_numbers = []
+
+
 def get_unique_number():
     "Returns a unique integer"
     global __unique_numbers
@@ -28,6 +30,7 @@ class DataType(Enum):
     Struct = auto()
     Enum = auto()
 
+
 class CVariable(object):
     name = ""
     data_type = None
@@ -43,7 +46,7 @@ class CVariable(object):
         self.bitfield_size = bitfield_size
         self.enum_value = enum_value
         self.is_enum = bool(self.enum_value)
-    
+
     def __repr__(self):
         return f'<{self.__class__.__name__} {self.name} {self.data_type} @ {hex(id(self))}>'
 
@@ -56,6 +59,7 @@ class CVariable(object):
         od['is_enum'] = self.is_enum
         od['enum_value'] = self.enum_value
         return od
+
 
 class CEnum(CVariable):
     def __init__(self, name, value):
@@ -78,7 +82,7 @@ class CObject(object):
             name = self.names[-1]
         else:
             name = 'Anon'
-        
+
         if self.data_type == DataType.Struct:
             t_name = 'Struct'
         elif self.data_type == DataType.Union:
@@ -89,7 +93,7 @@ class CObject(object):
             t_name = 'Unknown'
 
         return f'<{self.__class__.__name__} {name} {t_name} {len(self.members)} members @ {hex(id(self))}>'
-    
+
     def to_ordered_dict(self):
         od = OrderedDict()
         if self.data_type == DataType.Struct:
@@ -125,8 +129,9 @@ class CObject(object):
 
 
 _start_of_obj_blacklist = (
-    re.compile(r'''struct [aA-zZ\\_]+ [aA-zZ\\_]+;'''), # struct some_random_struct_name value;
+    re.compile(r'''struct [aA-zZ\\_]+ [aA-zZ\\_]+;'''),  # struct some_random_struct_name value;
 )
+
 
 def is_line_start_of_object(line):
     "Returns True if we are a c object (enum, struct, union)"
@@ -135,10 +140,12 @@ def is_line_start_of_object(line):
             return False
     return bool(re.search('\btypedef struct$|struct$|struct \S*$|enum|union', line))
 
+
 # This contains all the objects that don't pass convert_to_ctype_object
 NON_CTYPE_OBJ_NAMES = []
 # This contains a list of every object we collected
 ALL_C_OBJECTS = []
+
 
 def get_object_from_name(name):
     global ALL_C_OBJECTS
@@ -146,6 +153,7 @@ def get_object_from_name(name):
         if name == obj.preferred_name or name in obj.names:
             return obj
     return None
+
 
 def parse_object(f, pos=-1, pack_size=None, is_embedded=False):
     """
@@ -238,6 +246,7 @@ def parse_object(f, pos=-1, pack_size=None, is_embedded=False):
         if pos != -1:
             f.seek(pos)
     raise RuntimeError("parse_object(): Failure. This is a bug and we shouldn't be here!")
+
 
 def reverse_leading_underscores(value: str):
     """Take a string starting with underscores and moves them to the end. Returns a string"""
@@ -377,6 +386,7 @@ def get_struct_names(data):
             names[name] = [name, ]
     return names
 
+
 def get_preferred_struct_name(_names):
     # Remove the reference
     names = _names[:]
@@ -410,6 +420,7 @@ def convert_to_snake_case(name):
     s2 = re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
     return re.sub(r'(_)\1{1,}', '_', s2)
 
+
 def convert_to_ctype_object(data_type):
     ctype_types = {
         "c_bool": ("_Bool", "bool"),
@@ -435,7 +446,7 @@ def convert_to_ctype_object(data_type):
     for d in [8, 16, 32, 64]:
         ctype_types[f'c_int{d}'] = (f'int{d}_t',)
         ctype_types[f'c_uint{d}'] = (f'uint{d}_t',)
-    
+
     # This is dirty but we don't parse typedefs...
     ctype_types["c_uint16"] = ctype_types["c_uint16"] + ("descIdType",)
     ctype_types["c_uint64"] = ctype_types["c_uint64"] + ("_clock_identity",)
@@ -453,8 +464,9 @@ def convert_to_ctype_object(data_type):
                         t = f'ctypes.POINTER({t})'
                     return t
                 except AttributeError as ex:
-                    return None 
+                    return None
     return None
+
 
 def format_file(filename):
     import os
@@ -473,6 +485,7 @@ def format_file(filename):
     result.check_returncode()
 
     return processed_fname
+
 
 def parse_header_file(filename):
     with open(filename, 'r') as f:
@@ -555,6 +568,7 @@ def parse_header_file(filename):
                 line = f.readline()
         return c_objects, enum_objects
 
+
 def generate(filename='include/ics/icsnVC40.h'):
     import shutil
     import json
@@ -610,10 +624,10 @@ def generate(filename='include/ics/icsnVC40.h'):
         if debug_print:
             print(file_name, file_path)
         file_names.append(file_name)
-    
+
     # Verify we don't have any unknown data types here
     global NON_CTYPE_OBJ_NAMES
-    global ALL_C_OBJECTS 
+    global ALL_C_OBJECTS
     errors = False
     for obj_name in NON_CTYPE_OBJ_NAMES:
         obj = get_object_from_name(obj_name)
@@ -665,6 +679,7 @@ def generate(filename='include/ics/icsnVC40.h'):
     """
     print("Done.")
 
+
 def _write_c_object(f, c_object):
     # Write the header
     if c_object.data_type == DataType.Struct:
@@ -680,7 +695,7 @@ def _write_c_object(f, c_object):
         f.write('\n')
     else:
         raise ValueError("CObject is not of a known data type!")
-    
+
     # Write the rest of the header for structs/unions
     if c_object.data_type in (DataType.Struct, DataType.Union):
         # Setup the packing
@@ -694,7 +709,7 @@ def _write_c_object(f, c_object):
         if anonymous_names:
             f.write(f'    _anonymous_  = {str(tuple(anonymous_names))}\n')
         f.write(f'    _fields_ = [\n')
-    
+
     # Write the members
     for member in c_object.members:
         if c_object.data_type == DataType.Enum:
@@ -744,7 +759,7 @@ def _write_c_object(f, c_object):
                 _name = member.preferred_name
                 _created_member = CVariable(_name, _name, 0, 0)
                 _write_member(f, _created_member, True)
-    
+
     # Finalize the _fields_ attribute and extra names
     if c_object.data_type in (DataType.Struct, DataType.Union):
         f.write(f'    ]\n')
@@ -756,6 +771,7 @@ def _write_c_object(f, c_object):
             continue
         f.write('{} = {}\n'.format(re.sub('^\*', '', name), c_object.preferred_name))
     f.write('\n')
+
 
 def generate_pyfile(c_object, path):
     #name = get_preferred_struct_name(c_object.names)
@@ -780,6 +796,7 @@ def generate_pyfile(c_object, path):
         f.write('import enum\n')
         f.write('\n')
         # Generate all the imports
+
         def get_c_object_imports(c_object):
             import_names = []
             for member in c_object.members:
@@ -799,7 +816,7 @@ def generate_pyfile(c_object, path):
             # anonymous/nameless objects put an empty string in the list, lets remove it here
             import_names = [name for name in import_names if name]
             return sorted(set(import_names))
-        
+
         import_names = get_c_object_imports(c_object)
         for import_name in (import_names):
             f.write(f"from ics.structures.{import_name} import *\n")
@@ -809,7 +826,7 @@ def generate_pyfile(c_object, path):
             for member in c_object.members:
                 if isinstance(member, CObject):
                     _generate_inner_objects(f, member)
-                    _write_c_object(f, member) 
+                    _write_c_object(f, member)
         # generate all the inner objects
         _generate_inner_objects(f, c_object)
         # Finally write our main object
@@ -823,17 +840,23 @@ def generate_all_files():
     import pathlib
 
     try:
+        if sys.argv[0] == 'setup.py':
+            raise IndexError
         # Grab the filename from the command line
         filename = sys.argv[1]
         filename = os.path.normpath(filename)
         print(f"Parsing '{filename}'...")
     except IndexError as _:
         # use our default path if it isn't supplied
-        filename = 'include/ics/icsnVC40.h' 
+        filename = 'include/ics/icsnVC40.h'
+    if not pathlib.Path(filename).exists():
+        raise FileNotFoundError(filename)
     generate(filename)
 
     # Internal Header
     try:
+        if sys.argv[0] == 'setup.py':
+            raise IndexError
         # Grab the filename from the command line
         filename_internal = sys.argv[2]
         filename_internal = os.path.normpath(filename_internal)
@@ -844,6 +867,7 @@ def generate_all_files():
     if pathlib.Path(filename_internal).exists():
         print("WARNING: Generating internal header!")
         generate(filename_internal)
+
 
 if __name__ == '__main__':
     generate_all_files()

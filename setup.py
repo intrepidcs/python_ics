@@ -58,7 +58,7 @@ class build(build_module.build):
         import extract_icsneo40_defines
         import generate_icsneo40_structs
         extract_icsneo40_defines.extract()
-        generate_icsneo40_structs.generate()
+        generate_icsneo40_structs.generate_all_files()
         if 'DARWIN' in platform.system().upper():
             import build_libicsneo
             build_libicsneo.checkout()
@@ -129,11 +129,11 @@ setup(name='python_ics',
       include_package_data=True,
       ext_modules=[ics_extension],
       classifiers=[
-            'Programming Language :: Python :: 3',
-            'Programming Language :: Python :: 3.6',
-            'Programming Language :: Python :: 3.7',
-            'Programming Language :: Python :: 3.8',
-            'Programming Language :: Python :: 3.9',
-            'Programming Language :: Python :: 3.10',
-            'Programming Language :: Python :: 3.11',
+          'Programming Language :: Python :: 3',
+          'Programming Language :: Python :: 3.6',
+          'Programming Language :: Python :: 3.7',
+          'Programming Language :: Python :: 3.8',
+          'Programming Language :: Python :: 3.9',
+          'Programming Language :: Python :: 3.10',
+          'Programming Language :: Python :: 3.11',
       ],)
