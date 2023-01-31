@@ -597,10 +597,14 @@ def generate(filename='include/ics/icsnVC40.h'):
     except FileNotFoundError:
         pass
     ignore_names = [
-        '__fsid_t', '__darwin_pthread_handler_rec', '_mbstate_t', 'mbstate_t_',
+        '__fsid_t', '__darwin_pthread_handler_rec', 
+        '_mbstate_t', 'mbstate_t_', 'mbstatet_', 'Mbstatet_', '_Mbstatet',
+        '_LONGDOUBLE', 'LONGDOUBLE_', 
         '_opaque_pthread_attr_t', '_opaque_pthread_cond_t', '_opaque_pthread_condattr_t',
         '_opaque_pthread_mutex_t', '_opaque_pthread_mutexattr_t', '_opaque_pthread_once_t',
         '_opaque_pthread_rwlock_t', '_opaque_pthread_rwlockattr_t', '_opaque_pthread_t',
+        'crt_locale_pointers_', 'crt_locale_data_public_', 'ldiv_t', 'lldiv_t', 'ldouble_', 
+        'ldbl12_', 'div_t', 'crt_float_', 'crt_double_', 'clock_quality_', 'ndis_adapter_information',
         'NeoDevice', 'neo_device', 'NeoDeviceEx', 'neo_device_ex',
         'icsSpyMessage', 'icsSpyMessageJ1850', 'ics_spy_message', 'ics_spy_message_j1850']
     file_names = []
