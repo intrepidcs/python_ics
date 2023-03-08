@@ -28,7 +28,7 @@ class vllupformat1(ctypes.Structure):
 
 
 
-class Nameless6024(ctypes.Union):
+class Nameless52437(ctypes.Union):
     _pack_ = 2
     _fields_ = [
         ('vllupformat0', vllupformat0),
@@ -39,9 +39,9 @@ class Nameless6024(ctypes.Union):
 
 class s_pluto_vl_lookup_entry_s(ctypes.Structure):
     _pack_ = 2
-    _anonymous_  = ('Nameless6024',)
+    _anonymous_  = ('Nameless52437',)
     _fields_ = [
-        ('Nameless6024', Nameless6024),
+        ('Nameless52437', Nameless52437),
     ]
 
 

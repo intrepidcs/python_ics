@@ -4,7 +4,7 @@ import enum
 
 
 
-class Nameless18844(ctypes.Structure):
+class Nameless62941(ctypes.Structure):
     _fields_ = [
         ('id', ctypes.c_uint32, 12),
         ('res1', ctypes.c_uint32, 4),
@@ -21,16 +21,16 @@ class Nameless18844(ctypes.Structure):
 
 
 
-class Nameless61974(ctypes.Union):
-    _anonymous_  = ('Nameless18844',)
+class Nameless51772(ctypes.Union):
+    _anonymous_  = ('Nameless62941',)
     _fields_ = [
         ('ArbIDOrHeader', ctypes.c_uint32),
-        ('Nameless18844', Nameless18844),
+        ('Nameless62941', Nameless62941),
     ]
 
 
 
-class Nameless49459(ctypes.Structure):
+class Nameless39114(ctypes.Structure):
     _fields_ = [
         ('StatusBitField3', ctypes.c_uint32),
         ('StatusBitField4', ctypes.c_uint32),
@@ -38,7 +38,7 @@ class Nameless49459(ctypes.Structure):
 
 
 
-class Nameless21903(ctypes.Structure):
+class Nameless56218(ctypes.Structure):
     _fields_ = [
         ('hcrc_msbs', ctypes.c_uint32, 3),
         ('res2', ctypes.c_uint32, 5),
@@ -52,18 +52,18 @@ class Nameless21903(ctypes.Structure):
 
 
 
-class Nameless7100(ctypes.Union):
-    _anonymous_  = ('Nameless49459', 'Nameless21903')
+class Nameless62860(ctypes.Union):
+    _anonymous_  = ('Nameless39114', 'Nameless56218')
     _fields_ = [
-        ('Nameless49459', Nameless49459),
+        ('Nameless39114', Nameless39114),
         ('AckBytes', ctypes.c_uint8 * 8),
-        ('Nameless21903', Nameless21903),
+        ('Nameless56218', Nameless56218),
     ]
 
 
 
 class ics_spy_message_flex_ray(ctypes.Structure):
-    _anonymous_  = ('Nameless61974', 'Nameless7100')
+    _anonymous_  = ('Nameless51772', 'Nameless62860')
     _fields_ = [
         ('StatusBitField', ctypes.c_uint32),
         ('StatusBitField2', ctypes.c_uint32),
@@ -82,9 +82,9 @@ class ics_spy_message_flex_ray(ctypes.Structure):
         ('NumberBytesData', ctypes.c_uint8),
         ('NetworkID2', ctypes.c_uint8),
         ('DescriptionID', ctypes.c_uint16),
-        ('Nameless61974', Nameless61974),
+        ('Nameless51772', Nameless51772),
         ('Data', ctypes.c_uint8 * 8),
-        ('Nameless7100', Nameless7100),
+        ('Nameless62860', Nameless62860),
         ('ExtraDataPtr', ctypes.c_void_p),
         ('MiscData', ctypes.c_uint8),
         ('Reserved', ctypes.c_uint8 * 3),

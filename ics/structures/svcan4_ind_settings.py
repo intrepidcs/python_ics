@@ -10,7 +10,7 @@ from ics.structures.iso9141_keyword2000_settings import *
 from ics.structures.lin_settings import *
 
 
-class Nameless8267(ctypes.Structure):
+class Nameless14907(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
         ('network_enables', ctypes.c_uint16),
@@ -22,10 +22,10 @@ class Nameless8267(ctypes.Structure):
 
 class network_enables(ctypes.Union):
     _pack_ = 2
-    _anonymous_  = ('Nameless8267',)
+    _anonymous_  = ('Nameless14907',)
     _fields_ = [
         ('word', ctypes.c_uint64),
-        ('Nameless8267', Nameless8267),
+        ('Nameless14907', Nameless14907),
     ]
 
 

@@ -11,7 +11,7 @@ from ics.structures.s_text_api_settings import *
 from ics.structures.timesync_icshardware_settings import *
 
 
-class Nameless35335(ctypes.Structure):
+class Nameless36273(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
         ('network_enables', ctypes.c_uint16),
@@ -23,10 +23,10 @@ class Nameless35335(ctypes.Structure):
 
 class network_enables(ctypes.Union):
     _pack_ = 2
-    _anonymous_  = ('Nameless35335',)
+    _anonymous_  = ('Nameless36273',)
     _fields_ = [
         ('word', ctypes.c_uint64),
-        ('Nameless35335', Nameless35335),
+        ('Nameless36273', Nameless36273),
     ]
 
 

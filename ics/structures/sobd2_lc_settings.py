@@ -13,7 +13,7 @@ from ics.structures.s_text_api_settings import *
 from ics.structures.swcan_settings import *
 
 
-class Nameless39639(ctypes.Structure):
+class Nameless49197(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
         ('network_enables', ctypes.c_uint16),
@@ -25,10 +25,10 @@ class Nameless39639(ctypes.Structure):
 
 class network_enables(ctypes.Union):
     _pack_ = 2
-    _anonymous_  = ('Nameless39639',)
+    _anonymous_  = ('Nameless49197',)
     _fields_ = [
         ('word', ctypes.c_uint64),
-        ('Nameless39639', Nameless39639),
+        ('Nameless49197', Nameless49197),
     ]
 
 
