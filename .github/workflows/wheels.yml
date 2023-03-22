@@ -31,6 +31,8 @@ jobs:
           echo "Clang Version installed:"
           clang --version
           clang-format --version
+          which clang
+          which clang-format
         shell: bash
 
       - name: Install cibuildwheel
