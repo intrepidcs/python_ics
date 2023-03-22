@@ -16,24 +16,25 @@ jobs:
       # Used to host cibuildwheel
       - uses: actions/setup-python@v3
 
-      - name: Install Clang and Clang Format
-        run: |
-          if [ "$RUNNER_OS" == "Linux" ]; then
-            sudo apt install clang clang-format
-          elif [ "$RUNNER_OS" == "Windows" ]; then
-            choco install llvm
-          elif [ "$RUNNER_OS" == "macoOS" ]; then
-            brew install automake libtool cmake clang-format
-          else
-            echo "$RUNNER_OS not supported"
-            exit 1
-          fi
-          echo "Clang Version installed:"
-          clang --version
-          clang-format --version
-          which clang
-          which clang-format
-        shell: bash
+
+      #- name: Install Clang and Clang Format
+      #  run: |
+      #    if [ "$RUNNER_OS" == "Linux" ]; then
+      #      sudo apt install clang clang-format
+      #    elif [ "$RUNNER_OS" == "Windows" ]; then
+      #      choco install llvm
+      #    elif [ "$RUNNER_OS" == "macoOS" ]; then
+      #      brew install automake libtool cmake clang-format
+      #    else
+      #      echo "$RUNNER_OS not supported"
+      #      exit 1
+      #    fi
+      #    echo "Clang Version installed:"
+      #    clang --version
+      #    clang-format --version
+      #    which clang
+      #    which clang-format
+      #  shell: bash
 
       - name: Install cibuildwheel
         run: python -m pip install cibuildwheel==2.12.1
@@ -44,9 +45,15 @@ jobs:
           clang --version
           clang-format --version
           python -m cibuildwheel --output-dir wheelhouse
-        # to supply options, put them in 'env', like:
-        # env:
-        #   CIBW_SOME_OPTION: value
+        env:
+          CIBW_MANYLINUX_X86_64_IMAGE: quay.io/pypa/manylinux2014_x86_64
+          CIBW_ARCHS_MACOS: x86_64
+          CIBW_BEFORE_ALL_LINUX: >
+            yum -y install clang clang-tools-extra
+          CIBW_BEFORE_ALL_MACOS: >
+            brew install automake libtool cmake clang-format
+          CIBW_BEFORE_BUILD_WINDOWS: >
+            choco install llvm
 
       - uses: actions/upload-artifact@v3
         with:
