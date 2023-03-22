@@ -53,6 +53,7 @@ jobs:
             python -m pip install wheel
           CIBW_BEFORE_ALL_LINUX: >
             dnf install -y clang clang-tools-extra
+            dnf group install -y "Development Tools"
           CIBW_BEFORE_ALL_MACOS: >
             brew install automake libtool cmake clang-format
           CIBW_BEFORE_BUILD_WINDOWS: >
