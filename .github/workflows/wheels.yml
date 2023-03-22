@@ -16,11 +16,19 @@ jobs:
       # Used to host cibuildwheel
       - uses: actions/setup-python@v3
 
-      - name: Set up Clang
-        uses: egor-tensin/setup-clang@v1
-        with:
-          version: latest
-          #platform: x64
+      - name: Install Clang and Clang Format
+        run: |
+          if [ "$RUNNER_OS" == "Linux" ]; then
+            apt install clang clang-format
+          elif [ "$RUNNER_OS" == "Windows" ]; then
+            choco install llvm
+          elif [ "$RUNNER_OS" == "macoOS" ]; then
+            brew install automake libtool cmake clang-format
+          else
+            echo "$RUNNER_OS not supported"
+            exit 1
+          fi
+        shell: bash
 
       - name: Install cibuildwheel
         run: python -m pip install cibuildwheel==2.12.1
