@@ -49,7 +49,7 @@ jobs:
           CIBW_SKIP: cp36-*
           CIBW_MANYLINUX_X86_64_IMAGE: quay.io/pypa/manylinux_2_28_x86_64
           CIBW_ARCHS_MACOS: x86_64
-          CIBW_BEFORE_ALL:
+          CIBW_BEFORE_BUILD:
             python -m pip install wheel
           CIBW_BEFORE_ALL_LINUX: >
             dnf install -y clang clang-tools-extra
