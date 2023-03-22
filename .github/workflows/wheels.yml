@@ -19,7 +19,7 @@ jobs:
       - name: Install Clang and Clang Format
         run: |
           if [ "$RUNNER_OS" == "Linux" ]; then
-            apt install clang clang-format
+            sudo apt install clang clang-format
           elif [ "$RUNNER_OS" == "Windows" ]; then
             choco install llvm
           elif [ "$RUNNER_OS" == "macoOS" ]; then
