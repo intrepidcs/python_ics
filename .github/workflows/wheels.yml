@@ -49,10 +49,11 @@ jobs:
           CIBW_SKIP: cp36-*
           CIBW_MANYLINUX_X86_64_IMAGE: quay.io/pypa/manylinux_2_28_x86_64
           CIBW_ARCHS_MACOS: x86_64
+          CIBW_ENVIRONMENT: DISTUTILS_DEBUG=1
           CIBW_BEFORE_ALL: >
             python -m pip install wheel
           CIBW_BEFORE_ALL_LINUX: >
-            dnf install -y clang clang-tools-extra &&
+            dnf install -y cmake clang clang-tools-extra &&
             dnf group install -y "Development Tools"
           CIBW_BEFORE_ALL_MACOS: >
             brew install automake libtool cmake clang-format
