@@ -3239,6 +3239,104 @@ PyObject* meth_write_jupiter_firmware(PyObject* self, PyObject* args)
 
 }
 
+PyObject* meth_flash_phy_firmware(PyObject* self, PyObject* args)
+{
+	PyObject* obj = NULL;
+	char phy_indx = 0;
+	PyObject* bytes_obj = NULL;
+	unsigned int functionError = 1;
+	if (!PyArg_ParseTuple(args, arg_parse("OiO|i:", __FUNCTION__), &obj, &phy_indx, &bytes_obj, &functionError))
+	{
+		return NULL;
+	}
+
+	if (!PyBytes_CheckExact(bytes_obj))
+	{
+		return set_ics_exception(exception_runtime_error(), "Argument must be of Bytes type ");
+	}
+	if (!PyNeoDevice_CheckExact(obj))
+	{
+		return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+	}
+	ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+
+	try
+	{
+		ice::Library* lib = dll_get_library();
+		if (!lib)
+		{
+			char buffer[512];
+			return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+		}
+
+		ice::Function<int __stdcall (ICS_HANDLE, char, char*, size_t, unsigned int*)> icsneoFlashPhyFirmware(lib, "icsneoFlashPhyFirmware");
+		// Convert the object to a bytes object
+		PyObject* bytes = PyBytes_FromObject(bytes_obj);
+		// Grab the byte size
+		Py_ssize_t bsize = PyBytes_Size(bytes);
+		// Grab the data out of the bytes
+		char* bytes_str = PyBytes_AsString(bytes);
+		if (!bytes_str)
+			return NULL;
+		
+        Py_BEGIN_ALLOW_THREADS
+            if (!icsneoFlashPhyFirmware(handle, phy_indx, bytes_str, bsize, &functionError)) {
+                Py_BLOCK_THREADS
+                return set_ics_exception(exception_runtime_error(), "icsneoFlashPhyFirmware() Failed");
+            }
+        Py_END_ALLOW_THREADS
+        return Py_BuildValue("i", functionError);
+		
+	}
+	catch (ice::Exception& ex)
+	{
+		return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+	}
+}
+
+
+PyObject* meth_get_phy_firmware_version(PyObject* self, PyObject* args)
+{
+	PyObject* obj = NULL;
+	char phy_indx = 0;
+	unsigned int phyVersion = NULL;
+	unsigned int functionError = 1;
+	if (!PyArg_ParseTuple(args, arg_parse("Oi|ii:", __FUNCTION__), &obj, &phy_indx, &phyVersion, &functionError))
+	{
+		return NULL;
+	}
+
+	if (!PyNeoDevice_CheckExact(obj))
+	{
+		return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+	}
+	ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+
+	try
+	{
+		ice::Library* lib = dll_get_library();
+		if (!lib)
+		{
+			char buffer[512];
+			return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+		}
+
+		ice::Function<int __stdcall (ICS_HANDLE, char, unsigned int*, unsigned int*)> icsneoGetPhyFwVersion(lib, "icsneoGetPhyFwVersion");
+
+        Py_BEGIN_ALLOW_THREADS
+            if (!icsneoGetPhyFwVersion(handle, phy_indx, &phyVersion, &functionError)) {
+                Py_BLOCK_THREADS
+                return set_ics_exception(exception_runtime_error(), "icsneoGetPhyFwVersion() Failed");
+            }
+        Py_END_ALLOW_THREADS
+        return Py_BuildValue("i", phyVersion);
+		
+	}
+	catch (ice::Exception& ex)
+	{
+		return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+	}
+}
 
 PyObject* meth_override_library_name(PyObject* self, PyObject* args)
 {

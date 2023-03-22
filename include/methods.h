@@ -75,6 +75,8 @@ PyObject* meth_get_device_status(PyObject* self, PyObject* args);
 PyObject* meth_enable_network_com(PyObject* self, PyObject* args); //icsneoEnableNetworkCom
 PyObject* meth_enable_bus_voltage_monitor(PyObject* self, PyObject* args);
 PyObject* meth_get_bus_voltage(PyObject* self, PyObject* args);
+PyObject* meth_flash_phy_firmware(PyObject* self, PyObject* args);
+PyObject* meth_get_phy_firmware_version(PyObject* self, PyObject* args);
 PyObject* meth_read_jupiter_firmware(PyObject* self, PyObject* args);
 PyObject* meth_write_jupiter_firmware(PyObject* self, PyObject* args);
 PyObject* meth_get_disk_details(PyObject* self, PyObject* args);
@@ -1242,6 +1244,42 @@ PyObject* meth_generic_api_get_status(PyObject* self, PyObject* args);
     "\t12000\n" \
     "\t>>> \n"
 
+#define _DOC_FLASH_PHY_FIRMWARE \
+    MODULE_NAME ".flash_phy_firmware(device, data, phy_index)\n" \
+    "\n" \
+    "Flashes PHY Firmware. If not sure, don't use this method\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
+    "\n" \
+    "\tdata (:class:`bytes`): :class:`bytes`: data of the firmware binary.\n\n" \
+    "\n" \
+    "\tphy_index (:class:`int`): :class:`int`: phy Index enum.\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\tNone\n" \
+    "\n" \
+
+#define _DOC_GET_PHY_FIRMWARE_VERSION \
+    MODULE_NAME ".get_phy_firmware_version(device, phy_index)\n" \
+    "\n" \
+    "Gets PHY Firmware version as int. If not sure, don't use this method\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
+    "\n" \
+    "\tphy_index (:class:`int`): :class:`int`: phy Index enum.\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\tNone\n" \
+    "\n" \
+
 #define _DOC_READ_JUPITER_FIRMWARE \
     MODULE_NAME ".read_jupiter_firmware(device, size, [vnetChannel])\n" \
     "\n" \
@@ -1756,6 +1794,9 @@ static PyMethodDef IcsMethods[] = {
 
     _EZ_ICS_STRUCT_METHOD("enable_bus_voltage_monitor", "icsneoEnableBusVoltageMonitor", "EnableBusVoltageMonitor", meth_enable_bus_voltage_monitor, METH_VARARGS, _DOC_ENABLE_BUS_VOLTAGE_MONITOR),
     _EZ_ICS_STRUCT_METHOD("get_bus_voltage", "icsneoGetBusVoltage", "GetBusVoltage", meth_get_bus_voltage, METH_VARARGS, _DOC_GET_BUS_VOLTAGE),
+
+    _EZ_ICS_STRUCT_METHOD("flash_phy_firmware", "icsneoFlashPhyFirmware", "FlashPhyFirmware", meth_flash_phy_firmware, METH_VARARGS, _DOC_FLASH_PHY_FIRMWARE),
+    _EZ_ICS_STRUCT_METHOD("get_phy_firmware_version", "icsneoGetPhyFwVersion", "GetPhyFwVersion", meth_get_phy_firmware_version, METH_VARARGS, _DOC_GET_PHY_FIRMWARE_VERSION),
 
     _EZ_ICS_STRUCT_METHOD("read_jupiter_firmware", "icsneoReadJupiterFirmware", "ReadJupiterFirmware", meth_read_jupiter_firmware, METH_VARARGS, _DOC_READ_JUPITER_FIRMWARE),
     _EZ_ICS_STRUCT_METHOD("write_jupiter_firmware", "icsneoWriteJupiterFirmware", "WriteJupiterFirmware", meth_write_jupiter_firmware, METH_VARARGS, _DOC_WRITE_JUPITER_FIRMWARE),
