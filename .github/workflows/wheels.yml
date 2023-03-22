@@ -46,10 +46,10 @@ jobs:
           clang-format --version
           python -m cibuildwheel --output-dir wheelhouse
         env:
-          CIBW_MANYLINUX_X86_64_IMAGE: quay.io/pypa/manylinux2014_x86_64
+          CIBW_MANYLINUX_X86_64_IMAGE: quay.io/pypa/manylinux2_28_x86_64
           CIBW_ARCHS_MACOS: x86_64
           CIBW_BEFORE_ALL_LINUX: >
-            yum -y install clang clang-tools-extra
+            dnf install -y clang clang-tools-extra
           CIBW_BEFORE_ALL_MACOS: >
             brew install automake libtool cmake clang-format
           CIBW_BEFORE_BUILD_WINDOWS: >
