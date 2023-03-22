@@ -28,13 +28,20 @@ jobs:
             echo "$RUNNER_OS not supported"
             exit 1
           fi
+          echo "Clang Version installed:"
+          clang --version
+          clang-format --version
         shell: bash
 
       - name: Install cibuildwheel
         run: python -m pip install cibuildwheel==2.12.1
 
       - name: Build wheels
-        run: python -m cibuildwheel --output-dir wheelhouse
+        run: |
+          echo "Clang Version installed:"
+          clang --version
+          clang-format --version
+          python -m cibuildwheel --output-dir wheelhouse
         # to supply options, put them in 'env', like:
         # env:
         #   CIBW_SOME_OPTION: value
