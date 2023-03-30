@@ -59,7 +59,7 @@ class build(build_module.build):
         import generate_icsneo40_structs
         extract_icsneo40_defines.extract()
         generate_icsneo40_structs.generate_all_files()
-        if 'DARWIN' in platform.system().upper():
+        if platform.system().upper() in ('DARWIN', 'LINUX'):
             import build_libicsneo
             build_libicsneo.checkout()
             build_libicsneo.build()
@@ -111,6 +111,8 @@ ics_extension = Extension(
 package_data = {}
 if 'DARWIN' in platform.system().upper():
     package_data['ics'] = ['*.dylib']
+elif 'LINUX' in platform.system().upper():
+    package_data[''] = ['*.so']
 
 setup(name='python_ics',
       version=VERSION_STRING,
