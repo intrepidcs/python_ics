@@ -19,7 +19,7 @@ def checkout():
     if not os.path.isdir('libusb') and sys.platform == 'darwin':
         subprocess.check_output(
             ['git', 'clone', 'https://github.com/libusb/libusb.git'])
-    subprocess.check_output(['git', 'checkout', LIBUSB_COMMIT], cwd='libusb')
+        subprocess.check_output(['git', 'checkout', LIBUSB_COMMIT], cwd='libusb')
 
 
 def _build_libusb():
