@@ -6,7 +6,7 @@ before-build = "python -m pip install wheel"
 manylinux-x86_64-image = "quay.io/pypa/manylinux_2_28_x86_64"
 
 [tool.cibuildwheel.linux]
-before-build = "dnf install -y cmake libusbx-devel clang clang-tools-extra"
+before-build = "dnf install -y libpcap-dev cmake libusbx-devel clang clang-tools-extra"
 
 [tool.cibuildwheel.macos]
 archs = ["universal2"]
