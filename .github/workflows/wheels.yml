@@ -21,21 +21,6 @@ jobs:
 
       - name: Build wheels
         run: python -m cibuildwheel --output-dir wheelhouse
-        env:
-          CIBW_BUILD: "{*-win32,*-win_amd64,*-macosx_universal2,*-manylinux_x86_64,*-manylinux_aarch64}"
-          CIBW_SKIP: cp36-* pp* *-manylinux_i686 *-musllinux_*
-          CIBW_MANYLINUX_X86_64_IMAGE: quay.io/pypa/manylinux_2_28_x86_64
-          #CIBW_MANYLINUX_I686_IMAGE: quay.io/pypa/manylinux_2_28_i686
-          CIBW_ARCHS_MACOS: universal2
-          CIBW_ENVIRONMENT: DISTUTILS_DEBUG=1
-          CIBW_BEFORE_BUILD: >
-            python -m pip install wheel
-          CIBW_BEFORE_BUILD_LINUX: >
-            dnf install -y clang clang-tools-extra
-          CIBW_BEFORE_BUILD_MACOS: >
-            brew install automake libtool cmake clang-format
-          CIBW_BEFORE_BUILD_WINDOWS: >
-            choco install llvm
 
       - uses: actions/upload-artifact@v3
         with:
