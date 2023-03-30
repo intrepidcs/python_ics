@@ -19,7 +19,7 @@ bool __initialize(char* name)
 #elif (defined(__APPLE__))
             LIBRARY = new ice::Library("@loader_path/libicsneolegacy.dylib");
 #else
-            LIBRARY = new ice::Library("libicsneolegacy.so");
+            LIBRARY = new ice::Library("${ORIGIN}/libicsneolegacy.so");
 #endif
         }
         else 
