@@ -26,6 +26,7 @@ class device_feature(enum.IntEnum):
     networkTerminationDWCAN06 = enum.auto()
     networkTerminationDWCAN07 = enum.auto()
     networkTerminationDWCAN08 = enum.auto()
+    enhancedFlashDriver = enum.auto()
     NUM_VALID_DEVICE_FEATURES = enum.auto()
     supportedFeatureMax  = 65535
 

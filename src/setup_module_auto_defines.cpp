@@ -146,6 +146,8 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, NEODEVICE_NEW_DEVICE_59);
 	result += PyModule_AddIntMacro(module, NEODEVICE_RAD_BMS);
 	result += PyModule_AddIntMacro(module, NEODEVICE_RADMOON3);
+	result += PyModule_AddIntMacro(module, NEODEVICE_RADCOMET);
+	result += PyModule_AddIntMacro(module, NEODEVICE_NEW_DEVICE_FF);
 	result += PyModule_AddIntMacro(module, NEODEVICE_RED);
 	result += PyModule_AddIntMacro(module, NEODEVICE_ECU);
 	result += PyModule_AddIntMacro(module, NEODEVICE_IEVB);
@@ -497,24 +499,22 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS2_FLAG_RTSP_ENABLE);
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS2_FLAG_DEVICE_HOSTING_ENABLE);
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS2_FLAG_CONFIG_NOT_ALLOWED);
+	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS2_FLAG_ICS_SFP);
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS2_FLAG_COMM_IN_USE);
+	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS2_FLAG2_LINK_MODE);
+	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS2_FLAG2_PHY_MODE);
+	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS2_FLAG2_LINK_MODE_AUTO);
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS2_SIZE);
-	// enum
-	result += PyModule_AddIntMacro(module, LINK_SPEED_AUTO_NEGOTIATION);
-	result += PyModule_AddIntMacro(module, LINK_SPEED_1GBPS_FULL_DUPLEX);
-	result += PyModule_AddIntMacro(module, LINK_SPEED_1GBPS_HALF_DUPLEX);
-	result += PyModule_AddIntMacro(module, LINK_SPEED_100MBPS_FULL_DUPLEX);
-	result += PyModule_AddIntMacro(module, LINK_SPEED_100MBPS_HALF_DUPLEX);
-	result += PyModule_AddIntMacro(module, LINK_SPEED_10MBPS_FULL_DUPLEX);
-	result += PyModule_AddIntMacro(module, LINK_SPEED_10MBPS_HALF_DUPLEX);
-	result += PyModule_AddIntMacro(module, LINK_SPEED_COUNT);
-	// end of enum -  };
-
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS10G_FLAG_FULL_DUPLEX);
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS10G_FLAG_AUTO_NEG);
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS10G_FLAG_TCPIP_ENABLE);
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS10G_FLAG_RTSP_ENABLE);
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS10G_FLAG_DEVICE_HOSTING_ENABLE);
+	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS10G_FLAG_CONFIG_NOT_ALLOWED);
+	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS10G_FLAG_ICS_SFP);
+	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS10G_FLAG_LINK_MODE);
+	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS10G_FLAG_PHY_MODE);
+	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS10G_FLAG_LINK_MODE_AUTO);
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS10G_FLAG_COMM_IN_USE);
 	result += PyModule_AddIntMacro(module, ETHERNET10G_SETTINGS_SIZE);
 	result += PyModule_AddIntMacro(module, LOGGER_SETTINGS_SIZE);
@@ -792,6 +792,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, A2BMonitorSettings_SIZE);
 	result += PyModule_AddIntMacro(module, SRADA2BSettings_SIZE);
 	result += PyModule_AddIntMacro(module, SRADMoon2Settings_SIZE);
+	result += PyModule_AddIntMacro(module, SRADMoon3Settings_SIZE);
 	result += PyModule_AddIntMacro(module, SRADGigalogSettings_SIZE);
 	result += PyModule_AddIntMacro(module, SRADGigastarSettings_SIZE);
 	result += PyModule_AddIntMacro(module, SVividCANSettings_SIZE);
@@ -850,6 +851,11 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, SEtherBadgeSettings_SIZE);
 	result += PyModule_AddIntMacro(module, RADEPSILON_MAX_PHY);
 	result += PyModule_AddIntMacro(module, SRADEpsilonSettings_SIZE);
+	// enum
+	result += PyModule_AddIntMacro(module, SPI_PORT_ONBOARD);
+	result += PyModule_AddIntMacro(module, SPI_PORT_EXTERNAL);
+	// end of enum -  };
+
 	result += PyModule_AddIntMacro(module, SRADBMSSettings_SIZE);
 	result += PyModule_AddIntMacro(module, GS_VERSION);
 	result += PyModule_AddIntMacro(module, GLOBAL_SETTINGS_SIZE);
@@ -890,6 +896,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, DeviceRADEpsilonSettingsType);
 	result += PyModule_AddIntMacro(module, DeviceOBD2LCSettingsType);
 	result += PyModule_AddIntMacro(module, DeviceRADBMSSettingsType);
+	result += PyModule_AddIntMacro(module, DeviceRADMoon3SettingsType);
 	result += PyModule_AddIntMacro(module, DeviceSettingsTypeMax);
 	result += PyModule_AddIntMacro(module, DeviceSettingsNone);
 	// end of enum -  } EDeviceSettingsType;
@@ -947,7 +954,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, PHYREG_FAILURE);
 	result += PyModule_AddIntMacro(module, PHYREG_INVALID_MDIO_BUS_INDEX);
 	result += PyModule_AddIntMacro(module, PHYREG_INVALID_PHY_ADDR);
-	result += PyModule_AddIntMacro(module, PHYREG_RESERVED0);
+	result += PyModule_AddIntMacro(module, PHYREG_UNSUPPORTED_MDIO_CLAUSE);
 	result += PyModule_AddIntMacro(module, PHYREG_RESERVED1);
 	result += PyModule_AddIntMacro(module, PHYREG_RESERVED2);
 	result += PyModule_AddIntMacro(module, PHYREG_RESERVED3);
@@ -976,6 +983,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, networkTerminationDWCAN06);
 	result += PyModule_AddIntMacro(module, networkTerminationDWCAN07);
 	result += PyModule_AddIntMacro(module, networkTerminationDWCAN08);
+	result += PyModule_AddIntMacro(module, enhancedFlashDriver);
 	result += PyModule_AddIntMacro(module, NUM_VALID_DEVICE_FEATURES);
 	result += PyModule_AddIntMacro(module, supportedFeatureMax);
 	// end of enum -  } DeviceFeature;

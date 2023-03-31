@@ -30,6 +30,7 @@ from ics.structures.srad_gigalog_settings import *
 from ics.structures.srad_gigastar_settings import *
 from ics.structures.srad_jupiter_settings import *
 from ics.structures.srad_moon2_settings import *
+from ics.structures.srad_moon3_settings import *
 from ics.structures.srad_pluto_settings import *
 from ics.structures.srad_star2_settings import *
 from ics.structures.srad_super_moon_settings import *
@@ -83,6 +84,7 @@ class Settings(ctypes.Union):
         ('rad_a2b', SRADA2BSettings),
         ('epsilon', SRADEpsilonSettings),
         ('rad_bms', SRADBMSSettings),
+        ('radmoon3', SRADMoon3Settings),
     ]
 
 

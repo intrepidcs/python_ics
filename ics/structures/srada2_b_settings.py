@@ -11,6 +11,7 @@ from ics.structures.iso9141_keyword2000_settings import *
 from ics.structures.lin_settings import *
 from ics.structures.logger_settings import *
 from ics.structures.rad_reporting_settings import *
+from ics.structures.srad_gptp_settings_s import *
 from ics.structures.timesync_icshardware_settings import *
 
 
@@ -49,6 +50,7 @@ class srada2_b_settings(ctypes.Structure):
         ('pwr_man_timeout', ctypes.c_uint32),
         ('pwr_man_enable', ctypes.c_uint16),
         ('ethernet', ETHERNET_SETTINGS2),
+        ('gPTP', RAD_GPTP_SETTINGS),
     ]
 
 
