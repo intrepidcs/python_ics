@@ -844,34 +844,38 @@ def generate_all_files():
     import os
     import pathlib
 
-    try:
-        if sys.argv[0] == 'setup.py':
-            raise IndexError
-        # Grab the filename from the command line
-        filename = sys.argv[1]
-        filename = os.path.normpath(filename)
-        print(f"Parsing '{filename}'...")
-    except IndexError as _:
-        # use our default path if it isn't supplied
-        filename = 'include/ics/icsnVC40.h'
-    if not pathlib.Path(filename).exists():
-        raise FileNotFoundError(filename)
+    filename = 'include/ics/icsnVC40.h'
+    if __name__ == '__main__':
+        try:
+            if sys.argv[0] == 'setup.py':
+                raise IndexError
+            # Grab the filename from the command line
+            filename = sys.argv[1]
+            filename = os.path.normpath(filename)
+            print(f"Parsing '{filename}'...")
+        except IndexError as _:
+            # use our default path if it isn't supplied
+            filename = 'include/ics/icsnVC40.h'
+        if not pathlib.Path(filename).exists():
+            raise FileNotFoundError(filename)
     generate(filename)
 
     # Internal Header
-    try:
-        if sys.argv[0] == 'setup.py':
-            raise IndexError
-        # Grab the filename from the command line
-        filename_internal = sys.argv[2]
-        filename_internal = os.path.normpath(filename_internal)
-        print(f"Parsing '{filename_internal}'...")
-    except IndexError as _:
-        # use our default path if it isn't supplied
+    if __name__ == '__main__':
         filename_internal = 'include/ics/icsnVC40Internal.h'
-    if pathlib.Path(filename_internal).exists():
-        print("WARNING: Generating internal header!")
-        generate(filename_internal)
+        try:
+            if sys.argv[0] == 'setup.py':
+                raise IndexError
+            # Grab the filename from the command line
+            filename_internal = sys.argv[2]
+            filename_internal = os.path.normpath(filename_internal)
+            print(f"Parsing '{filename_internal}'...")
+        except IndexError as _:
+            # use our default path if it isn't supplied
+            filename_internal = 'include/ics/icsnVC40Internal.h'
+        if pathlib.Path(filename_internal).exists():
+            print("WARNING: Generating internal header!")
+            generate(filename_internal)
 
 
 if __name__ == '__main__':

@@ -1,0 +1,16 @@
+[tool.cibuildwheel]
+build = "{*-win32,*-win_amd64,*-macosx_universal2,*-manylinux_x86_64,*-manylinux_aarch64}"
+skip = "cp36-* pp* *-manylinux_i686 *-musllinux_*"
+environment = {DISTUTILS_DEBUG=1}
+before-build = "python -m pip install wheel"
+manylinux-x86_64-image = "quay.io/pypa/manylinux_2_28_x86_64"
+
+[tool.cibuildwheel.linux]
+before-build = "dnf install -y libpcap-devel cmake libusbx-devel clang clang-tools-extra"
+
+[tool.cibuildwheel.macos]
+archs = ["universal2"]
+before-build = "brew install automake libtool cmake clang-format"
+
+[tool.cibuildwheel.windows]
+before-build = "choco install llvm"
