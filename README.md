@@ -1,41 +1,33 @@
-# python_ics
+![](IntrepidCS.png)
 
-Python C Code module for interfacing to the icsneo40 dynamic library. Code tries to respect PEP 8 (https://www.python.org/dev/peps/pep-0008/). Function naming convention does not follow the tradition c style icsneo40 naming convention as the python_ics module name acts as the namespace (icsneo portion of the function) and function names are suppose to be lowercase with underscores instead of mixedCase like icsneo API.
+![](https://github.com/intrepidcs/python_ics/actions/workflows/wheels.yml/badge.svg)
+
+# Description
+
+Python wrapper for interfacing to IntrepidCS Hardware.
 
 # Installing
 
 - `pip install python_ics`
 
-- Placing icsneo40.dll in the system path as the api uses this DLL extensively.
+## Platform specific Installation notes
 
-# How to use
+### Windows
 
-#### Documentation
+- Windows requires icsneo40.dll to be installed in the PATH. This can be obtained through vspy3 or our hardware installation kit found here: https://cdn.intrepidcs.net/updates/files/RP1210KitInstall.zip
+
+### Linux
+
+- Linux builds use [libicsneo](https://github.com/intrepidcs/libicsneo) and are built against [manylinux](https://github.com/pypa/manylinux) using cibuildwheel.
+
+### MacOS
+
+- Mac builds use [libicsneo](https://github.com/intrepidcs/libicsneo) and are built using cibuildwheel
+
+# Documentation
 
 http://python-ics.readthedocs.io/
 
-#### C API can be mimiced almost identically by doing the following:
-
-    >>> import ics as icsneo
-    >>> devices = icsneo.FindNeoDevices()
-    >>> for device in devices:
-    ...     print(device.Name, device.SerialNumber)
-    ...
-    neoVI FIRE 59886
-    
-#### Recommended Python way by doing the following:
-
-    >>> import ics
-    >>> devices = ics.find_devices()
-    >>> for device in devices:
-    ...     print(device.Name, device.SerialNumber)
-    ...
-    neoVI FIRE 59886
-
-It should be noted that `ics.NeoDevice` is used a little bit differently than the C API. `ics.NeoDevice` contains two extra members:
-
-`ics.NeoDevice.AutoHandleClose` and `ics.NeoDevice._Handle`
-The handle normally returned from `icsneoOpenNeoDevice()` is stored inside `_Handle` and setting `AutoHandleClose` to `True` (Default) will automatically close the handle when the `ics.NeoDevice` goes out of scope.
 
 # License - MIT
 
