@@ -19,15 +19,21 @@ Python wrapper for interfacing to IntrepidCS Hardware.
 ### Linux
 
 - Linux builds use [libicsneo](https://github.com/intrepidcs/libicsneo) and are built against [manylinux](https://github.com/pypa/manylinux) using cibuildwheel.
+- libicsneolegacy.so is bundled with the wheel and python_ics will automatically use it.
 
 ### MacOS
 
 - Mac builds use [libicsneo](https://github.com/intrepidcs/libicsneo) and are built using cibuildwheel
+- libicsneolegacy.dylib is bundled with the wheel and python_ics will automatically use it.
 
 # Documentation
 
 http://python-ics.readthedocs.io/
 
+
+# Building from source
+
+- Building from source requires clang and clang-format to be present on the build machine.
 
 # License - MIT
 
