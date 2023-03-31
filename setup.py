@@ -10,7 +10,7 @@ import shutil
 
 MAJOR_VERSION = 911
 MINOR_VERSION = 12
-POST_VERSION = None
+POST_VERSION = 1
 
 if POST_VERSION:
     VERSION_STRING = '%d.%d-%d' % (MAJOR_VERSION, MINOR_VERSION, POST_VERSION)
@@ -118,6 +118,7 @@ setup(name='python_ics',
       version=VERSION_STRING,
       description='Library for interfacing with Intrepid devices in Python',
       long_description=read('README.md'),
+      long_description_content_type='text/markdown',
       license="MIT",
       author='David Rebbe',
       author_email='drebbe@intrepidcs.com',
