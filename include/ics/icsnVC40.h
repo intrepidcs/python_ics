@@ -201,6 +201,8 @@ typedef unsigned __int64 uint64_t;
 #define NEODEVICE_NEW_DEVICE_59 (0x00000021)
 #define NEODEVICE_RAD_BMS (0x00000022)
 #define NEODEVICE_RADMOON3 (0x00000023)
+#define NEODEVICE_RADCOMET (0x00000024)
+#define NEODEVICE_NEW_DEVICE_FF (0x00000025)
 #define NEODEVICE_RED (0x00000040)
 #define NEODEVICE_ECU (0x00000080)
 #define NEODEVICE_IEVB (0x00000100)
@@ -232,7 +234,7 @@ typedef unsigned __int64 uint64_t;
 #define NEODEVICE_NEOECUCHIP NEODEVICE_IEVB
 //clang-format on
 
-#define DEVICECOUNT_FOR_EXPLORER 42  //this value will be checked by the NeoViExplorer after #6453!
+#define DEVICECOUNT_FOR_EXPLORER 43 //this value will be checked by the NeoViExplorer after #6453!
 
 #define ISO15765_2_NETWORK_HSCAN 0x01
 #define ISO15765_2_NETWORK_MSCAN 0x02
@@ -958,6 +960,11 @@ typedef union _stChipVersions {
 	{
 		uint8_t mchip_major;
 		uint8_t mchip_minor;
+	} radmoon3_versions;
+	struct
+	{
+		uint8_t mchip_major;
+		uint8_t mchip_minor;
 	} pluto_versions;
 	struct
 	{
@@ -1168,55 +1175,65 @@ typedef struct ETHERNET_SETTINGS_t
 #define ETHERNET_SETTINGS2_FLAG_RTSP_ENABLE  0x08
 #define ETHERNET_SETTINGS2_FLAG_DEVICE_HOSTING_ENABLE  0x10
 #define ETHERNET_SETTINGS2_FLAG_CONFIG_NOT_ALLOWED 0x20
+#define ETHERNET_SETTINGS2_FLAG_ICS_SFP 0x40
 #define ETHERNET_SETTINGS2_FLAG_COMM_IN_USE  0x80
+
+#define ETHERNET_SETTINGS2_FLAG2_LINK_MODE 0x01
+#define ETHERNET_SETTINGS2_FLAG2_PHY_MODE 0x02
+#define ETHERNET_SETTINGS2_FLAG2_LINK_MODE_AUTO 0x04
 
 typedef struct ETHERNET_SETTINGS2_t
 {
-	/* bit0: 0=half duplex, 1=full duplex
+	/* FLAGS
+	 * bit0: 0=half duplex, 1=full duplex
 	 * bit1: auto negot
 	 * bit2: enable tcp/ip stack
 	 * bit3: enable rtsp server
 	 * bit4: enable intepid device hosting (go online and log other devices)
 	 * bit5: config not allowed
+	 * bit6: ICS SFP detected
+	 * bit7: comm in use
 	 */
 	uint8_t flags;
-	uint8_t link_speed;//0=10, 1=100, 2=1000
+	uint8_t link_speed; // 0=10, 1=100, 2=1000
 	uint32_t ip_addr;
 	uint32_t netmask;
 	uint32_t gateway;
-	uint8_t rsvd[2];
+	/* FLAGS2
+	 * bit0: link mode - 0=master, 1=slave
+	 * bit1: PHY mode - 0=IEEE, 1=legacy
+	 * bit2: auto master/slave
+	 */
+	uint8_t flags2;
+	uint8_t rsvd;
 } ETHERNET_SETTINGS2;
 #define ETHERNET_SETTINGS2_SIZE 16
 
-/* ETHERNET_SETTINGS2 link speed, duplex options */
-enum
-{
-	LINK_SPEED_AUTO_NEGOTIATION = 0,
-	LINK_SPEED_1GBPS_FULL_DUPLEX,
-	LINK_SPEED_1GBPS_HALF_DUPLEX,
-	LINK_SPEED_100MBPS_FULL_DUPLEX,
-	LINK_SPEED_100MBPS_HALF_DUPLEX,
-	LINK_SPEED_10MBPS_FULL_DUPLEX,
-	LINK_SPEED_10MBPS_HALF_DUPLEX,
-	// NOTE: new entries must be appended to maintain backwards compatibility
-	// insert new entries here
-	LINK_SPEED_COUNT,
-};
-
-#define ETHERNET_SETTINGS10G_FLAG_FULL_DUPLEX  0x01
-#define ETHERNET_SETTINGS10G_FLAG_AUTO_NEG     0x02
-#define ETHERNET_SETTINGS10G_FLAG_TCPIP_ENABLE 0x04
-#define ETHERNET_SETTINGS10G_FLAG_RTSP_ENABLE  0x08
-#define ETHERNET_SETTINGS10G_FLAG_DEVICE_HOSTING_ENABLE  0x10
-#define ETHERNET_SETTINGS10G_FLAG_COMM_IN_USE  0x80000000
+#define ETHERNET_SETTINGS10G_FLAG_FULL_DUPLEX 0x00000001
+#define ETHERNET_SETTINGS10G_FLAG_AUTO_NEG 0x00000002
+#define ETHERNET_SETTINGS10G_FLAG_TCPIP_ENABLE 0x00000004
+#define ETHERNET_SETTINGS10G_FLAG_RTSP_ENABLE 0x00000008
+#define ETHERNET_SETTINGS10G_FLAG_DEVICE_HOSTING_ENABLE 0x00000010
+#define ETHERNET_SETTINGS10G_FLAG_CONFIG_NOT_ALLOWED 0x00000020
+#define ETHERNET_SETTINGS10G_FLAG_ICS_SFP 0x00000040
+#define ETHERNET_SETTINGS10G_FLAG_LINK_MODE 0x00000080
+#define ETHERNET_SETTINGS10G_FLAG_PHY_MODE 0x00000100
+#define ETHERNET_SETTINGS10G_FLAG_LINK_MODE_AUTO 0x00000200
+#define ETHERNET_SETTINGS10G_FLAG_COMM_IN_USE 0x80000000
 
 typedef struct ETHERNET10G_SETTINGS_t
 {
-	/* bit0: 0=half duplex, 1=full duplex
+	/* FLAGS
+	 * bit0: 0=half duplex, 1=full duplex
 	 * bit1: auto negot
 	 * bit2: enable tcp/ip stack
 	 * bit3: enable rtsp server
 	 * bit4: enable intepid device hosting (go online and log other devices)
+	 * bit5: config not allowed
+	 * bit6: ICS SFP detected
+	 * bit7: link mode - 0=master, 1=slave
+	 * bit8: PHY mode - 0=IEEE, 1=legacy
+	 * bit9: auto master/slave
 	 * bit31: comm in use
 	 */
 	uint32_t flags;
@@ -2604,7 +2621,6 @@ typedef struct
 
 typedef struct _SRADA2BSettings
 {
-	// TODO!!!!
 	uint16_t perf_en;
 	struct
 	{
@@ -2632,9 +2648,10 @@ typedef struct _SRADA2BSettings
 	uint32_t pwr_man_timeout;
 	uint16_t pwr_man_enable;
 	ETHERNET_SETTINGS2 ethernet;
+	RAD_GPTP_SETTINGS gPTP;
 } SRADA2BSettings;
 
-#define SRADA2BSettings_SIZE 296
+#define SRADA2BSettings_SIZE 332
 
 typedef struct _SRADMoon2Settings
 {
@@ -2658,6 +2675,27 @@ typedef struct _SRADMoon2Settings
 } SRADMoon2Settings;
 
 #define SRADMoon2Settings_SIZE 162
+
+typedef struct _SRADMoon3Settings
+{
+	uint16_t perf_en; // 2
+
+	ETHERNET10G_SETTINGS autoEth10g; // 24
+	ETHERNET10G_SETTINGS eth10g; // 24
+
+	uint16_t network_enables; // 2
+	uint16_t network_enables_2; // 2
+	uint16_t network_enabled_on_boot; // 2
+	uint16_t network_enables_3; // 2
+
+	struct
+	{
+		uint16_t enableLatencyTest : 1;
+		uint16_t reserved : 15;
+	} flags; // 2
+} SRADMoon3Settings;
+
+#define SRADMoon3Settings_SIZE 60
 
 typedef struct _SRADGigalogSettings
 {
@@ -3751,8 +3789,10 @@ typedef struct _SFire3Settings
 	ETHERNET_SETTINGS ethernet_2;
 	ETHERNET_SETTINGS2 ethernet2_2;
 	Fire3LinuxSettings os_settings;
+
+	RAD_GPTP_SETTINGS gPTP;
 }SFire3Settings;
-#define SFire3Settings_SIZE (632)
+#define SFire3Settings_SIZE (668)
 
 typedef struct
 {
@@ -3883,58 +3923,96 @@ typedef struct _SRADEpsilonSettings
 }SRADEpsilonSettings;//384
 #define SRADEpsilonSettings_SIZE 384
 
+typedef struct
+{
+	uint8_t wBMSDeviceID;
+	uint8_t enabled;
+} sWIL_FAULT_SERVICING_SETTINGS;
+
+typedef struct 
+{
+	uint8_t enabled;
+} sWIL_NETWORK_DATA_CAPTURE_SETTINGS;
+
+typedef struct _sWIL_CONNECTION_SETTINGS
+{
+	uint8_t using_port_a; //1
+	uint8_t using_port_b; //1
+	uint8_t attemptConnect; //1
+	sWIL_FAULT_SERVICING_SETTINGS fault_servicing_config; //2
+	sWIL_NETWORK_DATA_CAPTURE_SETTINGS network_data_capture_config; //1
+	uint16_t sensor_buffer_size; //2
+} sWIL_CONNECTION_SETTINGS;
+
+enum
+{
+	SPI_PORT_ONBOARD = 0,
+	SPI_PORT_EXTERNAL,
+};
+
+typedef struct _sSPI_PORT_SETTINGS
+{
+	uint8_t port_a_onbaord_external;
+	uint8_t port_b_onbaord_external;
+} sSPI_PORT_SETTINGS;
+
 typedef union
 {
 	uint64_t dword;
 	struct
 	{
-		unsigned can_id:29;
-		unsigned can_id_isExtended:1;
+		unsigned can_id : 29;
+		unsigned can_id_isExtended : 1;
 		uint16_t tcp_port;
-		unsigned manager_onboard_external : 1;
-		unsigned reserved:18;
-	}config;
-} SWILBridgeConfig;
+		unsigned reserved : 18;
+	} config;
+} sWILBridgeConfig;
 
 typedef struct _SRADBMSSettings
 {
-        /* Performance Test */
-	uint16_t perf_en;//2
+	/* Performance Test */
+	uint16_t perf_en; //2
 
-	uint64_t termination_enables;
+	uint64_t termination_enables; //8
 
-	CAN_SETTINGS can1;
-    CANFD_SETTINGS canfd1;
+	CAN_SETTINGS can1; //12
+	CANFD_SETTINGS canfd1; //10
 
-    CAN_SETTINGS can2;
-    CANFD_SETTINGS canfd2;
+	CAN_SETTINGS can2; //12
+	CANFD_SETTINGS canfd2; //10
 
-	uint16_t network_enables;
-	uint16_t network_enables_2;
-	uint16_t network_enables_3;
+	uint16_t network_enables;//2
+	uint16_t network_enables_2;//2
+	uint16_t network_enables_3;//2
 
 	/* ISO15765-2 Transport Layer */
-	int16_t iso15765_separation_time_offset;//2
+	int16_t iso15765_separation_time_offset; //2
 
-    struct
+	struct
 	{
 		uint32_t disableUsbCheckOnBoot : 1;
 		uint32_t enableLatencyTest : 1;
 		uint32_t enablePcEthernetComm : 1;
 		uint32_t reserved : 29;
-	} flags;//4
+	} flags; //4
 
-	ETHERNET_SETTINGS ethernet;
-	ETHERNET_SETTINGS2 ethernet2;
+	ETHERNET_SETTINGS ethernet; //8
+	ETHERNET_SETTINGS2 ethernet2; //16
 
-	uint32_t pwr_man_timeout;
-	uint16_t pwr_man_enable;
-	uint16_t network_enabled_on_boot;
+	uint32_t pwr_man_timeout; // 4
+	uint16_t pwr_man_enable; //2
+	uint16_t network_enabled_on_boot; //2
 
 	//WIL wrapped CAN and ETHERNET
-	SWILBridgeConfig wil_config;
-} SRADBMSSettings;
-#define SRADBMSSettings_SIZE 108
+	sWILBridgeConfig wil_config; //8
+
+	sSPI_PORT_SETTINGS spi_config; //2
+
+	sWIL_CONNECTION_SETTINGS wbms_wil_1; //8
+	sWIL_CONNECTION_SETTINGS wbms_wil_2; //8
+
+}SRADBMSSettings;
+#define SRADBMSSettings_SIZE 126
 
 #define GS_VERSION 5
 typedef struct _GLOBAL_SETTINGS
@@ -3980,6 +4058,7 @@ typedef struct _GLOBAL_SETTINGS
 		SRADEpsilonSettings epsilon;
 		SOBD2LCSettings obd2lc;
 		SRADBMSSettings rad_bms;
+		SRADMoon3Settings radmoon3;
 		// Make sure SDeviceSettings matches this
 	};
 } GLOBAL_SETTINGS;
@@ -4024,10 +4103,11 @@ typedef enum _EDeviceSettingsType
 	DeviceRADEpsilonSettingsType,
 	DeviceOBD2LCSettingsType,
 	DeviceRADBMSSettingsType,
+	DeviceRADMoon3SettingsType,
 	// add new settings type here
 	// Also add to map inside cicsneoVI::Init()
 	DeviceSettingsTypeMax,
-	DeviceSettingsNone = 0xFFFFFFFF// just wanted to reserve this
+	DeviceSettingsNone = 0xFFFFFFFF // just wanted to reserve this
 } EDeviceSettingsType;
 
 typedef struct _SDeviceSettings
@@ -4072,6 +4152,7 @@ typedef struct _SDeviceSettings
 		SRADA2BSettings rad_a2b;
 		SRADEpsilonSettings epsilon;
 		SRADBMSSettings rad_bms;
+		SRADMoon3Settings radmoon3;
 		// Make sure GLOBAL_SETTINGS matches this
 		// NOTE: When adding new structures here implement inside icsneoGetDeviceSettings and icsneoSetDeviceSettings also.	} Settings;
 	} Settings;
@@ -4663,7 +4744,7 @@ typedef enum SPhyRegPktStatus
 	PHYREG_FAILURE,
 	PHYREG_INVALID_MDIO_BUS_INDEX,
 	PHYREG_INVALID_PHY_ADDR,
-	PHYREG_RESERVED0,
+	PHYREG_UNSUPPORTED_MDIO_CLAUSE,
 	PHYREG_RESERVED1,
 	PHYREG_RESERVED2,
 	PHYREG_RESERVED3
@@ -4684,8 +4765,8 @@ typedef struct SPhyRegPkt
 			uint16_t Enabled:1;
 			uint16_t WriteEnable:1;
 			uint16_t Clause45Enable:1;
-			uint16_t status:2;
-			uint16_t reserved:3;
+			uint16_t status : 3;
+			uint16_t reserved : 2;
 			uint16_t BusIndex:4;
 			uint16_t version:4;
 		};
@@ -4717,6 +4798,7 @@ typedef enum
 	networkTerminationDWCAN06,
 	networkTerminationDWCAN07,
 	networkTerminationDWCAN08,
+	enhancedFlashDriver,
 	NUM_VALID_DEVICE_FEATURES,
 	supportedFeatureMax = 0xFFFF,
 } DeviceFeature;
@@ -4815,6 +4897,7 @@ CHECK_STRUCT_SIZE(A2BMonitorSettings);
 CHECK_STRUCT_SIZE(SRADEpsilonSettings);
 CHECK_STRUCT_SIZE(RAD_GPTP_SETTINGS);
 CHECK_STRUCT_SIZE(SRADBMSSettings);
+CHECK_STRUCT_SIZE(SRADMoon3Settings);
 #endif /* INTREPID_NO_CHECK_STRUCT_SIZE */
 
 #endif /* _ICSNVC40_H */
