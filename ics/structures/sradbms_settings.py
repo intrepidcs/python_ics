@@ -6,7 +6,9 @@ from ics.structures.can_settings import *
 from ics.structures.canfd_settings import *
 from ics.structures.ethernet_settings import *
 from ics.structures.ethernet_settings2 import *
-from ics.structures.swil_bridge_config import *
+from ics.structures.s_spi_port_settings import *
+from ics.structures.s_wil_bridge_config import *
+from ics.structures.s_wil_connection_settings import *
 
 
 class flags(ctypes.Structure):
@@ -39,7 +41,10 @@ class sradbms_settings(ctypes.Structure):
         ('pwr_man_timeout', ctypes.c_uint32),
         ('pwr_man_enable', ctypes.c_uint16),
         ('network_enabled_on_boot', ctypes.c_uint16),
-        ('wil_config', SWILBridgeConfig),
+        ('wil_config', sWILBridgeConfig),
+        ('spi_config', sSPI_PORT_SETTINGS),
+        ('wbms_wil_1', sWIL_CONNECTION_SETTINGS),
+        ('wbms_wil_2', sWIL_CONNECTION_SETTINGS),
     ]
 
 

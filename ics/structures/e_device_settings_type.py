@@ -45,6 +45,7 @@ class e_device_settings_type(enum.IntEnum):
     DeviceRADEpsilonSettingsType = enum.auto()
     DeviceOBD2LCSettingsType = enum.auto()
     DeviceRADBMSSettingsType = enum.auto()
+    DeviceRADMoon3SettingsType = enum.auto()
     DeviceSettingsTypeMax = enum.auto()
     DeviceSettingsNone  = 4294967295
 

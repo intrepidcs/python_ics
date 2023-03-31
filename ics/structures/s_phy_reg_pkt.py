@@ -11,8 +11,8 @@ class Nameless3555(ctypes.Structure):
         ('Enabled', ctypes.c_uint16, 1),
         ('WriteEnable', ctypes.c_uint16, 1),
         ('Clause45Enable', ctypes.c_uint16, 1),
-        ('status', ctypes.c_uint16, 2),
-        ('reserved', ctypes.c_uint16, 3),
+        ('status', ctypes.c_uint16, 3),
+        ('reserved', ctypes.c_uint16, 2),
         ('BusIndex', ctypes.c_uint16, 4),
         ('version', ctypes.c_uint16, 4),
     ]
