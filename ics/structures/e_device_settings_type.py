@@ -38,7 +38,7 @@ class e_device_settings_type(enum.IntEnum):
     DeviceRADPlutoSwitchSettingsType = enum.auto()
     DeviceRADGigastarSettingsType = enum.auto()
     DeviceRADJupiterSettingsType = enum.auto()
-    DeviceFire3SettingsType = enum.auto()
+    DeviceRed2SettingsType = enum.auto()
     DeviceRadMoonDuoSettingsType = enum.auto()
     DeviceEtherBadgeSettingsType = enum.auto()
     DeviceRADA2BSettingsType = enum.auto()
@@ -46,6 +46,8 @@ class e_device_settings_type(enum.IntEnum):
     DeviceOBD2LCSettingsType = enum.auto()
     DeviceRADBMSSettingsType = enum.auto()
     DeviceRADMoon3SettingsType = enum.auto()
+    DeviceFire3SettingsType = enum.auto()
+    DeviceFire3FlexraySettingsType = enum.auto()
     DeviceSettingsTypeMax = enum.auto()
     DeviceSettingsNone  = 4294967295
 

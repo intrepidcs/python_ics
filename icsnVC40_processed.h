@@ -78,7 +78,10 @@ typedef struct _NeoDeviceEx
   uint8_t MACAddress[6];
   uint16_t hardwareRev;
   uint16_t revReserved;
-  uint32_t Reserved[6];
+  uint32_t tcpIpAddress[4];
+  uint16_t tcpPort;
+  uint16_t Reserved0;
+  uint32_t Reserved1;
 } NeoDeviceEx;
 typedef union tagOptionsOpenNeoEx
 {
@@ -497,7 +500,27 @@ typedef union _stChipVersions
     uint8_t zchip_minor;
     uint8_t schip_major;
     uint8_t schip_minor;
+  } red2_versions;
+  struct
+  {
+    uint8_t zchip_major;
+    uint8_t zchip_minor;
+    uint8_t schip_major;
+    uint8_t schip_minor;
+    uint8_t vem_z_major;
+    uint8_t vem_z_minor;
   } fire3_versions;
+  struct
+  {
+    uint8_t zchip_major;
+    uint8_t zchip_minor;
+    uint8_t schip_major;
+    uint8_t schip_minor;
+    uint8_t vem_z_major;
+    uint8_t vem_z_minor;
+    uint8_t vem_f_major;
+    uint8_t vem_f_minor;
+  } fire3_flexray_versions;
   struct
   {
     uint8_t mchip_major;
@@ -810,12 +833,15 @@ typedef struct _ExtendedGetVersionsResponse
 } GetComponentVersionsResponse;
 enum
 {
-  swUpdateWrite,
-  swUpdateErase,
-  swUpdateGetProgress,
-  swUpdateValidateAll,
-  swUpdateGetBufferSize,
-  swUpdateCheckVersion,
+  swUpdateWrite = 0,
+  swUpdateErase = 1,
+  swUpdateGetProgress = 2,
+  swUpdateValidateAll = 3,
+  swUpdateGetBufferSize = 4,
+  swUpdateCheckHostVersion = 5,
+  swUpdateValidateComponent = 6,
+  swUpdateFinalize = 7,
+  swUpdateGetCommunicationVersion = 8,
 };
 typedef struct
 {
@@ -876,6 +902,17 @@ typedef struct _GPTPStatus
   uint8_t is_syntonized;
   uint8_t reserved[8];
 } GPTPStatus;
+typedef union ManufacturingOperation
+{
+  uint32_t rtcCalEnable;
+  int rtcCalValue;
+  struct
+  {
+    uint32_t apiVersion;
+    uint32_t code;
+  } unlock;
+  uint8_t bytes[(256)];
+} ManufacturingOperation;
 #pragma pack(pop)
 typedef struct _SExtSubCmdComm
 {
@@ -901,6 +938,7 @@ typedef struct _SExtSubCmdComm
     UartPortData uartData;
     UartPortPortBytes uartBytesLen;
     UartPortConfig uartConfig;
+    ManufacturingOperation mfgOperation;
   } extension;
 } SExtSubCmdComm;
 enum
@@ -1660,7 +1698,8 @@ typedef struct _SRADA2BSettings
   struct
   {
     uint16_t hwComLatencyTestEn : 1;
-    uint16_t : 15;
+    uint16_t disableUsbCheckOnBoot : 1;
+    uint16_t : 14;
   } flags;
   uint16_t network_enabled_on_boot;
   CAN_SETTINGS can1;
@@ -2513,7 +2552,7 @@ typedef struct
   uint8_t ethConfigurationPort;
   uint8_t reserved[5];
 } Fire3LinuxSettings;
-typedef struct _SFire3Settings
+typedef struct _SRed2Settings
 {
   uint16_t perf_en;
   uint16_t network_enabled_on_boot;
@@ -2585,7 +2624,205 @@ typedef struct _SFire3Settings
   ETHERNET_SETTINGS2 ethernet2_2;
   Fire3LinuxSettings os_settings;
   RAD_GPTP_SETTINGS gPTP;
+} SRed2Settings;
+typedef struct _SFire3Settings
+{
+  uint16_t perf_en;
+  uint16_t network_enabled_on_boot;
+  uint16_t misc_io_on_report_events;
+  uint16_t pwr_man_enable;
+  int16_t iso15765_separation_time_offset;
+  uint16_t slaveVnetA;
+  uint32_t reserved;
+  uint64_t termination_enables_1;
+  uint64_t network_enables;
+  uint32_t pwr_man_timeout;
+  CAN_SETTINGS can1;
+  CANFD_SETTINGS canfd1;
+  CAN_SETTINGS can2;
+  CANFD_SETTINGS canfd2;
+  CAN_SETTINGS can3;
+  CANFD_SETTINGS canfd3;
+  CAN_SETTINGS can4;
+  CANFD_SETTINGS canfd4;
+  CAN_SETTINGS can5;
+  CANFD_SETTINGS canfd5;
+  CAN_SETTINGS can6;
+  CANFD_SETTINGS canfd6;
+  CAN_SETTINGS can7;
+  CANFD_SETTINGS canfd7;
+  CAN_SETTINGS can8;
+  CANFD_SETTINGS canfd8;
+  LIN_SETTINGS lin1;
+  LIN_SETTINGS lin2;
+  ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings_1;
+  uint16_t iso_parity_1;
+  uint16_t iso_msg_termination_1;
+  ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings_2;
+  uint16_t iso_parity_2;
+  uint16_t iso_msg_termination_2;
+  ETHERNET_SETTINGS ethernet_1;
+  TIMESYNC_ICSHARDWARE_SETTINGS timeSync;
+  STextAPISettings text_api;
+  struct
+  {
+    uint32_t disableUsbCheckOnBoot : 1;
+    uint32_t enableLatencyTest : 1;
+    uint32_t busMessagesToAndroid : 1;
+    uint32_t enablePcEthernetComm : 1;
+    uint32_t enableDefaultLogger : 1;
+    uint32_t enableDefaultUpload : 1;
+    uint32_t reserved : 26;
+  } flags;
+  DISK_SETTINGS disk;
+  uint16_t misc_io_report_period;
+  uint16_t ain_threshold;
+  uint16_t misc_io_analog_enable;
+  uint16_t digitalIoThresholdTicks;
+  uint16_t digitalIoThresholdEnable;
+  uint16_t misc_io_initial_ddr;
+  uint16_t misc_io_initial_latch;
+  ETHERNET_SETTINGS2 ethernet2_1;
+  ETHERNET_SETTINGS ethernet_2;
+  ETHERNET_SETTINGS2 ethernet2_2;
+  Fire3LinuxSettings os_settings;
+  RAD_GPTP_SETTINGS gPTP;
+  CAN_SETTINGS can9;
+  CANFD_SETTINGS canfd9;
+  CAN_SETTINGS can10;
+  CANFD_SETTINGS canfd10;
+  CAN_SETTINGS can11;
+  CANFD_SETTINGS canfd11;
+  CAN_SETTINGS can12;
+  CANFD_SETTINGS canfd12;
+  CAN_SETTINGS can13;
+  CANFD_SETTINGS canfd13;
+  CAN_SETTINGS can14;
+  CANFD_SETTINGS canfd14;
+  CAN_SETTINGS can15;
+  CANFD_SETTINGS canfd15;
+  CAN_SETTINGS can16;
+  CANFD_SETTINGS canfd16;
+  SWCAN_SETTINGS swcan1;
+  SWCAN_SETTINGS swcan2;
+  CAN_SETTINGS lsftcan1;
+  CAN_SETTINGS lsftcan2;
+  ETHERNET_SETTINGS ethernet_3;
+  ETHERNET_SETTINGS2 ethernet2_3;
+  LIN_SETTINGS lin3;
+  LIN_SETTINGS lin4;
+  LIN_SETTINGS lin5;
+  LIN_SETTINGS lin6;
+  LIN_SETTINGS lin7;
+  LIN_SETTINGS lin8;
+  ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings_3;
+  uint16_t iso_parity_3;
+  uint16_t iso_msg_termination_3;
+  ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings_4;
+  uint16_t iso_parity_4;
+  uint16_t iso_msg_termination_4;
+  ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings_5;
+  uint16_t iso_parity_5;
+  uint16_t iso_msg_termination_5;
+  ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings_6;
+  uint16_t iso_parity_6;
+  uint16_t iso_msg_termination_6;
+  uint16_t selectable_network_1;
+  uint16_t selectable_network_2;
+  uint64_t network_enables_2;
+  uint64_t termination_enables_2;
 } SFire3Settings;
+typedef struct _SFire3FlexraySettings
+{
+  uint16_t perf_en;
+  uint16_t network_enabled_on_boot;
+  uint16_t misc_io_on_report_events;
+  uint16_t pwr_man_enable;
+  int16_t iso15765_separation_time_offset;
+  uint16_t slaveVnetA;
+  uint32_t reserved;
+  uint64_t termination_enables_1;
+  uint64_t network_enables;
+  uint32_t pwr_man_timeout;
+  CAN_SETTINGS can1;
+  CANFD_SETTINGS canfd1;
+  CAN_SETTINGS can2;
+  CANFD_SETTINGS canfd2;
+  CAN_SETTINGS can3;
+  CANFD_SETTINGS canfd3;
+  CAN_SETTINGS can4;
+  CANFD_SETTINGS canfd4;
+  CAN_SETTINGS can5;
+  CANFD_SETTINGS canfd5;
+  CAN_SETTINGS can6;
+  CANFD_SETTINGS canfd6;
+  CAN_SETTINGS can7;
+  CANFD_SETTINGS canfd7;
+  CAN_SETTINGS can8;
+  CANFD_SETTINGS canfd8;
+  LIN_SETTINGS lin1;
+  LIN_SETTINGS lin2;
+  ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings_1;
+  uint16_t iso_parity_1;
+  uint16_t iso_msg_termination_1;
+  ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings_2;
+  uint16_t iso_parity_2;
+  uint16_t iso_msg_termination_2;
+  ETHERNET_SETTINGS ethernet_1;
+  TIMESYNC_ICSHARDWARE_SETTINGS timeSync;
+  STextAPISettings text_api;
+  struct
+  {
+    uint32_t disableUsbCheckOnBoot : 1;
+    uint32_t enableLatencyTest : 1;
+    uint32_t busMessagesToAndroid : 1;
+    uint32_t reserved1 : 1;
+    uint32_t enableDefaultLogger : 1;
+    uint32_t enableDefaultUpload : 1;
+    uint32_t reserved : 26;
+  } flags;
+  DISK_SETTINGS disk;
+  uint16_t misc_io_report_period;
+  uint16_t ain_threshold;
+  uint16_t misc_io_analog_enable;
+  uint16_t digitalIoThresholdTicks;
+  uint16_t digitalIoThresholdEnable;
+  uint16_t misc_io_initial_ddr;
+  uint16_t misc_io_initial_latch;
+  ETHERNET_SETTINGS2 ethernet2_1;
+  ETHERNET_SETTINGS ethernet_2;
+  ETHERNET_SETTINGS2 ethernet2_2;
+  Fire3LinuxSettings os_settings;
+  RAD_GPTP_SETTINGS gPTP;
+  CAN_SETTINGS can9;
+  CANFD_SETTINGS canfd9;
+  CAN_SETTINGS can10;
+  CANFD_SETTINGS canfd10;
+  CAN_SETTINGS can11;
+  CANFD_SETTINGS canfd11;
+  CAN_SETTINGS can12;
+  CANFD_SETTINGS canfd12;
+  CAN_SETTINGS can13;
+  CANFD_SETTINGS canfd13;
+  CAN_SETTINGS can14;
+  CANFD_SETTINGS canfd14;
+  CAN_SETTINGS can15;
+  CANFD_SETTINGS canfd15;
+  ETHERNET_SETTINGS ethernet_3;
+  ETHERNET_SETTINGS2 ethernet2_3;
+  LIN_SETTINGS lin3;
+  LIN_SETTINGS lin4;
+  ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings_3;
+  uint16_t iso_parity_3;
+  uint16_t iso_msg_termination_3;
+  ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings_4;
+  uint16_t iso_parity_4;
+  uint16_t iso_msg_termination_4;
+  uint64_t network_enables_2;
+  uint64_t termination_enables_2;
+  uint16_t flex_mode;
+  uint16_t flex_termination;
+} SFire3FlexraySettings;
 typedef struct
 {
   uint16_t perf_en;
@@ -2707,10 +2944,32 @@ enum
   SPI_PORT_ONBOARD = 0,
   SPI_PORT_EXTERNAL,
 };
-typedef struct _sSPI_PORT_SETTINGS
+enum
 {
-  uint8_t port_a_onbaord_external;
-  uint8_t port_b_onbaord_external;
+  SPI_TYPE_WIL = 0,
+  SPI_TYPE_RAW,
+};
+enum
+{
+  SPI_MODE_MASTER,
+  SPI_MODE_SLAVE,
+  SPI_MODE_PMS_EMULATION,
+};
+typedef union
+{
+  uint8_t byte;
+  struct
+  {
+    uint8_t onboard_external : 1;
+    uint8_t type : 1;
+    uint8_t mode : 3;
+    uint8_t reserved : 3;
+  } config;
+} sSPI_PORT_SETTING;
+typedef struct
+{
+  sSPI_PORT_SETTING port_a;
+  sSPI_PORT_SETTING port_b;
 } sSPI_PORT_SETTINGS;
 typedef union
 {
@@ -2751,6 +3010,8 @@ typedef struct _SRADBMSSettings
   sSPI_PORT_SETTINGS spi_config;
   sWIL_CONNECTION_SETTINGS wbms_wil_1;
   sWIL_CONNECTION_SETTINGS wbms_wil_2;
+  uint16_t wil1_nwk_metadata_buff_count;
+  uint16_t wil2_nwk_metadata_buff_count;
 } SRADBMSSettings;
 typedef struct _GLOBAL_SETTINGS
 {
@@ -2787,14 +3048,16 @@ typedef struct _GLOBAL_SETTINGS
     SFlexVnetzSettings flexvnetz;
     SVividCANSettings vividcan;
     SVCAN4IndSettings vcan4_ind;
+    SOBD2LCSettings obd2lc;
     SRADGigastarSettings radgigastar;
     SRADJupiterSettings jupiter;
+    SRed2Settings red2;
     SFire3Settings fire3;
+    SFire3FlexraySettings fire3fr;
     SRadMoonDuoSettings radmoonduo;
     SEtherBadgeSettings etherBadge;
     SRADA2BSettings rad_a2b;
     SRADEpsilonSettings epsilon;
-    SOBD2LCSettings obd2lc;
     SRADBMSSettings rad_bms;
     SRADMoon3Settings radmoon3;
   };
@@ -2829,7 +3092,7 @@ typedef enum _EDeviceSettingsType
   DeviceRADPlutoSwitchSettingsType,
   DeviceRADGigastarSettingsType,
   DeviceRADJupiterSettingsType,
-  DeviceFire3SettingsType,
+  DeviceRed2SettingsType,
   DeviceRadMoonDuoSettingsType,
   DeviceEtherBadgeSettingsType,
   DeviceRADA2BSettingsType,
@@ -2837,6 +3100,8 @@ typedef enum _EDeviceSettingsType
   DeviceOBD2LCSettingsType,
   DeviceRADBMSSettingsType,
   DeviceRADMoon3SettingsType,
+  DeviceFire3SettingsType,
+  DeviceFire3FlexraySettingsType,
   DeviceSettingsTypeMax,
   DeviceSettingsNone = 0xFFFFFFFF
 } EDeviceSettingsType;
@@ -2878,12 +3143,14 @@ typedef struct _SDeviceSettings
     SRADGigastarSettings radgigastar;
     SRADJupiterSettings jupiter;
     SFire3Settings fire3;
+    SRed2Settings red2;
     SRadMoonDuoSettings radmoon_duo;
     SEtherBadgeSettings etherBadge;
     SRADA2BSettings rad_a2b;
     SRADEpsilonSettings epsilon;
     SRADBMSSettings rad_bms;
     SRADMoon3Settings radmoon3;
+    SFire3FlexraySettings fire3Flexray;
   } Settings;
 } SDeviceSettings;
 typedef enum _EPlasmaIonVnetChannel_t
@@ -3282,8 +3549,8 @@ typedef struct
 typedef struct
 {
   uint8_t ethernetActivationLineEnabled;
-  ethernetNetworkStatus_t ethernetStatus;
-  uint8_t unused;
+  ethernetNetworkStatus_t ethernetStatus[3];
+  uint8_t ethernetActivationLineEnabled_2;
 } icsFire3DeviceStatus;
 typedef struct
 {
@@ -3422,365 +3689,380 @@ typedef enum
 } DeviceFeature;
 enum
 {
-  assert_line_4828 = 1 / (int)(!!(sizeof(CAN_SETTINGS) == 12))
+  assert_line_5140 = 1 / (int)(!!(sizeof(CAN_SETTINGS) == 12))
 };
 ;
 enum
 {
-  assert_line_4829 = 1 / (int)(!!(sizeof(CANFD_SETTINGS) == 10))
+  assert_line_5141 = 1 / (int)(!!(sizeof(CANFD_SETTINGS) == 10))
 };
 ;
 enum
 {
-  assert_line_4830 = 1 / (int)(!!(sizeof(SWCAN_SETTINGS) == 14))
+  assert_line_5142 = 1 / (int)(!!(sizeof(SWCAN_SETTINGS) == 14))
 };
 ;
 enum
 {
-  assert_line_4831 = 1 / (int)(!!(sizeof(LIN_SETTINGS) == 10))
+  assert_line_5143 = 1 / (int)(!!(sizeof(LIN_SETTINGS) == 10))
 };
 ;
 enum
 {
-  assert_line_4832 = 1 / (int)(!!(sizeof(ISO9141_KEYWORD2000__INIT_STEP) == 6))
+  assert_line_5144 = 1 / (int)(!!(sizeof(ISO9141_KEYWORD2000__INIT_STEP) == 6))
 };
 ;
 enum
 {
-  assert_line_4833 = 1 / (int)(!!(sizeof(ISO9141_KEYWORD2000_SETTINGS) == 114))
+  assert_line_5145 = 1 / (int)(!!(sizeof(ISO9141_KEYWORD2000_SETTINGS) == 114))
 };
 ;
 enum
 {
-  assert_line_4834 = 1 / (int)(!!(sizeof(UART_SETTINGS) == 16))
+  assert_line_5146 = 1 / (int)(!!(sizeof(UART_SETTINGS) == 16))
 };
 ;
 enum
 {
-  assert_line_4835 = 1 / (int)(!!(sizeof(J1708_SETTINGS) == 2))
+  assert_line_5147 = 1 / (int)(!!(sizeof(J1708_SETTINGS) == 2))
 };
 ;
 enum
 {
-  assert_line_4836 = 1 / (int)(!!(sizeof(SRedSettings) == 44))
+  assert_line_5148 = 1 / (int)(!!(sizeof(SRedSettings) == 44))
 };
 ;
 enum
 {
-  assert_line_4837 = 1 / (int)(!!(sizeof(STextAPISettings) == 72))
+  assert_line_5149 = 1 / (int)(!!(sizeof(STextAPISettings) == 72))
 };
 ;
 enum
 {
-  assert_line_4838 = 1 / (int)(!!(sizeof(stChipVersions) == 8))
+  assert_line_5150 = 1 / (int)(!!(sizeof(stChipVersions) == 8))
 };
 ;
 enum
 {
-  assert_line_4839 = 1 / (int)(!!(sizeof(SNeoMostGatewaySettings) == 4))
+  assert_line_5151 = 1 / (int)(!!(sizeof(SNeoMostGatewaySettings) == 4))
 };
 ;
 enum
 {
-  assert_line_4840 = 1 / (int)(!!(sizeof(OP_ETH_GENERAL_SETTINGS) == 20))
+  assert_line_5152 = 1 / (int)(!!(sizeof(OP_ETH_GENERAL_SETTINGS) == 20))
 };
 ;
 enum
 {
-  assert_line_4841 = 1 / (int)(!!(sizeof(OP_ETH_SETTINGS) == 16))
+  assert_line_5153 = 1 / (int)(!!(sizeof(OP_ETH_SETTINGS) == 16))
 };
 ;
 enum
 {
-  assert_line_4842 = 1 / (int)(!!(sizeof(ETHERNET_SETTINGS) == 8))
+  assert_line_5154 = 1 / (int)(!!(sizeof(ETHERNET_SETTINGS) == 8))
 };
 ;
 enum
 {
-  assert_line_4843 = 1 / (int)(!!(sizeof(ETHERNET_SETTINGS2) == 16))
+  assert_line_5155 = 1 / (int)(!!(sizeof(ETHERNET_SETTINGS2) == 16))
 };
 ;
 enum
 {
-  assert_line_4844 = 1 / (int)(!!(sizeof(ETHERNET10G_SETTINGS) == 24))
+  assert_line_5156 = 1 / (int)(!!(sizeof(ETHERNET10G_SETTINGS) == 24))
 };
 ;
 enum
 {
-  assert_line_4845 = 1 / (int)(!!(sizeof(LOGGER_SETTINGS) == 4))
+  assert_line_5157 = 1 / (int)(!!(sizeof(LOGGER_SETTINGS) == 4))
 };
 ;
 enum
 {
-  assert_line_4846 = 1 / (int)(!!(sizeof(DISK_SETTINGS) == 14))
+  assert_line_5158 = 1 / (int)(!!(sizeof(DISK_SETTINGS) == 14))
 };
 ;
 enum
 {
-  assert_line_4847 = 1 / (int)(!!(sizeof(SERDESCAM_SETTINGS) == 32))
+  assert_line_5159 = 1 / (int)(!!(sizeof(SERDESCAM_SETTINGS) == 32))
 };
 ;
 enum
 {
-  assert_line_4848 = 1 / (int)(!!(sizeof(SERDESPOC_SETTINGS) == 10))
+  assert_line_5160 = 1 / (int)(!!(sizeof(SERDESPOC_SETTINGS) == 10))
 };
 ;
 enum
 {
-  assert_line_4849 = 1 / (int)(!!(sizeof(SERDESGEN_SETTINGS) == 32))
+  assert_line_5161 = 1 / (int)(!!(sizeof(SERDESGEN_SETTINGS) == 32))
 };
 ;
 enum
 {
-  assert_line_4850 = 1 / (int)(!!(sizeof(RAD_REPORTING_SETTINGS) == 16))
+  assert_line_5162 = 1 / (int)(!!(sizeof(RAD_REPORTING_SETTINGS) == 16))
 };
 ;
 enum
 {
-  assert_line_4851 = 1 / (int)(!!(sizeof(CANTERM_SETTINGS) == 6))
+  assert_line_5163 = 1 / (int)(!!(sizeof(CANTERM_SETTINGS) == 6))
 };
 ;
 enum
 {
-  assert_line_4852 = 1 / (int)(!!(sizeof(SFireSettings) == 744))
+  assert_line_5164 = 1 / (int)(!!(sizeof(SFireSettings) == 744))
 };
 ;
 enum
 {
-  assert_line_4853 = 1 / (int)(!!(sizeof(SFireVnetSettings) == 792))
+  assert_line_5165 = 1 / (int)(!!(sizeof(SFireVnetSettings) == 792))
 };
 ;
 enum
 {
-  assert_line_4854 = 1 / (int)(!!(sizeof(SCyanSettings) == 936))
+  assert_line_5166 = 1 / (int)(!!(sizeof(SCyanSettings) == 936))
 };
 ;
 enum
 {
-  assert_line_4855 = 1 / (int)(!!(sizeof(SVCAN3Settings) == 40))
+  assert_line_5167 = 1 / (int)(!!(sizeof(SVCAN3Settings) == 40))
 };
 ;
 enum
 {
-  assert_line_4856 = 1 / (int)(!!(sizeof(SVCAN4Settings) == 342))
+  assert_line_5168 = 1 / (int)(!!(sizeof(SVCAN4Settings) == 342))
 };
 ;
 enum
 {
-  assert_line_4857 = 1 / (int)(!!(sizeof(SVCANRFSettings) == 340))
+  assert_line_5169 = 1 / (int)(!!(sizeof(SVCANRFSettings) == 340))
 };
 ;
 enum
 {
-  assert_line_4858 = 1 / (int)(!!(sizeof(SECUSettings) == 470))
+  assert_line_5170 = 1 / (int)(!!(sizeof(SECUSettings) == 470))
 };
 ;
 enum
 {
-  assert_line_4859 = 1 / (int)(!!(sizeof(SPendantSettings) == 470))
+  assert_line_5171 = 1 / (int)(!!(sizeof(SPendantSettings) == 470))
 };
 ;
 enum
 {
-  assert_line_4860 = 1 / (int)(!!(sizeof(SIEVBSettings) == 434))
+  assert_line_5172 = 1 / (int)(!!(sizeof(SIEVBSettings) == 434))
 };
 ;
 enum
 {
-  assert_line_4861 = 1 / (int)(!!(sizeof(SEEVBSettings) == 32))
+  assert_line_5173 = 1 / (int)(!!(sizeof(SEEVBSettings) == 32))
 };
 ;
 enum
 {
-  assert_line_4862 = 1 / (int)(!!(sizeof(SRADGalaxySettings) == 768))
+  assert_line_5174 = 1 / (int)(!!(sizeof(SRADGalaxySettings) == 768))
 };
 ;
 enum
 {
-  assert_line_4863 = 1 / (int)(!!(sizeof(SRADStar2Settings) == 414))
+  assert_line_5175 = 1 / (int)(!!(sizeof(SRADStar2Settings) == 414))
 };
 ;
 enum
 {
-  assert_line_4864 = 1 / (int)(!!(sizeof(SOBD2SimSettings) == 148))
+  assert_line_5176 = 1 / (int)(!!(sizeof(SOBD2SimSettings) == 148))
 };
 enum
 {
-  assert_line_4865 = 1 / (int)(!!(sizeof(CmProbeSettings) == 4))
+  assert_line_5177 = 1 / (int)(!!(sizeof(CmProbeSettings) == 4))
 };
 ;
 enum
 {
-  assert_line_4866 = 1 / (int)(!!(sizeof(GLOBAL_SETTINGS) == (936 + 6)))
+  assert_line_5178 = 1 / (int)(!!(sizeof(GLOBAL_SETTINGS) == ((1472) + 6)))
 };
 ;
 enum
 {
-  assert_line_4867 = 1 / (int)(!!(sizeof(stCM_ISO157652_TxMessage) == 4128))
+  assert_line_5179 = 1 / (int)(!!(sizeof(stCM_ISO157652_TxMessage) == 4128))
 };
 ;
 enum
 {
-  assert_line_4868 = 1 / (int)(!!(sizeof(stCM_ISO157652_RxMessage) == 42))
+  assert_line_5180 = 1 / (int)(!!(sizeof(stCM_ISO157652_RxMessage) == 42))
 };
 ;
 enum
 {
-  assert_line_4869 = 1 / (int)(!!(sizeof(spyFilterLong) == 72))
+  assert_line_5181 = 1 / (int)(!!(sizeof(spyFilterLong) == 72))
 };
 ;
 enum
 {
-  assert_line_4870 = 1 / (int)(!!(sizeof(icsSpyMessage) == 72))
+  assert_line_5182 = 1 / (int)(!!(sizeof(icsSpyMessage) == 72))
 };
 ;
 enum
 {
-  assert_line_4871 = 1 / (int)(!!(sizeof(icsSpyMessageLong) == 72))
+  assert_line_5183 = 1 / (int)(!!(sizeof(icsSpyMessageLong) == 72))
 };
 ;
 enum
 {
-  assert_line_4872 = 1 / (int)(!!(sizeof(icsSpyMessageJ1850) == 72))
+  assert_line_5184 = 1 / (int)(!!(sizeof(icsSpyMessageJ1850) == 72))
 };
 ;
 enum
 {
-  assert_line_4873 = 1 / (int)(!!(sizeof(icsSpyMessageVSB) == 64))
+  assert_line_5185 = 1 / (int)(!!(sizeof(icsSpyMessageVSB) == 64))
 };
 ;
 enum
 {
-  assert_line_4874 = 1 / (int)(!!(sizeof(OBD2ProSettings) == 482))
+  assert_line_5186 = 1 / (int)(!!(sizeof(OBD2ProSettings) == 482))
 };
 ;
 enum
 {
-  assert_line_4875 = 1 / (int)(!!(sizeof(ISO15765_2015_TxMessage) == (32 + sizeof(uint8_t*))))
+  assert_line_5187 = 1 / (int)(!!(sizeof(ISO15765_2015_TxMessage) == (32 + sizeof(uint8_t*))))
 };
 ;
 enum
 {
-  assert_line_4876 = 1 / (int)(!!(sizeof(TIMESYNC_ICSHARDWARE_SETTINGS) == 4))
+  assert_line_5188 = 1 / (int)(!!(sizeof(TIMESYNC_ICSHARDWARE_SETTINGS) == 4))
 };
 ;
 enum
 {
-  assert_line_4877 = 1 / (int)(!!(sizeof(SRADSuperMoonSettings) == 178))
+  assert_line_5189 = 1 / (int)(!!(sizeof(SRADSuperMoonSettings) == 178))
 };
 ;
 enum
 {
-  assert_line_4878 = 1 / (int)(!!(sizeof(SRADMoon2Settings) == 162))
+  assert_line_5190 = 1 / (int)(!!(sizeof(SRADMoon2Settings) == 162))
 };
 ;
 enum
 {
-  assert_line_4879 = 1 / (int)(!!(sizeof(SRADGigalogSettings) == 698))
+  assert_line_5191 = 1 / (int)(!!(sizeof(SRADGigalogSettings) == 698))
 };
 ;
 enum
 {
-  assert_line_4880 = 1 / (int)(!!(sizeof(SRADGigastarSettings) == 702))
+  assert_line_5192 = 1 / (int)(!!(sizeof(SRADGigastarSettings) == 702))
 };
 ;
 enum
 {
-  assert_line_4881 = 1 / (int)(!!(sizeof(SExtSubCmdHdr) == 4))
+  assert_line_5193 = 1 / (int)(!!(sizeof(SExtSubCmdHdr) == 4))
 };
 ;
 enum
 {
-  assert_line_4882 = 1 / (int)(!!(sizeof(SDiskStructure) == 16))
+  assert_line_5194 = 1 / (int)(!!(sizeof(SDiskStructure) == 16))
 };
 ;
 enum
 {
-  assert_line_4883 = 1 / (int)(!!(sizeof(SDiskFormatProgress) == 10))
+  assert_line_5195 = 1 / (int)(!!(sizeof(SDiskFormatProgress) == 10))
 };
 ;
 enum
 {
-  assert_line_4884 = 1 / (int)(!!(sizeof(SDiskStatus) == 14))
+  assert_line_5196 = 1 / (int)(!!(sizeof(SDiskStatus) == 14))
 };
 ;
 enum
 {
-  assert_line_4885 = 1 / (int)(!!(sizeof(SExtSubCmdComm) == 522))
+  assert_line_5197 = 1 / (int)(!!(sizeof(SExtSubCmdComm) == 522))
 };
 ;
 enum
 {
-  assert_line_4886 = 1 / (int)(!!(sizeof(SRADPlutoSettings) == 348))
+  assert_line_5198 = 1 / (int)(!!(sizeof(SRADPlutoSettings) == 348))
 };
 ;
 enum
 {
-  assert_line_4887 = 1 / (int)(!!(sizeof(CANHubSettings) == 56))
+  assert_line_5199 = 1 / (int)(!!(sizeof(CANHubSettings) == 56))
 };
 ;
 enum
 {
-  assert_line_4888 = 1 / (int)(!!(sizeof(SNeoECU12Settings) == 358))
+  assert_line_5200 = 1 / (int)(!!(sizeof(SNeoECU12Settings) == 358))
 };
 ;
 enum
 {
-  assert_line_4889 = 1 / (int)(!!(sizeof(SPlutoSwitchSettings) == 50378))
+  assert_line_5201 = 1 / (int)(!!(sizeof(SPlutoSwitchSettings) == 50378))
 };
 ;
 enum
 {
-  assert_line_4890 = 1 / (int)(!!(sizeof(VCAN4IndSettings) == (228)))
+  assert_line_5202 = 1 / (int)(!!(sizeof(VCAN4IndSettings) == (228)))
 };
 ;
 enum
 {
-  assert_line_4891 = 1 / (int)(!!(sizeof(SRADJupiterSettings) == 348))
+  assert_line_5203 = 1 / (int)(!!(sizeof(SRADJupiterSettings) == 348))
 };
 ;
 enum
 {
-  assert_line_4892 = 1 / (int)(!!(sizeof(RadMoonDuoSettings) == 38))
+  assert_line_5204 = 1 / (int)(!!(sizeof(RadMoonDuoSettings) == 38))
 };
 ;
 enum
 {
-  assert_line_4893 = 1 / (int)(!!(sizeof(SFire3Settings) == (668)))
+  assert_line_5205 = 1 / (int)(!!(sizeof(SFire3Settings) == (1472)))
 };
 ;
 enum
 {
-  assert_line_4894 = 1 / (int)(!!(sizeof(SEtherBadgeSettings) == 316))
+  assert_line_5206 = 1 / (int)(!!(sizeof(SRed2Settings) == (668)))
 };
 ;
 enum
 {
-  assert_line_4895 = 1 / (int)(!!(sizeof(SRADA2BSettings) == 332))
+  assert_line_5207 = 1 / (int)(!!(sizeof(SEtherBadgeSettings) == 316))
 };
 ;
 enum
 {
-  assert_line_4896 = 1 / (int)(!!(sizeof(A2BMonitorSettings) == 20))
+  assert_line_5208 = 1 / (int)(!!(sizeof(SRADA2BSettings) == 332))
 };
 ;
 enum
 {
-  assert_line_4897 = 1 / (int)(!!(sizeof(SRADEpsilonSettings) == 384))
+  assert_line_5209 = 1 / (int)(!!(sizeof(A2BMonitorSettings) == 20))
 };
 ;
 enum
 {
-  assert_line_4898 = 1 / (int)(!!(sizeof(RAD_GPTP_SETTINGS) == 36))
+  assert_line_5210 = 1 / (int)(!!(sizeof(SRADEpsilonSettings) == 384))
 };
 ;
 enum
 {
-  assert_line_4899 = 1 / (int)(!!(sizeof(SRADBMSSettings) == 126))
+  assert_line_5211 = 1 / (int)(!!(sizeof(RAD_GPTP_SETTINGS) == 36))
 };
 ;
 enum
 {
-  assert_line_4900 = 1 / (int)(!!(sizeof(SRADMoon3Settings) == 60))
+  assert_line_5212 = 1 / (int)(!!(sizeof(SRADBMSSettings) == 130))
+};
+;
+enum
+{
+  assert_line_5213 = 1 / (int)(!!(sizeof(SRADMoon3Settings) == 60))
+};
+;
+enum
+{
+  assert_line_5214 = 1 / (int)(!!(sizeof(SFire3FlexraySettings) == (1122)))
+};
+;
+enum
+{
+  assert_line_5215 = 1 / (int)(!!(sizeof(CANHubSettings) == 56))
 };
 ;

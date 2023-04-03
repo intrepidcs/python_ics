@@ -8,8 +8,8 @@ from ics.structures.ethernet_network_status_t import *
 class ics_fire3_device_status(ctypes.Structure):
     _fields_ = [
         ('ethernetActivationLineEnabled', ctypes.c_uint8),
-        ('ethernetStatus', ethernetNetworkStatus_t),
-        ('unused', ctypes.c_uint8),
+        ('ethernetStatus', ethernetNetworkStatus_t * 3),
+        ('ethernetActivationLineEnabled_2', ctypes.c_uint8),
     ]
 
 

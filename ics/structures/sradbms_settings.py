@@ -45,6 +45,8 @@ class sradbms_settings(ctypes.Structure):
         ('spi_config', sSPI_PORT_SETTINGS),
         ('wbms_wil_1', sWIL_CONNECTION_SETTINGS),
         ('wbms_wil_2', sWIL_CONNECTION_SETTINGS),
+        ('wil1_nwk_metadata_buff_count', ctypes.c_uint16),
+        ('wil2_nwk_metadata_buff_count', ctypes.c_uint16),
     ]
 
 

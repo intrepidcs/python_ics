@@ -49,14 +49,14 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'ics'
-copyright = '2022, Intrepid Control Systems, Inc.'
+copyright = 'Intrepid Control Systems, Inc.'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
 # The short X.Y version.
-version = '911.12'
+version = '912.4'
 # The full version, including alpha/beta/rc tags.
 release = version
 

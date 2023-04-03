@@ -233,6 +233,17 @@ class jupiter_versions(ctypes.Structure):
 
 
 
+class red2_versions(ctypes.Structure):
+    _pack_ = 2
+    _fields_ = [
+        ('zchip_major', ctypes.c_uint8),
+        ('zchip_minor', ctypes.c_uint8),
+        ('schip_major', ctypes.c_uint8),
+        ('schip_minor', ctypes.c_uint8),
+    ]
+
+
+
 class fire3_versions(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
@@ -240,6 +251,23 @@ class fire3_versions(ctypes.Structure):
         ('zchip_minor', ctypes.c_uint8),
         ('schip_major', ctypes.c_uint8),
         ('schip_minor', ctypes.c_uint8),
+        ('vem_z_major', ctypes.c_uint8),
+        ('vem_z_minor', ctypes.c_uint8),
+    ]
+
+
+
+class fire3_flexray_versions(ctypes.Structure):
+    _pack_ = 2
+    _fields_ = [
+        ('zchip_major', ctypes.c_uint8),
+        ('zchip_minor', ctypes.c_uint8),
+        ('schip_major', ctypes.c_uint8),
+        ('schip_minor', ctypes.c_uint8),
+        ('vem_z_major', ctypes.c_uint8),
+        ('vem_z_minor', ctypes.c_uint8),
+        ('vem_f_major', ctypes.c_uint8),
+        ('vem_f_minor', ctypes.c_uint8),
     ]
 
 
@@ -317,7 +345,9 @@ class st_chip_versions(ctypes.Union):
         ('radgigastar_usbz_versions', radgigastar_usbz_versions),
         ('obd2lc_versions', obd2lc_versions),
         ('jupiter_versions', jupiter_versions),
+        ('red2_versions', red2_versions),
         ('fire3_versions', fire3_versions),
+        ('fire3_flexray_versions', fire3_flexray_versions),
         ('rad_moon_duo_versions', rad_moon_duo_versions),
         ('obd2dev_versions', obd2dev_versions),
         ('ether_badge_versions', ether_badge_versions),
