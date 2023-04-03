@@ -12,7 +12,6 @@ from ics.structures.iso9141_keyword2000_settings import *
 from ics.structures.lin_settings import *
 from ics.structures.s_text_api_settings import *
 from ics.structures.srad_gptp_settings_s import *
-from ics.structures.swcan_settings import *
 from ics.structures.timesync_icshardware_settings import *
 
 
@@ -22,7 +21,7 @@ class flags(ctypes.Structure):
         ('disableUsbCheckOnBoot', ctypes.c_uint32, 1),
         ('enableLatencyTest', ctypes.c_uint32, 1),
         ('busMessagesToAndroid', ctypes.c_uint32, 1),
-        ('enablePcEthernetComm', ctypes.c_uint32, 1),
+        ('reserved1', ctypes.c_uint32, 1),
         ('enableDefaultLogger', ctypes.c_uint32, 1),
         ('enableDefaultUpload', ctypes.c_uint32, 1),
         ('reserved', ctypes.c_uint32, 26),
@@ -30,7 +29,7 @@ class flags(ctypes.Structure):
 
 
 
-class s_fire3_settings(ctypes.Structure):
+class s_fire3_flexray_settings(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
         ('perf_en', ctypes.c_uint16),
@@ -98,39 +97,23 @@ class s_fire3_settings(ctypes.Structure):
         ('canfd14', CANFD_SETTINGS),
         ('can15', CAN_SETTINGS),
         ('canfd15', CANFD_SETTINGS),
-        ('can16', CAN_SETTINGS),
-        ('canfd16', CANFD_SETTINGS),
-        ('swcan1', SWCAN_SETTINGS),
-        ('swcan2', SWCAN_SETTINGS),
-        ('lsftcan1', CAN_SETTINGS),
-        ('lsftcan2', CAN_SETTINGS),
         ('ethernet_3', ETHERNET_SETTINGS),
         ('ethernet2_3', ETHERNET_SETTINGS2),
         ('lin3', LIN_SETTINGS),
         ('lin4', LIN_SETTINGS),
-        ('lin5', LIN_SETTINGS),
-        ('lin6', LIN_SETTINGS),
-        ('lin7', LIN_SETTINGS),
-        ('lin8', LIN_SETTINGS),
         ('iso9141_kwp_settings_3', ISO9141_KEYWORD2000_SETTINGS),
         ('iso_parity_3', ctypes.c_uint16),
         ('iso_msg_termination_3', ctypes.c_uint16),
         ('iso9141_kwp_settings_4', ISO9141_KEYWORD2000_SETTINGS),
         ('iso_parity_4', ctypes.c_uint16),
         ('iso_msg_termination_4', ctypes.c_uint16),
-        ('iso9141_kwp_settings_5', ISO9141_KEYWORD2000_SETTINGS),
-        ('iso_parity_5', ctypes.c_uint16),
-        ('iso_msg_termination_5', ctypes.c_uint16),
-        ('iso9141_kwp_settings_6', ISO9141_KEYWORD2000_SETTINGS),
-        ('iso_parity_6', ctypes.c_uint16),
-        ('iso_msg_termination_6', ctypes.c_uint16),
-        ('selectable_network_1', ctypes.c_uint16),
-        ('selectable_network_2', ctypes.c_uint16),
         ('network_enables_2', ctypes.c_uint64),
         ('termination_enables_2', ctypes.c_uint64),
+        ('flex_mode', ctypes.c_uint16),
+        ('flex_termination', ctypes.c_uint16),
     ]
 
 
-_SFire3Settings = s_fire3_settings
-SFire3Settings = s_fire3_settings
+_SFire3FlexraySettings = s_fire3_flexray_settings
+SFire3FlexraySettings = s_fire3_flexray_settings
 

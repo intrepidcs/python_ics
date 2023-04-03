@@ -19,7 +19,8 @@ class flags(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
         ('hwComLatencyTestEn', ctypes.c_uint16, 1),
-        ('', ctypes.c_uint16, 15),
+        ('disableUsbCheckOnBoot', ctypes.c_uint16, 1),
+        ('', ctypes.c_uint16, 14),
     ]
 
 
