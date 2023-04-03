@@ -96,7 +96,8 @@ PyObject* meth_uart_get_baudrate(PyObject* self, PyObject* args);
 PyObject* meth_generic_api_send_command(PyObject* self, PyObject* args);
 PyObject* meth_generic_api_read_data(PyObject* self, PyObject* args);
 PyObject* meth_generic_api_get_status(PyObject* self, PyObject* args);
-
+PyObject* meth_get_gptp_status(PyObject* self, PyObject* args); // icsneoGetGPTPStatus
+PyObject* meth_get_all_chip_versions(PyObject* self, PyObject* args); // icsneoGetAllChipVersions
 
 #ifdef _cplusplus
 }
@@ -1686,6 +1687,36 @@ PyObject* meth_generic_api_get_status(PyObject* self, PyObject* args);
     "\ttuple of (:class:`int`): (functionIndex, callbackError, finishedProcessing) \n\n" \
     "\n"
 
+#define _DOC_GET_GPTP_STATUS \
+    MODULE_NAME ".get_gptp_status(device)\n" \
+    "\n" \
+    "Gets the gPTP Status from the device.\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\tics.structures.gptp_status.gptp_status (:class:`ics.structures.gptp_status.gptp_status`)\n\n" \
+    "\n"
+
+#define _DOC_GET_ALL_CHIP_VERSIONS \
+    MODULE_NAME ".get_all_chip_versions(device, api_index, instance_index)\n" \
+    "\n" \
+    "Get all the chip (firmware) versions of the device.\n" \
+    "\n" \
+    "Args:\n" \
+    "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
+    "\n" \
+    "Raises:\n" \
+    "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
+    "\n" \
+    "Returns:\n" \
+    "\tics.structures.st_chip_versions.st_chip_versions (:class:`ics.structures.st_chip_versions.st_chip_versions`)\n\n" \
+    "\n"
+
 static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("find_devices", "icsneoFindNeoDevices", "FindNeoDevices", (PyCFunction)meth_find_devices, METH_VARARGS | METH_KEYWORDS, _DOC_FIND_DEVICES),
     _EZ_ICS_STRUCT_METHOD("open_device", "icsneoOpenNeoDevice", "OpenNeoDevice", (PyCFunction)meth_open_device, METH_VARARGS | METH_KEYWORDS, _DOC_OPEN_DEVICES),
@@ -1780,6 +1811,8 @@ static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("generic_api_send_command", "icsneoGenericAPISendCommand", "GenericAPISendCommand", meth_generic_api_send_command, METH_VARARGS, _DOC_GENERIC_API_SEND_COMMAND),   
     _EZ_ICS_STRUCT_METHOD("generic_api_read_data", "icsneoGenericAPIReadData", "GenericAPIReadData", meth_generic_api_read_data, METH_VARARGS, _DOC_GENERIC_API_READ_DATA),   
     _EZ_ICS_STRUCT_METHOD("generic_api_get_status", "icsneoGenericAPIGetStatus", "GenericAPIGetStatus", meth_generic_api_get_status, METH_VARARGS, _DOC_GENERIC_API_GET_STATUS),   
+    _EZ_ICS_STRUCT_METHOD("get_gptp_status", "icsneoGetGPTPStatus", "GetGPTPStatus", meth_get_gptp_status, METH_VARARGS, _DOC_GET_GPTP_STATUS),   
+    _EZ_ICS_STRUCT_METHOD("get_all_chip_versions", "icsneoGetAllChipVersions", "GetAllChipVersions", meth_get_all_chip_versions, METH_VARARGS, _DOC_GET_ALL_CHIP_VERSIONS),
 
     {"override_library_name", (PyCFunction)meth_override_library_name, METH_VARARGS, _DOC_OVERRIDE_LIBRARY_NAME},
     {"get_library_path", (PyCFunction)meth_get_library_path, METH_NOARGS, ""},

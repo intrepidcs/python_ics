@@ -4070,3 +4070,112 @@ PyObject* meth_generic_api_get_status(PyObject* self, PyObject* args)
     }
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
+
+PyObject* meth_get_gptp_status(PyObject* self, PyObject* args)
+{
+    PyObject* obj = NULL;
+    if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
+        return NULL;
+    }
+    // Before we do anything, we need to grab the python gptp_status ctype.Structure.
+    PyObject* status = _getPythonModuleObject("ics.structures.gptp_status", "gptp_status");
+    if (!status)
+    {
+        return NULL;
+    }
+    // Grab the buffer out of the newly created object - make sure to call PyBuffer_Release(&status_buffer) when done.
+    Py_buffer status_buffer = {};
+    PyObject_GetBuffer(status, &status_buffer, PyBUF_C_CONTIGUOUS | PyBUF_WRITABLE);
+    // Verify we have a valid NeoDevice Object - This comes after gptp_status allocation for testing purposes
+    if (!PyNeoDevice_CheckExact(obj)) {
+        PyBuffer_Release(&status_buffer);
+        Py_DECREF(status);
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            PyBuffer_Release(&status_buffer);
+            Py_DECREF(status);
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        // Get the gptp_status
+        Py_BEGIN_ALLOW_THREADS
+        // int _stdcall icsneoGetGPTPStatus(void* hObject, GPTPStatus* gptpStatus)
+        ice::Function<int __stdcall (ICS_HANDLE, GPTPStatus*)> icsneoGetGPTPStatus(lib, "icsneoGetGPTPStatus");
+        if (!icsneoGetGPTPStatus(handle, (GPTPStatus*)status_buffer.buf))
+        {
+            Py_BLOCK_THREADS
+            PyBuffer_Release(&status_buffer);
+            Py_DECREF(status);
+            return set_ics_exception(exception_runtime_error(), "icsneoGetGPTPStatus() Failed");
+        }
+        Py_END_ALLOW_THREADS
+        PyBuffer_Release(&status_buffer);
+        return status;
+    }
+    catch (ice::Exception& ex)
+    {
+        PyBuffer_Release(&status_buffer);
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
+
+// int _stdcall icsneoGetAllChipVersions(void* hObject, stChipVersions* pInfo, int ipInfoSize)
+PyObject* meth_get_all_chip_versions(PyObject* self, PyObject* args)
+{
+    PyObject* obj = NULL;
+    if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
+        return NULL;
+    }
+    // Before we do anything, we need to grab the python ctype.Structure.
+    PyObject* py_struct = _getPythonModuleObject("ics.structures.st_chip_versions", "st_chip_versions");
+    if (!py_struct)
+    {
+        return NULL;
+    }
+    // Grab the buffer out of the newly created object - make sure to call PyBuffer_Release(&py_struct_buffer) when done.
+    Py_buffer py_struct_buffer = {};
+    PyObject_GetBuffer(py_struct, &py_struct_buffer, PyBUF_C_CONTIGUOUS | PyBUF_WRITABLE);
+    // Verify we have a valid NeoDevice Object - This comes after ctypes struct allocation for testing purposes
+    if (!PyNeoDevice_CheckExact(obj)) {
+        PyBuffer_Release(&py_struct_buffer);
+        Py_DECREF(py_struct);
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+    try
+    {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            PyBuffer_Release(&py_struct_buffer);
+            Py_DECREF(py_struct);
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        // Get the struct
+        Py_BEGIN_ALLOW_THREADS
+        // int _stdcall icsneoGetAllChipVersions(void* hObject, stChipVersions* pInfo, int ipInfoSize)
+        ice::Function<int __stdcall (ICS_HANDLE, stChipVersions*, int)> icsneoGetAllChipVersions(lib, "icsneoGetAllChipVersions");
+        if (!icsneoGetAllChipVersions(handle, (stChipVersions*)py_struct_buffer.buf, py_struct_buffer.len))
+        {
+            Py_BLOCK_THREADS
+            PyBuffer_Release(&py_struct_buffer);
+            Py_DECREF(py_struct);
+            return set_ics_exception(exception_runtime_error(), "icsneoGetAllChipVersions() Failed");
+        }
+        Py_END_ALLOW_THREADS
+        PyBuffer_Release(&py_struct_buffer);
+        return py_struct;
+    }
+    catch (ice::Exception& ex)
+    {
+        PyBuffer_Release(&py_struct_buffer);
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
