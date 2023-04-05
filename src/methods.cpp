@@ -1,4 +1,4 @@
-﻿#include "methods.h"
+#include "methods.h"
 #include "exceptions.h"
 #include "dll.h"
 #include "defines.h"
@@ -3244,8 +3244,8 @@ PyObject* meth_flash_phy_firmware(PyObject* self, PyObject* args)
 	PyObject* obj = NULL;
 	char phy_indx = 0;
 	PyObject* bytes_obj = NULL;
-	unsigned int functionError = 1;
-	if (!PyArg_ParseTuple(args, arg_parse("OiO|i:", __FUNCTION__), &obj, &phy_indx, &bytes_obj, &functionError))
+	int function_error = 1;
+	if (!PyArg_ParseTuple(args, arg_parse("OiO|i:", __FUNCTION__), &obj, &phy_indx, &bytes_obj, &function_error))
 	{
 		return NULL;
 	}
@@ -3269,7 +3269,7 @@ PyObject* meth_flash_phy_firmware(PyObject* self, PyObject* args)
 			return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
 		}
 
-		ice::Function<int __stdcall (ICS_HANDLE, char, char*, size_t, unsigned int*)> icsneoFlashPhyFirmware(lib, "icsneoFlashPhyFirmware");
+		ice::Function<int __stdcall (ICS_HANDLE, char, char*, size_t, int*)> icsneoFlashPhyFirmware(lib, "icsneoFlashPhyFirmware");
 		// Convert the object to a bytes object
 		PyObject* bytes = PyBytes_FromObject(bytes_obj);
 		// Grab the byte size
@@ -3280,12 +3280,12 @@ PyObject* meth_flash_phy_firmware(PyObject* self, PyObject* args)
 			return NULL;
 		
         Py_BEGIN_ALLOW_THREADS
-            if (!icsneoFlashPhyFirmware(handle, phy_indx, bytes_str, bsize, &functionError)) {
+            if (!icsneoFlashPhyFirmware(handle, phy_indx, bytes_str, bsize, &function_error)) {
                 Py_BLOCK_THREADS
                 return set_ics_exception(exception_runtime_error(), "icsneoFlashPhyFirmware() Failed");
             }
         Py_END_ALLOW_THREADS
-        return Py_BuildValue("i", functionError);
+        return Py_BuildValue("i", function_error);
 		
 	}
 	catch (ice::Exception& ex)
@@ -3299,9 +3299,9 @@ PyObject* meth_get_phy_firmware_version(PyObject* self, PyObject* args)
 {
 	PyObject* obj = NULL;
 	char phy_indx = 0;
-	unsigned int phyVersion = NULL;
-	unsigned int functionError = 1;
-	if (!PyArg_ParseTuple(args, arg_parse("Oi|ii:", __FUNCTION__), &obj, &phy_indx, &phyVersion, &functionError))
+	int phy_version = NULL;
+	int function_error = 1;
+	if (!PyArg_ParseTuple(args, arg_parse("Oi|ii:", __FUNCTION__), &obj, &phy_indx, &phy_version, &function_error))
 	{
 		return NULL;
 	}
@@ -3321,15 +3321,15 @@ PyObject* meth_get_phy_firmware_version(PyObject* self, PyObject* args)
 			return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
 		}
 
-		ice::Function<int __stdcall (ICS_HANDLE, char, unsigned int*, unsigned int*)> icsneoGetPhyFwVersion(lib, "icsneoGetPhyFwVersion");
+		ice::Function<int __stdcall (ICS_HANDLE, char, int*, int*)> icsneoGetPhyFwVersion(lib, "icsneoGetPhyFwVersion");
 
         Py_BEGIN_ALLOW_THREADS
-            if (!icsneoGetPhyFwVersion(handle, phy_indx, &phyVersion, &functionError)) {
+            if (!icsneoGetPhyFwVersion(handle, phy_indx, &phy_version, &function_error)) {
                 Py_BLOCK_THREADS
                 return set_ics_exception(exception_runtime_error(), "icsneoGetPhyFwVersion() Failed");
             }
         Py_END_ALLOW_THREADS
-        return Py_BuildValue("i", phyVersion);
+        return Py_BuildValue("i", phy_version);
 		
 	}
 	catch (ice::Exception& ex)
