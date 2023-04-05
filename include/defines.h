@@ -6,7 +6,6 @@
 #define MODULE_DESCRIPTION "Copyright Intrepid Control Systems, Inc."
 #define VSPY3_BUILD_VERSION 901
 
-
 // https://bugs.python.org/issue28769
 // 2.x     = char* PyString_AsString(return_value);
 // 3.0-3.6 = char* PyUnicode_AsUTF8(value);
@@ -22,10 +21,11 @@
 #endif
 
 #ifdef _cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-int setup_module_defines(PyObject* module);
+    int setup_module_defines(PyObject* module);
 
 #ifdef _cplusplus
 }
