@@ -138,7 +138,7 @@ def is_line_start_of_object(line):
     for regex in _start_of_obj_blacklist:
         if bool(regex.search(line)):
             return False
-    return bool(re.search('\btypedef struct$|struct$|struct \S*$|enum|union', line))
+    return bool(re.search('\btypedef struct$|struct$|struct \S*$|enum$|enum |union$|union ', line))
 
 
 # This contains all the objects that don't pass convert_to_ctype_object
@@ -161,7 +161,6 @@ def parse_object(f, pos=-1, pack_size=None, is_embedded=False):
     if pos is -1, don't reset position when finished
     """
     start_pos = f.tell()
-    opening_bracket_count = 0
     opening_bracket_count = 0
     try:
         # Read the first line and make sure we have a C Object
@@ -207,6 +206,7 @@ def parse_object(f, pos=-1, pack_size=None, is_embedded=False):
                     continue
                 opening_bracket_count += line.count('{')
                 opening_bracket_count -= line.count('}')
+                assert(opening_bracket_count >= 0)
                 # Determine if we are at the end of the struct
                 if opening_bracket_count == 0 and re.match('}.*;', line):
                     extra_names = ''.join(line.split()).strip('};').split(',')
