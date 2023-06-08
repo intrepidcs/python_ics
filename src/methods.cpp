@@ -3296,8 +3296,8 @@ PyObject* meth_flash_phy_firmware(PyObject* self, PyObject* args)
         if (!bytes_str)
             return NULL;
 
-        Py_BEGIN_ALLOW_THREADS if (!icsneoFlashPhyFirmware(handle, phy_indx, bytes_str, bsize, &function_error))
-        {
+        Py_BEGIN_ALLOW_THREADS;
+        if (!icsneoFlashPhyFirmware(handle, phy_indx, bytes_str, bsize, &function_error)) {
             Py_BLOCK_THREADS return set_ics_exception(exception_runtime_error(), "icsneoFlashPhyFirmware() Failed");
         }
         Py_END_ALLOW_THREADS return Py_BuildValue("i", function_error);
@@ -3335,8 +3335,8 @@ PyObject* meth_get_phy_firmware_version(PyObject* self, PyObject* args)
 
         unsigned int phy_version = 0;
         int function_error = 0;
-        Py_BEGIN_ALLOW_THREADS if (!icsneoGetPhyFwVersion(handle, phy_indx, &phy_version, &function_error))
-        {
+        Py_BEGIN_ALLOW_THREADS;
+        if (!icsneoGetPhyFwVersion(handle, phy_indx, &phy_version, &function_error)) {
             Py_BLOCK_THREADS return set_ics_exception(exception_runtime_error(), "icsneoGetPhyFwVersion() Failed");
         }
         Py_END_ALLOW_THREADS
