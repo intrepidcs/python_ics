@@ -12,7 +12,8 @@ class ethernet_settings2(ctypes.Structure):
         ('ip_addr', ctypes.c_uint32),
         ('netmask', ctypes.c_uint32),
         ('gateway', ctypes.c_uint32),
-        ('rsvd', ctypes.c_uint8 * 2),
+        ('flags2', ctypes.c_uint8),
+        ('rsvd', ctypes.c_uint8),
     ]
 
 

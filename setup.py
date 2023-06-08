@@ -8,9 +8,9 @@ import sys
 import unittest
 import shutil
 
-MAJOR_VERSION = 910
-MINOR_VERSION = 10
-POST_VERSION = 6
+MAJOR_VERSION = 912
+MINOR_VERSION = 4
+POST_VERSION = None
 
 if POST_VERSION:
     VERSION_STRING = '%d.%d-%d' % (MAJOR_VERSION, MINOR_VERSION, POST_VERSION)
@@ -59,7 +59,7 @@ class build(build_module.build):
         import generate_icsneo40_structs
         extract_icsneo40_defines.extract()
         generate_icsneo40_structs.generate_all_files()
-        if 'DARWIN' in platform.system().upper():
+        if platform.system().upper() in ('DARWIN', 'LINUX'):
             import build_libicsneo
             build_libicsneo.checkout()
             build_libicsneo.build()
@@ -111,11 +111,14 @@ ics_extension = Extension(
 package_data = {}
 if 'DARWIN' in platform.system().upper():
     package_data['ics'] = ['*.dylib']
+elif 'LINUX' in platform.system().upper():
+    package_data[''] = ['*.so']
 
 setup(name='python_ics',
       version=VERSION_STRING,
       description='Library for interfacing with Intrepid devices in Python',
       long_description=read('README.md'),
+      long_description_content_type='text/markdown',
       license="MIT",
       author='David Rebbe',
       author_email='drebbe@intrepidcs.com',

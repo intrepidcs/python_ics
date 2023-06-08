@@ -10,6 +10,7 @@ from ics.structures.get_component_versions import *
 from ics.structures.get_component_versions_response import *
 from ics.structures.get_supported_features_response import *
 from ics.structures.gptp_status import *
+from ics.structures.manufacturing_operation import *
 from ics.structures.s_disk_details import *
 from ics.structures.s_disk_format_progress import *
 from ics.structures.s_disk_structure import *
@@ -46,6 +47,7 @@ class extension(ctypes.Union):
         ('uartData', UartPortData),
         ('uartBytesLen', UartPortPortBytes),
         ('uartConfig', UartPortConfig),
+        ('mfgOperation', ManufacturingOperation),
     ]
 
 

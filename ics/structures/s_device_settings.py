@@ -6,6 +6,7 @@ from ics.structures.e_device_settings_type import *
 from ics.structures.s_cm_probe_settings import *
 from ics.structures.s_cyan_settings import *
 from ics.structures.s_ether_badge_settings import *
+from ics.structures.s_fire3_flexray_settings import *
 from ics.structures.s_fire3_settings import *
 from ics.structures.s_fire_settings import *
 from ics.structures.s_fire_vnet_settings import *
@@ -14,6 +15,7 @@ from ics.structures.s_neo_ecu12_settings import *
 from ics.structures.s_pendant_settings import *
 from ics.structures.s_pluto_switch_settings_s import *
 from ics.structures.s_rad_moon_duo_settings import *
+from ics.structures.s_red2_settings import *
 from ics.structures.s_red_settings import *
 from ics.structures.s_vivid_can_settings import *
 from ics.structures.scan_hub_settings import *
@@ -30,6 +32,7 @@ from ics.structures.srad_gigalog_settings import *
 from ics.structures.srad_gigastar_settings import *
 from ics.structures.srad_jupiter_settings import *
 from ics.structures.srad_moon2_settings import *
+from ics.structures.srad_moon3_settings import *
 from ics.structures.srad_pluto_settings import *
 from ics.structures.srad_star2_settings import *
 from ics.structures.srad_super_moon_settings import *
@@ -78,11 +81,14 @@ class Settings(ctypes.Union):
         ('radgigastar', SRADGigastarSettings),
         ('jupiter', SRADJupiterSettings),
         ('fire3', SFire3Settings),
+        ('red2', SRed2Settings),
         ('radmoon_duo', SRadMoonDuoSettings),
         ('etherBadge', SEtherBadgeSettings),
         ('rad_a2b', SRADA2BSettings),
         ('epsilon', SRADEpsilonSettings),
         ('rad_bms', SRADBMSSettings),
+        ('radmoon3', SRADMoon3Settings),
+        ('fire3Flexray', SFire3FlexraySettings),
     ]
 
 

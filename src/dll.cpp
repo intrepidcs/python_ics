@@ -9,28 +9,22 @@ bool __initialize(char* name)
     if (dll_is_initialized()) {
         return true;
     }
-    try
-    {
-        memset(ERROR_MESSAGE, '\0', sizeof(ERROR_MESSAGE)/sizeof(ERROR_MESSAGE[0]));
-        if (!name)
-        {
+    try {
+        memset(ERROR_MESSAGE, '\0', sizeof(ERROR_MESSAGE) / sizeof(ERROR_MESSAGE[0]));
+        if (!name) {
 #if (defined(_WIN32) || defined(__WIN32__))
             LIBRARY = new ice::Library("icsneo40.dll");
 #elif (defined(__APPLE__))
             LIBRARY = new ice::Library("@loader_path/libicsneolegacy.dylib");
 #else
-            LIBRARY = new ice::Library("libicsneolegacy.so");
+            LIBRARY = new ice::Library("${ORIGIN}/libicsneolegacy.so");
 #endif
-        }
-        else 
-        {
+        } else {
             LIBRARY = new ice::Library(name);
         }
-    }
-    catch (ice::Exception& ex)
-    {
-        strncpy(ERROR_MESSAGE, ex.whatString().c_str(), sizeof(ERROR_MESSAGE)/sizeof(ERROR_MESSAGE[0]));
-        ERROR_MESSAGE[sizeof(ERROR_MESSAGE)/sizeof(ERROR_MESSAGE[0]) - 1] = '\0';
+    } catch (ice::Exception& ex) {
+        strncpy(ERROR_MESSAGE, ex.whatString().c_str(), sizeof(ERROR_MESSAGE) / sizeof(ERROR_MESSAGE[0]));
+        ERROR_MESSAGE[sizeof(ERROR_MESSAGE) / sizeof(ERROR_MESSAGE[0]) - 1] = '\0';
         return false;
     }
     return true;

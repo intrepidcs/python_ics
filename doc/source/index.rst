@@ -46,6 +46,7 @@ Module Functions
     ics.generic_api_read_data
     ics.generic_api_send_command
     ics.get_active_vnet_channel
+    ics.get_all_chip_versions
     ics.get_backup_power_enabled
     ics.get_backup_power_ready
     ics.get_bus_voltage
@@ -56,6 +57,7 @@ Module Functions
     ics.get_dll_firmware_info
     ics.get_dll_version
     ics.get_error_messages
+    ics.get_gptp_status
     ics.get_hw_firmware_info
     ics.get_last_api_error
     ics.get_library_path
@@ -110,6 +112,7 @@ Module Functions
     ics.GenericAPIReadData
     ics.GenericAPISendCommand
     ics.GetActiveVNETChannel
+    ics.GetAllChipVersions
     ics.GetBackupPowerEnabled
     ics.GetBackupPowerReady
     ics.GetBusVoltage
@@ -118,6 +121,7 @@ Module Functions
     ics.GetDeviceSettings
     ics.GetDeviceStatus
     ics.GetErrorMessages
+    ics.GetGPTPStatus
     ics.GetHWFirmwareInfo
     ics.GetLastAPIError
     ics.GetMessages
@@ -185,6 +189,7 @@ Module Functions
     ics.icsneoGenericAPIReadData
     ics.icsneoGenericAPISendCommand
     ics.icsneoGetActiveVNETChannel
+    ics.icsneoGetAllChipVersions
     ics.icsneoGetBackupPowerEnabled
     ics.icsneoGetBackupPowerReady
     ics.icsneoGetBusVoltage
@@ -193,6 +198,7 @@ Module Functions
     ics.icsneoGetDeviceSettings
     ics.icsneoGetDeviceStatus
     ics.icsneoGetErrorMessages
+    ics.icsneoGetGPTPStatus
     ics.icsneoGetHWFirmwareInfo
     ics.icsneoGetLastAPIError
     ics.icsneoGetMessages
@@ -494,10 +500,6 @@ Module Structures
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.ndis_adapter_information.ndis_adapter_information
-            :members:
-            :undoc-members:
-
     .. autoclass:: ics.structures.op_eth_general_settings.op_eth_general_settings
             :members:
             :undoc-members:
@@ -706,11 +708,31 @@ Module Structures
             :members:
             :undoc-members:
 
+    .. autoclass:: ics.structures.s_spi_port_settings.s_spi_port_settings
+            :members:
+            :undoc-members:
+
     .. autoclass:: ics.structures.s_text_api_settings.s_text_api_settings
             :members:
             :undoc-members:
 
     .. autoclass:: ics.structures.s_vivid_can_settings.s_vivid_can_settings
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.s_wil_bridge_config.s_wil_bridge_config
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.s_wil_connection_settings.s_wil_connection_settings
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.s_wil_fault_servicing_settings.s_wil_fault_servicing_settings
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.s_wil_network_data_capture_settings.s_wil_network_data_capture_settings
             :members:
             :undoc-members:
 
@@ -810,6 +832,10 @@ Module Structures
             :members:
             :undoc-members:
 
+    .. autoclass:: ics.structures.srad_moon3_settings.srad_moon3_settings
+            :members:
+            :undoc-members:
+
     .. autoclass:: ics.structures.srad_pluto_settings.srad_pluto_settings
             :members:
             :undoc-members:
@@ -875,10 +901,6 @@ Module Structures
             :undoc-members:
 
     .. autoclass:: ics.structures.swcan_settings.swcan_settings
-            :members:
-            :undoc-members:
-
-    .. autoclass:: ics.structures.swil_bridge_config.swil_bridge_config
             :members:
             :undoc-members:
 
@@ -1016,7 +1038,7 @@ Module Variables
             :annotation: = 6
 
     .. py:data:: BUILD_DATETIME
-            :annotation: = Oct 27 2022 12:46:26
+            :annotation: = Apr  3 2023 12:37:17
 
     .. py:data:: CANFD_BRS_ENABLED
             :annotation: = 2
@@ -1058,7 +1080,7 @@ Module Variables
             :annotation: = 12
 
     .. py:data:: DEVICECOUNT_FOR_EXPLORER
-            :annotation: = 42
+            :annotation: = 43
 
     .. py:data:: DISABLE
             :annotation: = 1
@@ -1084,17 +1106,41 @@ Module Variables
     .. py:data:: ETHERNET_SETTINGS10G_FLAG_COMM_IN_USE
             :annotation: = -2147483648
 
+    .. py:data:: ETHERNET_SETTINGS10G_FLAG_CONFIG_NOT_ALLOWED
+            :annotation: = 32
+
     .. py:data:: ETHERNET_SETTINGS10G_FLAG_DEVICE_HOSTING_ENABLE
             :annotation: = 16
 
     .. py:data:: ETHERNET_SETTINGS10G_FLAG_FULL_DUPLEX
             :annotation: = 1
 
+    .. py:data:: ETHERNET_SETTINGS10G_FLAG_ICS_SFP
+            :annotation: = 64
+
+    .. py:data:: ETHERNET_SETTINGS10G_FLAG_LINK_MODE
+            :annotation: = 128
+
+    .. py:data:: ETHERNET_SETTINGS10G_FLAG_LINK_MODE_AUTO
+            :annotation: = 512
+
+    .. py:data:: ETHERNET_SETTINGS10G_FLAG_PHY_MODE
+            :annotation: = 256
+
     .. py:data:: ETHERNET_SETTINGS10G_FLAG_RTSP_ENABLE
             :annotation: = 8
 
     .. py:data:: ETHERNET_SETTINGS10G_FLAG_TCPIP_ENABLE
             :annotation: = 4
+
+    .. py:data:: ETHERNET_SETTINGS2_FLAG2_LINK_MODE
+            :annotation: = 1
+
+    .. py:data:: ETHERNET_SETTINGS2_FLAG2_LINK_MODE_AUTO
+            :annotation: = 4
+
+    .. py:data:: ETHERNET_SETTINGS2_FLAG2_PHY_MODE
+            :annotation: = 2
 
     .. py:data:: ETHERNET_SETTINGS2_FLAG_AUTO_NEG
             :annotation: = 2
@@ -1110,6 +1156,9 @@ Module Variables
 
     .. py:data:: ETHERNET_SETTINGS2_FLAG_FULL_DUPLEX
             :annotation: = 1
+
+    .. py:data:: ETHERNET_SETTINGS2_FLAG_ICS_SFP
+            :annotation: = 64
 
     .. py:data:: ETHERNET_SETTINGS2_FLAG_RTSP_ENABLE
             :annotation: = 8
@@ -1236,30 +1285,6 @@ Module Variables
 
     .. py:data:: JUPITER_PTP_ROLE_SLAVE
             :annotation: = 2
-
-    .. py:data:: LINK_SPEED_100MBPS_FULL_DUPLEX
-            :annotation: = 3
-
-    .. py:data:: LINK_SPEED_100MBPS_HALF_DUPLEX
-            :annotation: = 4
-
-    .. py:data:: LINK_SPEED_10MBPS_FULL_DUPLEX
-            :annotation: = 5
-
-    .. py:data:: LINK_SPEED_10MBPS_HALF_DUPLEX
-            :annotation: = 6
-
-    .. py:data:: LINK_SPEED_1GBPS_FULL_DUPLEX
-            :annotation: = 1
-
-    .. py:data:: LINK_SPEED_1GBPS_HALF_DUPLEX
-            :annotation: = 2
-
-    .. py:data:: LINK_SPEED_AUTO_NEGOTIATION
-            :annotation: = 0
-
-    .. py:data:: LINK_SPEED_COUNT
-            :annotation: = 7
 
     .. py:data:: LINUX_BOOT_ALLOWED
             :annotation: = 1
@@ -1396,6 +1421,9 @@ Module Variables
     .. py:data:: NEODEVICE_NEW_DEVICE_59
             :annotation: = 33
 
+    .. py:data:: NEODEVICE_NEW_DEVICE_FF
+            :annotation: = 37
+
     .. py:data:: NEODEVICE_OBD2_DEV
             :annotation: = 26
 
@@ -1416,6 +1444,9 @@ Module Variables
 
     .. py:data:: NEODEVICE_PLASMA
             :annotation: = 4096
+
+    .. py:data:: NEODEVICE_RADCOMET
+            :annotation: = 36
 
     .. py:data:: NEODEVICE_RADEPSILON
             :annotation: = 24
@@ -1883,7 +1914,7 @@ Module Variables
             :annotation: = 1
 
     .. py:data:: NUM_VALID_DEVICE_FEATURES
-            :annotation: = 16
+            :annotation: = 17
 
     .. py:data:: OPETH_FUNC_MEDIACONVERTER
             :annotation: = 1
@@ -1939,9 +1970,6 @@ Module Variables
     .. py:data:: PHYREG_READ
             :annotation: = 0
 
-    .. py:data:: PHYREG_RESERVED0
-            :annotation: = 4
-
     .. py:data:: PHYREG_RESERVED1
             :annotation: = 5
 
@@ -1953,6 +1981,9 @@ Module Variables
 
     .. py:data:: PHYREG_SUCCESS
             :annotation: = 0
+
+    .. py:data:: PHYREG_UNSUPPORTED_MDIO_CLAUSE
+            :annotation: = 4
 
     .. py:data:: PHYREG_WRITE
             :annotation: = 1
@@ -2481,6 +2512,12 @@ Module Variables
 
     .. py:data:: SLOW_MODE
             :annotation: = 1
+
+    .. py:data:: SPI_PORT_EXTERNAL
+            :annotation: = 1
+
+    .. py:data:: SPI_PORT_ONBOARD
+            :annotation: = 0
 
     .. py:data:: SPY_PROTOCOL_A2B
             :annotation: = 35

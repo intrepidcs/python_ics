@@ -138,7 +138,7 @@ def is_line_start_of_object(line):
     for regex in _start_of_obj_blacklist:
         if bool(regex.search(line)):
             return False
-    return bool(re.search('\btypedef struct$|struct$|struct \S*$|enum|union', line))
+    return bool(re.search('\btypedef struct$|struct$|struct \S*$|enum$|enum |union$|union ', line))
 
 
 # This contains all the objects that don't pass convert_to_ctype_object
@@ -161,7 +161,6 @@ def parse_object(f, pos=-1, pack_size=None, is_embedded=False):
     if pos is -1, don't reset position when finished
     """
     start_pos = f.tell()
-    opening_bracket_count = 0
     opening_bracket_count = 0
     try:
         # Read the first line and make sure we have a C Object
@@ -207,6 +206,7 @@ def parse_object(f, pos=-1, pack_size=None, is_embedded=False):
                     continue
                 opening_bracket_count += line.count('{')
                 opening_bracket_count -= line.count('}')
+                assert (opening_bracket_count >= 0)
                 # Determine if we are at the end of the struct
                 if opening_bracket_count == 0 and re.match('}.*;', line):
                     extra_names = ''.join(line.split()).strip('};').split(',')
@@ -271,14 +271,14 @@ def parse_struct_member(buffered_line):
     # uint8_t data[4 * 1024]; /* The data */
 
     # remove all unneeded whitespace
-    #print("DEBUG BEFORE:", buffered_line)
+    # print("DEBUG BEFORE:", buffered_line)
     # if len(buffered_line.split('\n')):
     #    new_buffered_line = ''
     #    for line in buffered_line.split('\n'):
     #        new_buffered_line += re.sub('{|union|}|;', '', line) + '\n'
     #    buffered_line = new_buffered_line
     buffered_line = re.sub("\s*\[", "[", ' '.join(buffered_line.split()))
-    #print("DEBUG AFTER:", buffered_line)
+    # print("DEBUG AFTER:", buffered_line)
 
     # Figure out if we are an array type and get the array length
     array_subsection = re.search('\[.*\]', buffered_line)
@@ -473,7 +473,7 @@ def format_file(filename):
     processed_fname = os.path.basename(filename)
     name, ext = os.path.splitext(processed_fname)
     processed_fname = f'{name}_processed{ext}'
-    #processed_fname = "icsnVC40_processed.h"
+    # processed_fname = "icsnVC40_processed.h"
     # Run it through the preprocessor
     # clang -E -P .\include\ics\icsnVC40.h -o output.h
     result = run(["clang", "-DEXTERNAL_PROJECT", "-E", "-P", filename, "-o", processed_fname], stdout=PIPE, stderr=PIPE)
@@ -597,14 +597,14 @@ def generate(filename='include/ics/icsnVC40.h'):
     except FileNotFoundError:
         pass
     ignore_names = [
-        '__fsid_t', '__darwin_pthread_handler_rec', 
+        '__fsid_t', '__darwin_pthread_handler_rec',
         '_mbstate_t', 'mbstate_t_', 'mbstatet_', 'Mbstatet_', '_Mbstatet',
         '_LONGDOUBLE', 'LONGDOUBLE_',
         '_opaque_pthread_attr_t', '_opaque_pthread_cond_t', '_opaque_pthread_condattr_t',
         '_opaque_pthread_mutex_t', '_opaque_pthread_mutexattr_t', '_opaque_pthread_once_t',
         '_opaque_pthread_rwlock_t', '_opaque_pthread_rwlockattr_t', '_opaque_pthread_t',
-        'crt_locale_pointers_', 'crt_locale_data_public_', '__crt_locale_data_public', 
-        'ldiv_t', 'lldiv_t', 'ldouble_', 'ldbl12_', 'div_t', 'crt_float_', 'crt_double_', 
+        'crt_locale_pointers_', 'crt_locale_data_public_', '__crt_locale_data_public',
+        'ldiv_t', 'lldiv_t', 'ldouble_', 'ldbl12_', 'div_t', 'crt_float_', 'crt_double_',
         'ndis_adapter_information',
         'NeoDevice', 'neo_device', 'NeoDeviceEx', 'neo_device_ex',
         'icsSpyMessage', 'icsSpyMessageJ1850', 'ics_spy_message', 'ics_spy_message_j1850']
@@ -651,7 +651,7 @@ def generate(filename='include/ics/icsnVC40.h'):
             fname = re.sub('(\.py)', '', file_name)
             r = re.compile('(' + fname + ')')
             if list(filter(r.match, ignore_names)):
-                #print("IGNORING:", fname)
+                # print("IGNORING:", fname)
                 continue
             f.write('    "')
             f.write(fname)
@@ -664,7 +664,7 @@ def generate(filename='include/ics/icsnVC40.h'):
             fname = re.sub('(\.py)', '', file_name)
             r = re.compile('(' + fname + ')')
             if list(filter(r.match, ignore_names)):
-                #print("IGNORING:", fname)
+                # print("IGNORING:", fname)
                 continue
             f.write(f'    "ics.structures.{fname}",\n')
         f.write(']\n\n')
@@ -739,7 +739,7 @@ def _write_c_object(f, c_object):
                     data_type = convert_to_ctype_object(member.data_type)
                     # If we aren't a valid ctypes data type we are probably a struct
                     if not data_type:
-                        #print(f"Warning: Couldn't find a valid ctype type for '{member.data_type}' in '{member.name}'")
+                        # print(f"Warning: Couldn't find a valid ctype type for '{member.data_type}' in '{member.name}'")
                         global NON_CTYPE_OBJ_NAMES
                         NON_CTYPE_OBJ_NAMES.append(member.data_type)
                         data_type = member.data_type
@@ -779,8 +779,8 @@ def _write_c_object(f, c_object):
 
 
 def generate_pyfile(c_object, path):
-    #name = get_preferred_struct_name(c_object.names)
-    #c_object.preferred_name = convert_to_snake_case(name)
+    # name = get_preferred_struct_name(c_object.names)
+    # c_object.preferred_name = convert_to_snake_case(name)
     # Make the fname and the path
     fname = f'{c_object.preferred_name}.py'
     fname_with_path = os.path.normpath(os.path.join(path, fname))
@@ -844,34 +844,15 @@ def generate_all_files():
     import os
     import pathlib
 
-    try:
-        if sys.argv[0] == 'setup.py':
-            raise IndexError
-        # Grab the filename from the command line
-        filename = sys.argv[1]
-        filename = os.path.normpath(filename)
-        print(f"Parsing '{filename}'...")
-    except IndexError as _:
-        # use our default path if it isn't supplied
-        filename = 'include/ics/icsnVC40.h'
-    if not pathlib.Path(filename).exists():
-        raise FileNotFoundError(filename)
-    generate(filename)
-
-    # Internal Header
-    try:
-        if sys.argv[0] == 'setup.py':
-            raise IndexError
-        # Grab the filename from the command line
-        filename_internal = sys.argv[2]
-        filename_internal = os.path.normpath(filename_internal)
-        print(f"Parsing '{filename_internal}'...")
-    except IndexError as _:
-        # use our default path if it isn't supplied
-        filename_internal = 'include/ics/icsnVC40Internal.h'
-    if pathlib.Path(filename_internal).exists():
-        print("WARNING: Generating internal header!")
-        generate(filename_internal)
+    filenames = ('icsnVC40.h', 'icsnVC40Internal.h')
+    for filename in filenames:
+        path = pathlib.Path('include/ics/')
+        path = path.joinpath(filename)
+        if path.exists():
+            if 'Internal' in str(filename):
+                print("WARNING: Generating internal header!")
+            print(f"Parsing {str(path)}...")
+            generate(str(path))
 
 
 if __name__ == '__main__':

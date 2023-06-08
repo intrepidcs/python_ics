@@ -12,8 +12,28 @@ from ics.structures.iso9141_keyword2000_settings import *
 from ics.structures.lin_settings import *
 from ics.structures.s_text_api_settings import *
 from ics.structures.srad_gptp_settings_s import *
-from ics.structures.swcan_settings import *
 from ics.structures.timesync_icshardware_settings import *
+
+
+class Nameless39639(ctypes.Structure):
+    _pack_ = 2
+    _fields_ = [
+        ('network_enables', ctypes.c_uint16),
+        ('network_enables_2', ctypes.c_uint16),
+        ('network_enables_3', ctypes.c_uint16),
+        ('network_enables_4', ctypes.c_uint16),
+    ]
+
+
+
+class network_enables(ctypes.Union):
+    _pack_ = 2
+    _anonymous_  = ('Nameless39639',)
+    _fields_ = [
+        ('word', ctypes.c_uint64),
+        ('Nameless39639', Nameless39639),
+    ]
+
 
 
 class flags(ctypes.Structure):
@@ -30,7 +50,7 @@ class flags(ctypes.Structure):
 
 
 
-class s_fire3_settings(ctypes.Structure):
+class s_red2_settings(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
         ('perf_en', ctypes.c_uint16),
@@ -40,8 +60,8 @@ class s_fire3_settings(ctypes.Structure):
         ('iso15765_separation_time_offset', ctypes.c_int16),
         ('slaveVnetA', ctypes.c_uint16),
         ('reserved', ctypes.c_uint32),
-        ('termination_enables_1', ctypes.c_uint64),
-        ('network_enables', ctypes.c_uint64),
+        ('termination_enables', ctypes.c_uint64),
+        ('network_enables', network_enables),
         ('pwr_man_timeout', ctypes.c_uint32),
         ('can1', CAN_SETTINGS),
         ('canfd1', CANFD_SETTINGS),
@@ -84,53 +104,9 @@ class s_fire3_settings(ctypes.Structure):
         ('ethernet2_2', ETHERNET_SETTINGS2),
         ('os_settings', Fire3LinuxSettings),
         ('gPTP', RAD_GPTP_SETTINGS),
-        ('can9', CAN_SETTINGS),
-        ('canfd9', CANFD_SETTINGS),
-        ('can10', CAN_SETTINGS),
-        ('canfd10', CANFD_SETTINGS),
-        ('can11', CAN_SETTINGS),
-        ('canfd11', CANFD_SETTINGS),
-        ('can12', CAN_SETTINGS),
-        ('canfd12', CANFD_SETTINGS),
-        ('can13', CAN_SETTINGS),
-        ('canfd13', CANFD_SETTINGS),
-        ('can14', CAN_SETTINGS),
-        ('canfd14', CANFD_SETTINGS),
-        ('can15', CAN_SETTINGS),
-        ('canfd15', CANFD_SETTINGS),
-        ('can16', CAN_SETTINGS),
-        ('canfd16', CANFD_SETTINGS),
-        ('swcan1', SWCAN_SETTINGS),
-        ('swcan2', SWCAN_SETTINGS),
-        ('lsftcan1', CAN_SETTINGS),
-        ('lsftcan2', CAN_SETTINGS),
-        ('ethernet_3', ETHERNET_SETTINGS),
-        ('ethernet2_3', ETHERNET_SETTINGS2),
-        ('lin3', LIN_SETTINGS),
-        ('lin4', LIN_SETTINGS),
-        ('lin5', LIN_SETTINGS),
-        ('lin6', LIN_SETTINGS),
-        ('lin7', LIN_SETTINGS),
-        ('lin8', LIN_SETTINGS),
-        ('iso9141_kwp_settings_3', ISO9141_KEYWORD2000_SETTINGS),
-        ('iso_parity_3', ctypes.c_uint16),
-        ('iso_msg_termination_3', ctypes.c_uint16),
-        ('iso9141_kwp_settings_4', ISO9141_KEYWORD2000_SETTINGS),
-        ('iso_parity_4', ctypes.c_uint16),
-        ('iso_msg_termination_4', ctypes.c_uint16),
-        ('iso9141_kwp_settings_5', ISO9141_KEYWORD2000_SETTINGS),
-        ('iso_parity_5', ctypes.c_uint16),
-        ('iso_msg_termination_5', ctypes.c_uint16),
-        ('iso9141_kwp_settings_6', ISO9141_KEYWORD2000_SETTINGS),
-        ('iso_parity_6', ctypes.c_uint16),
-        ('iso_msg_termination_6', ctypes.c_uint16),
-        ('selectable_network_1', ctypes.c_uint16),
-        ('selectable_network_2', ctypes.c_uint16),
-        ('network_enables_2', ctypes.c_uint64),
-        ('termination_enables_2', ctypes.c_uint64),
     ]
 
 
-_SFire3Settings = s_fire3_settings
-SFire3Settings = s_fire3_settings
+_SRed2Settings = s_red2_settings
+SRed2Settings = s_red2_settings
 
