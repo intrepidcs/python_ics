@@ -1,4 +1,4 @@
-#include "methods.h"
+﻿#include "methods.h"
 #include "exceptions.h"
 #include "dll.h"
 #include "defines.h"
@@ -3299,9 +3299,8 @@ PyObject* meth_get_phy_firmware_version(PyObject* self, PyObject* args)
 {
 	PyObject* obj = NULL;
 	char phy_indx = 0;
-	int phy_version = NULL;
-	int function_error = 1;
-	if (!PyArg_ParseTuple(args, arg_parse("Oi|ii:", __FUNCTION__), &obj, &phy_indx, &phy_version, &function_error))
+    bool check_function_error = true;
+	if (!PyArg_ParseTuple(args, arg_parse("Oi|b:", __FUNCTION__), &obj, &phy_indx, &check_function_error))
 	{
 		return NULL;
 	}
@@ -3320,17 +3319,24 @@ PyObject* meth_get_phy_firmware_version(PyObject* self, PyObject* args)
 			char buffer[512];
 			return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
 		}
+        // int __stdcall icsneoGetPhyFwVersion(void* hObject, unsigned char phyIndx, unsigned int* phyFwVers, int* errorCode)
+        ice::Function<int __stdcall (ICS_HANDLE, unsigned char, unsigned int*, int*)> icsneoGetPhyFwVersion(lib, "icsneoGetPhyFwVersion");
 
-		ice::Function<int __stdcall (ICS_HANDLE, char, int*, int*)> icsneoGetPhyFwVersion(lib, "icsneoGetPhyFwVersion");
-
-        Py_BEGIN_ALLOW_THREADS
-            if (!icsneoGetPhyFwVersion(handle, phy_indx, &phy_version, &function_error)) {
-                Py_BLOCK_THREADS
-                return set_ics_exception(exception_runtime_error(), "icsneoGetPhyFwVersion() Failed");
-            }
+        unsigned int phy_version = 0;
+	    int function_error = 0;
+        Py_BEGIN_ALLOW_THREADS		
+        if (!icsneoGetPhyFwVersion(handle, phy_indx, &phy_version, &function_error)) {
+            Py_BLOCK_THREADS
+            return set_ics_exception(exception_runtime_error(), "icsneoGetPhyFwVersion() Failed");
+        }
         Py_END_ALLOW_THREADS
-        return Py_BuildValue("i", phy_version);
-		
+        // Raise an exception on failed error check
+        if (check_function_error && (function_error != PhyOperationSuccess)) {
+            std::stringstream ss;
+            ss << "icsneoGetPhyFwVersion() function error: '" << function_error << "'";
+            return set_ics_exception_dev(exception_runtime_error(), obj, (char*)ss.str().c_str());
+        }
+        return Py_BuildValue("Ii", phy_version, function_error);
 	}
 	catch (ice::Exception& ex)
 	{

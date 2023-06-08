@@ -1264,14 +1264,16 @@ PyObject* meth_generic_api_get_status(PyObject* self, PyObject* args);
     "\n" \
 
 #define _DOC_GET_PHY_FIRMWARE_VERSION \
-    MODULE_NAME ".get_phy_firmware_version(device, phy_index)\n" \
+    MODULE_NAME ".get_phy_firmware_version(device, phy_index, check_function_error)\n" \
     "\n" \
-    "Gets PHY Firmware version as int. If not sure, don't use this method\n" \
+    "Gets PHY Firmware version. If not sure, don't use this method\n" \
     "\n" \
     "Args:\n" \
     "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`\n\n" \
     "\n" \
     "\tphy_index (:class:`int`): :class:`int`: phy Index enum.\n\n" \
+    "\n" \
+    "\tcheck_function_error (:class:`bool`): :class:`bool`: If True, raises an exception if function_error isn't successful. Set this to False if you want to parse the error yourself.\n\n" \
     "\n" \
     "Raises:\n" \
     "\t:class:`" MODULE_NAME ".RuntimeError`\n" \
