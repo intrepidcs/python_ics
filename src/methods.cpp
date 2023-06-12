@@ -104,6 +104,8 @@ char* neodevice_to_string(unsigned long type)
             return "RAD-Gigastar";
         case NEODEVICE_RED2:
             return "neoVI RED 2";
+        case NEODEVICE_FIRE2_REDLINE:
+            return "neoVI FIRE 2 Redline";
         case NEODEVICE_ETHER_BADGE:
             return "EtherBADGE";
         case NEODEVICE_RAD_A2B:
@@ -111,6 +113,7 @@ char* neodevice_to_string(unsigned long type)
         case NEODEVICE_RADEPSILON:
             return "RAD-Epsilon";
         case NEODEVICE_OBD2_SIM_DOIP:
+        case NEODEVICE_OBD2_SIM:
             return "neoOBD2-SIM";
         case NEODEVICE_OBD2_DEV:
             return "neoOBD2-DEV";
@@ -126,11 +129,15 @@ char* neodevice_to_string(unsigned long type)
             return "RAD-wBMS";
         case NEODEVICE_RADMOON3:
             return "RAD-Moon3";
+        case NEODEVICE_RADCOMET:
+            return "RAD-Comet";
+        case NEODEVICE_FIRE3_FLEXRAY:
+            return "neoVI FIRE 3 Flexray";
         case NEODEVICE_RED:
             return "neoVI RED";
         case NEODEVICE_ECU:
             return "neoECU";
-        case NEODEVICE_IEVB:
+        case NEODEVICE_IEVB: //also NEODEVICE_NEOECUCHIP
             return "IEVB";
         case NEODEVICE_PENDANT:
             return "Pendant";
@@ -138,13 +145,13 @@ char* neodevice_to_string(unsigned long type)
             return "neoOBD2 PRO";
         case NEODEVICE_ECUCHIP_UART:
             return "ECUCHIP";
-        case NEODEVICE_PLASMA:
+        case NEODEVICE_PLASMA: //also NEODEVICE_ANY_PLASMA
             return "neoVI PLASMA";
         case NEODEVICE_NEOANALOG:
             return "neoAnalog";
         case NEODEVICE_CT_OBD:
             return "neoOBD CT";
-        case NEODEVICE_ION:
+        case NEODEVICE_ION: //also NEODEVICE_ANY_ION
             return "neoVI ION";
         case NEODEVICE_RADSTAR:
             return "RAD-Star";
@@ -168,6 +175,12 @@ char* neodevice_to_string(unsigned long type)
             return "RAD-Star 2";
         case NEODEVICE_VIVIDCAN:
             return "VividCAN";
+        case NEODEVICE_DONT_REUSE0:
+        case NEODEVICE_DONT_REUSE1:
+        case NEODEVICE_DONT_REUSE2:
+        case NEODEVICE_DONT_REUSE3:
+        default:
+            return "Unknown";
     };
     return "Intrepid Device";
 }
