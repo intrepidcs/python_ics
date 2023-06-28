@@ -336,6 +336,10 @@ Module Structures
             :members:
             :undoc-members:
 
+    .. autoclass:: ics.structures.ethernet10_t1_s_settings.ethernet10_t1_s_settings
+            :members:
+            :undoc-members:
+
     .. autoclass:: ics.structures.ethernet_network_status_t.ethernet_network_status_t
             :members:
             :undoc-members:
@@ -380,11 +384,19 @@ Module Structures
             :members:
             :undoc-members:
 
+    .. autoclass:: ics.structures.generic_api_data_old.generic_api_data_old
+            :members:
+            :undoc-members:
+
     .. autoclass:: ics.structures.generic_api_selector.generic_api_selector
             :members:
             :undoc-members:
 
     .. autoclass:: ics.structures.generic_api_status.generic_api_status
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.generic_binary_status.generic_binary_status
             :members:
             :undoc-members:
 
@@ -464,6 +476,10 @@ Module Structures
             :members:
             :undoc-members:
 
+    .. autoclass:: ics.structures.ics_spy_message_mdio.ics_spy_message_mdio
+            :members:
+            :undoc-members:
+
     .. autoclass:: ics.structures.ics_spy_message_vsb.ics_spy_message_vsb
             :members:
             :undoc-members:
@@ -509,6 +525,10 @@ Module Structures
             :undoc-members:
 
     .. autoclass:: ics.structures.op_eth_settings.op_eth_settings
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.phy_error_type.phy_error_type
             :members:
             :undoc-members:
 
@@ -560,15 +580,15 @@ Module Structures
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_ext_sub_cmd_comm.s_ext_sub_cmd_comm
-            :members:
-            :undoc-members:
-
     .. autoclass:: ics.structures.s_ext_sub_cmd_hdr.s_ext_sub_cmd_hdr
             :members:
             :undoc-members:
 
     .. autoclass:: ics.structures.s_extended_data_flash_header.s_extended_data_flash_header
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.s_fire3_flexray_settings.s_fire3_flexray_settings
             :members:
             :undoc-members:
 
@@ -704,7 +724,15 @@ Module Structures
             :members:
             :undoc-members:
 
+    .. autoclass:: ics.structures.s_red2_settings.s_red2_settings
+            :members:
+            :undoc-members:
+
     .. autoclass:: ics.structures.s_red_settings.s_red_settings
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.s_spi_port_setting.s_spi_port_setting
             :members:
             :undoc-members:
 
@@ -789,6 +817,10 @@ Module Structures
             :undoc-members:
 
     .. autoclass:: ics.structures.spy_filter_long.spy_filter_long
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.srad_comet_settings.srad_comet_settings
             :members:
             :undoc-members:
 
@@ -956,6 +988,10 @@ Module Structures
             :members:
             :undoc-members:
 
+    .. autoclass:: ics.structures.wbms_gateway_settings.wbms_gateway_settings
+            :members:
+            :undoc-members:
+
 
 
 ============================================================
@@ -1038,7 +1074,7 @@ Module Variables
             :annotation: = 6
 
     .. py:data:: BUILD_DATETIME
-            :annotation: = Apr  3 2023 12:37:17
+            :annotation: = Jun 28 2023 15:31:51
 
     .. py:data:: CANFD_BRS_ENABLED
             :annotation: = 2
@@ -1080,7 +1116,7 @@ Module Variables
             :annotation: = 12
 
     .. py:data:: DEVICECOUNT_FOR_EXPLORER
-            :annotation: = 43
+            :annotation: = 46
 
     .. py:data:: DISABLE
             :annotation: = 1
@@ -1097,8 +1133,29 @@ Module Variables
     .. py:data:: DISK_STRUCTURE_FLAG_FULL_FORMAT
             :annotation: = 1
 
+    .. py:data:: DRIVER_MASK
+            :annotation: = 192
+
+    .. py:data:: DRIVER_USB1
+            :annotation: = 64
+
+    .. py:data:: DRIVER_USB2
+            :annotation: = 128
+
+    .. py:data:: DRIVER_USB3
+            :annotation: = 192
+
     .. py:data:: ETHERNET10G_SETTINGS_SIZE
             :annotation: = 24
+
+    .. py:data:: ETHERNET10T1S_SETTINGS_FLAG_ENABLE_PLCA
+            :annotation: = 1
+
+    .. py:data:: ETHERNET10T1S_SETTINGS_FLAG_TERMINATION
+            :annotation: = 2
+
+    .. py:data:: ETHERNET10T1S_SETTINGS_SIZE
+            :annotation: = 12
 
     .. py:data:: ETHERNET_SETTINGS10G_FLAG_AUTO_NEG
             :annotation: = 2
@@ -1193,14 +1250,62 @@ Module Variables
     .. py:data:: FAST_MODE
             :annotation: = 3
 
+    .. py:data:: FIRE2_REPORT_EMISC1_ANALOG
+            :annotation: = 32
+
+    .. py:data:: FIRE2_REPORT_EMISC1_DIGITAL
+            :annotation: = 2
+
+    .. py:data:: FIRE2_REPORT_EMISC2_ANALOG
+            :annotation: = 64
+
+    .. py:data:: FIRE2_REPORT_EMISC2_DIGITAL
+            :annotation: = 4
+
+    .. py:data:: FIRE2_REPORT_GPS
+            :annotation: = 1024
+
+    .. py:data:: FIRE2_REPORT_MISC5_DIGITAL
+            :annotation: = 8
+
+    .. py:data:: FIRE2_REPORT_MISC6_DIGITAL
+            :annotation: = 16
+
+    .. py:data:: FIRE2_REPORT_PERIODIC
+            :annotation: = 1
+
+    .. py:data:: FIRE2_REPORT_PWM_IN
+            :annotation: = 512
+
+    .. py:data:: FIRE2_REPORT_TEMP_ANALOG
+            :annotation: = 256
+
+    .. py:data:: FIRE2_REPORT_VBATT_ANALOG
+            :annotation: = 128
+
+    .. py:data:: FIRE3_REPORT_ORIENTATION
+            :annotation: = 2048
+
     .. py:data:: GENERIC_API_DATA_BUFFER_SIZE
             :annotation: = 513
+
+    .. py:data:: GENERIC_BINARY_STATUS_ERROR_ANY_MASK
+            :annotation: = 7
+
+    .. py:data:: GENERIC_BINARY_STATUS_ERROR_BINARY_EMPTY
+            :annotation: = 4
+
+    .. py:data:: GENERIC_BINARY_STATUS_ERROR_OVERSIZE
+            :annotation: = 2
+
+    .. py:data:: GENERIC_BINARY_STATUS_ERROR_UNKNOWN_BINARY
+            :annotation: = 1
 
     .. py:data:: GET_SUPPORTED_FEATURES_COMMAND_VERSION
             :annotation: = 1
 
     .. py:data:: GLOBAL_SETTINGS_SIZE
-            :annotation: = 942
+            :annotation: = 1478
 
     .. py:data:: GS_VERSION
             :annotation: = 5
@@ -1394,6 +1499,9 @@ Module Variables
     .. py:data:: NEODEVICE_FIRE3
             :annotation: = 15
 
+    .. py:data:: NEODEVICE_FIRE3_FLEXRAY
+            :annotation: = 37
+
     .. py:data:: NEODEVICE_FLEX
             :annotation: = 134217728
 
@@ -1420,9 +1528,6 @@ Module Variables
 
     .. py:data:: NEODEVICE_NEW_DEVICE_59
             :annotation: = 33
-
-    .. py:data:: NEODEVICE_NEW_DEVICE_FF
-            :annotation: = 37
 
     .. py:data:: NEODEVICE_OBD2_DEV
             :annotation: = 26
@@ -1505,6 +1610,9 @@ Module Variables
     .. py:data:: NEODEVICE_RED2
             :annotation: = 20
 
+    .. py:data:: NEODEVICE_RED2_OEM
+            :annotation: = 38
+
     .. py:data:: NEODEVICE_UNKNOWN
             :annotation: = 0
 
@@ -1545,7 +1653,7 @@ Module Variables
             :annotation: = 0.065536
 
     .. py:data:: NEOVI_3G_MAX_SETTINGS_SIZE
-            :annotation: = 942
+            :annotation: = 1478
 
     .. py:data:: NEOVI_COMMTYPE_FIRE_USB
             :annotation: = 5
@@ -1663,6 +1771,30 @@ Module Variables
 
     .. py:data:: NETID_DEVICE_STATUS
             :annotation: = 513
+
+    .. py:data:: NETID_DWCAN_09
+            :annotation: = 534
+
+    .. py:data:: NETID_DWCAN_10
+            :annotation: = 535
+
+    .. py:data:: NETID_DWCAN_11
+            :annotation: = 536
+
+    .. py:data:: NETID_DWCAN_12
+            :annotation: = 537
+
+    .. py:data:: NETID_DWCAN_13
+            :annotation: = 538
+
+    .. py:data:: NETID_DWCAN_14
+            :annotation: = 539
+
+    .. py:data:: NETID_DWCAN_15
+            :annotation: = 540
+
+    .. py:data:: NETID_DWCAN_16
+            :annotation: = 541
 
     .. py:data:: NETID_ETHERNET
             :annotation: = 93
@@ -1790,6 +1922,12 @@ Module Variables
     .. py:data:: NETID_LIN6
             :annotation: = 98
 
+    .. py:data:: NETID_LIN_07
+            :annotation: = 542
+
+    .. py:data:: NETID_LIN_08
+            :annotation: = 543
+
     .. py:data:: NETID_LSFTCAN
             :annotation: = 4
 
@@ -1801,6 +1939,30 @@ Module Variables
 
     .. py:data:: NETID_MAX
             :annotation: = 100
+
+    .. py:data:: NETID_MDIO_01
+            :annotation: = 545
+
+    .. py:data:: NETID_MDIO_02
+            :annotation: = 546
+
+    .. py:data:: NETID_MDIO_03
+            :annotation: = 547
+
+    .. py:data:: NETID_MDIO_04
+            :annotation: = 548
+
+    .. py:data:: NETID_MDIO_05
+            :annotation: = 549
+
+    .. py:data:: NETID_MDIO_06
+            :annotation: = 550
+
+    .. py:data:: NETID_MDIO_07
+            :annotation: = 551
+
+    .. py:data:: NETID_MDIO_08
+            :annotation: = 552
 
     .. py:data:: NETID_MOST
             :annotation: = 51
@@ -1871,6 +2033,9 @@ Module Variables
     .. py:data:: NETID_SPI1
             :annotation: = 72
 
+    .. py:data:: NETID_SPI2
+            :annotation: = 544
+
     .. py:data:: NETID_SWCAN
             :annotation: = 3
 
@@ -1900,6 +2065,9 @@ Module Variables
 
     .. py:data:: NETID_WBMS
             :annotation: = 532
+
+    .. py:data:: NETID_WBMS2
+            :annotation: = 533
 
     .. py:data:: NORMAL
             :annotation: = 0
@@ -2035,6 +2203,9 @@ Module Variables
 
     .. py:data:: RADEPSILON_MAX_PHY
             :annotation: = 18
+
+    .. py:data:: RADEPSILON_NUM_PORTS
+            :annotation: = 9
 
     .. py:data:: RADJUPITER_NUM_PORTS
             :annotation: = 8
@@ -2513,10 +2684,25 @@ Module Variables
     .. py:data:: SLOW_MODE
             :annotation: = 1
 
+    .. py:data:: SPI_MODE_MASTER
+            :annotation: = 0
+
+    .. py:data:: SPI_MODE_PMS_EMULATION
+            :annotation: = 2
+
+    .. py:data:: SPI_MODE_SLAVE
+            :annotation: = 1
+
     .. py:data:: SPI_PORT_EXTERNAL
             :annotation: = 1
 
     .. py:data:: SPI_PORT_ONBOARD
+            :annotation: = 0
+
+    .. py:data:: SPI_TYPE_RAW
+            :annotation: = 1
+
+    .. py:data:: SPI_TYPE_WIL
             :annotation: = 0
 
     .. py:data:: SPY_PROTOCOL_A2B
@@ -2602,6 +2788,9 @@ Module Variables
 
     .. py:data:: SPY_PROTOCOL_LIN
             :annotation: = 12
+
+    .. py:data:: SPY_PROTOCOL_MDIO
+            :annotation: = 37
 
     .. py:data:: SPY_PROTOCOL_MOST
             :annotation: = 17
@@ -2696,9 +2885,6 @@ Module Variables
     .. py:data:: SPY_STATUS2_I2C_ERR_TIMEOUT
             :annotation: = 2097152
 
-    .. py:data:: SPY_STATUS2_I2C_NODE_FAULT
-            :annotation: = 4194304
-
     .. py:data:: SPY_STATUS2_ISO_FRAME_ERROR
             :annotation: = 134217728
 
@@ -2741,6 +2927,36 @@ Module Variables
     .. py:data:: SPY_STATUS2_LONG_MESSAGE
             :annotation: = 8
 
+    .. py:data:: SPY_STATUS2_MDIO_CLAUSE45
+            :annotation: = 536870912
+
+    .. py:data:: SPY_STATUS2_MDIO_ERR_TIMEOUT
+            :annotation: = 2097152
+
+    .. py:data:: SPY_STATUS2_MDIO_INVALID_BUS
+            :annotation: = 8388608
+
+    .. py:data:: SPY_STATUS2_MDIO_INVALID_PHYADDR
+            :annotation: = 16777216
+
+    .. py:data:: SPY_STATUS2_MDIO_INVALID_REGADDR
+            :annotation: = 33554432
+
+    .. py:data:: SPY_STATUS2_MDIO_JOB_CANCELLED
+            :annotation: = 4194304
+
+    .. py:data:: SPY_STATUS2_MDIO_OVERFLOW
+            :annotation: = 268435456
+
+    .. py:data:: SPY_STATUS2_MDIO_READ
+            :annotation: = 1073741824
+
+    .. py:data:: SPY_STATUS2_MDIO_UNSUPPORTED_CLAUSE
+            :annotation: = 67108864
+
+    .. py:data:: SPY_STATUS2_MDIO_UNSUPPORTED_OPCODE
+            :annotation: = 134217728
+
     .. py:data:: SPY_STATUS2_MOST_CHANGED_PAR
             :annotation: = -2147483648
 
@@ -2768,9 +2984,6 @@ Module Variables
     .. py:data:: SPY_STATUS2_MOST_PACKET_DATA
             :annotation: = 2097152
 
-    .. py:data:: SPY_STATUS2_MOST_STATUS
-            :annotation: = 4194304
-
     .. py:data:: SPY_STATUS2_MOST_TOO_SHORT
             :annotation: = 268435456
 
@@ -2780,7 +2993,7 @@ Module Variables
     .. py:data:: SPY_STATUS2_VALUE_IS_BOOLEAN
             :annotation: = 2
 
-    .. py:data:: SPY_STATUS2_WBMS_NODE_DISCONNECTED
+    .. py:data:: SPY_STATUS2_WBMS_API_IS_CALLBACK
             :annotation: = 2097152
 
     .. py:data:: SPY_STATUS3_CANFD_BRS
@@ -2951,6 +3164,9 @@ Module Variables
     .. py:data:: SWCAN_SETTINGS_SIZE
             :annotation: = 14
 
+    .. py:data:: TCP_SUPPORTED
+            :annotation: = 32
+
     .. py:data:: TIMESYNC_ICSHARDWARE_SETTINGS_SIZE
             :annotation: = 4
 
@@ -2965,6 +3181,18 @@ Module Variables
 
     .. py:data:: VNETBITS_FEATURE_DISABLE_USB_CHECK
             :annotation: = 2
+
+    .. py:data:: WBMS_GATEWAY_NETWORK_DWCAN_01
+            :annotation: = 1
+
+    .. py:data:: WBMS_GATEWAY_NETWORK_DWCAN_02
+            :annotation: = 2
+
+    .. py:data:: WBMS_GATEWAY_NETWORK_NONE
+            :annotation: = 0
+
+    .. py:data:: WBMS_GATEWAY_NETWORK_UDP_MULTICAST
+            :annotation: = 3
 
     .. py:data:: WIFI_ANTENNA_EXTERNAL
             :annotation: = 1
