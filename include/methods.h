@@ -1873,7 +1873,7 @@ extern "C"
                 "\n"
 
 #define _DOC_FLASH_PHY_FIRMWARE                                                                                        \
-    MODULE_NAME ".flash_phy_firmware(device, data, phy_index)\n"                                                       \
+    MODULE_NAME ".flash_phy_firmware(device, data, phy_index[, check_success])\n"                                      \
                 "\n"                                                                                                   \
                 "Flashes PHY Firmware. If not sure, don't use this method\n"                                           \
                 "\n"                                                                                                   \
@@ -1884,6 +1884,9 @@ extern "C"
                 "\tdata (:class:`bytes`): :class:`bytes`: data of the firmware binary.\n\n"                            \
                 "\n"                                                                                                   \
                 "\tphy_index (:class:`int`): :class:`int`: phy Index enum.\n\n"                                        \
+                "\n"                                                                                                   \
+                "\n"                                                                                                   \
+                "\tcheck_success (:class:`bool`): :class:`bool`: Optional, raises an exception if not successful \n\n" \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
@@ -2021,7 +2024,8 @@ static PyMethodDef IcsMethods[] = {
                           meth_load_default_settings,
                           METH_VARARGS,
                           _DOC_LOAD_DEFAULT_SETTINGS),
-    //_EZ_ICS_STRUCT_METHOD("spy_message_to_j1850", METH_spy_message_to_j1850, METH_VARARGS, "Accepts a " MODULE_NAME
+    //_EZ_ICS_STRUCT_METHOD("spy_message_to_j1850", METH_spy_message_to_j1850, METH_VARARGS, "Accepts a "
+    // MODULE_NAME
     //"."
     // SPY_MESSAGE_OBJECT_NAME ", and returns a " MODULE_NAME "." SPY_MESSAGE_J1850_OBJECT_NAME ". Exception on
     // error."),

@@ -137,7 +137,7 @@ char* neodevice_to_string(unsigned long type)
             return "neoVI RED";
         case NEODEVICE_ECU:
             return "neoECU";
-        case NEODEVICE_IEVB: //also NEODEVICE_NEOECUCHIP
+        case NEODEVICE_IEVB: // also NEODEVICE_NEOECUCHIP
             return "IEVB";
         case NEODEVICE_PENDANT:
             return "Pendant";
@@ -145,13 +145,13 @@ char* neodevice_to_string(unsigned long type)
             return "neoOBD2 PRO";
         case NEODEVICE_ECUCHIP_UART:
             return "ECUCHIP";
-        case NEODEVICE_PLASMA: //also NEODEVICE_ANY_PLASMA
+        case NEODEVICE_PLASMA: // also NEODEVICE_ANY_PLASMA
             return "neoVI PLASMA";
         case NEODEVICE_NEOANALOG:
             return "neoAnalog";
         case NEODEVICE_CT_OBD:
             return "neoOBD CT";
-        case NEODEVICE_ION: //also NEODEVICE_ANY_ION
+        case NEODEVICE_ION: // also NEODEVICE_ANY_ION
             return "neoVI ION";
         case NEODEVICE_RADSTAR:
             return "RAD-Star";
@@ -3277,8 +3277,8 @@ PyObject* meth_flash_phy_firmware(PyObject* self, PyObject* args)
     PyObject* obj = NULL;
     char phy_indx = 0;
     PyObject* bytes_obj = NULL;
-    int function_error = 1;
-    if (!PyArg_ParseTuple(args, arg_parse("OiO|i:", __FUNCTION__), &obj, &phy_indx, &bytes_obj, &function_error)) {
+    bool check_success = true;
+    if (!PyArg_ParseTuple(args, arg_parse("OiO|b:", __FUNCTION__), &obj, &phy_indx, &bytes_obj, &check_success)) {
         return NULL;
     }
 
@@ -3290,30 +3290,80 @@ PyObject* meth_flash_phy_firmware(PyObject* self, PyObject* args)
                                  "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
     }
     ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
-
+    // Convert the object to a bytes object
+    PyObject* bytes = PyBytes_FromObject(bytes_obj);
+    // Grab the byte size
+    Py_ssize_t bsize = PyBytes_Size(bytes);
+    // Grab the data out of the bytes
+    unsigned char* bytes_str = (unsigned char*)PyBytes_AsString(bytes);
+    if (!bytes_str)
+        return NULL;
     try {
         ice::Library* lib = dll_get_library();
         if (!lib) {
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
-
-        ice::Function<int __stdcall(ICS_HANDLE, char, char*, size_t, int*)> icsneoFlashPhyFirmware(
+        int function_error = (int)PhyOperationError;
+        // int __stdcall icsneoFlashPhyFirmware(void* hObject, unsigned char phyIndx, unsigned char* fileData, size_t
+        // fileDataSize, int* errorCode)
+        ice::Function<int __stdcall(ICS_HANDLE, unsigned char, unsigned char*, size_t, int*)> icsneoFlashPhyFirmware(
             lib, "icsneoFlashPhyFirmware");
-        // Convert the object to a bytes object
-        PyObject* bytes = PyBytes_FromObject(bytes_obj);
-        // Grab the byte size
-        Py_ssize_t bsize = PyBytes_Size(bytes);
-        // Grab the data out of the bytes
-        char* bytes_str = PyBytes_AsString(bytes);
-        if (!bytes_str)
-            return NULL;
-
         Py_BEGIN_ALLOW_THREADS;
         if (!icsneoFlashPhyFirmware(handle, phy_indx, bytes_str, bsize, &function_error)) {
-            Py_BLOCK_THREADS return set_ics_exception(exception_runtime_error(), "icsneoFlashPhyFirmware() Failed");
+            Py_BLOCK_THREADS;
+            return set_ics_exception(exception_runtime_error(), "icsneoFlashPhyFirmware() Failed");
         }
-        Py_END_ALLOW_THREADS return Py_BuildValue("i", function_error);
+        // check the return value to make sure we are good
+        if (check_success && function_error != PhyOperationSuccess) {
+            std::stringstream ss;
+            ss << "icsneoFlashPhyFirmware() Failed with error code: " << function_error << " (";
+            switch (function_error) {
+                case PhyOperationError:
+                    ss << "PhyOperationError";
+                    break;
+                case PhyOperationSuccess:
+                    ss << "PhyOperationSuccess";
+                    break;
+                case PhyFlashingInitError:
+                    ss << "PhyFlashingInitError";
+                    break;
+                case PhyFlashingEraseError:
+                    ss << "PhyFlashingEraseError";
+                    break;
+                case PhyFlashingWriteError:
+                    ss << "PhyFlashingWriteError";
+                    break;
+                case PhyFlashingReadError:
+                    ss << "PhyFlashingReadError";
+                    break;
+                case PhyFlashingVerifyError:
+                    ss << "PhyFlashingVerifyError";
+                    break;
+                case PhyFlashingDeinitError:
+                    ss << "PhyFlashingDeinitError";
+                    break;
+                case PhyFlashingInvalidHardware:
+                    ss << "PhyFlashingInvalidHardware";
+                    break;
+                case PhyFlashingInvalidDataFile:
+                    ss << "PhyFlashingInvalidDataFile";
+                    break;
+                case PhyGetVersionError:
+                    ss << "PhyGetVersionError";
+                    break;
+                case PhyIndexError:
+                    ss << "PhyIndexError";
+                    break;
+                default:
+                    ss << "Unknown";
+                    break;
+            };
+            ss << ")";
+            return set_ics_exception(exception_runtime_error(), (char*)ss.str().c_str());
+        }
+        Py_END_ALLOW_THREADS;
+        return Py_BuildValue("i", function_error);
 
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
