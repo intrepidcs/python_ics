@@ -86,6 +86,7 @@ class srad_galaxy_settings(ctypes.Structure):
         ('ethernet2', ETHERNET_SETTINGS2),
         ('network_enables_4', ctypes.c_uint16),
         ('gPTP', RAD_GPTP_SETTINGS),
+        ('network_enables_5', ctypes.c_uint64),
     ]
 
 

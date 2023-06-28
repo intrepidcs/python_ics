@@ -9,6 +9,7 @@ from ics.structures.ethernet_settings2 import *
 from ics.structures.s_spi_port_settings import *
 from ics.structures.s_wil_bridge_config import *
 from ics.structures.s_wil_connection_settings import *
+from ics.structures.wbms_gateway_settings import *
 
 
 class flags(ctypes.Structure):
@@ -47,6 +48,9 @@ class sradbms_settings(ctypes.Structure):
         ('wbms_wil_2', sWIL_CONNECTION_SETTINGS),
         ('wil1_nwk_metadata_buff_count', ctypes.c_uint16),
         ('wil2_nwk_metadata_buff_count', ctypes.c_uint16),
+        ('gateway', WBMSGatewaySettings),
+        ('network_enables_4', ctypes.c_uint16),
+        ('network_enables_5', ctypes.c_uint64),
     ]
 
 
