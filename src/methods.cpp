@@ -3374,8 +3374,8 @@ PyObject* meth_get_phy_firmware_version(PyObject* self, PyObject* args)
 {
     PyObject* obj = NULL;
     char phy_indx = 0;
-    bool check_function_error = true;
-    if (!PyArg_ParseTuple(args, arg_parse("Oi|b:", __FUNCTION__), &obj, &phy_indx, &check_function_error)) {
+    bool check_success = true;
+    if (!PyArg_ParseTuple(args, arg_parse("Oi|b:", __FUNCTION__), &obj, &phy_indx, &check_success)) {
         return NULL;
     }
 
@@ -3402,13 +3402,54 @@ PyObject* meth_get_phy_firmware_version(PyObject* self, PyObject* args)
         if (!icsneoGetPhyFwVersion(handle, phy_indx, &phy_version, &function_error)) {
             Py_BLOCK_THREADS return set_ics_exception(exception_runtime_error(), "icsneoGetPhyFwVersion() Failed");
         }
-        Py_END_ALLOW_THREADS
-            // Raise an exception on failed error check
-            if (check_function_error && (function_error != PhyOperationSuccess))
-        {
+        Py_END_ALLOW_THREADS;
+        // check the return value to make sure we are good
+        if (check_success && function_error != PhyOperationSuccess) {
             std::stringstream ss;
-            ss << "icsneoGetPhyFwVersion() function error: '" << function_error << "'";
-            return set_ics_exception_dev(exception_runtime_error(), obj, (char*)ss.str().c_str());
+            ss << "icsneoGetPhyFwVersion() Failed with error code: " << function_error << " (";
+            switch (function_error) {
+                case PhyOperationError:
+                    ss << "PhyOperationError";
+                    break;
+                case PhyOperationSuccess:
+                    ss << "PhyOperationSuccess";
+                    break;
+                case PhyFlashingInitError:
+                    ss << "PhyFlashingInitError";
+                    break;
+                case PhyFlashingEraseError:
+                    ss << "PhyFlashingEraseError";
+                    break;
+                case PhyFlashingWriteError:
+                    ss << "PhyFlashingWriteError";
+                    break;
+                case PhyFlashingReadError:
+                    ss << "PhyFlashingReadError";
+                    break;
+                case PhyFlashingVerifyError:
+                    ss << "PhyFlashingVerifyError";
+                    break;
+                case PhyFlashingDeinitError:
+                    ss << "PhyFlashingDeinitError";
+                    break;
+                case PhyFlashingInvalidHardware:
+                    ss << "PhyFlashingInvalidHardware";
+                    break;
+                case PhyFlashingInvalidDataFile:
+                    ss << "PhyFlashingInvalidDataFile";
+                    break;
+                case PhyGetVersionError:
+                    ss << "PhyGetVersionError";
+                    break;
+                case PhyIndexError:
+                    ss << "PhyIndexError";
+                    break;
+                default:
+                    ss << "Unknown";
+                    break;
+            };
+            ss << ")";
+            return set_ics_exception(exception_runtime_error(), (char*)ss.str().c_str());
         }
         return Py_BuildValue("Ii", phy_version, function_error);
     } catch (ice::Exception& ex) {

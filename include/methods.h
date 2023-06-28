@@ -1885,7 +1885,6 @@ extern "C"
                 "\n"                                                                                                   \
                 "\tphy_index (:class:`int`): :class:`int`: phy Index enum.\n\n"                                        \
                 "\n"                                                                                                   \
-                "\n"                                                                                                   \
                 "\tcheck_success (:class:`bool`): :class:`bool`: Optional, raises an exception if not successful \n\n" \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
@@ -1896,7 +1895,7 @@ extern "C"
                 "\n"
 
 #define _DOC_GET_PHY_FIRMWARE_VERSION                                                                                  \
-    MODULE_NAME ".get_phy_firmware_version(device, phy_index, check_function_error)\n"                                 \
+    MODULE_NAME ".get_phy_firmware_version(device, phy_index[, check_success])\n"                                      \
                 "\n"                                                                                                   \
                 "Gets PHY Firmware version. If not sure, don't use this method\n"                                      \
                 "\n"                                                                                                   \
@@ -1906,8 +1905,7 @@ extern "C"
                 "\n"                                                                                                   \
                 "\tphy_index (:class:`int`): :class:`int`: phy Index enum.\n\n"                                        \
                 "\n"                                                                                                   \
-                "\tcheck_function_error (:class:`bool`): :class:`bool`: If True, raises an exception if "              \
-                "function_error isn't successful. Set this to False if you want to parse the error yourself.\n\n"      \
+                "\tcheck_success (:class:`bool`): :class:`bool`: Optional, raises an exception if not successful \n\n" \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \

@@ -1080,7 +1080,7 @@ Module Variables
             :annotation: = 6
 
     .. py:data:: BUILD_DATETIME
-            :annotation: = Jun 28 2023 16:01:22
+            :annotation: = Jun 28 2023 16:13:59
 
     .. py:data:: CANFD_BRS_ENABLED
             :annotation: = 2
