@@ -24,6 +24,7 @@ from ics.structures.sievb_settings import *
 from ics.structures.sobd2_lc_settings import *
 from ics.structures.sobd2_pro_settings import *
 from ics.structures.sobd2_sim_settings import *
+from ics.structures.srad_comet_settings import *
 from ics.structures.srad_epsilon_settings import *
 from ics.structures.srad_galaxy_settings import *
 from ics.structures.srad_gigalog_settings import *
@@ -43,7 +44,7 @@ from ics.structures.svcan4_settings import *
 from ics.structures.svcanrf_settings import *
 
 
-class Nameless32656(ctypes.Union):
+class Nameless59426(ctypes.Union):
     _pack_ = 2
     _fields_ = [
         ('red', SRedSettings),
@@ -86,18 +87,19 @@ class Nameless32656(ctypes.Union):
         ('epsilon', SRADEpsilonSettings),
         ('rad_bms', SRADBMSSettings),
         ('radmoon3', SRADMoon3Settings),
+        ('radcomet', SRADCometSettings),
     ]
 
 
 
 class global_settings(ctypes.Structure):
     _pack_ = 2
-    _anonymous_  = ('Nameless32656',)
+    _anonymous_  = ('Nameless59426',)
     _fields_ = [
         ('version', ctypes.c_uint16),
         ('len', ctypes.c_uint16),
         ('chksum', ctypes.c_uint16),
-        ('Nameless32656', Nameless32656),
+        ('Nameless59426', Nameless59426),
     ]
 
 

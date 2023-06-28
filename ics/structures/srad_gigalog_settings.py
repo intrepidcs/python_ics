@@ -83,6 +83,7 @@ class srad_gigalog_settings(ctypes.Structure):
         ('network_enables_4', ctypes.c_uint16),
         ('reporting', RAD_REPORTING_SETTINGS),
         ('serdesgen', SERDESGEN_SETTINGS),
+        ('network_enables_5', ctypes.c_uint64),
     ]
 
 

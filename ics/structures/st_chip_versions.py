@@ -319,6 +319,15 @@ class epsilon_versions(ctypes.Structure):
 
 
 
+class rad_comet_versions(ctypes.Structure):
+    _pack_ = 2
+    _fields_ = [
+        ('zynq_core_major', ctypes.c_uint8),
+        ('zynq_core_minor', ctypes.c_uint8),
+    ]
+
+
+
 class st_chip_versions(ctypes.Union):
     _pack_ = 2
     _fields_ = [
@@ -353,6 +362,7 @@ class st_chip_versions(ctypes.Union):
         ('ether_badge_versions', ether_badge_versions),
         ('rad_a2b_versions', rad_a2b_versions),
         ('epsilon_versions', epsilon_versions),
+        ('rad_comet_versions', rad_comet_versions),
     ]
 
 

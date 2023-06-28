@@ -2520,6 +2520,32 @@
                         "enum_value": null
                     }
                 ]
+            },
+            {
+                "names": [
+                    "rad_comet_versions"
+                ],
+                "data_type": "Struct",
+                "packing": 2,
+                "is_anonymous": false,
+                "members": [
+                    {
+                        "name": "zynq_core_major",
+                        "data_type": "uint8_t",
+                        "array_length": 0,
+                        "bitfield_size": 0,
+                        "is_enum": false,
+                        "enum_value": null
+                    },
+                    {
+                        "name": "zynq_core_minor",
+                        "data_type": "uint8_t",
+                        "array_length": 0,
+                        "bitfield_size": 0,
+                        "is_enum": false,
+                        "enum_value": null
+                    }
+                ]
             }
         ]
     },
@@ -3162,6 +3188,81 @@
     },
     {
         "names": [
+            "ETHERNET10T1S_SETTINGS_t",
+            "ETHERNET10T1S_SETTINGS"
+        ],
+        "data_type": "Struct",
+        "packing": 2,
+        "is_anonymous": false,
+        "members": [
+            {
+                "name": "max_burst_count",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "burst_timer",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "max_num_nodes",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "local_id",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "to_timer",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "flags",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "local_id_alternate",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "rsvd",
+                "data_type": "uint8_t",
+                "array_length": 5,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            }
+        ]
+    },
+    {
+        "names": [
             "LOGGER_SETTINGS_t",
             "LOGGER_SETTINGS"
         ],
@@ -3625,6 +3726,41 @@
         "names": [
             "_GenericAPIData",
             "GenericAPIData"
+        ],
+        "data_type": "Struct",
+        "packing": 2,
+        "is_anonymous": false,
+        "members": [
+            {
+                "name": "length",
+                "data_type": "uint16_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "api",
+                "data_type": "GenericAPISelector",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "bData",
+                "data_type": "uint8_t",
+                "array_length": 513,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            }
+        ]
+    },
+    {
+        "names": [
+            "_GenericAPIData_OLD",
+            "GenericAPIData_OLD"
         ],
         "data_type": "Struct",
         "packing": 2,
@@ -4304,15 +4440,15 @@
     },
     {
         "names": [
-            "ManufacturingOperation",
-            "ManufacturingOperation"
+            "_GenericBinaryStatus",
+            "GenericBinaryStatus"
         ],
-        "data_type": "Union",
+        "data_type": "Struct",
         "packing": 1,
         "is_anonymous": false,
         "members": [
             {
-                "name": "rtcCalEnable",
+                "name": "size",
                 "data_type": "uint32_t",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -4320,235 +4456,28 @@
                 "enum_value": null
             },
             {
-                "name": "rtcCalValue",
-                "data_type": "int",
+                "name": "index",
+                "data_type": "uint16_t",
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": false,
                 "enum_value": null
             },
             {
-                "names": [
-                    "unlock"
-                ],
-                "data_type": "Struct",
-                "packing": 1,
-                "is_anonymous": false,
-                "members": [
-                    {
-                        "name": "apiVersion",
-                        "data_type": "uint32_t",
-                        "array_length": 0,
-                        "bitfield_size": 0,
-                        "is_enum": false,
-                        "enum_value": null
-                    },
-                    {
-                        "name": "code",
-                        "data_type": "uint32_t",
-                        "array_length": 0,
-                        "bitfield_size": 0,
-                        "is_enum": false,
-                        "enum_value": null
-                    }
-                ]
+                "name": "status",
+                "data_type": "uint16_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
             },
             {
-                "name": "bytes",
+                "name": "reserved",
                 "data_type": "uint8_t",
-                "array_length": 256,
+                "array_length": 8,
                 "bitfield_size": 0,
                 "is_enum": false,
                 "enum_value": null
-            }
-        ]
-    },
-    {
-        "names": [
-            "_SExtSubCmdComm",
-            "SExtSubCmdComm"
-        ],
-        "data_type": "Struct",
-        "packing": 2,
-        "is_anonymous": false,
-        "members": [
-            {
-                "name": "header",
-                "data_type": "SExtSubCmdHdr",
-                "array_length": 0,
-                "bitfield_size": 0,
-                "is_enum": false,
-                "enum_value": null
-            },
-            {
-                "names": [
-                    "extension"
-                ],
-                "data_type": "Union",
-                "packing": 2,
-                "is_anonymous": false,
-                "members": [
-                    {
-                        "name": "structure",
-                        "data_type": "SDiskStructure",
-                        "array_length": 0,
-                        "bitfield_size": 0,
-                        "is_enum": false,
-                        "enum_value": null
-                    },
-                    {
-                        "name": "details",
-                        "data_type": "SDiskDetails",
-                        "array_length": 0,
-                        "bitfield_size": 0,
-                        "is_enum": false,
-                        "enum_value": null
-                    },
-                    {
-                        "name": "progress",
-                        "data_type": "SDiskFormatProgress",
-                        "array_length": 0,
-                        "bitfield_size": 0,
-                        "is_enum": false,
-                        "enum_value": null
-                    },
-                    {
-                        "name": "startDHCPServer",
-                        "data_type": "StartDHCPServerCommand",
-                        "array_length": 0,
-                        "bitfield_size": 0,
-                        "is_enum": false,
-                        "enum_value": null
-                    },
-                    {
-                        "name": "stopDHCPServer",
-                        "data_type": "StopDHCPServerCommand",
-                        "array_length": 0,
-                        "bitfield_size": 0,
-                        "is_enum": false,
-                        "enum_value": null
-                    },
-                    {
-                        "name": "getSupportedFeatures",
-                        "data_type": "GetSupportedFeaturesResponse",
-                        "array_length": 0,
-                        "bitfield_size": 0,
-                        "is_enum": false,
-                        "enum_value": null
-                    },
-                    {
-                        "name": "genericResponse",
-                        "data_type": "ExtendedResponseGeneric",
-                        "array_length": 0,
-                        "bitfield_size": 0,
-                        "is_enum": false,
-                        "enum_value": null
-                    },
-                    {
-                        "name": "gptpStatus",
-                        "data_type": "GPTPStatus",
-                        "array_length": 0,
-                        "bitfield_size": 0,
-                        "is_enum": false,
-                        "enum_value": null
-                    },
-                    {
-                        "name": "apiStatus",
-                        "data_type": "GenericAPIStatus",
-                        "array_length": 0,
-                        "bitfield_size": 0,
-                        "is_enum": false,
-                        "enum_value": null
-                    },
-                    {
-                        "name": "apiData",
-                        "data_type": "GenericAPIData",
-                        "array_length": 0,
-                        "bitfield_size": 0,
-                        "is_enum": false,
-                        "enum_value": null
-                    },
-                    {
-                        "name": "apiSelector",
-                        "data_type": "GenericAPISelector",
-                        "array_length": 0,
-                        "bitfield_size": 0,
-                        "is_enum": false,
-                        "enum_value": null
-                    },
-                    {
-                        "name": "getComponentVersions",
-                        "data_type": "GetComponentVersions",
-                        "array_length": 0,
-                        "bitfield_size": 0,
-                        "is_enum": false,
-                        "enum_value": null
-                    },
-                    {
-                        "name": "softwareUpdate",
-                        "data_type": "SoftwareUpdateCommand",
-                        "array_length": 0,
-                        "bitfield_size": 0,
-                        "is_enum": false,
-                        "enum_value": null
-                    },
-                    {
-                        "name": "getComponentVersionsResponse",
-                        "data_type": "GetComponentVersionsResponse",
-                        "array_length": 0,
-                        "bitfield_size": 0,
-                        "is_enum": false,
-                        "enum_value": null
-                    },
-                    {
-                        "name": "wbmsManagerToLockUnlock",
-                        "data_type": "wBMSManagerSetLock",
-                        "array_length": 0,
-                        "bitfield_size": 0,
-                        "is_enum": false,
-                        "enum_value": null
-                    },
-                    {
-                        "name": "wbmsManagerToReset",
-                        "data_type": "wBMSManagerReset",
-                        "array_length": 0,
-                        "bitfield_size": 0,
-                        "is_enum": false,
-                        "enum_value": null
-                    },
-                    {
-                        "name": "uartData",
-                        "data_type": "UartPortData",
-                        "array_length": 0,
-                        "bitfield_size": 0,
-                        "is_enum": false,
-                        "enum_value": null
-                    },
-                    {
-                        "name": "uartBytesLen",
-                        "data_type": "UartPortPortBytes",
-                        "array_length": 0,
-                        "bitfield_size": 0,
-                        "is_enum": false,
-                        "enum_value": null
-                    },
-                    {
-                        "name": "uartConfig",
-                        "data_type": "UartPortConfig",
-                        "array_length": 0,
-                        "bitfield_size": 0,
-                        "is_enum": false,
-                        "enum_value": null
-                    },
-                    {
-                        "name": "mfgOperation",
-                        "data_type": "ManufacturingOperation",
-                        "array_length": 0,
-                        "bitfield_size": 0,
-                        "is_enum": false,
-                        "enum_value": null
-                    }
-                ]
             }
         ]
     },
@@ -8353,6 +8282,14 @@
                 "bitfield_size": 0,
                 "is_enum": false,
                 "enum_value": null
+            },
+            {
+                "name": "network_enables_5",
+                "data_type": "uint64_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
             }
         ]
     },
@@ -8668,6 +8605,14 @@
                 "bitfield_size": 0,
                 "is_enum": false,
                 "enum_value": null
+            },
+            {
+                "name": "network_enables_5",
+                "data_type": "uint64_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
             }
         ]
     },
@@ -8779,6 +8724,14 @@
             {
                 "name": "gPTP",
                 "data_type": "RAD_GPTP_SETTINGS",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "network_enables_5",
+                "data_type": "uint64_t",
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": false,
@@ -9070,6 +9023,14 @@
                 "bitfield_size": 0,
                 "is_enum": false,
                 "enum_value": null
+            },
+            {
+                "name": "network_enables_5",
+                "data_type": "uint64_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
             }
         ]
     },
@@ -9177,6 +9138,14 @@
                 "bitfield_size": 0,
                 "is_enum": false,
                 "enum_value": null
+            },
+            {
+                "name": "network_enables_5",
+                "data_type": "uint64_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
             }
         ]
     },
@@ -9270,6 +9239,14 @@
                         "enum_value": null
                     }
                 ]
+            },
+            {
+                "name": "network_enables_5",
+                "data_type": "uint64_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
             }
         ]
     },
@@ -9723,6 +9700,14 @@
                 "bitfield_size": 0,
                 "is_enum": false,
                 "enum_value": null
+            },
+            {
+                "name": "network_enables_5",
+                "data_type": "uint64_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
             }
         ]
     },
@@ -10148,6 +10133,14 @@
             {
                 "name": "gPTP",
                 "data_type": "RAD_GPTP_SETTINGS",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "network_enables_5",
+                "data_type": "uint64_t",
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": false,
@@ -17530,6 +17523,14 @@
                 "bitfield_size": 0,
                 "is_enum": false,
                 "enum_value": null
+            },
+            {
+                "name": "misc_io_on_report_events",
+                "data_type": "uint16_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
             }
         ]
     },
@@ -17784,6 +17785,56 @@
     },
     {
         "names": [
+            "WBMSGatewaySettings"
+        ],
+        "data_type": "Struct",
+        "packing": 2,
+        "is_anonymous": false,
+        "members": [
+            {
+                "name": "wbms1_network",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "wbms1_canfd_enable",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "wbms2_network",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "wbms2_canfd_enable",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "reserved",
+                "data_type": "uint16_t",
+                "array_length": 6,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            }
+        ]
+    },
+    {
+        "names": [
             "_SRADBMSSettings",
             "SRADBMSSettings"
         ],
@@ -17996,6 +18047,349 @@
             {
                 "name": "wil2_nwk_metadata_buff_count",
                 "data_type": "uint16_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "gateway",
+                "data_type": "WBMSGatewaySettings",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "network_enables_4",
+                "data_type": "uint16_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "network_enables_5",
+                "data_type": "uint64_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            }
+        ]
+    },
+    {
+        "names": [
+            "_SRADCometSettings",
+            "SRADCometSettings"
+        ],
+        "data_type": "Struct",
+        "packing": 2,
+        "is_anonymous": false,
+        "members": [
+            {
+                "name": "ecu_id",
+                "data_type": "uint32_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "perf_en",
+                "data_type": "uint16_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "names": [
+                    "flags"
+                ],
+                "data_type": "Struct",
+                "packing": 2,
+                "is_anonymous": false,
+                "members": [
+                    {
+                        "name": "hwComLatencyTestEn",
+                        "data_type": "uint16_t",
+                        "array_length": 0,
+                        "bitfield_size": 1,
+                        "is_enum": false,
+                        "enum_value": null
+                    },
+                    {
+                        "name": "disableUsbCheckOnBoot",
+                        "data_type": "uint16_t",
+                        "array_length": 0,
+                        "bitfield_size": 1,
+                        "is_enum": false,
+                        "enum_value": null
+                    },
+                    {
+                        "name": "reserved",
+                        "data_type": "uint16_t",
+                        "array_length": 0,
+                        "bitfield_size": 14,
+                        "is_enum": false,
+                        "enum_value": null
+                    }
+                ]
+            },
+            {
+                "name": "network_enabled_on_boot",
+                "data_type": "uint16_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "can1",
+                "data_type": "CAN_SETTINGS",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "canfd1",
+                "data_type": "CANFD_SETTINGS",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "can2",
+                "data_type": "CAN_SETTINGS",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "canfd2",
+                "data_type": "CANFD_SETTINGS",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "iso9141_kwp_settings_1",
+                "data_type": "ISO9141_KEYWORD2000_SETTINGS",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "iso_parity_1",
+                "data_type": "uint16_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "iso_msg_termination_1",
+                "data_type": "uint16_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "names": [
+                    "network_enables"
+                ],
+                "data_type": "Union",
+                "packing": 2,
+                "is_anonymous": false,
+                "members": [
+                    {
+                        "name": "word",
+                        "data_type": "uint64_t",
+                        "array_length": 0,
+                        "bitfield_size": 0,
+                        "is_enum": false,
+                        "enum_value": null
+                    },
+                    {
+                        "names": [],
+                        "data_type": "Struct",
+                        "packing": 2,
+                        "is_anonymous": true,
+                        "members": [
+                            {
+                                "name": "network_enables",
+                                "data_type": "uint16_t",
+                                "array_length": 0,
+                                "bitfield_size": 0,
+                                "is_enum": false,
+                                "enum_value": null
+                            },
+                            {
+                                "name": "network_enables_2",
+                                "data_type": "uint16_t",
+                                "array_length": 0,
+                                "bitfield_size": 0,
+                                "is_enum": false,
+                                "enum_value": null
+                            },
+                            {
+                                "name": "network_enables_3",
+                                "data_type": "uint16_t",
+                                "array_length": 0,
+                                "bitfield_size": 0,
+                                "is_enum": false,
+                                "enum_value": null
+                            },
+                            {
+                                "name": "network_enables_4",
+                                "data_type": "uint16_t",
+                                "array_length": 0,
+                                "bitfield_size": 0,
+                                "is_enum": false,
+                                "enum_value": null
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "termination_enables",
+                "data_type": "uint64_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "timeSyncSettings",
+                "data_type": "TIMESYNC_ICSHARDWARE_SETTINGS",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "reporting",
+                "data_type": "RAD_REPORTING_SETTINGS",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "iso15765_separation_time_offset",
+                "data_type": "int16_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "pwr_man_timeout",
+                "data_type": "uint32_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "pwr_man_enable",
+                "data_type": "uint16_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "gPTP",
+                "data_type": "RAD_GPTP_SETTINGS",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "text_api",
+                "data_type": "STextAPISettings",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "ethernet",
+                "data_type": "ETHERNET_SETTINGS2",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "opEthGen",
+                "data_type": "OP_ETH_GENERAL_SETTINGS",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "ethT1",
+                "data_type": "ETHERNET_SETTINGS2",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "opEth1",
+                "data_type": "OP_ETH_SETTINGS",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "ethT1s1",
+                "data_type": "ETHERNET_SETTINGS2",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "t1s1",
+                "data_type": "ETHERNET10T1S_SETTINGS",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "ethT1s2",
+                "data_type": "ETHERNET_SETTINGS2",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "t1s2",
+                "data_type": "ETHERNET10T1S_SETTINGS",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "network_enables_5",
+                "data_type": "uint64_t",
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": false,
@@ -18361,6 +18755,14 @@
                         "bitfield_size": 0,
                         "is_enum": false,
                         "enum_value": null
+                    },
+                    {
+                        "name": "radcomet",
+                        "data_type": "SRADCometSettings",
+                        "array_length": 0,
+                        "bitfield_size": 0,
+                        "is_enum": false,
+                        "enum_value": null
                     }
                 ]
             }
@@ -18714,6 +19116,14 @@
                     {
                         "name": "fire3Flexray",
                         "data_type": "SFire3FlexraySettings",
+                        "array_length": 0,
+                        "bitfield_size": 0,
+                        "is_enum": false,
+                        "enum_value": null
+                    },
+                    {
+                        "name": "radcomet",
+                        "data_type": "SRADCometSettings",
                         "array_length": 0,
                         "bitfield_size": 0,
                         "is_enum": false,
@@ -20181,6 +20591,281 @@
     },
     {
         "names": [
+            "_icsSpyMessageMdio",
+            "icsSpyMessageMdio"
+        ],
+        "data_type": "Struct",
+        "packing": 0,
+        "is_anonymous": false,
+        "members": [
+            {
+                "name": "StatusBitField",
+                "data_type": "uint32_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "StatusBitField2",
+                "data_type": "uint32_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "TimeHardware",
+                "data_type": "uint32_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "TimeHardware2",
+                "data_type": "uint32_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "TimeSystem",
+                "data_type": "uint32_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "TimeSystem2",
+                "data_type": "uint32_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "TimeStampHardwareID",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "TimeStampSystemID",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "NetworkID",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "NodeID",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "Protocol",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "MessagePieceID",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "ExtraDataPtrEnabled",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "NumberBytesHeader",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "NumberBytesData",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "NetworkID2",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "DescriptionID",
+                "data_type": "descIdType",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "names": [],
+                "data_type": "Union",
+                "packing": 0,
+                "is_anonymous": true,
+                "members": [
+                    {
+                        "name": "ArbIDOrHeader",
+                        "data_type": "uint32_t",
+                        "array_length": 0,
+                        "bitfield_size": 0,
+                        "is_enum": false,
+                        "enum_value": null
+                    },
+                    {
+                        "names": [],
+                        "data_type": "Struct",
+                        "packing": 0,
+                        "is_anonymous": true,
+                        "members": [
+                            {
+                                "name": "RegAddr",
+                                "data_type": "uint32_t",
+                                "array_length": 0,
+                                "bitfield_size": 16,
+                                "is_enum": false,
+                                "enum_value": null
+                            },
+                            {
+                                "name": "PhyAddr",
+                                "data_type": "uint32_t",
+                                "array_length": 0,
+                                "bitfield_size": 5,
+                                "is_enum": false,
+                                "enum_value": null
+                            },
+                            {
+                                "name": "DevType",
+                                "data_type": "uint32_t",
+                                "array_length": 0,
+                                "bitfield_size": 5,
+                                "is_enum": false,
+                                "enum_value": null
+                            },
+                            {
+                                "name": "",
+                                "data_type": "uint32_t",
+                                "array_length": 0,
+                                "bitfield_size": 6,
+                                "is_enum": false,
+                                "enum_value": null
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "Data",
+                "data_type": "uint8_t",
+                "array_length": 8,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "names": [],
+                "data_type": "Union",
+                "packing": 0,
+                "is_anonymous": true,
+                "members": [
+                    {
+                        "names": [],
+                        "data_type": "Struct",
+                        "packing": 0,
+                        "is_anonymous": true,
+                        "members": [
+                            {
+                                "name": "StatusBitField3",
+                                "data_type": "uint32_t",
+                                "array_length": 0,
+                                "bitfield_size": 0,
+                                "is_enum": false,
+                                "enum_value": null
+                            },
+                            {
+                                "name": "StatusBitField4",
+                                "data_type": "uint32_t",
+                                "array_length": 0,
+                                "bitfield_size": 0,
+                                "is_enum": false,
+                                "enum_value": null
+                            }
+                        ]
+                    },
+                    {
+                        "name": "AckBytes",
+                        "data_type": "uint8_t",
+                        "array_length": 8,
+                        "bitfield_size": 0,
+                        "is_enum": false,
+                        "enum_value": null
+                    }
+                ]
+            },
+            {
+                "name": "ExtraDataPtr",
+                "data_type": "void*",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "MiscData",
+                "data_type": "uint8_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "Reserved",
+                "data_type": "uint8_t",
+                "array_length": 3,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            }
+        ]
+    },
+    {
+        "names": [
             "_icsSpyMessageLong",
             "icsSpyMessageLong"
         ],
@@ -21206,7 +21891,7 @@
             {
                 "name": "ethernetStatus",
                 "data_type": "ethernetNetworkStatus_t",
-                "array_length": 0,
+                "array_length": 9,
                 "bitfield_size": 0,
                 "is_enum": false,
                 "enum_value": null
@@ -21298,6 +21983,14 @@
             {
                 "name": "plutoStatus",
                 "data_type": "icsRadPlutoDeviceStatus",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "epsilonStatus",
+                "data_type": "icsRadEpsilonDeviceStatus",
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": false,

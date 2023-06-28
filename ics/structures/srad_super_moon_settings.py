@@ -26,6 +26,7 @@ class srad_super_moon_settings(ctypes.Structure):
         ('hwComLatencyTestEn', ctypes.c_uint16),
         ('Eth2', ETHERNET_SETTINGS2),
         ('gPTP', RAD_GPTP_SETTINGS),
+        ('network_enables_5', ctypes.c_uint64),
     ]
 
 

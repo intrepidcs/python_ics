@@ -7,6 +7,7 @@ from ics.structures.ics_fire3_device_status import *
 from ics.structures.ics_flex_vnetz_device_status import *
 from ics.structures.ics_obd2_pro_device_status import *
 from ics.structures.ics_rad_bms_device_status import *
+from ics.structures.ics_rad_epsilon_device_status import *
 from ics.structures.ics_rad_jupiter_device_status import *
 from ics.structures.ics_rad_moon_duo_device_status import *
 from ics.structures.ics_rad_pluto_device_status import *
@@ -25,6 +26,7 @@ class ics_device_status(ctypes.Union):
         ('jupiterStatus', icsRadJupiterDeviceStatus),
         ('obd2proStatus', icsOBD2ProDeviceStatus),
         ('plutoStatus', icsRadPlutoDeviceStatus),
+        ('epsilonStatus', icsRadEpsilonDeviceStatus),
         ('vcan4indStatus', icsVcan4IndustrialDeviceStatus),
         ('radBMSStatus', icsRadBMSDeviceStatus),
     ]

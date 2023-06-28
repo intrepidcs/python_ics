@@ -82,6 +82,7 @@ class srad_gigastar_settings(ctypes.Structure):
         ('network_enables_4', ctypes.c_uint16),
         ('serdesgen', SERDESGEN_SETTINGS),
         ('gPTP', RAD_GPTP_SETTINGS),
+        ('network_enables_5', ctypes.c_uint64),
     ]
 
 

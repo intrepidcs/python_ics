@@ -25,6 +25,7 @@ class srad_moon3_settings(ctypes.Structure):
         ('network_enabled_on_boot', ctypes.c_uint16),
         ('network_enables_3', ctypes.c_uint16),
         ('flags', flags),
+        ('network_enables_5', ctypes.c_uint64),
     ]
 
 

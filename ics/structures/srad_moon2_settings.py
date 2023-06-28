@@ -24,6 +24,7 @@ class srad_moon2_settings(ctypes.Structure):
         ('timeSyncSettings', TIMESYNC_ICSHARDWARE_SETTINGS),
         ('hwComLatencyTestEn', ctypes.c_uint16),
         ('gPTP', RAD_GPTP_SETTINGS),
+        ('network_enables_5', ctypes.c_uint64),
     ]
 
 
