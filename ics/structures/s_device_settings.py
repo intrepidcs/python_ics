@@ -26,6 +26,7 @@ from ics.structures.sievb_settings import *
 from ics.structures.sobd2_lc_settings import *
 from ics.structures.sobd2_pro_settings import *
 from ics.structures.sobd2_sim_settings import *
+from ics.structures.srad_comet_settings import *
 from ics.structures.srad_epsilon_settings import *
 from ics.structures.srad_galaxy_settings import *
 from ics.structures.srad_gigalog_settings import *
@@ -89,6 +90,7 @@ class Settings(ctypes.Union):
         ('rad_bms', SRADBMSSettings),
         ('radmoon3', SRADMoon3Settings),
         ('fire3Flexray', SFire3FlexraySettings),
+        ('radcomet', SRADCometSettings),
     ]
 
 

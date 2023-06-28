@@ -56,6 +56,7 @@ class srad_star2_settings(ctypes.Structure):
         ('reporting', RAD_REPORTING_SETTINGS),
         ('ethernet', ETHERNET_SETTINGS2),
         ('gPTP', RAD_GPTP_SETTINGS),
+        ('network_enables_5', ctypes.c_uint64),
     ]
 
 

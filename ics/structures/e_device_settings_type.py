@@ -48,6 +48,8 @@ class e_device_settings_type(enum.IntEnum):
     DeviceRADMoon3SettingsType = enum.auto()
     DeviceFire3SettingsType = enum.auto()
     DeviceFire3FlexraySettingsType = enum.auto()
+    DeviceRADCometSettingsType = enum.auto()
+    DeviceRed2OemSettingsType = enum.auto()
     DeviceSettingsTypeMax = enum.auto()
     DeviceSettingsNone  = 4294967295
 

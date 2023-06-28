@@ -4,7 +4,26 @@ import enum
 
 
 
-class Nameless5189(ctypes.Structure):
+class Nameless28192(ctypes.Structure):
+    _fields_ = [
+        ('RegAddr', ctypes.c_uint32, 16),
+        ('PhyAddr', ctypes.c_uint32, 5),
+        ('DevType', ctypes.c_uint32, 5),
+        ('', ctypes.c_uint32, 6),
+    ]
+
+
+
+class Nameless18906(ctypes.Union):
+    _anonymous_  = ('Nameless28192',)
+    _fields_ = [
+        ('ArbIDOrHeader', ctypes.c_uint32),
+        ('Nameless28192', Nameless28192),
+    ]
+
+
+
+class Nameless3555(ctypes.Structure):
     _fields_ = [
         ('StatusBitField3', ctypes.c_uint32),
         ('StatusBitField4', ctypes.c_uint32),
@@ -12,17 +31,17 @@ class Nameless5189(ctypes.Structure):
 
 
 
-class Nameless54558(ctypes.Union):
-    _anonymous_  = ('Nameless5189',)
+class Nameless45381(ctypes.Union):
+    _anonymous_  = ('Nameless3555',)
     _fields_ = [
-        ('Nameless5189', Nameless5189),
+        ('Nameless3555', Nameless3555),
         ('AckBytes', ctypes.c_uint8 * 8),
     ]
 
 
 
-class ics_spy_message_vsb(ctypes.Structure):
-    _anonymous_  = ('Nameless54558',)
+class ics_spy_message_mdio(ctypes.Structure):
+    _anonymous_  = ('Nameless18906', 'Nameless45381')
     _fields_ = [
         ('StatusBitField', ctypes.c_uint32),
         ('StatusBitField2', ctypes.c_uint32),
@@ -40,16 +59,16 @@ class ics_spy_message_vsb(ctypes.Structure):
         ('NumberBytesHeader', ctypes.c_uint8),
         ('NumberBytesData', ctypes.c_uint8),
         ('NetworkID2', ctypes.c_uint8),
-        ('DescriptionID', ctypes.c_int16),
-        ('ArbIDOrHeader', ctypes.c_uint32),
+        ('DescriptionID', ctypes.c_uint16),
+        ('Nameless18906', Nameless18906),
         ('Data', ctypes.c_uint8 * 8),
-        ('Nameless54558', Nameless54558),
-        ('ExtraDataPtr', ctypes.c_uint32),
+        ('Nameless45381', Nameless45381),
+        ('ExtraDataPtr', ctypes.c_void_p),
         ('MiscData', ctypes.c_uint8),
         ('Reserved', ctypes.c_uint8 * 3),
     ]
 
 
-_icsSpyMessageVSB = ics_spy_message_vsb
-icsSpyMessageVSB = ics_spy_message_vsb
+_icsSpyMessageMdio = ics_spy_message_mdio
+icsSpyMessageMdio = ics_spy_message_mdio
 

@@ -51,6 +51,7 @@ class srad_epsilon_settings(ctypes.Structure):
         ('flags', flags),
         ('switchSettings', SRADEpsilonSwitchSettings),
         ('ethernet2', ETHERNET_SETTINGS2),
+        ('misc_io_on_report_events', ctypes.c_uint16),
     ]
 
 

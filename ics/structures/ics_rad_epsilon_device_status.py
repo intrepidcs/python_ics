@@ -7,7 +7,7 @@ from ics.structures.ethernet_network_status_t import *
 
 class ics_rad_epsilon_device_status(ctypes.Structure):
     _fields_ = [
-        ('ethernetStatus', ethernetNetworkStatus_t),
+        ('ethernetStatus', ethernetNetworkStatus_t * 9),
     ]
 
 

@@ -121,6 +121,14 @@ int setup_module_auto_defines(PyObject* module)
     result += PyModule_AddIntMacro(module, NETID_LIN_07);
     result += PyModule_AddIntMacro(module, NETID_LIN_08);
     result += PyModule_AddIntMacro(module, NETID_SPI2);
+    result += PyModule_AddIntMacro(module, NETID_MDIO_01);
+    result += PyModule_AddIntMacro(module, NETID_MDIO_02);
+    result += PyModule_AddIntMacro(module, NETID_MDIO_03);
+    result += PyModule_AddIntMacro(module, NETID_MDIO_04);
+    result += PyModule_AddIntMacro(module, NETID_MDIO_05);
+    result += PyModule_AddIntMacro(module, NETID_MDIO_06);
+    result += PyModule_AddIntMacro(module, NETID_MDIO_07);
+    result += PyModule_AddIntMacro(module, NETID_MDIO_08);
     result += PyModule_AddIntMacro(module, NETID_MAX);
     result += PyModule_AddIntMacro(module, NETID_INVALID);
     result += PyModule_AddIntMacro(module, NEODEVICE_UNKNOWN);
@@ -160,6 +168,7 @@ int setup_module_auto_defines(PyObject* module)
     result += PyModule_AddIntMacro(module, NEODEVICE_RADMOON3);
     result += PyModule_AddIntMacro(module, NEODEVICE_RADCOMET);
     result += PyModule_AddIntMacro(module, NEODEVICE_FIRE3_FLEXRAY);
+    result += PyModule_AddIntMacro(module, NEODEVICE_RED2_OEM);
     result += PyModule_AddIntMacro(module, NEODEVICE_RED);
     result += PyModule_AddIntMacro(module, NEODEVICE_ECU);
     result += PyModule_AddIntMacro(module, NEODEVICE_IEVB);
@@ -250,6 +259,7 @@ int setup_module_auto_defines(PyObject* module)
     result += PyModule_AddIntMacro(module, SPY_PROTOCOL_AUTOSAR);
     result += PyModule_AddIntMacro(module, SPY_PROTOCOL_A2B);
     result += PyModule_AddIntMacro(module, SPY_PROTOCOL_WBMS);
+    result += PyModule_AddIntMacro(module, SPY_PROTOCOL_MDIO);
     result += PyModule_AddIntMacro(module, SPY_STATUS_GLOBAL_ERR);
     result += PyModule_AddIntMacro(module, SPY_STATUS_TX_MSG);
     result += PyModule_AddIntMacro(module, SPY_STATUS_XTD_FRAME);
@@ -303,6 +313,16 @@ int setup_module_auto_defines(PyObject* module)
     result += PyModule_AddIntMacro(module, SPY_STATUS2_I2C_ERR_TIMEOUT);
     result += PyModule_AddIntMacro(module, SPY_STATUS2_I2C_ERR_NACK);
     result += PyModule_AddIntMacro(module, SPY_STATUS2_I2C_DIR_READ);
+    result += PyModule_AddIntMacro(module, SPY_STATUS2_MDIO_ERR_TIMEOUT);
+    result += PyModule_AddIntMacro(module, SPY_STATUS2_MDIO_JOB_CANCELLED);
+    result += PyModule_AddIntMacro(module, SPY_STATUS2_MDIO_INVALID_BUS);
+    result += PyModule_AddIntMacro(module, SPY_STATUS2_MDIO_INVALID_PHYADDR);
+    result += PyModule_AddIntMacro(module, SPY_STATUS2_MDIO_INVALID_REGADDR);
+    result += PyModule_AddIntMacro(module, SPY_STATUS2_MDIO_UNSUPPORTED_CLAUSE);
+    result += PyModule_AddIntMacro(module, SPY_STATUS2_MDIO_UNSUPPORTED_OPCODE);
+    result += PyModule_AddIntMacro(module, SPY_STATUS2_MDIO_OVERFLOW);
+    result += PyModule_AddIntMacro(module, SPY_STATUS2_MDIO_CLAUSE45);
+    result += PyModule_AddIntMacro(module, SPY_STATUS2_MDIO_READ);
     result += PyModule_AddIntMacro(module, SPY_STATUS2_LIN_ERR_RX_BREAK_NOT_0);
     result += PyModule_AddIntMacro(module, SPY_STATUS2_LIN_ERR_RX_BREAK_TOO_SHORT);
     result += PyModule_AddIntMacro(module, SPY_STATUS2_LIN_ERR_RX_SYNC_NOT_55);
@@ -321,7 +341,6 @@ int setup_module_auto_defines(PyObject* module)
     result += PyModule_AddIntMacro(module, SPY_STATUS3_LIN_SLAVE_DATA_TOO_SHORT);
     result += PyModule_AddIntMacro(module, SPY_STATUS3_LIN_ONLY_UPDATE_SLAVE_TABLE_ONCE);
     result += PyModule_AddIntMacro(module, SPY_STATUS2_MOST_PACKET_DATA);
-    result += PyModule_AddIntMacro(module, SPY_STATUS2_MOST_STATUS);
     result += PyModule_AddIntMacro(module, SPY_STATUS2_MOST_LOW_LEVEL);
     result += PyModule_AddIntMacro(module, SPY_STATUS2_MOST_CONTROL_DATA);
     result += PyModule_AddIntMacro(module, SPY_STATUS2_MOST_MHP_USER_DATA);
@@ -346,8 +365,7 @@ int setup_module_auto_defines(PyObject* module)
     result += PyModule_AddIntMacro(module, SPY_STATUS2_FLEXRAY_NO_HEADERCRC);
     result += PyModule_AddIntMacro(module, SPY_STATUS2_CAN_ISO15765_LOGICAL_FRAME);
     result += PyModule_AddIntMacro(module, SPY_STATUS2_CAN_HAVE_LINK_DATA);
-    result += PyModule_AddIntMacro(module, SPY_STATUS2_WBMS_NODE_DISCONNECTED);
-    result += PyModule_AddIntMacro(module, SPY_STATUS2_I2C_NODE_FAULT);
+    result += PyModule_AddIntMacro(module, SPY_STATUS2_WBMS_API_IS_CALLBACK);
     result += PyModule_AddIntMacro(module, SPY_STATUS3_CANFD_ESI);
     result += PyModule_AddIntMacro(module, SPY_STATUS3_CANFD_IDE);
     result += PyModule_AddIntMacro(module, SPY_STATUS3_CANFD_RTR);
@@ -546,6 +564,9 @@ int setup_module_auto_defines(PyObject* module)
     result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS10G_FLAG_LINK_MODE_AUTO);
     result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS10G_FLAG_COMM_IN_USE);
     result += PyModule_AddIntMacro(module, ETHERNET10G_SETTINGS_SIZE);
+    result += PyModule_AddIntMacro(module, ETHERNET10T1S_SETTINGS_SIZE);
+    result += PyModule_AddIntMacro(module, ETHERNET10T1S_SETTINGS_FLAG_ENABLE_PLCA);
+    result += PyModule_AddIntMacro(module, ETHERNET10T1S_SETTINGS_FLAG_TERMINATION);
     result += PyModule_AddIntMacro(module, LOGGER_SETTINGS_SIZE);
     result += PyModule_AddIntMacro(module, DISK_SETTINGS_SIZE);
     result += PyModule_AddIntMacro(module, CANTERM_SETTINGS_SIZE);
@@ -596,9 +617,10 @@ int setup_module_auto_defines(PyObject* module)
     // end of enum -  };
 
     result += PyModule_AddIntMacro(module, SExtSubCmdHdr_SIZE);
-    result += PyModule_AddIntMacro(module, MANUFACTURING_OPERATION_MAX_SIZE);
-    result += PyModule_AddIntMacro(module, ManufacturingOperationAPIVersion);
-    result += PyModule_AddIntMacro(module, SExtSubCmdComm_SIZE);
+    result += PyModule_AddIntMacro(module, GENERIC_BINARY_STATUS_ERROR_UNKNOWN_BINARY);
+    result += PyModule_AddIntMacro(module, GENERIC_BINARY_STATUS_ERROR_OVERSIZE);
+    result += PyModule_AddIntMacro(module, GENERIC_BINARY_STATUS_ERROR_BINARY_EMPTY);
+    result += PyModule_AddIntMacro(module, GENERIC_BINARY_STATUS_ERROR_ANY_MASK);
     result += PyModule_AddIntMacro(module, SERDESCAM_SETTINGS_FLAG_ENABLE);
     result += PyModule_AddIntMacro(module, SERDESCAM_SETTINGS_FLAG_RTSP_ENABLE);
     result += PyModule_AddIntMacro(module, SERDESCAM_SETTINGS_FLAG_AUTO_DET_RES_ENABLE);
@@ -885,8 +907,17 @@ int setup_module_auto_defines(PyObject* module)
     result += PyModule_AddIntMacro(module, SFire3FlexraySettings_SIZE);
     result += PyModule_AddIntMacro(module, RadMoonDuoSettings_SIZE);
     result += PyModule_AddIntMacro(module, SEtherBadgeSettings_SIZE);
+    result += PyModule_AddIntMacro(module, RADEPSILON_NUM_PORTS);
     result += PyModule_AddIntMacro(module, RADEPSILON_MAX_PHY);
     result += PyModule_AddIntMacro(module, SRADEpsilonSettings_SIZE);
+    // enum
+    result += PyModule_AddIntMacro(module, enumWILPortConfig_Single_Port_A);
+    result += PyModule_AddIntMacro(module, enumWILPortConfig_Single_Port_B);
+    result += PyModule_AddIntMacro(module, enumWILPortConfig_Dual_Port_A_And_B);
+    result += PyModule_AddIntMacro(module, enumWILPortConfig_Single_Port_A_And_B);
+    result += PyModule_AddIntMacro(module, _enumWILPortConfig_Total);
+    // end of enum -  };
+
     // enum
     result += PyModule_AddIntMacro(module, SPI_PORT_ONBOARD);
     result += PyModule_AddIntMacro(module, SPI_PORT_EXTERNAL);
@@ -903,7 +934,12 @@ int setup_module_auto_defines(PyObject* module)
     result += PyModule_AddIntMacro(module, SPI_MODE_PMS_EMULATION);
     // end of enum -  };
 
+    result += PyModule_AddIntMacro(module, WBMS_GATEWAY_NETWORK_NONE);
+    result += PyModule_AddIntMacro(module, WBMS_GATEWAY_NETWORK_DWCAN_01);
+    result += PyModule_AddIntMacro(module, WBMS_GATEWAY_NETWORK_DWCAN_02);
+    result += PyModule_AddIntMacro(module, WBMS_GATEWAY_NETWORK_UDP_MULTICAST);
     result += PyModule_AddIntMacro(module, SRADBMSSettings_SIZE);
+    result += PyModule_AddIntMacro(module, SRADCometSettings_SIZE);
     result += PyModule_AddIntMacro(module, GS_VERSION);
     result += PyModule_AddIntMacro(module, GLOBAL_SETTINGS_SIZE);
     result += PyModule_AddIntMacro(module, NEOVI_3G_MAX_SETTINGS_SIZE);
@@ -946,6 +982,8 @@ int setup_module_auto_defines(PyObject* module)
     result += PyModule_AddIntMacro(module, DeviceRADMoon3SettingsType);
     result += PyModule_AddIntMacro(module, DeviceFire3SettingsType);
     result += PyModule_AddIntMacro(module, DeviceFire3FlexraySettingsType);
+    result += PyModule_AddIntMacro(module, DeviceRADCometSettingsType);
+    result += PyModule_AddIntMacro(module, DeviceRed2OemSettingsType);
     result += PyModule_AddIntMacro(module, DeviceSettingsTypeMax);
     result += PyModule_AddIntMacro(module, DeviceSettingsNone);
     // end of enum -  } EDeviceSettingsType;
@@ -1036,6 +1074,21 @@ int setup_module_auto_defines(PyObject* module)
     result += PyModule_AddIntMacro(module, NUM_VALID_DEVICE_FEATURES);
     result += PyModule_AddIntMacro(module, supportedFeatureMax);
     // end of enum -  } DeviceFeature;
+
+    // enum
+    result += PyModule_AddIntMacro(module, PhyOperationError);
+    result += PyModule_AddIntMacro(module, PhyOperationSuccess);
+    result += PyModule_AddIntMacro(module, PhyFlashingInitError);
+    result += PyModule_AddIntMacro(module, PhyFlashingEraseError);
+    result += PyModule_AddIntMacro(module, PhyFlashingWriteError);
+    result += PyModule_AddIntMacro(module, PhyFlashingReadError);
+    result += PyModule_AddIntMacro(module, PhyFlashingVerifyError);
+    result += PyModule_AddIntMacro(module, PhyFlashingDeinitError);
+    result += PyModule_AddIntMacro(module, PhyFlashingInvalidHardware);
+    result += PyModule_AddIntMacro(module, PhyFlashingInvalidDataFile);
+    result += PyModule_AddIntMacro(module, PhyGetVersionError);
+    result += PyModule_AddIntMacro(module, PhyIndexError);
+    // end of enum -  } PhyErrorType;
 
     result += PyModule_AddIntMacro(module, NUM_DEVICE_FEATURE_BITFIELDS);
     // enum
