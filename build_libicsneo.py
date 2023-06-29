@@ -4,7 +4,7 @@ import os
 import shutil
 import sys
 
-LIBICSNEO_COMMIT = '5b3e21fa7ca8dfa2c61105d8f36a0638eb177dca'
+LIBICSNEO_COMMIT = '9ef93eb73e1ada72ccc7a571744b9db1a564f18b'
 LIBUSB_COMMIT = '4239bc3a50014b8e6a5a2a59df1fff3b7469543b'
 CPUS = str(multiprocessing.cpu_count())
 
