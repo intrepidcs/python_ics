@@ -1469,7 +1469,7 @@ PyObject* meth_load_default_settings(PyObject* self, PyObject* args) // icsneoLo
         }
         ice::Function<int __stdcall(ICS_HANDLE)> icsneoLoadDefaultSettings(lib, "icsneoLoadDefaultSettings");
         Py_BEGIN_ALLOW_THREADS;
-        if (!icsneoLoadDefaultSettings(PyNeoDevice_GetNeoDevice(obj)->handle)) {
+        if (!icsneoLoadDefaultSettings(handle)) {
             Py_BLOCK_THREADS;
             return set_ics_exception_dev(exception_runtime_error(), obj, "icsneoLoadDefaultSettings() Failed");
         }
