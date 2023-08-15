@@ -67,13 +67,19 @@ class build(build_module.build):
         build_module.build.run(self)
 
 
-home_path = os.path.expanduser('~')
-# Grab all the source files
-source_files = []
-for root, dirs, files in os.walk('src'):
-    for file in files:
-        if file.endswith('.cpp') or file.endswith('.c'):
-            source_files.append(os.path.join(root, file))
+source_files = [
+    'src/object_spy_message.cpp',
+    'src/defines.cpp',
+    'src/exceptions.cpp',
+    'src/dll.cpp',
+    'src/setup_module_auto_defines.cpp',
+    'src/main.cpp',
+    'src/object_neo_device.cpp',
+    'src/methods.cpp',
+    'src/ice/src/ice_library_manager.cpp',
+    'src/ice/src/ice_library_name.cpp',
+    'src/ice/src/ice_library.cpp'
+]
 
 # Set compiler flags here
 if 'LINUX' in platform.system().upper() or "MSC" not in sys.version:
@@ -103,7 +109,7 @@ ics_extension = Extension(
     define_macros=[('MAJOR_VERSION', MAJOR_VERSION),
                    ('MINOR_VERSION', MINOR_VERSION),
                    ('EXTERNAL_PROJECT', 1)],
-    include_dirs=['include', 'include/ics', 'include/ice'],
+    include_dirs=['include', 'include/ics', 'src/ice/include', 'src/ice/include/ice'],
     libraries=[],
     library_dirs=['/usr/local/lib'],
     sources=source_files, extra_compile_args=compile_args)

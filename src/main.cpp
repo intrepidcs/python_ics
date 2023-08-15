@@ -1,4 +1,4 @@
-
+#include <ice/ice.h>
 #include <Python.h>
 #include <datetime.h>
 #include "defines.h"
@@ -48,34 +48,35 @@
     "\n"                                                                                                               \
     "https://pypi.python.org/pypi/python-ics\n"
 
-#if PY_MAJOR_VERSION >= 3
 static PyModuleDef IcsModule = {
     PyModuleDef_HEAD_INIT, MODULE_NAME, _DOC_ICS_MODULE, -1, IcsMethods, NULL, NULL, NULL, NULL
 };
+
+void initialize_ics_library() {    
+#if (defined(_WIN32) || defined(__WIN32__))
+    // Everything besides windows uses libicsneo
+    constexpr char LIBRARY_NAME[] = "icsneo40";
+#else
+    constexpr char LIBRARY_NAME[] = "icsneo";
 #endif
+    auto& mgr = ice::LibraryManager::instance();
+    const auto library_name = ice::LibraryName(LIBRARY_NAME);
+    mgr.add("ics", library_name.build(), true);
+}
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-#if PY_MAJOR_VERSION >= 3
     PyMODINIT_FUNC PyInit_ics(void)
-#else
-void initics(void)
-#endif
     {
-#if PY_MAJOR_VERSION >= 3
+        initialize_ics_library();
+
         PyObject* module = PyModule_Create(&IcsModule);
-#else
-    PyObject* module = Py_InitModule3(MODULE_NAME, IcsMethods, _DOC_ICS_MODULE);
-#endif
+
         if (!module) {
-#if PY_MAJOR_VERSION >= 3
             return module;
-#else
-        return;
-#endif
         }
         PyDateTime_IMPORT;
 
@@ -89,11 +90,7 @@ void initics(void)
         setup_neo_device_object(module);
         setup_spy_message_object(module);
 
-#if PY_MAJOR_VERSION >= 3
         return module;
-#else
-    return;
-#endif
     }
 
 #ifdef __cplusplus

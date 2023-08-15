@@ -61,7 +61,7 @@ PyObject* _set_ics_exception(PyObject* exception, char* msg, const char* func_na
 {
     std::stringstream ss;
     std::string function = std::string(func_name);
-    int loc = function.find("meth_");
+    auto loc = function.find("meth_");
     if (loc != std::string::npos) {
         function.erase(loc, 5);
     }
@@ -78,7 +78,7 @@ PyObject* _set_ics_exception_dev(PyObject* exception, PyObject* obj, char* msg, 
 {
     std::stringstream ss;
     std::string function = std::string(func_name);
-    int loc = function.find("meth_");
+    auto loc = function.find("meth_");
     if (loc != std::string::npos) {
         function.erase(loc, 5);
     }
