@@ -57,7 +57,7 @@ void initialize_ics_library() {
     // Everything besides windows uses libicsneo
     constexpr char LIBRARY_NAME[] = "icsneo40";
 #else
-    constexpr char LIBRARY_NAME[] = "icsneo";
+    constexpr char LIBRARY_NAME[] = "icsneolegacy";
 #endif
     auto& mgr = ice::LibraryManager::instance();
     const auto library_name = ice::LibraryName(LIBRARY_NAME);

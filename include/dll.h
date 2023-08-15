@@ -5,9 +5,7 @@
 #pragma warning(disable : 4290)
 #endif
 
-#include "ice/ice_library.h"
-#include "ice/ice_exception.h"
-#include "ice/ice_function.h"
+#include <ice/ice.h>
 
 #ifdef _MSC_VER
 #pragma warning(default : 4290)
