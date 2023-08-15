@@ -220,7 +220,7 @@ static void spy_message_object_dealloc(spy_message_object* self)
          self->msg.ExtraDataPtr != NULL)) {
         // Clean up the ExtraDataPtr if we can
         // Ethernet protocol uses the ExtraDataPtrEnabled reversed internally so do a double check here
-        delete[] self->msg.ExtraDataPtr;
+        delete[] (unsigned char*)self->msg.ExtraDataPtr;
         self->msg.ExtraDataPtr = NULL;
         self->msg.ExtraDataPtrEnabled = 0;
     }
@@ -383,7 +383,7 @@ static int spy_message_object_setattr(PyObject* o, PyObject* name, PyObject* val
         // Get tuple items and place them in array, set as 0 if error.
         Py_ssize_t length = PyObject_Length(value);
         if (obj->msg.ExtraDataPtr != NULL)
-            delete[] obj->msg.ExtraDataPtr;
+            delete[] (unsigned char*)obj->msg.ExtraDataPtr;
         obj->msg.ExtraDataPtr = new unsigned char[length];
         // Some newer protocols are packing the length into NumberBytesHeader also so lets handle it here...
         if (obj->msg.Protocol == SPY_PROTOCOL_A2B || obj->msg.Protocol == SPY_PROTOCOL_ETHERNET) {
@@ -407,7 +407,7 @@ static int spy_message_object_setattr(PyObject* o, PyObject* name, PyObject* val
         if ((!obj->noExtraDataPtrCleanup && PyLong_AsLong(value) != 1 && obj->msg.ExtraDataPtrEnabled == 1) ||
             (!obj->noExtraDataPtrCleanup && PyLong_AsLong(value) != 1 && obj->msg.Protocol == SPY_PROTOCOL_ETHERNET)) {
             if (obj->msg.ExtraDataPtr != NULL)
-                delete[] obj->msg.ExtraDataPtr;
+                delete[] (unsigned char*)obj->msg.ExtraDataPtr;
         } else if (PyLong_AsLong(value) != 0 && obj->msg.Protocol == SPY_PROTOCOL_ETHERNET) {
             // Ethernet always needs to be set to 0
             return 0;

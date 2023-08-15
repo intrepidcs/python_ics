@@ -461,7 +461,7 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
             // Find the first free device
             for (int i = 0; i < count; ++i) {
                 // If we are looking for a serial number, check here
-                if (serial_number && devices[i].neoDevice.SerialNumber != serial_number)
+                if (serial_number && devices[i].neoDevice.SerialNumber != (int32_t)serial_number)
                     continue;
                 // If we aren't using neoVI Server and already have a connection we can't proceed.
                 if (!use_neovi_server && devices[i].neoDevice.NumberOfClients != 0) {
@@ -592,7 +592,7 @@ __int64 _tm_secs_offset(tm* t1, tm* t2)
     __int64 r2 = _tm_secs(t2);
     if (r1 == -1 || r2 == -1)
         return result;
-    if (t1->tm_year != t2->tm_year || t1->tm_mon != t1->tm_mon)
+    if (t1->tm_year != t2->tm_year || t1->tm_mon != t2->tm_mon)
         return -2;
     if ((result = r1 - r2) < 0)
         result *= -1;
@@ -1284,7 +1284,7 @@ static void message_reflash_callback(const wchar_t* message, unsigned long progr
     // We need to relock the GIL here otherwise we crash
     PyGILState_STATE state = PyGILState_Ensure();
     if (!msg_reflash_callback) {
-        PySys_WriteStdout("%s -%d\n", message, progress);
+        PySys_WriteStdout("%ls -%ld\n", message, progress);
     } else if (PyObject_HasAttrString(msg_reflash_callback, "reflash_callback")) {
         PyObject_CallMethod(msg_reflash_callback, "reflash_callback", "u,i", message, progress);
     } else {
@@ -3032,7 +3032,7 @@ PyObject* meth_get_device_status(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), "icsneoGetDeviceStatus() Failed");
         }
         if (throw_exception_on_size_mismatch) {
-            if (device_status_size != device_status_buffer.len) {
+            if (device_status_size != (size_t)device_status_buffer.len) {
                 Py_BLOCK_THREADS;
                 PyBuffer_Release(&device_status_buffer);
                 return set_ics_exception(exception_runtime_error(), "icsneoGetDeviceStatus() API mismatch detected!");
@@ -3685,7 +3685,7 @@ PyObject* meth_enable_doip_line(PyObject* self, PyObject* args)
 PyObject* meth_is_device_feature_supported(PyObject* self, PyObject* args)
 {
     PyObject* obj = NULL;
-    unsigned int feature = NULL;
+    unsigned int feature = 0;
     bool enable = false;
     if (!PyArg_ParseTuple(args, arg_parse("OI:", __FUNCTION__), &obj, &feature)) {
         return NULL;
@@ -3993,7 +3993,7 @@ PyObject* meth_uart_write(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), "icsneoUartWrite() Failed");
         }
         Py_END_ALLOW_THREADS;
-        if (check_size && data.len != bytesActuallySent) {
+        if (check_size && (size_t)data.len != bytesActuallySent) {
             return set_ics_exception(exception_runtime_error(),
                                      "Bytes actually sent didn't match bytes to send length");
         }
