@@ -60,7 +60,7 @@ void initialize_ics_library() {
     constexpr char LIBRARY_NAME[] = "icsneolegacy";
 #endif
     auto& mgr = ice::LibraryManager::instance();
-    const auto library_name = ice::LibraryName(LIBRARY_NAME);
+    const auto& library_name = ice::LibraryName(LIBRARY_NAME);
     mgr.add("ics", library_name.build(), true);
 }
 
