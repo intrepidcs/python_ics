@@ -319,6 +319,17 @@ class epsilon_versions(ctypes.Structure):
 
 
 
+class rad_wbms_versions(ctypes.Structure):
+    _pack_ = 2
+    _fields_ = [
+        ('mchip_major', ctypes.c_uint8),
+        ('mchip_minor', ctypes.c_uint8),
+        ('wil_major', ctypes.c_uint8),
+        ('wil_minor', ctypes.c_uint8),
+    ]
+
+
+
 class rad_comet_versions(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
@@ -362,6 +373,7 @@ class st_chip_versions(ctypes.Union):
         ('ether_badge_versions', ether_badge_versions),
         ('rad_a2b_versions', rad_a2b_versions),
         ('epsilon_versions', epsilon_versions),
+        ('rad_wbms_versions', rad_wbms_versions),
         ('rad_comet_versions', rad_comet_versions),
     ]
 

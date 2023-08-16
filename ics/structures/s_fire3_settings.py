@@ -128,6 +128,7 @@ class s_fire3_settings(ctypes.Structure):
         ('selectable_network_2', ctypes.c_uint16),
         ('network_enables_2', ctypes.c_uint64),
         ('termination_enables_2', ctypes.c_uint64),
+        ('iso_tester_pullup_enable', ctypes.c_uint16),
     ]
 
 

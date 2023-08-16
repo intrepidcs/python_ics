@@ -111,6 +111,7 @@ class s_fire3_flexray_settings(ctypes.Structure):
         ('termination_enables_2', ctypes.c_uint64),
         ('flex_mode', ctypes.c_uint16),
         ('flex_termination', ctypes.c_uint16),
+        ('iso_tester_pullup_enable', ctypes.c_uint16),
     ]
 
 

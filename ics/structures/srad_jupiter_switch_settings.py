@@ -17,7 +17,7 @@ class srad_jupiter_switch_settings(ctypes.Structure):
         ('spoofMacFlag', ctypes.c_uint8),
         ('spoofedMac', ctypes.c_uint8 * 6),
         ('pad', ctypes.c_uint8),
-        ('ptpParams', JupiterPtpParams_t),
+        ('ptpParams_unused', JupiterPtpParams_t),
     ]
 
 
