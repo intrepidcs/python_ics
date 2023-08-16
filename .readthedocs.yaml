@@ -11,6 +11,9 @@ build:
     - clang
     - clang-format
     - build-essential
+    - libpcap0.8-dev 
+    - libusb-1.0-0-dev 
+    - cmake
   tools:
     python: "3.11"
     
