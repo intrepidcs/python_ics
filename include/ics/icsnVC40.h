@@ -525,6 +525,20 @@ typedef unsigned __int64 uint64_t;
 #define FIRE2_REPORT_GPS (0x0400)
 #define FIRE3_REPORT_ORIENTATION (0x0800)
 
+typedef enum
+{
+    eSupportedWILVersions_WIL_1_1_0 = 1,
+    eSupportedWILVersions_WIL_2_0_0,
+}eSupportedWILVersions;
+
+typedef enum SwitchwBMSVersionError
+{
+	SwitchwBMSVersion_Failed = 0,
+	SwitchwBMSVersion_OK,
+	SwitchwBMSVersion_Reflashed,	
+	SwitchwBMSVersion_ParameterNotValid,
+} SwitchwBMSVersionError;
+
 typedef struct SExtendedDataFlashHeader
 {
 	uint16_t version;
@@ -1125,6 +1139,14 @@ typedef union _stChipVersions
 		uint8_t mchip_major;
 		uint8_t mchip_minor;
 	} epsilon_versions;
+
+	struct
+	{
+		uint8_t mchip_major;
+		uint8_t mchip_minor;
+		uint8_t wil_major;
+		uint8_t wil_minor;	
+	} rad_wbms_versions;
 
 	struct
 	{
@@ -3744,9 +3766,6 @@ typedef struct _SOBD2LCSettings
 
 #define RADJUPITER_NUM_PORTS 8
 
-#define JUPITER_PTP_ROLE_DISABLED 0
-#define JUPITER_PTP_ROLE_MASTER 1
-#define JUPITER_PTP_ROLE_SLAVE 2
 typedef struct SJupiterPtpParams_s
 {
 	uint32_t neighborPropDelay; //ns
@@ -3768,7 +3787,7 @@ typedef struct _SRADJupiterSwitchSettings
 	uint8_t spoofMacFlag;
 	uint8_t spoofedMac[6];
 	uint8_t pad;
-	JupiterPtpParams_t ptpParams; //16
+	JupiterPtpParams_t ptpParams_unused; //16
 } SRADJupiterSwitchSettings; //44
 
 typedef struct _SRADJupiterSettings
@@ -3907,8 +3926,9 @@ typedef struct _SRed2Settings
 	ETHERNET_SETTINGS2 ethernet2_2;
 	Fire3LinuxSettings os_settings;
 	RAD_GPTP_SETTINGS gPTP;
+	uint16_t iso_tester_pullup_enable;
 } SRed2Settings;
-#define SRed2Settings_SIZE (668)
+#define SRed2Settings_SIZE (670)
 
 typedef struct _SFire3Settings
 {
@@ -4016,8 +4036,9 @@ typedef struct _SFire3Settings
 	uint16_t selectable_network_2;
 	uint64_t network_enables_2;
 	uint64_t termination_enables_2;
+	uint16_t iso_tester_pullup_enable;
 } SFire3Settings;
-#define SFire3Settings_SIZE (1472)
+#define SFire3Settings_SIZE (1474)
 
 typedef struct _SFire3FlexraySettings
 {
@@ -4109,8 +4130,9 @@ typedef struct _SFire3FlexraySettings
 	uint64_t termination_enables_2;
 	uint16_t flex_mode;
 	uint16_t flex_termination;
+	uint16_t iso_tester_pullup_enable;
 } SFire3FlexraySettings;
-#define SFire3FlexraySettings_SIZE (1122)
+#define SFire3FlexraySettings_SIZE (1124)
 
 typedef struct
 {

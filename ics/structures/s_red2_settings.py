@@ -104,6 +104,7 @@ class s_red2_settings(ctypes.Structure):
         ('ethernet2_2', ETHERNET_SETTINGS2),
         ('os_settings', Fire3LinuxSettings),
         ('gPTP', RAD_GPTP_SETTINGS),
+        ('iso_tester_pullup_enable', ctypes.c_uint16),
     ]
 
 

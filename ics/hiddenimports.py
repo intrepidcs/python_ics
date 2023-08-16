@@ -161,6 +161,8 @@ hidden_imports = [
     "ics.structures.s_phy_reg_pkt_clause22_mess",
     "ics.structures.s_phy_reg_pkt_clause45_mess",
     "ics.structures.s_phy_reg_pkt",
+    "ics.structures.e_supported_wil_versions",
+    "ics.structures.switchw_bms_version_error",
     "ics.structures.op_eth_link_mode",
     "ics.structures.e_disk_format",
     "ics.structures.e_disk_layout",

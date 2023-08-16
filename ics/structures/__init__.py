@@ -161,6 +161,8 @@ __all__ = [
     "s_phy_reg_pkt_clause22_mess",
     "s_phy_reg_pkt_clause45_mess",
     "s_phy_reg_pkt",
+    "e_supported_wil_versions",
+    "switchw_bms_version_error",
     "op_eth_link_mode",
     "e_disk_format",
     "e_disk_layout",

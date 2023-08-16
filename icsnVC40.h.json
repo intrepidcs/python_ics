@@ -2523,6 +2523,48 @@
             },
             {
                 "names": [
+                    "rad_wbms_versions"
+                ],
+                "data_type": "Struct",
+                "packing": 2,
+                "is_anonymous": false,
+                "members": [
+                    {
+                        "name": "mchip_major",
+                        "data_type": "uint8_t",
+                        "array_length": 0,
+                        "bitfield_size": 0,
+                        "is_enum": false,
+                        "enum_value": null
+                    },
+                    {
+                        "name": "mchip_minor",
+                        "data_type": "uint8_t",
+                        "array_length": 0,
+                        "bitfield_size": 0,
+                        "is_enum": false,
+                        "enum_value": null
+                    },
+                    {
+                        "name": "wil_major",
+                        "data_type": "uint8_t",
+                        "array_length": 0,
+                        "bitfield_size": 0,
+                        "is_enum": false,
+                        "enum_value": null
+                    },
+                    {
+                        "name": "wil_minor",
+                        "data_type": "uint8_t",
+                        "array_length": 0,
+                        "bitfield_size": 0,
+                        "is_enum": false,
+                        "enum_value": null
+                    }
+                ]
+            },
+            {
+                "names": [
                     "rad_comet_versions"
                 ],
                 "data_type": "Struct",
@@ -14483,7 +14525,7 @@
                 "enum_value": null
             },
             {
-                "name": "ptpParams",
+                "name": "ptpParams_unused",
                 "data_type": "JupiterPtpParams_t",
                 "array_length": 0,
                 "bitfield_size": 0,
@@ -15299,6 +15341,14 @@
             {
                 "name": "gPTP",
                 "data_type": "RAD_GPTP_SETTINGS",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "iso_tester_pullup_enable",
+                "data_type": "uint16_t",
                 "array_length": 0,
                 "bitfield_size": 0,
                 "is_enum": false,
@@ -16132,6 +16182,14 @@
                 "bitfield_size": 0,
                 "is_enum": false,
                 "enum_value": null
+            },
+            {
+                "name": "iso_tester_pullup_enable",
+                "data_type": "uint16_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
             }
         ]
     },
@@ -16828,6 +16886,14 @@
             },
             {
                 "name": "flex_termination",
+                "data_type": "uint16_t",
+                "array_length": 0,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            },
+            {
+                "name": "iso_tester_pullup_enable",
                 "data_type": "uint16_t",
                 "array_length": 0,
                 "bitfield_size": 0,
