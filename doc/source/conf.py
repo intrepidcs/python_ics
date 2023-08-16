@@ -56,7 +56,7 @@ copyright = 'Intrepid Control Systems, Inc.'
 # built documents.
 #
 # The short X.Y version.
-version = '913.8'
+version = '913.16'
 # The full version, including alpha/beta/rc tags.
 release = version
 
