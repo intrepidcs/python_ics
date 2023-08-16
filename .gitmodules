@@ -1,3 +1,3 @@
 [submodule "src/ice"]
 	path = src/ice
-	url = git@github.com:ic3man5/ice.git
+	url = https://github.com/ic3man5/ice.git
