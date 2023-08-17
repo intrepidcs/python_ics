@@ -3,7 +3,7 @@ import re
 import os.path
 from collections import OrderedDict
 import sys
-from subprocess import run, PIPE
+from subprocess import STDOUT, CalledProcessError, run, PIPE
 from enum import Enum, auto
 import random
 import ctypes
@@ -476,13 +476,22 @@ def format_file(filename):
     # processed_fname = "icsnVC40_processed.h"
     # Run it through the preprocessor
     # clang -E -P .\include\ics\icsnVC40.h -o output.h
-    result = run(["clang", "-DEXTERNAL_PROJECT", "-E", "-P", filename, "-o", processed_fname], stdout=PIPE, stderr=PIPE)
-    result.check_returncode()
+    result = run(["clang", "-DEXTERNAL_PROJECT", "-E", "-P", filename, "-o", processed_fname], stdout=PIPE, stderr=STDOUT)
+    try:
+        result.check_returncode()
+    except CalledProcessError as ex:
+        print(f"ERROR: {' '.join(result.args)} failed with error code {ex.returncode}")
+        print(ex.stdout.decode('UTF-8'))
+        #print(ex.stderr)
 
     # Format the file
     result = run(["clang-format", "-i", "--style",
-                  "{BasedOnStyle: Mozilla, ColumnLimit: '200'}", processed_fname], stdout=PIPE, stderr=PIPE)
-    result.check_returncode()
+                  "{BasedOnStyle: Mozilla, ColumnLimit: '200'}", processed_fname], stdout=PIPE, stderr=STDOUT)
+    try:
+        result.check_returncode()
+    except CalledProcessError as ex:
+        print(f"ERROR: {' '.join(result.args)} failed with error code {ex.returncode}")
+        print(ex.stdout.decode('UTF-8'))
 
     return processed_fname
 
