@@ -87,7 +87,11 @@ if 'LINUX' in platform.system().upper() or "MSC" not in sys.version:
         '-fpermissive',
         '-Wno-unused-variable',
         '-Wno-unused-function',
-        '-Wno-write-strings'
+        '-Wno-write-strings',
+    ]
+elif 'DARWIN' in platform.system().upper():
+    compile_args = [
+        '-std=c++17',
     ]
 else:
     compile_args = []
