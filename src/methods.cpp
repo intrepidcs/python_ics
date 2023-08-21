@@ -1262,7 +1262,7 @@ PyObject* meth_flash_devices(PyObject* self, PyObject* args)
                                     unsigned long,
                                     unsigned long,
                                     unsigned long,
-                                    void*)>
+                                    void (*MessageCallback)(const char* message, bool success))>
             FlashDevice2(lib, "FlashDevice2");
         Py_BEGIN_ALLOW_THREADS;
         if (!FlashDevice2(0x3835C256, &(neo_device->dev), rc, reflash_count, 0, 0, 0, &message_callback)) {
