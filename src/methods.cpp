@@ -2263,11 +2263,11 @@ PyObject* meth_get_hw_firmware_info(PyObject* self, PyObject* args)
 
 PyObject* meth_base36enc(PyObject* self, PyObject* args)
 {
-    unsigned long value = 0;
-    if (!PyArg_ParseTuple(args, arg_parse("i:", __FUNCTION__), &value)) {
+    unsigned long long value = 0;
+    if (!PyArg_ParseTuple(args, arg_parse("K:", __FUNCTION__), &value)) {
         return NULL;
     }
-    char base36[37] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    constexpr char base36[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     /* log(2**64) / log(36) = 12.38 => max 13 char + '\0' */
     char buffer[100];
     unsigned int offset = sizeof(buffer);
