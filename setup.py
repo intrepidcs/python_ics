@@ -82,7 +82,7 @@ source_files = [
 ]
 
 # gcc and clang arguments
-gcc_compile_args = [
+GCC_COMPILE_ARGS = [
     '-fpermissive',
     '-Wno-unused-variable',
     '-Wno-unused-function',
@@ -94,12 +94,13 @@ if 'WINDOWS' in platform.system().upper():
     compile_args = []
     # mingw and clang python builds won't have MSC in the version string
     if "MSC" not in sys.version:
-        compile_args = gcc_compile_args
+        compile_args = GCC_COMPILE_ARGS
 elif 'LINUX' in platform.system().upper():
-    compile_args = gcc_compile_args
+    compile_args = GCC_COMPILE_ARGS
 elif 'DARWIN' in platform.system().upper():
     # Mac doesn't respect the compiler args, but will append with ARCHFLAGS environment variable
     os.environ['ARCHFLAGS'] = '-std=c++17'
+    compile_args = []
 else:
     compile_args = []
 
