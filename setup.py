@@ -90,9 +90,8 @@ if 'LINUX' in platform.system().upper() or "MSC" not in sys.version:
         '-Wno-write-strings',
     ]
 elif 'DARWIN' in platform.system().upper():
-    compile_args = [
-        '-std=c++17',
-    ]
+    # Mac doesn't respect the compiler args, but will append with ARCHFLAGS environment variable
+    os.environ['ARCHFLAGS'] = '-std=c++17'
 else:
     compile_args = []
 
