@@ -6,7 +6,7 @@ enable_use_server = True
 
 # Helper Functions ##########################################################
 def dev_name(device):
-    if int("AA0000", 36) < device.SerialNumber < int("ZZZZZZ", 36):
+    if int("0A0000", 36) <= device.SerialNumber <= int("ZZZZZZ", 36):
         return device.Name + " " + ics.base36enc(device.SerialNumber)
     else:
         return device.Name + " " + str(device.SerialNumber)

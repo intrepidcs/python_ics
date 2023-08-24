@@ -143,10 +143,10 @@ static PyObject* neo_device_object_tp_repr(PyObject* o)
 {
     // example output: <ics.NeoDevice neoVI FIRE2 CY1234>
     neo_device_object* nd = (neo_device_object*)(o);
-    // Check range is A00000-ZZZZZZ
+    // Check range is 0A0000-ZZZZZZ
     PyObject* sn = NULL;
     uint32_t serial = (uint32_t)nd->dev.SerialNumber;
-    if (604661760 <= serial && serial <= 2176782335)
+    if (16796160 <= serial && serial <= 2176782335)
         sn = convert_to_base36(serial);
     else
         sn = PyUnicode_FromFormat("%lu", nd->dev.SerialNumber);
