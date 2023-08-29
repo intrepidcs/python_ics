@@ -51,7 +51,7 @@ def get_device_specific_settings(s: s_device_settings) -> object:
 
 def dev_name(device):
     # Return a friendly name of the device (ie. neoVI FIRE2 CY1234)
-    if int("A00000", 36) <= device.SerialNumber <= int("ZZZZZZ", 36):
+    if int("0A0000", 36) <= device.SerialNumber <= int("ZZZZZZ", 36):
         return device.Name + " " + ics.base36enc(device.SerialNumber)
     else:
         return device.Name + " " + str(device.SerialNumber)
