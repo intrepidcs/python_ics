@@ -43,9 +43,7 @@ def get_device_specific_settings(s: s_device_settings) -> object:
     setting_map[e_device_settings_type.DeviceOBD2LCSettingsType] = "obd2lc"
 
     if s.DeviceSettingType not in setting_map:
-        raise KeyError(
-            f"Error: {s.DeviceSettingType} is not a known type in setting_map"
-        )
+        raise KeyError(f"Error: {s.DeviceSettingType} is not a known type in setting_map")
     return getattr(s.Settings, setting_map[s.DeviceSettingType])
 
 
@@ -69,9 +67,7 @@ if __name__ == "__main__":
     try:
         # Open the first device
         device = ics.open_device()
-        print(
-            f"Opened Device {dev_name(device)} (Open Client handles: {device.NumberOfClients})..."
-        )
+        print(f"Opened Device {dev_name(device)} (Open Client handles: {device.NumberOfClients})...")
     except ics.RuntimeError as ex:
         print(f"Failed to open first device: {ex}")
         exit(1)
