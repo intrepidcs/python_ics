@@ -58,6 +58,26 @@ typedef struct
 #endif
 #endif
 
+// Internal Enum for Accessory (aka Phy) functions
+typedef enum AccessoryErrorType
+{
+	AccessoryOperationError = 0,
+	AccessoryOperationSuccess = 1,
+	AccessoryFlashingInitError = 2,
+	AccessoryFlashingEraseError = 3,
+	AccessoryFlashingWriteError = 4,
+	AccessoryFlashingReadError = 5,
+	AccessoryFlashingVerifyError = 6,
+	AccessoryFlashingDeinitError = 7,
+	AccessoryFlashingInvalidHardware = 8,
+	AccessoryFlashingInvalidDataFile = 9,
+	AccessoryGetVersionError = 10,
+	AccessoryIndexError = 11,
+	AccessoryParamApiVersionError = 12,
+	AccessoryParamSizeMismatchError = 13,
+	AccessoryParameterNull = 14,
+} AccessoryOperationErrorType;
+
 // Internal function
 char* neodevice_to_string(unsigned long type)
 {
@@ -3272,13 +3292,13 @@ PyObject* meth_write_jupiter_firmware(PyObject* self, PyObject* args)
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
-PyObject* meth_flash_phy_firmware(PyObject* self, PyObject* args)
+PyObject* meth_flash_accessory_firmware(PyObject* self, PyObject* args)
 {
     PyObject* obj = NULL;
-    char phy_indx = 0;
+    char index = 0;
     PyObject* bytes_obj = NULL;
     bool check_success = true;
-    if (!PyArg_ParseTuple(args, arg_parse("OiO|b:", __FUNCTION__), &obj, &phy_indx, &bytes_obj, &check_success)) {
+    if (!PyArg_ParseTuple(args, arg_parse("OiO|b:", __FUNCTION__), &obj, &index, &bytes_obj, &check_success)) {
         return NULL;
     }
 
@@ -3304,56 +3324,71 @@ PyObject* meth_flash_phy_firmware(PyObject* self, PyObject* args)
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
-        int function_error = (int)PhyOperationError;
-        // int __stdcall icsneoFlashPhyFirmware(void* hObject, unsigned char phyIndx, unsigned char* fileData, size_t
+        int function_error = 0;
+        // int __stdcall icsneoFlashAccessoryFirmware(void* hObject, unsigned char index, unsigned char* fileData, size_t
         // fileDataSize, int* errorCode)
         ice::Function<int __stdcall(ICS_HANDLE, unsigned char, unsigned char*, size_t, int*)> icsneoFlashPhyFirmware(
-            lib, "icsneoFlashPhyFirmware");
+            lib, "icsneoFlashPhyFirmware"); // Old API
         Py_BEGIN_ALLOW_THREADS;
-        if (!icsneoFlashPhyFirmware(handle, phy_indx, bytes_str, bsize, &function_error)) {
-            Py_BLOCK_THREADS;
-            return set_ics_exception(exception_runtime_error(), "icsneoFlashPhyFirmware() Failed");
+        if (!icsneoFlashPhyFirmware(handle, index, bytes_str, bsize, &function_error)) {
+
+            ice::Function<int __stdcall(ICS_HANDLE, unsigned char, unsigned char*, size_t, int*)> icsneoFlashAccessoryFirmware(
+            lib, "icsneoFlashAccessoryFirmware");  // New API
+
+            if (!icsneoFlashAccessoryFirmware(handle, index, bytes_str, bsize, &function_error)) {
+                Py_BLOCK_THREADS;
+                return set_ics_exception(exception_runtime_error(), "icsneoFlashAccessoryFirmware() or  icsneoFlashPhyFirmware() Failed");
+            }
         }
         // check the return value to make sure we are good
-        if (check_success && function_error != PhyOperationSuccess) {
+        if (check_success && function_error != AccessoryOperationSuccess) {
             std::stringstream ss;
-            ss << "icsneoFlashPhyFirmware() Failed with error code: " << function_error << " (";
+            ss << "icsneoFlashAccessoryFirmware() Failed with error code: " << function_error << " (";
             switch (function_error) {
-                case PhyOperationError:
-                    ss << "PhyOperationError";
+                case AccessoryOperationError:
+                    ss << "AccessoryOperationError";
                     break;
-                case PhyOperationSuccess:
-                    ss << "PhyOperationSuccess";
+                case AccessoryOperationSuccess:
+                    ss << "AccessoryOperationSuccess";
                     break;
-                case PhyFlashingInitError:
-                    ss << "PhyFlashingInitError";
+                case AccessoryFlashingInitError:
+                    ss << "AccessoryFlashingInitError";
                     break;
-                case PhyFlashingEraseError:
-                    ss << "PhyFlashingEraseError";
+                case AccessoryFlashingEraseError:
+                    ss << "AccessoryFlashingEraseError";
                     break;
-                case PhyFlashingWriteError:
-                    ss << "PhyFlashingWriteError";
+                case AccessoryFlashingWriteError:
+                    ss << "AccessoryFlashingWriteError";
                     break;
-                case PhyFlashingReadError:
-                    ss << "PhyFlashingReadError";
+                case AccessoryFlashingReadError:
+                    ss << "AccessoryFlashingReadError";
                     break;
-                case PhyFlashingVerifyError:
-                    ss << "PhyFlashingVerifyError";
+                case AccessoryFlashingVerifyError:
+                    ss << "AccessoryFlashingVerifyError";
                     break;
-                case PhyFlashingDeinitError:
-                    ss << "PhyFlashingDeinitError";
+                case AccessoryFlashingDeinitError:
+                    ss << "AccessoryFlashingDeinitError";
                     break;
-                case PhyFlashingInvalidHardware:
-                    ss << "PhyFlashingInvalidHardware";
+                case AccessoryFlashingInvalidHardware:
+                    ss << "AccessoryFlashingInvalidHardware";
                     break;
-                case PhyFlashingInvalidDataFile:
-                    ss << "PhyFlashingInvalidDataFile";
+                case AccessoryFlashingInvalidDataFile:
+                    ss << "AccessoryFlashingInvalidDataFile";
                     break;
-                case PhyGetVersionError:
-                    ss << "PhyGetVersionError";
+                case AccessoryGetVersionError:
+                    ss << "AccessoryGetVersionError";
                     break;
-                case PhyIndexError:
-                    ss << "PhyIndexError";
+                case AccessoryIndexError:
+                    ss << "AccessoryIndexError";
+                    break;
+                case AccessoryIndexError:
+                    ss << "AccessoryIndexError";
+                    break;
+                case AccessoryParamSizeMismatchError:
+                    ss << "AccessoryParamSizeMismatchError";
+                    break;
+                case AccessoryParameterNull:
+                    ss << "AccessoryParameterNull";
                     break;
                 default:
                     ss << "Unknown";
@@ -3370,12 +3405,12 @@ PyObject* meth_flash_phy_firmware(PyObject* self, PyObject* args)
     }
 }
 
-PyObject* meth_get_phy_firmware_version(PyObject* self, PyObject* args)
+PyObject* meth_get_accessory_firmware_version(PyObject* self, PyObject* args)
 {
     PyObject* obj = NULL;
-    char phy_indx = 0;
+    char index = 0;
     bool check_success = true;
-    if (!PyArg_ParseTuple(args, arg_parse("Oi|b:", __FUNCTION__), &obj, &phy_indx, &check_success)) {
+    if (!PyArg_ParseTuple(args, arg_parse("Oi|b:", __FUNCTION__), &obj, &index, &check_success)) {
         return NULL;
     }
 
@@ -3391,58 +3426,72 @@ PyObject* meth_get_phy_firmware_version(PyObject* self, PyObject* args)
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
-        // int __stdcall icsneoGetPhyFwVersion(void* hObject, unsigned char phyIndx, unsigned int* phyFwVers, int*
+        // int __stdcall icsneoGetAccessoryFirmwareVersion(void* hObject, unsigned char Indx, unsigned int* FwVers, int*
         // errorCode)
         ice::Function<int __stdcall(ICS_HANDLE, unsigned char, unsigned int*, int*)> icsneoGetPhyFwVersion(
-            lib, "icsneoGetPhyFwVersion");
+            lib, "icsneoGetPhyFwVersion"); // Old API
 
-        unsigned int phy_version = 0;
+        unsigned int accessory_version = 0;
         int function_error = 0;
         Py_BEGIN_ALLOW_THREADS;
-        if (!icsneoGetPhyFwVersion(handle, phy_indx, &phy_version, &function_error)) {
-            Py_BLOCK_THREADS return set_ics_exception(exception_runtime_error(), "icsneoGetPhyFwVersion() Failed");
+        if (!icsneoGetPhyFwVersion(handle, index, &accessory_version, &function_error)) {
+
+            ice::Function<int __stdcall(ICS_HANDLE, unsigned char, unsigned int*, int*)> icsneoGetAccessoryFirmwareVersion(
+            lib, "icsneoGetAccessoryFirmwareVersion"); // New API
+            if (!icsneoGetAccessoryFirmwareVersion(handle, index, &accessory_version, &function_error)) {
+                Py_BLOCK_THREADS return set_ics_exception(exception_runtime_error(), " icsneoGetAccessoryFirmwareVersion() or icsneoGetPhyFwVersion() Failed");
+            }
         }
         Py_END_ALLOW_THREADS;
         // check the return value to make sure we are good
-        if (check_success && function_error != PhyOperationSuccess) {
+        if (check_success && function_error != AccessoryOperationSuccess) {
             std::stringstream ss;
-            ss << "icsneoGetPhyFwVersion() Failed with error code: " << function_error << " (";
+            ss << "icsneoGetAccessoryFirmwareVersion() Failed with error code: " << function_error << " (";
             switch (function_error) {
-                case PhyOperationError:
-                    ss << "PhyOperationError";
+                case AccessoryOperationError:
+                    ss << "AccessoryOperationError";
                     break;
-                case PhyOperationSuccess:
-                    ss << "PhyOperationSuccess";
+                case AccessoryOperationSuccess:
+                    ss << "AccessoryOperationSuccess";
                     break;
-                case PhyFlashingInitError:
-                    ss << "PhyFlashingInitError";
+                case AccessoryFlashingInitError:
+                    ss << "AccessoryFlashingInitError";
                     break;
-                case PhyFlashingEraseError:
-                    ss << "PhyFlashingEraseError";
+                case AccessoryFlashingEraseError:
+                    ss << "AccessoryFlashingEraseError";
                     break;
-                case PhyFlashingWriteError:
-                    ss << "PhyFlashingWriteError";
+                case AccessoryFlashingWriteError:
+                    ss << "AccessoryFlashingWriteError";
                     break;
-                case PhyFlashingReadError:
-                    ss << "PhyFlashingReadError";
+                case AccessoryFlashingReadError:
+                    ss << "AccessoryFlashingReadError";
                     break;
-                case PhyFlashingVerifyError:
-                    ss << "PhyFlashingVerifyError";
+                case AccessoryFlashingVerifyError:
+                    ss << "AccessoryFlashingVerifyError";
                     break;
-                case PhyFlashingDeinitError:
-                    ss << "PhyFlashingDeinitError";
+                case AccessoryFlashingDeinitError:
+                    ss << "AccessoryFlashingDeinitError";
                     break;
-                case PhyFlashingInvalidHardware:
-                    ss << "PhyFlashingInvalidHardware";
+                case AccessoryFlashingInvalidHardware:
+                    ss << "AccessoryFlashingInvalidHardware";
                     break;
-                case PhyFlashingInvalidDataFile:
-                    ss << "PhyFlashingInvalidDataFile";
+                case AccessoryFlashingInvalidDataFile:
+                    ss << "AccessoryFlashingInvalidDataFile";
                     break;
-                case PhyGetVersionError:
-                    ss << "PhyGetVersionError";
+                case AccessoryGetVersionError:
+                    ss << "AccessoryGetVersionError";
                     break;
-                case PhyIndexError:
-                    ss << "PhyIndexError";
+                case AccessoryIndexError:
+                    ss << "AccessoryIndexError";
+                    break;
+                case AccessoryIndexError:
+                    ss << "AccessoryIndexError";
+                    break;
+                case AccessoryParamSizeMismatchError:
+                    ss << "AccessoryParamSizeMismatchError";
+                    break;
+                case AccessoryParameterNull:
+                    ss << "AccessoryParameterNull";
                     break;
                 default:
                     ss << "Unknown";
@@ -3451,7 +3500,7 @@ PyObject* meth_get_phy_firmware_version(PyObject* self, PyObject* args)
             ss << ")";
             return set_ics_exception(exception_runtime_error(), (char*)ss.str().c_str());
         }
-        return Py_BuildValue("Ii", phy_version, function_error);
+        return Py_BuildValue("Ii", accessory_version, function_error);
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
