@@ -58,26 +58,6 @@ typedef struct
 #endif
 #endif
 
-// Internal Enum for Accessory (aka Phy) functions
-typedef enum AccessoryErrorType
-{
-	AccessoryOperationError = 0,
-	AccessoryOperationSuccess = 1,
-	AccessoryFlashingInitError = 2,
-	AccessoryFlashingEraseError = 3,
-	AccessoryFlashingWriteError = 4,
-	AccessoryFlashingReadError = 5,
-	AccessoryFlashingVerifyError = 6,
-	AccessoryFlashingDeinitError = 7,
-	AccessoryFlashingInvalidHardware = 8,
-	AccessoryFlashingInvalidDataFile = 9,
-	AccessoryGetVersionError = 10,
-	AccessoryIndexError = 11,
-	AccessoryParamApiVersionError = 12,
-	AccessoryParamSizeMismatchError = 13,
-	AccessoryParameterNull = 14,
-} AccessoryOperationErrorType;
-
 // Internal function
 char* neodevice_to_string(unsigned long type)
 {
@@ -3295,10 +3275,10 @@ PyObject* meth_write_jupiter_firmware(PyObject* self, PyObject* args)
 PyObject* meth_flash_accessory_firmware(PyObject* self, PyObject* args)
 {
     PyObject* obj = NULL;
-    char index = 0;
+    char accessory_indx = 0;
     PyObject* bytes_obj = NULL;
     bool check_success = true;
-    if (!PyArg_ParseTuple(args, arg_parse("OiO|b:", __FUNCTION__), &obj, &index, &bytes_obj, &check_success)) {
+    if (!PyArg_ParseTuple(args, arg_parse("OiO|b:", __FUNCTION__), &obj, &accessory_indx, &bytes_obj, &check_success)) {
         return NULL;
     }
 
@@ -3319,26 +3299,28 @@ PyObject* meth_flash_accessory_firmware(PyObject* self, PyObject* args)
     if (!bytes_str)
         return NULL;
     try {
+
+        FlashAccessoryFirmwareParams param;
+        param.apiVersion = 1;
+        param.size = sizeof(FlashAccessoryFirmwareParams);
+        param.index = accessory_indx;
+        param.data = bytes_str;
+        param.dataSize = bsize;
+
         ice::Library* lib = dll_get_library();
         if (!lib) {
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
-        int function_error = 0;
-        // int __stdcall icsneoFlashAccessoryFirmware(void* hObject, unsigned char index, unsigned char* fileData, size_t
-        // fileDataSize, int* errorCode)
-        ice::Function<int __stdcall(ICS_HANDLE, unsigned char, unsigned char*, size_t, int*)> icsneoFlashPhyFirmware(
-            lib, "icsneoFlashPhyFirmware"); // Old API
+        int function_error = (int)AccessoryOperationError;
+        // int __stdcall icsneoFlashAccessoryFirmware(void* hObject, FlashAccessoryFirmwareParams* param, int* errorCode)
+        //int __stdcall icsneoFlashPhyFirmware(void* hObject, unsigned char phyIndx, unsigned char* fileData, size_t fileDataSize, int* errorCode)
+        ice::Function<int __stdcall(ICS_HANDLE, FlashAccessoryFirmwareParams, int*)> icsneoFlashAccessoryFirmware(
+            lib, "icsneoFlashAccessoryFirmware");
         Py_BEGIN_ALLOW_THREADS;
-        if (!icsneoFlashPhyFirmware(handle, index, bytes_str, bsize, &function_error)) {
-
-            ice::Function<int __stdcall(ICS_HANDLE, unsigned char, unsigned char*, size_t, int*)> icsneoFlashAccessoryFirmware(
-            lib, "icsneoFlashAccessoryFirmware");  // New API
-
-            if (!icsneoFlashAccessoryFirmware(handle, index, bytes_str, bsize, &function_error)) {
-                Py_BLOCK_THREADS;
-                return set_ics_exception(exception_runtime_error(), "icsneoFlashAccessoryFirmware() or  icsneoFlashPhyFirmware() Failed");
-            }
+        if (!icsneoFlashAccessoryFirmware(handle, param, &function_error)) {
+            Py_BLOCK_THREADS;
+            return set_ics_exception(exception_runtime_error(), "icsneoFlashAccessoryFirmware() Failed");
         }
         // check the return value to make sure we are good
         if (check_success && function_error != AccessoryOperationSuccess) {
@@ -3381,8 +3363,8 @@ PyObject* meth_flash_accessory_firmware(PyObject* self, PyObject* args)
                 case AccessoryIndexError:
                     ss << "AccessoryIndexError";
                     break;
-                case AccessoryIndexError:
-                    ss << "AccessoryIndexError";
+                case AccessoryParamApiVersionError :
+                    ss << "AccessoryParamApiVersionError ";
                     break;
                 case AccessoryParamSizeMismatchError:
                     ss << "AccessoryParamSizeMismatchError";
@@ -3394,7 +3376,6 @@ PyObject* meth_flash_accessory_firmware(PyObject* self, PyObject* args)
                     ss << "Unknown";
                     break;
             };
-            ss << ")";
             return set_ics_exception(exception_runtime_error(), (char*)ss.str().c_str());
         }
         Py_END_ALLOW_THREADS;
@@ -3408,9 +3389,9 @@ PyObject* meth_flash_accessory_firmware(PyObject* self, PyObject* args)
 PyObject* meth_get_accessory_firmware_version(PyObject* self, PyObject* args)
 {
     PyObject* obj = NULL;
-    char index = 0;
+    char accessory_indx = 0;
     bool check_success = true;
-    if (!PyArg_ParseTuple(args, arg_parse("Oi|b:", __FUNCTION__), &obj, &index, &check_success)) {
+    if (!PyArg_ParseTuple(args, arg_parse("Oi|b:", __FUNCTION__), &obj, &accessory_indx, &check_success)) {
         return NULL;
     }
 
@@ -3426,27 +3407,21 @@ PyObject* meth_get_accessory_firmware_version(PyObject* self, PyObject* args)
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
-        // int __stdcall icsneoGetAccessoryFirmwareVersion(void* hObject, unsigned char Indx, unsigned int* FwVers, int*
-        // errorCode)
-        ice::Function<int __stdcall(ICS_HANDLE, unsigned char, unsigned int*, int*)> icsneoGetPhyFwVersion(
-            lib, "icsneoGetPhyFwVersion"); // Old API
+        // int __stdcall icsneoGetAccessoryFirmwareVersion(void* hObject, unsigned char index, unsigned int* fwVers, int* errorCode)
+        ice::Function<int __stdcall(ICS_HANDLE, unsigned char, unsigned int*, int*)> icsneoGetAccessoryFirmwareVersion(
+            lib, "icsneoGetAccessoryFirmwareVersion");
 
         unsigned int accessory_version = 0;
         int function_error = 0;
         Py_BEGIN_ALLOW_THREADS;
-        if (!icsneoGetPhyFwVersion(handle, index, &accessory_version, &function_error)) {
-
-            ice::Function<int __stdcall(ICS_HANDLE, unsigned char, unsigned int*, int*)> icsneoGetAccessoryFirmwareVersion(
-            lib, "icsneoGetAccessoryFirmwareVersion"); // New API
-            if (!icsneoGetAccessoryFirmwareVersion(handle, index, &accessory_version, &function_error)) {
-                Py_BLOCK_THREADS return set_ics_exception(exception_runtime_error(), " icsneoGetAccessoryFirmwareVersion() or icsneoGetPhyFwVersion() Failed");
-            }
+        if (!icsneoGetAccessoryFirmwareVersion(handle, accessory_indx, &accessory_version, &function_error)) {
+            Py_BLOCK_THREADS return set_ics_exception(exception_runtime_error(), "icsneoGetAccessoryFirmwareVersion() Failed");
         }
         Py_END_ALLOW_THREADS;
         // check the return value to make sure we are good
         if (check_success && function_error != AccessoryOperationSuccess) {
             std::stringstream ss;
-            ss << "icsneoGetAccessoryFirmwareVersion() Failed with error code: " << function_error << " (";
+            ss << "icsneoFlashAccessoryFirmware() Failed with error code: " << function_error << " (";
             switch (function_error) {
                 case AccessoryOperationError:
                     ss << "AccessoryOperationError";
@@ -3484,8 +3459,8 @@ PyObject* meth_get_accessory_firmware_version(PyObject* self, PyObject* args)
                 case AccessoryIndexError:
                     ss << "AccessoryIndexError";
                     break;
-                case AccessoryIndexError:
-                    ss << "AccessoryIndexError";
+                case AccessoryParamApiVersionError :
+                    ss << "AccessoryParamApiVersionError ";
                     break;
                 case AccessoryParamSizeMismatchError:
                     ss << "AccessoryParamSizeMismatchError";
