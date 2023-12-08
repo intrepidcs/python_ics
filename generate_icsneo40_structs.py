@@ -48,16 +48,16 @@ class CVariable(object):
         self.is_enum = bool(self.enum_value)
 
     def __repr__(self):
-        return f'<{self.__class__.__name__} {self.name} {self.data_type} @ {hex(id(self))}>'
+        return f"<{self.__class__.__name__} {self.name} {self.data_type} @ {hex(id(self))}>"
 
     def to_ordered_dict(self):
         od = OrderedDict()
-        od['name'] = self.name
-        od['data_type'] = self.data_type
-        od['array_length'] = self.array_length
-        od['bitfield_size'] = self.bitfield_size
-        od['is_enum'] = self.is_enum
-        od['enum_value'] = self.enum_value
+        od["name"] = self.name
+        od["data_type"] = self.data_type
+        od["array_length"] = self.array_length
+        od["bitfield_size"] = self.bitfield_size
+        od["is_enum"] = self.is_enum
+        od["enum_value"] = self.enum_value
         return od
 
 
@@ -81,44 +81,44 @@ class CObject(object):
         if self.names:
             name = self.names[-1]
         else:
-            name = 'Anon'
+            name = "Anon"
 
         if self.data_type == DataType.Struct:
-            t_name = 'Struct'
+            t_name = "Struct"
         elif self.data_type == DataType.Union:
-            t_name = 'Union'
+            t_name = "Union"
         elif self.data_type == DataType.Enum:
-            t_name = 'Enum'
+            t_name = "Enum"
         else:
-            t_name = 'Unknown'
+            t_name = "Unknown"
 
-        return f'<{self.__class__.__name__} {name} {t_name} {len(self.members)} members @ {hex(id(self))}>'
+        return f"<{self.__class__.__name__} {name} {t_name} {len(self.members)} members @ {hex(id(self))}>"
 
     def to_ordered_dict(self):
         od = OrderedDict()
         if self.data_type == DataType.Struct:
-            t_name = 'Struct'
+            t_name = "Struct"
         elif self.data_type == DataType.Union:
-            t_name = 'Union'
+            t_name = "Union"
         elif self.data_type == DataType.Enum:
-            t_name = 'Enum'
+            t_name = "Enum"
         else:
-            t_name = 'Unknown'
+            t_name = "Unknown"
 
-        od['names'] = self.names
-        od['data_type'] = t_name
-        od['packing'] = self.packing
-        od['is_anonymous'] = self.is_anonymous
-        od['members'] = []
+        od["names"] = self.names
+        od["data_type"] = t_name
+        od["packing"] = self.packing
+        od["is_anonymous"] = self.is_anonymous
+        od["members"] = []
         for member in self.members:
-            od['members'].append(member.to_ordered_dict())
+            od["members"].append(member.to_ordered_dict())
         return od
 
     def assign_preferred_name(self, is_embedded=False):
         """This assigns a name to the object if we are nameless and anonymous, safe to call multiple times."""
         self.preferred_name = get_preferred_struct_name(self.names)
         # Any object that starts with _ won't be imported with import * statement so lets push it to the end
-        if self.preferred_name and self.preferred_name.startswith('_'):
+        if self.preferred_name and self.preferred_name.startswith("_"):
             modified_name = reverse_leading_underscores(self.preferred_name)
             self.names.append(modified_name)
             self.preferred_name = get_preferred_struct_name(self.names)
@@ -128,9 +128,7 @@ class CObject(object):
             self.preferred_name = convert_to_snake_case(self.preferred_name)
 
 
-_start_of_obj_blacklist = (
-    re.compile(r'''struct [aA-zZ\\_]+ [aA-zZ\\_]+;'''),  # struct some_random_struct_name value;
-)
+_start_of_obj_blacklist = (re.compile(r"""struct [aA-zZ\\_]+ [aA-zZ\\_]+;"""),)  # struct some_random_struct_name value;
 
 
 def is_line_start_of_object(line):
@@ -138,7 +136,7 @@ def is_line_start_of_object(line):
     for regex in _start_of_obj_blacklist:
         if bool(regex.search(line)):
             return False
-    return bool(re.search('\btypedef struct$|struct$|struct \S*$|enum$|enum |union$|union ', line))
+    return bool(re.search("\btypedef struct$|struct$|struct \S*$|enum$|enum |union$|union ", line))
 
 
 # This contains all the objects that don't pass convert_to_ctype_object
@@ -175,16 +173,16 @@ def parse_object(f, pos=-1, pack_size=None, is_embedded=False):
         new_obj = CObject()
         new_obj.packing = pack_size
         # Grab the object name
-        name = re.sub('typedef|struct|enum|union|\{|\s*', '', line)
+        name = re.sub("typedef|struct|enum|union|\{|\s*", "", line)
         # Only append the name if its not anonymous
         if name:
             new_obj.names.append(name)
         # Determine the type of object
-        if 'struct' in line:
+        if "struct" in line:
             new_obj.data_type = DataType.Struct
-        elif 'union' in line:
+        elif "union" in line:
             new_obj.data_type = DataType.Union
-        elif 'enum' in line:
+        elif "enum" in line:
             new_obj.data_type = DataType.Enum
         else:
             new_obj.data_type = DataType.Unknown
@@ -204,15 +202,15 @@ def parse_object(f, pos=-1, pack_size=None, is_embedded=False):
                     embedded_object = parse_object(f, -1, pack_size, True)
                     new_obj.members.append(embedded_object)
                     continue
-                opening_bracket_count += line.count('{')
-                opening_bracket_count -= line.count('}')
-                assert (opening_bracket_count >= 0)
+                opening_bracket_count += line.count("{")
+                opening_bracket_count -= line.count("}")
+                assert opening_bracket_count >= 0
                 # Determine if we are at the end of the struct
-                if opening_bracket_count == 0 and re.match('}.*;', line):
-                    extra_names = ''.join(line.split()).strip('};').split(',')
+                if opening_bracket_count == 0 and re.match("}.*;", line):
+                    extra_names = "".join(line.split()).strip("};").split(",")
                     try:
                         # Remove dangling empty string
-                        extra_names.remove('')
+                        extra_names.remove("")
                     except ValueError:
                         pass
                     if extra_names:
@@ -221,7 +219,7 @@ def parse_object(f, pos=-1, pack_size=None, is_embedded=False):
                     finished = True
                     break
                 # Nothing to do with this line anymore
-                if re.match('.*{.*', line):
+                if re.match(".*{.*", line):
                     continue
                 # Parse the member
                 if new_obj.data_type == DataType.Enum:
@@ -250,9 +248,9 @@ def parse_object(f, pos=-1, pack_size=None, is_embedded=False):
 
 def reverse_leading_underscores(value: str):
     """Take a string starting with underscores and moves them to the end. Returns a string"""
-    if value.startswith('_'):
-        underscore_count = len(value) - len(value.lstrip('_'))
-        return value.lstrip('_') + '_'*underscore_count
+    if value.startswith("_"):
+        underscore_count = len(value) - len(value.lstrip("_"))
+        return value.lstrip("_") + "_" * underscore_count
     # We didn't have underscores in the value
     return value
 
@@ -277,61 +275,60 @@ def parse_struct_member(buffered_line):
     #    for line in buffered_line.split('\n'):
     #        new_buffered_line += re.sub('{|union|}|;', '', line) + '\n'
     #    buffered_line = new_buffered_line
-    buffered_line = re.sub("\s*\[", "[", ' '.join(buffered_line.split()))
+    buffered_line = re.sub("\s*\[", "[", " ".join(buffered_line.split()))
     # print("DEBUG AFTER:", buffered_line)
 
     # Figure out if we are an array type and get the array length
-    array_subsection = re.search('\[.*\]', buffered_line)
+    array_subsection = re.search("\[.*\]", buffered_line)
     is_array = array_subsection is not None
     if is_array:
-        array_length = int(eval(array_subsection.group(0).strip('[]')))
+        array_length = int(eval(array_subsection.group(0).strip("[]")))
     else:
         array_length = 0
     # Remove the array portion
-    buffered_line = re.sub('\[.*\]', '', buffered_line)
+    buffered_line = re.sub("\[.*\]", "", buffered_line)
     # split up the remaining
     words = buffered_line.split()
     if not len(words):
-        return None, '', 0, 0  # data_type, array_length, bitwise_length
-    if ':' in words:
+        return None, "", 0, 0  # data_type, array_length, bitwise_length
+    if ":" in words:
         # we are a bitfield ;(
         try:
-            bitwise_length = int(
-                re.search('\d*', words[words.index(":")+1]).group(0))
+            bitwise_length = int(re.search("\d*", words[words.index(":") + 1]).group(0))
         except Exception as ex:
             if debug_print:
                 print("EXCEPTION:", ex)
             bitwise_length = 0
         # see if we get a valid ctype object before : to check for things like "unsigned : 31;"
-        pre_colon_text = ' '.join(words[:words.index(":")])
+        pre_colon_text = " ".join(words[: words.index(":")])
         check_data_type = convert_to_ctype_object(pre_colon_text)
         if check_data_type:
-            data_name = ''
+            data_name = ""
             data_type = pre_colon_text
         else:
-            data_name_index = words.index(":")-1
+            data_name_index = words.index(":") - 1
             data_name = words[data_name_index]
-            data_type = ' '.join(words[0:data_name_index])
+            data_type = " ".join(words[0:data_name_index])
     else:
         bitwise_length = 0
         data_name = words[-1]
-        data_type = ' '.join(words[0:len(words)-1])
-        if data_name.startswith('*'):
-            data_type += ' *'
-            data_name = data_name.lstrip('*')
+        data_type = " ".join(words[0 : len(words) - 1])
+        if data_name.startswith("*"):
+            data_type += " *"
+            data_name = data_name.lstrip("*")
     # DEBUG: ['uint8_t', 'MACAddress[6];']
     # print("DEBUG:", words, buffered_line)
 
     # remove stuff that shouldn't be in the name
-    data_name = re.sub('{|{|}|\s*', '', data_name)
-    data_type = re.sub('union|{|{|}|^struct', '', data_type)
+    data_name = re.sub("{|{|}|\s*", "", data_name)
+    data_type = re.sub("union|{|{|}|^struct", "", data_type)
     data_type = data_type.strip()
     if not data_type:
-        data_name = ''
+        data_name = ""
     # Any object that starts with _ won't be imported with import * statement so lets push it to the end
-    if data_type.startswith('_') and not convert_to_ctype_object(data_type):
+    if data_type.startswith("_") and not convert_to_ctype_object(data_type):
         data_type = reverse_leading_underscores(data_type)
-    return re.sub('\[.*\]|;', '', data_name), data_type, array_length, bitwise_length
+    return re.sub("\[.*\]|;", "", data_name), data_type, array_length, bitwise_length
 
 
 def parse_enum_member(buffered_line):
@@ -339,34 +336,34 @@ def parse_enum_member(buffered_line):
     # VARIABLE_NAME = 0,
 
     # remove all unneeded whitespace
-    buffered_line = re.sub("\s*\[", "[", ' '.join(buffered_line.split()))
+    buffered_line = re.sub("\s*\[", "[", " ".join(buffered_line.split()))
 
-    if '=' in buffered_line:
-        name = buffered_line.split('=')[0]
-        value = buffered_line.split('=')[1]
-        value = re.sub('{|{|}|,|\s*', '', value)
+    if "=" in buffered_line:
+        name = buffered_line.split("=")[0]
+        value = buffered_line.split("=")[1]
+        value = re.sub("{|{|}|,|\s*", "", value)
         try:
             value = int(value)
         except ValueError as ex:
-            if '0X' in value.upper():
+            if "0X" in value.upper():
                 value = int(value, 16)
-            elif '0B' in value.upper():
+            elif "0B" in value.upper():
                 value = int(value, 2)
     else:
-        name = re.sub(',', '', buffered_line)
+        name = re.sub(",", "", buffered_line)
         value = None
     return name, value
 
 
 def get_struct_name_from_header(line):
     # line.split('struct ')[-1]
-    struct_name = re.sub('typedef|struct|enum|union|\{|\s*', '', line)
+    struct_name = re.sub("typedef|struct|enum|union|\{|\s*", "", line)
     if not struct_name:  # == 'typedef struct':
         anonymous_struct = True
-        struct_name = 'anonymous'
-    elif '{' == struct_name:
+        struct_name = "anonymous"
+    elif "{" == struct_name:
         anonymous_struct = True
-        struct_name = 'anonymous'
+        struct_name = "anonymous"
     else:
         anonymous_struct = False
     return struct_name, anonymous_struct
@@ -378,12 +375,14 @@ def get_struct_names(data):
     # key = the "key" in the data
     # values = list of other names
     for name in data.keys():
-        if name in ('names', 'pack'):
+        if name in ("names", "pack"):
             continue
-        if 'names' in data[name]:
-            names[name] = data[name]['names']
+        if "names" in data[name]:
+            names[name] = data[name]["names"]
         else:
-            names[name] = [name, ]
+            names[name] = [
+                name,
+            ]
     return names
 
 
@@ -416,9 +415,9 @@ def get_preferred_struct_name(_names):
 
 def convert_to_snake_case(name):
     # return name
-    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
-    s2 = re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
-    return re.sub(r'(_)\1{1,}', '_', s2)
+    s1 = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", name)
+    s2 = re.sub("([a-z0-9])([A-Z])", r"\1_\2", s1).lower()
+    return re.sub(r"(_)\1{1,}", "_", s2)
 
 
 def convert_to_ctype_object(data_type):
@@ -431,37 +430,52 @@ def convert_to_ctype_object(data_type):
         "c_short": ("short",),
         "c_ushort": ("unsigned short",),
         "c_int": ("int",),
-        "c_uint": ("unsigned", "unsigned int",),
+        "c_uint": (
+            "unsigned",
+            "unsigned int",
+        ),
         "c_long": ("long",),
         "c_ulong": ("unsigned long",),
-        "c_longlong": ("__int64", "long long",),
-        "c_ulonglong": ("unsigned __int64", "unsigned long long",),
+        "c_longlong": (
+            "__int64",
+            "long long",
+        ),
+        "c_ulonglong": (
+            "unsigned __int64",
+            "unsigned long long",
+        ),
         "c_size_t": ("size_t",),
-        "c_ssize_t": ("ssize_t", "Py_ssize_t",),
+        "c_ssize_t": (
+            "ssize_t",
+            "Py_ssize_t",
+        ),
         "c_float": ("float",),
         "c_double": ("double",),
-        "c_void_p": ("void*", "void *",),
+        "c_void_p": (
+            "void*",
+            "void *",
+        ),
     }
     # Add all the intX_t types
     for d in [8, 16, 32, 64]:
-        ctype_types[f'c_int{d}'] = (f'int{d}_t',)
-        ctype_types[f'c_uint{d}'] = (f'uint{d}_t',)
+        ctype_types[f"c_int{d}"] = (f"int{d}_t",)
+        ctype_types[f"c_uint{d}"] = (f"uint{d}_t",)
 
     # This is dirty but we don't parse typedefs...
     ctype_types["c_uint16"] = ctype_types["c_uint16"] + ("descIdType",)
     ctype_types["c_uint64"] = ctype_types["c_uint64"] + ("_clock_identity",)
 
-    is_pointer = '*' in data_type and not 'void' in data_type
+    is_pointer = "*" in data_type and not "void" in data_type
     for ctype_type, c_types in ctype_types.items():
         for c_type in c_types:
             if is_pointer:
-                data_type = data_type.replace('*', '')
+                data_type = data_type.replace("*", "")
             if c_type == data_type:
                 try:
                     t = f"ctypes.{ctype_type}"
                     eval(t)
                     if is_pointer:
-                        t = f'ctypes.POINTER({t})'
+                        t = f"ctypes.POINTER({t})"
                     return t
                 except AttributeError as ex:
                     return None
@@ -470,34 +484,40 @@ def convert_to_ctype_object(data_type):
 
 def format_file(filename):
     import os
+
     processed_fname = os.path.basename(filename)
     name, ext = os.path.splitext(processed_fname)
-    processed_fname = f'{name}_processed{ext}'
+    processed_fname = f"{name}_processed{ext}"
     # processed_fname = "icsnVC40_processed.h"
     # Run it through the preprocessor
     # clang -E -P .\include\ics\icsnVC40.h -o output.h
-    result = run(["clang", "-DEXTERNAL_PROJECT", "-E", "-P", filename, "-o", processed_fname], stdout=PIPE, stderr=STDOUT)
+    result = run(
+        ["clang", "-DEXTERNAL_PROJECT", "-E", "-P", filename, "-o", processed_fname], stdout=PIPE, stderr=STDOUT
+    )
     try:
         result.check_returncode()
     except CalledProcessError as ex:
         print(f"ERROR: {' '.join(result.args)} failed with error code {ex.returncode}")
-        print(ex.stdout.decode('UTF-8'))
-        #print(ex.stderr)
+        print(ex.stdout.decode("UTF-8"))
+        # print(ex.stderr)
 
     # Format the file
-    result = run(["clang-format", "-i", "--style",
-                  "{BasedOnStyle: Mozilla, ColumnLimit: '200'}", processed_fname], stdout=PIPE, stderr=STDOUT)
+    result = run(
+        ["clang-format", "-i", "--style", "{BasedOnStyle: Mozilla, ColumnLimit: '200'}", processed_fname],
+        stdout=PIPE,
+        stderr=STDOUT,
+    )
     try:
         result.check_returncode()
     except CalledProcessError as ex:
         print(f"ERROR: {' '.join(result.args)} failed with error code {ex.returncode}")
-        print(ex.stdout.decode('UTF-8'))
+        print(ex.stdout.decode("UTF-8"))
 
     return processed_fname
 
 
 def parse_header_file(filename):
-    with open(filename, 'r') as f:
+    with open(filename, "r") as f:
         pack_size = 0
         line_count = 0
         last_pos = f.tell()
@@ -511,20 +531,20 @@ def parse_header_file(filename):
                 line = line.strip()
                 line_count += 1
                 # Remove all unneeded whitespace
-                line = ' '.join(line.split())
+                line = " ".join(line.split())
                 # Remove preprocessor statements
                 if line.startswith("#"):
                     # get the pack size
-                    if re.match('#pragma.*pack.*.*pop.*', line):
+                    if re.match("#pragma.*pack.*.*pop.*", line):
                         if pack_size_stack:
                             pack_size = pack_size_stack.pop()
                         else:
                             pack_size = 0
-                    elif re.match('#pragma.*pack.*.*push.*', line) or re.match('#pragma.*pack\(\d\)', line):
-                        pushing = 'push' in line
+                    elif re.match("#pragma.*pack.*.*push.*", line) or re.match("#pragma.*pack\(\d\)", line):
+                        pushing = "push" in line
                         try:
                             last = pack_size
-                            pack_size = int(re.search('\d{1,}', line).group(0))
+                            pack_size = int(re.search("\d{1,}", line).group(0))
                             if pushing:
                                 pack_size_stack.append(last)
                         except AttributeError:
@@ -533,20 +553,24 @@ def parse_header_file(filename):
                             pack_size_stack.append(pack_size)
                         if debug_print:
                             print("PACK SIZE:", pack_size)
-                    elif re.match('#define.*', line) and len(line.split(' ')) == 3 and not '\\' in line and not 'sizeof' in line:
+                    elif (
+                        re.match("#define.*", line)
+                        and len(line.split(" ")) == 3
+                        and not "\\" in line
+                        and not "sizeof" in line
+                    ):
                         # preprocessor define that can be used as a number in array sizes...
                         # we are going to hack the variable into the module's globals so we can eval() it later
-                        words = line.split(' ')
+                        words = line.split(" ")
                         if debug_print:
-                            print("ADDING {} to globals with value of {}".format(
-                                words[1], words[2]))
+                            print("ADDING {} to globals with value of {}".format(words[1], words[2]))
                         try:
                             globals()[words[1]] = eval(words[2])
                         except SyntaxError as ex:
                             # This happens when we have an integer literal
                             # https://en.cppreference.com/w/cpp/language/integer_literal
                             # TODO: 0x1p5
-                            literals = ('u', 'U', 'l', 'L', 'z', 'Z', 'f', 'F')
+                            literals = ("u", "U", "l", "L", "z", "Z", "f", "F")
                             modified_word = words[2]
                             while modified_word.endswith(literals):
                                 for literal in literals:
@@ -578,10 +602,11 @@ def parse_header_file(filename):
         return c_objects, enum_objects
 
 
-def generate(filename='include/ics/icsnVC40.h'):
+def generate(filename="include/ics/icsnVC40.h"):
     import shutil
     import json
     import os
+
     basename = os.path.basename(filename)
     filename = format_file(filename)
     c_objects, enum_objects = parse_header_file(filename)
@@ -593,30 +618,57 @@ def generate(filename='include/ics/icsnVC40.h'):
     for enum_object in enum_objects:
         enum_objects_converted.append(enum_object.to_ordered_dict())
     j = json.dumps(c_objects_converted, indent=4, sort_keys=False)
-    with open(f'{basename}.json', 'w+') as f:
+    with open(f"{basename}.json", "w+") as f:
         f.write(j)
     j = json.dumps(enum_objects_converted, indent=4, sort_keys=False)
-    with open(f'{basename}.enums.json', 'w+') as f:
+    with open(f"{basename}.enums.json", "w+") as f:
         f.write(j)
     # generate the python files
-    output_dir = './ics/structures'
+    output_dir = "./ics/structures"
     print(f"Removing {output_dir}...")
     try:
         shutil.rmtree(output_dir)
     except FileNotFoundError:
         pass
     ignore_names = [
-        '__fsid_t', '__darwin_pthread_handler_rec',
-        '_mbstate_t', 'mbstate_t_', 'mbstatet_', 'Mbstatet_', '_Mbstatet',
-        '_LONGDOUBLE', 'LONGDOUBLE_',
-        '_opaque_pthread_attr_t', '_opaque_pthread_cond_t', '_opaque_pthread_condattr_t',
-        '_opaque_pthread_mutex_t', '_opaque_pthread_mutexattr_t', '_opaque_pthread_once_t',
-        '_opaque_pthread_rwlock_t', '_opaque_pthread_rwlockattr_t', '_opaque_pthread_t',
-        'crt_locale_pointers_', 'crt_locale_data_public_', '__crt_locale_data_public',
-        'ldiv_t', 'lldiv_t', 'ldouble_', 'ldbl12_', 'div_t', 'crt_float_', 'crt_double_',
-        'ndis_adapter_information',
-        'NeoDevice', 'neo_device', 'NeoDeviceEx', 'neo_device_ex',
-        'icsSpyMessage', 'icsSpyMessageJ1850', 'ics_spy_message', 'ics_spy_message_j1850']
+        "__fsid_t",
+        "__darwin_pthread_handler_rec",
+        "_mbstate_t",
+        "mbstate_t_",
+        "mbstatet_",
+        "Mbstatet_",
+        "_Mbstatet",
+        "_LONGDOUBLE",
+        "LONGDOUBLE_",
+        "_opaque_pthread_attr_t",
+        "_opaque_pthread_cond_t",
+        "_opaque_pthread_condattr_t",
+        "_opaque_pthread_mutex_t",
+        "_opaque_pthread_mutexattr_t",
+        "_opaque_pthread_once_t",
+        "_opaque_pthread_rwlock_t",
+        "_opaque_pthread_rwlockattr_t",
+        "_opaque_pthread_t",
+        "crt_locale_pointers_",
+        "crt_locale_data_public_",
+        "__crt_locale_data_public",
+        "ldiv_t",
+        "lldiv_t",
+        "ldouble_",
+        "ldbl12_",
+        "div_t",
+        "crt_float_",
+        "crt_double_",
+        "ndis_adapter_information",
+        "NeoDevice",
+        "neo_device",
+        "NeoDeviceEx",
+        "neo_device_ex",
+        "icsSpyMessage",
+        "icsSpyMessageJ1850",
+        "ics_spy_message",
+        "ics_spy_message_j1850",
+    ]
     file_names = []
     prefered_names = []
     all_objects = c_objects + enum_objects
@@ -654,11 +706,11 @@ def generate(filename='include/ics/icsnVC40.h'):
         print(f"Generated all python {len(all_objects)-ignored_enum_count} files.")
 
     # Generate __init__.py and add all the modules to __all__
-    with open(os.path.join(output_dir, '__init__.py'), 'w+') as f:
+    with open(os.path.join(output_dir, "__init__.py"), "w+") as f:
         f.write("__all__ = [\n")
         for file_name in file_names:
-            fname = re.sub('(\.py)', '', file_name)
-            r = re.compile('(' + fname + ')')
+            fname = re.sub("(\.py)", "", file_name)
+            r = re.compile("(" + fname + ")")
             if list(filter(r.match, ignore_names)):
                 # print("IGNORING:", fname)
                 continue
@@ -667,16 +719,16 @@ def generate(filename='include/ics/icsnVC40.h'):
             f.write('",\n')
         f.write("]\n")
     # write a hidden_import python file for pyinstaller
-    with open('./ics/hiddenimports.py', 'w+') as f:
-        f.write('hidden_imports = [\n')
+    with open("./ics/hiddenimports.py", "w+") as f:
+        f.write("hidden_imports = [\n")
         for file_name in file_names:
-            fname = re.sub('(\.py)', '', file_name)
-            r = re.compile('(' + fname + ')')
+            fname = re.sub("(\.py)", "", file_name)
+            r = re.compile("(" + fname + ")")
             if list(filter(r.match, ignore_names)):
                 # print("IGNORING:", fname)
                 continue
             f.write(f'    "ics.structures.{fname}",\n')
-        f.write(']\n\n')
+        f.write("]\n\n")
 
     # Verify We can at least import all of the modules - quick check to make sure parser worked.
     # TODO: This is broke
@@ -697,16 +749,16 @@ def generate(filename='include/ics/icsnVC40.h'):
 def _write_c_object(f, c_object):
     # Write the header
     if c_object.data_type == DataType.Struct:
-        f.write(f'class {c_object.preferred_name}(ctypes.Structure):\n')
+        f.write(f"class {c_object.preferred_name}(ctypes.Structure):\n")
     elif c_object.data_type == DataType.Union:
-        f.write(f'class {c_object.preferred_name}(ctypes.Union):\n')
+        f.write(f"class {c_object.preferred_name}(ctypes.Union):\n")
     elif c_object.data_type == DataType.Enum:
-        f.write(f'class {c_object.preferred_name}(enum.IntEnum):\n')
+        f.write(f"class {c_object.preferred_name}(enum.IntEnum):\n")
         f.write('    """A ctypes-compatible IntEnum superclass."""\n')
-        f.write('    @classmethod\n')
-        f.write('    def from_param(cls, obj):\n')
-        f.write('        return int(obj)\n')
-        f.write('\n')
+        f.write("    @classmethod\n")
+        f.write("    def from_param(cls, obj):\n")
+        f.write("        return int(obj)\n")
+        f.write("\n")
     else:
         raise ValueError("CObject is not of a known data type!")
 
@@ -714,15 +766,15 @@ def _write_c_object(f, c_object):
     if c_object.data_type in (DataType.Struct, DataType.Union):
         # Setup the packing
         if c_object.packing:
-            f.write(f'    _pack_ = {c_object.packing}\n')
+            f.write(f"    _pack_ = {c_object.packing}\n")
         # Grab all the anonymous names
         anonymous_names = []
         for member in c_object.members:
             if isinstance(member, CObject) and member.is_anonymous:
                 anonymous_names.append(member.preferred_name)
         if anonymous_names:
-            f.write(f'    _anonymous_  = {str(tuple(anonymous_names))}\n')
-        f.write(f'    _fields_ = [\n')
+            f.write(f"    _anonymous_  = {str(tuple(anonymous_names))}\n")
+        f.write(f"    _fields_ = [\n")
 
     # Write the members
     for member in c_object.members:
@@ -730,16 +782,16 @@ def _write_c_object(f, c_object):
             enum_value = member.enum_value
             if enum_value == None:
                 if c_object.enum_last_value != None:
-                    enum_value = 'enum.auto()'
+                    enum_value = "enum.auto()"
                     c_object.enum_last_value += 1
                 else:
                     # https://docs.python.org/3/library/enum.html#enum.auto
                     # By default, the initial value starts at 1.
                     c_object.enum_last_value = 0
-                    enum_value = '0'
+                    enum_value = "0"
             elif c_object.enum_last_value == None:
                 c_object.enum_last_value = 0
-            f.write(f'    {member.name} = {enum_value}\n')
+            f.write(f"    {member.name} = {enum_value}\n")
         else:
             # Struct/Union
             def _write_member(f, member, is_struct_or_union=False):
@@ -757,7 +809,7 @@ def _write_c_object(f, c_object):
                         # C enum types can be char, unsigned, signed but seem to default to
                         # 4 byte integer on most systems (even 64-bit)
                         # This is a potential hole but nothing we can do here
-                        data_type = 'ctypes.c_int32'
+                        data_type = "ctypes.c_int32"
                 else:
                     data_type = member.data_type
                 if member.bitfield_size:
@@ -776,22 +828,22 @@ def _write_c_object(f, c_object):
 
     # Finalize the _fields_ attribute and extra names
     if c_object.data_type in (DataType.Struct, DataType.Union):
-        f.write(f'    ]\n')
+        f.write(f"    ]\n")
     # Extra names here
-    f.write('\n\n')
+    f.write("\n\n")
     for name in c_object.names:
         # Ignore the actual object name
         if name == c_object.preferred_name:
             continue
-        f.write('{} = {}\n'.format(re.sub('^\*', '', name), c_object.preferred_name))
-    f.write('\n')
+        f.write("{} = {}\n".format(re.sub("^\*", "", name), c_object.preferred_name))
+    f.write("\n")
 
 
 def generate_pyfile(c_object, path):
     # name = get_preferred_struct_name(c_object.names)
     # c_object.preferred_name = convert_to_snake_case(name)
     # Make the fname and the path
-    fname = f'{c_object.preferred_name}.py'
+    fname = f"{c_object.preferred_name}.py"
     fname_with_path = os.path.normpath(os.path.join(path, fname))
     # create the needed directories
     if not os.path.exists(os.path.split(fname_with_path)[0]):
@@ -799,16 +851,16 @@ def generate_pyfile(c_object, path):
             os.makedirs(os.path.split(fname_with_path)[0])
         except OSError as ex:
             import errno
+
             if ex.errno != errno.EEXIST:
                 # Race condition handler, if someone else makes a directory after we check if exists
                 raise
-    with open(fname_with_path, 'w+') as f:
+    with open(fname_with_path, "w+") as f:
         # Write the boiler plate code
-        f.write(
-            '# This file was auto generated; Do not modify, if you value your sanity!\n')
-        f.write('import ctypes\n')
-        f.write('import enum\n')
-        f.write('\n')
+        f.write("# This file was auto generated; Do not modify, if you value your sanity!\n")
+        f.write("import ctypes\n")
+        f.write("import enum\n")
+        f.write("\n")
         # Generate all the imports
 
         def get_c_object_imports(c_object):
@@ -832,15 +884,16 @@ def generate_pyfile(c_object, path):
             return sorted(set(import_names))
 
         import_names = get_c_object_imports(c_object)
-        for import_name in (import_names):
+        for import_name in import_names:
             f.write(f"from ics.structures.{import_name} import *\n")
-        f.write('\n\n')
+        f.write("\n\n")
 
         def _generate_inner_objects(f, c_object):
             for member in c_object.members:
                 if isinstance(member, CObject):
                     _generate_inner_objects(f, member)
                     _write_c_object(f, member)
+
         # generate all the inner objects
         _generate_inner_objects(f, c_object)
         # Finally write our main object
@@ -853,16 +906,16 @@ def generate_all_files():
     import os
     import pathlib
 
-    filenames = ('icsnVC40.h', 'icsnVC40Internal.h')
+    filenames = ("icsnVC40.h", "icsnVC40Internal.h")
     for filename in filenames:
-        path = pathlib.Path('include/ics/')
+        path = pathlib.Path("include/ics/")
         path = path.joinpath(filename)
         if path.exists():
-            if 'Internal' in str(filename):
+            if "Internal" in str(filename):
                 print("WARNING: Generating internal header!")
             print(f"Parsing {str(path)}...")
             generate(str(path))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     generate_all_files()

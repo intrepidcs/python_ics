@@ -6,6 +6,7 @@ import os
 
 from cmvspy import data
 
+
 class testCoreMini(unittest.TestCase):
     def _clear_coremini(self):
         if self.dev1.DeviceType == ics.NEODEVICE_VCAN3:
@@ -13,10 +14,10 @@ class testCoreMini(unittest.TestCase):
         else:
             ics.coremini_clear(self.dev1, ics.SCRIPT_LOCATION_FLASH_MEM)
             ics.coremini_clear(self.dev1, ics.SCRIPT_LOCATION_SDCARD)
-        
+
     @classmethod
     def setUpClass(self):
-        #input() # for debugging purposes
+        # input() # for debugging purposes
         self.dev1 = ics.open_device()
         self._clear_coremini(self)
 
@@ -38,9 +39,10 @@ class testCoreMini(unittest.TestCase):
             ics.coremini_clear(self.dev1, location)
             time.sleep(0.1)
             self.assertFalse(ics.coremini_get_status(self.dev1))
+
         # This allows us to work in other directories and leave the vs3cmb file
         # inside same directory as the script.
-        vs3file = os.path.dirname(os.path.realpath(__file__)) + '/cmvspy.vs3cmb'
+        vs3file = os.path.dirname(os.path.realpath(__file__)) + "/cmvspy.vs3cmb"
         if self.dev1.DeviceType == ics.NEODEVICE_VCAN3:
             load_coremini(self, data, ics.SCRIPT_LOCATION_VCAN3_MEM)
             load_coremini(self, vs3file, ics.SCRIPT_LOCATION_VCAN3_MEM)
@@ -70,4 +72,4 @@ class testCoreMini(unittest.TestCase):
 
 
 if __name__ == "__main__":
-	unittest.main()
+    unittest.main()
