@@ -146,7 +146,7 @@ static PyObject* neo_device_object_tp_repr(PyObject* o)
     // Check range is 0A0000-ZZZZZZ
     PyObject* sn = NULL;
     uint32_t serial = (uint32_t)nd->dev.SerialNumber;
-    if (16796160 <= serial && serial <= 2176782335)
+    if (MIN_BASE36_SERIAL <= serial && serial <= MAX_SERIAL)
         sn = convert_to_base36(serial);
     else
         sn = PyUnicode_FromFormat("%lu", nd->dev.SerialNumber);
