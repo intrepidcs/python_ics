@@ -92,7 +92,7 @@ PyObject* _set_ics_exception_dev(PyObject* exception, PyObject* obj, char* msg, 
         }
         char* b36sn = pyics_base36enc(PyNeoDevice_GetSerialNumber(obj));
         ss << PyNeoDevice_GetSerialNumber(obj);
-        if (b36sn != NULL && PyNeoDevice_GetSerialNumber(obj) >= 16796160 /* "0A0000" */) {
+        if (b36sn != NULL && PyNeoDevice_GetSerialNumber(obj) >= MIN_BASE36_SERIAL /* "0A0000" */) {
             ss << " - " << b36sn << ")";
         } else {
             ss << ")";
