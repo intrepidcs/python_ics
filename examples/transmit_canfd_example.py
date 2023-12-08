@@ -1,11 +1,13 @@
 import ics
 import time
+
 # Tells our custom open_device() function to do special behavior
 # with neoVI Server enabled so we can successfully open devices
 enable_use_server = True
 
 
 DATA_BYTES = tuple([x for x in range(64)])
+
 
 def are_errors_present(msg):
     """Helper function to detect if a message error occurred."""
@@ -49,8 +51,11 @@ def open_device(index=0):
         # ics.open_device() won't open a device if we have handles open already
         # so we need to find them and specify which ones to connect to.
         devices = ics.find_devices()
-        print("Opening Device {} (Open Client handles: {})...".format(
-            dev_name(devices[index]), devices[index].NumberOfClients))
+        print(
+            "Opening Device {} (Open Client handles: {})...".format(
+                dev_name(devices[index]), devices[index].NumberOfClients
+            )
+        )
         ics.open_device(devices[index])
         device = devices[index]
     else:
@@ -73,38 +78,43 @@ def transmit_can(device):
     _, _ = ics.get_messages(device)
     # msg parameter here can also be a tuple of messages
     ics.transmit_messages(device, msg)
-    # Give the bus and buffers time to do their magic. 
+    # Give the bus and buffers time to do their magic.
     # In a real application we should poll until we find our actual message.
     time.sleep(0.5)
     # get all the messages on this device and print out the transmitted messages
-    print("="*80)
+    print("=" * 80)
     print(f"Transmitted Messages on {dev_name(device)}")
-    print("="*80)
+    print("=" * 80)
     msgs, error_count = ics.get_messages(device)
     for i, m in enumerate(msgs):
         # Only process transmitted messages
         if m.StatusBitField & ics.SPY_STATUS_TX_MSG == ics.SPY_STATUS_TX_MSG:
-            print('Message #{}\t'.format(i+1), end='')
+            print("Message #{}\t".format(i + 1), end="")
             data = m.Data if not m.ExtraDataPtr else m.ExtraDataPtr
             netid = m.NetworkID | (m.NetworkID2 << 8)
-            print('NetID: {}\tArbID: {}\tData: {}\tErrors Present: {}'.format(hex(netid), hex(m.ArbIDOrHeader), [hex(x) for x in data], are_errors_present(m)))
+            print(
+                "NetID: {}\tArbID: {}\tData: {}\tErrors Present: {}".format(
+                    hex(netid), hex(m.ArbIDOrHeader), [hex(x) for x in data], are_errors_present(m)
+                )
+            )
+
 
 def receive_can(device):
     msgs, error_count = ics.get_messages(device)
-    print("="*80)
+    print("=" * 80)
     print(f"Received Messages on {dev_name(device)}")
-    print("="*80)
+    print("=" * 80)
     print("Received {} messages with {} errors.".format(len(msgs), error_count))
     for i, m in enumerate(msgs):
         # Ignore transmitted messages
         if m.StatusBitField & ics.SPY_STATUS_TX_MSG == ics.SPY_STATUS_TX_MSG:
             continue
-        #if m.Protocol != ics.SPY_PROTOCOL_CANFD:
+        # if m.Protocol != ics.SPY_PROTOCOL_CANFD:
         #    continue
-        print('Message #{}\t'.format(i+1), end='')
+        print("Message #{}\t".format(i + 1), end="")
         data = m.Data if not m.ExtraDataPtr else m.ExtraDataPtr
         netid = m.NetworkID | (m.NetworkID2 << 8)
-        print('NetID: {}\tArbID: {}\tData: {}'.format(hex(netid), hex(m.ArbIDOrHeader), [hex(x) for x in data]))
+        print("NetID: {}\tArbID: {}\tData: {}".format(hex(netid), hex(m.ArbIDOrHeader), [hex(x) for x in data]))
 
 
 if __name__ == "__main__":
