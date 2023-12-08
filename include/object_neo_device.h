@@ -42,7 +42,7 @@
 #define ICS_HANDLE_PY_TYPE T_INT
 #else
 #define ICS_HANDLE void*
-#define ICS_HANDLE_PY_TYPE T_INT
+#define ICS_HANDLE_PY_TYPE T_ULONGLONG
 #endif
 
 typedef struct

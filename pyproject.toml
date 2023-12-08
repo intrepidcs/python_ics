@@ -14,3 +14,18 @@ before-build = "brew install automake libtool cmake clang-format"
 
 [tool.cibuildwheel.windows]
 before-build = "choco install llvm"
+
+[tool.black]
+line-length = 120
+# https://stackoverflow.com/questions/73247204/black-not-respecting-extend-exclude-in-pyproject-toml
+force-exclude = '''
+/(
+  | .vscode
+  | .venv
+  | build
+  | ics
+  | include
+  | msvc
+  | src
+)/
+'''
