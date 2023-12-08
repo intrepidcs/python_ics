@@ -49,7 +49,7 @@ typedef struct
 {
     PyObject_HEAD NeoDevice dev;
     PyObject* name;
-    char auto_cleanup;
+    bool auto_cleanup;
     ICS_HANDLE handle;
     PyObject* dict;
 } neo_device_object;
@@ -67,16 +67,11 @@ static PyMemberDef neo_device_object_members[] = {
     { "MaxAllowedClients", T_INT, offsetof(neo_device_object, dev.MaxAllowedClients), 0, "" },
     { "AutoHandleClose",
       T_BOOL,
-      offsetof(neo_device_object, dev.MaxAllowedClients),
+      offsetof(neo_device_object, auto_cleanup),
       0,
       "When " NEO_DEVICE_OBJECT_NAME " is freed the handle will automatically be closed, if true." },
     { "_Handle",
       ICS_HANDLE_PY_TYPE,
-      offsetof(neo_device_object, handle),
-      0,
-      "This contains the handle returned from icsneoOpenDevice() API. If uncertain, don't use this." },
-    { "IsOpen",
-      T_BOOL,
       offsetof(neo_device_object, handle),
       0,
       "This contains the handle returned from icsneoOpenDevice() API. If uncertain, don't use this." },
