@@ -1,4 +1,4 @@
-![](IntrepidCS.png)
+![](https://github.com/intrepidcs/python_ics/blob/master/IntrepidCS.png?raw=true)
 
 ![](https://github.com/intrepidcs/python_ics/actions/workflows/wheels.yml/badge.svg)
 
