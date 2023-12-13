@@ -3275,37 +3275,22 @@ PyObject* meth_write_jupiter_firmware(PyObject* self, PyObject* args)
 PyObject* meth_flash_accessory_firmware(PyObject* self, PyObject* args)
 {
     PyObject* obj = NULL;
-    char accessory_indx = 0;
-    PyObject* bytes_obj = NULL;
+    PyObject* parms = NULL;
     bool check_success = true;
-    if (!PyArg_ParseTuple(args, arg_parse("OiO|b:", __FUNCTION__), &obj, &accessory_indx, &bytes_obj, &check_success)) {
+    if (!PyArg_ParseTuple(args, arg_parse("OO|b:", __FUNCTION__), &obj, &parms, &check_success)) {
         return NULL;
     }
+    /*if (!PyArg_ParseTuple(args, arg_parse("OiO|b:", __FUNCTION__), &obj, &accessory_indx, &bytes_obj, &check_success)) {
+        return NULL;
+    }*/
 
-    if (!PyBytes_CheckExact(bytes_obj)) {
-        return set_ics_exception(exception_runtime_error(), "Argument must be of Bytes type ");
-    }
     if (!PyNeoDevice_CheckExact(obj)) {
         return set_ics_exception(exception_runtime_error(),
                                  "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
     }
     ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
-    // Convert the object to a bytes object
-    PyObject* bytes = PyBytes_FromObject(bytes_obj);
-    // Grab the byte size
-    Py_ssize_t bsize = PyBytes_Size(bytes);
-    // Grab the data out of the bytes
-    unsigned char* bytes_str = (unsigned char*)PyBytes_AsString(bytes);
-    if (!bytes_str)
-        return NULL;
-    try {
 
-        FlashAccessoryFirmwareParams param;
-        param.apiVersion = 1;
-        param.size = sizeof(FlashAccessoryFirmwareParams);
-        param.index = accessory_indx;
-        param.data = bytes_str;
-        param.dataSize = bsize;
+    try {
 
         ice::Library* lib = dll_get_library();
         if (!lib) {
@@ -3315,10 +3300,14 @@ PyObject* meth_flash_accessory_firmware(PyObject* self, PyObject* args)
         int function_error = (int)AccessoryOperationError;
         // int __stdcall icsneoFlashAccessoryFirmware(void* hObject, FlashAccessoryFirmwareParams* param, int* errorCode)
         //int __stdcall icsneoFlashPhyFirmware(void* hObject, unsigned char phyIndx, unsigned char* fileData, size_t fileDataSize, int* errorCode)
-        ice::Function<int __stdcall(ICS_HANDLE, FlashAccessoryFirmwareParams, int*)> icsneoFlashAccessoryFirmware(
+        ice::Function<int __stdcall(ICS_HANDLE, FlashAccessoryFirmwareParams*, int*)> icsneoFlashAccessoryFirmware(
             lib, "icsneoFlashAccessoryFirmware");
+
+        Py_buffer parms_buffer = {};
+        PyObject_GetBuffer(parms, &parms_buffer, PyBUF_C_CONTIGUOUS);
+
         Py_BEGIN_ALLOW_THREADS;
-        if (!icsneoFlashAccessoryFirmware(handle, param, &function_error)) {
+        if (!icsneoFlashAccessoryFirmware(handle, (FlashAccessoryFirmwareParams*)parms_buffer.buf, &function_error)) {
             Py_BLOCK_THREADS;
             return set_ics_exception(exception_runtime_error(), "icsneoFlashAccessoryFirmware() Failed");
         }
