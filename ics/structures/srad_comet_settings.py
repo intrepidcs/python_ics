@@ -7,6 +7,7 @@ from ics.structures.canfd_settings import *
 from ics.structures.ethernet10_t1_s_settings import *
 from ics.structures.ethernet_settings2 import *
 from ics.structures.iso9141_keyword2000_settings import *
+from ics.structures.lin_settings import *
 from ics.structures.op_eth_general_settings import *
 from ics.structures.op_eth_settings import *
 from ics.structures.rad_reporting_settings import *
@@ -78,6 +79,7 @@ class srad_comet_settings(ctypes.Structure):
         ('ethT1s2', ETHERNET_SETTINGS2),
         ('t1s2', ETHERNET10T1S_SETTINGS),
         ('network_enables_5', ctypes.c_uint64),
+        ('lin1', LIN_SETTINGS),
     ]
 
 

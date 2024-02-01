@@ -61,9 +61,9 @@ class sobd2_lc_settings(ctypes.Structure):
         ('canfd4', CANFD_SETTINGS),
         ('swcan1', SWCAN_SETTINGS),
         ('lin1', LIN_SETTINGS),
-        ('iso9141_kwp_settings_1', ISO9141_KEYWORD2000_SETTINGS),
-        ('iso_parity_1', ctypes.c_uint16),
-        ('iso_msg_termination_1', ctypes.c_uint16),
+        ('iso9141_kwp_settings', ISO9141_KEYWORD2000_SETTINGS),
+        ('iso_parity', ctypes.c_uint16),
+        ('iso_msg_termination', ctypes.c_uint16),
         ('network_enables', network_enables),
         ('pwr_man_timeout', ctypes.c_uint32),
         ('pwr_man_enable', ctypes.c_uint16),
@@ -76,6 +76,7 @@ class sobd2_lc_settings(ctypes.Structure):
         ('disk', DISK_SETTINGS),
         ('ethernet', ETHERNET_SETTINGS),
         ('ethernet2', ETHERNET_SETTINGS2),
+        ('iso_tester_pullup_enable', ctypes.c_uint16),
     ]
 
 

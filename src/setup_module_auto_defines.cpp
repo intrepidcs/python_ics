@@ -169,6 +169,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, NEODEVICE_RADCOMET);
 	result += PyModule_AddIntMacro(module, NEODEVICE_FIRE3_FLEXRAY);
 	result += PyModule_AddIntMacro(module, NEODEVICE_RED2_OEM);
+	result += PyModule_AddIntMacro(module, NEODEVICE_NEW_DEVICE_27);
 	result += PyModule_AddIntMacro(module, NEODEVICE_RED);
 	result += PyModule_AddIntMacro(module, NEODEVICE_ECU);
 	result += PyModule_AddIntMacro(module, NEODEVICE_IEVB);
@@ -357,6 +358,9 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, SPY_STATUS2_ETHERNET_UPDATE_CHECKSUMS);
 	result += PyModule_AddIntMacro(module, SPY_STATUS2_ETHERNET_MANUALFCS_ENABLED);
 	result += PyModule_AddIntMacro(module, SPY_STATUS2_ETHERNET_FCS_VERIFIED);
+	result += PyModule_AddIntMacro(module, SPY_STATUS2_ETHERNET_T1S_SYMBOL);
+	result += PyModule_AddIntMacro(module, SPY_STATUS2_ETHERNET_T1S_BURST);
+	result += PyModule_AddIntMacro(module, SPY_STATUS2_ETHERNET_T1S_ETHERNET);
 	result += PyModule_AddIntMacro(module, SPY_STATUS2_FLEXRAY_TX_AB);
 	result += PyModule_AddIntMacro(module, SPY_STATUS2_FLEXRAY_TX_AB_NO_A);
 	result += PyModule_AddIntMacro(module, SPY_STATUS2_FLEXRAY_TX_AB_NO_B);
@@ -417,18 +421,6 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, FIRE2_REPORT_PWM_IN);
 	result += PyModule_AddIntMacro(module, FIRE2_REPORT_GPS);
 	result += PyModule_AddIntMacro(module, FIRE3_REPORT_ORIENTATION);
-	// enum
-	result += PyModule_AddIntMacro(module, eSupportedWILVersions_WIL_1_1_0);
-	result += PyModule_AddIntMacro(module, eSupportedWILVersions_WIL_2_0_0);
-	// end of enum -  } eSupportedWILVersions;
-
-	// enum
-	result += PyModule_AddIntMacro(module, SwitchwBMSVersion_Failed);
-	result += PyModule_AddIntMacro(module, SwitchwBMSVersion_OK);
-	result += PyModule_AddIntMacro(module, SwitchwBMSVersion_Reflashed);
-	result += PyModule_AddIntMacro(module, SwitchwBMSVersion_ParameterNotValid);
-	// end of enum -  } SwitchwBMSVersionError;
-
 	result += PyModule_AddIntMacro(module, CANNODE_STATUS_COREMINI_IS_RUNNING);
 	result += PyModule_AddIntMacro(module, CANNODE_STATUS_IN_BOOTLOADER);
 	result += PyModule_AddIntMacro(module, MAIN_VNET);
@@ -563,6 +555,18 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS2_FLAG2_LINK_MODE);
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS2_FLAG2_PHY_MODE);
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS2_FLAG2_LINK_MODE_AUTO);
+	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS2_FLAG2_SFP_ID_SHIFT);
+	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS2_FLAG2_SFP_ID_MASK);
+	// enum
+	result += PyModule_AddIntMacro(module, SFP_ID_UNKNOWN);
+	result += PyModule_AddIntMacro(module, SFP_ID_FINISAR_FCLF8522P2BTL);
+	result += PyModule_AddIntMacro(module, SFP_ID_FS_GB_GE_T);
+	result += PyModule_AddIntMacro(module, SFP_ID_ICS_MV2112A2);
+	result += PyModule_AddIntMacro(module, SFP_ID_ICS_MV2221MB1);
+	result += PyModule_AddIntMacro(module, SFP_ID_ICS_MV3244);
+	result += PyModule_AddIntMacro(module, SFP_ID_MAX);
+	// end of enum -  } SfpId;
+
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS2_SIZE);
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS10G_FLAG_FULL_DUPLEX);
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS10G_FLAG_AUTO_NEG);
@@ -579,6 +583,52 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, ETHERNET10T1S_SETTINGS_SIZE);
 	result += PyModule_AddIntMacro(module, ETHERNET10T1S_SETTINGS_FLAG_ENABLE_PLCA);
 	result += PyModule_AddIntMacro(module, ETHERNET10T1S_SETTINGS_FLAG_TERMINATION);
+	result += PyModule_AddIntMacro(module, ETHERNET10T1S_SETTINGS_FLAG_BUS_DECODING_BEACONS);
+	result += PyModule_AddIntMacro(module, ETHERNET10T1S_SETTINGS_FLAG_BUS_DECODING_ALL);
+	// enum
+	result += PyModule_AddIntMacro(module, MACSEC_PACKET_NO_VLAN_OR_MPLS);
+	result += PyModule_AddIntMacro(module, MACSEC_PACKET_SINGLE_VLAN);
+	result += PyModule_AddIntMacro(module, MACSEC_PACKET_DUAL_VLAN);
+	result += PyModule_AddIntMacro(module, MACSEC_PACKET_MPLS);
+	result += PyModule_AddIntMacro(module, MACSEC_PACKET_SINGLE_VLAN_FOLLOW_BY_MPLS);
+	result += PyModule_AddIntMacro(module, MACSEC_PACKET_DUAL_VLAN_FOLLOW_BY_MPLS);
+	result += PyModule_AddIntMacro(module, MACSEC_PACKET_UNSUPPORTED_TYPE);
+	// end of enum -  } MACSEC_PACKET_TYPE;
+
+	result += PyModule_AddIntMacro(module, MACSEC_SETTINGS_RULE_SIZE);
+	result += PyModule_AddIntMacro(module, MACSEC_SETTINGS_MAP_SIZE);
+	// enum
+	result += PyModule_AddIntMacro(module, MACSEC_VF_DISABLED);
+	result += PyModule_AddIntMacro(module, MACSEC_VF_CHECK);
+	result += PyModule_AddIntMacro(module, MACSEC_VF_STRICT);
+	result += PyModule_AddIntMacro(module, MACSEC_VF_NA);
+	// end of enum -  } MACSEC_VALIDATEFRAME;
+
+	// enum
+	result += PyModule_AddIntMacro(module, MACSEC_SECTAG_ICV_BOTH_STRIP);
+	result += PyModule_AddIntMacro(module, MACSEC_SECTAG_ICV_RESERVED);
+	result += PyModule_AddIntMacro(module, MACSEC_SECTAG_ICV_STRIP_ICV_ONLY);
+	result += PyModule_AddIntMacro(module, MACSEC_SECTAG_ICV_NO_STRIP);
+	// end of enum -  } MACSEC_STRIP_SECTAG_ICV;
+
+	// enum
+	result += PyModule_AddIntMacro(module, MACSEC_CIPHER_GCM_AES_128);
+	result += PyModule_AddIntMacro(module, MACSEC_CIPHER_GCM_AES_256);
+	result += PyModule_AddIntMacro(module, MACSEC_CIPHER_GCM_AES_128_XPN);
+	result += PyModule_AddIntMacro(module, MACSEC_CIPHER_GCM_AES_256_XPN);
+	// end of enum -  } MACSEC_CIPHER_SUITE;
+
+	result += PyModule_AddIntMacro(module, MACSEC_SETTINGS_SECY_SIZE);
+	result += PyModule_AddIntMacro(module, MACSEC_SETTINGS_SC_SIZE);
+	result += PyModule_AddIntMacro(module, MACSEC_SETTINGS_SA_SIZE);
+	result += PyModule_AddIntMacro(module, MACSEC_SETTINGS_FLAGS_SIZE);
+	result += PyModule_AddIntMacro(module, MACSEC_NUM_FLAGS_PER_CONFIG);
+	result += PyModule_AddIntMacro(module, MACSEC_NUM_RULES_PER_CONFIG);
+	result += PyModule_AddIntMacro(module, MACSEC_NUM_MAPS_PER_CONFIG);
+	result += PyModule_AddIntMacro(module, MACSEC_NUM_SECY_PER_CONFIG);
+	result += PyModule_AddIntMacro(module, MACSEC_NUM_SC_PER_CONFIG);
+	result += PyModule_AddIntMacro(module, MACSEC_NUM_SA_PER_CONFIG);
+	result += PyModule_AddIntMacro(module, MACSEC_SETTINGS_SIZE);
 	result += PyModule_AddIntMacro(module, LOGGER_SETTINGS_SIZE);
 	result += PyModule_AddIntMacro(module, DISK_SETTINGS_SIZE);
 	result += PyModule_AddIntMacro(module, CANTERM_SETTINGS_SIZE);
