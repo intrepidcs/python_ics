@@ -37,5 +37,47 @@
             "console": "integratedTerminal",
             "args": ["include/ics/icsnVC40.h", ],
         },
+        {
+            "name": "Python: Run icsdebug.py",
+            "type": "python",
+            "request": "launch",
+            "program": "src\\icsdebug.py",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Debugger Attach",
+            "type": "cppvsdbg",
+            //"type": "lldb",
+            "request": "attach",
+            //"program": "${workspaceFolder}\\.venv\\Scripts\\python.exe", /* My virtual env */
+            "pid": "${command:pickProcess}",
+            //"MIMode": "gdb",
+            //"miDebuggerPath": "/usr/bin/gdb",
+            //"setupCommands": [
+            //    {
+            //        "description": "Enable pretty-printing for gdb",
+            //        "text": "-enable-pretty-printing",
+            //        "ignoreFailures": true
+            //    }
+            //]
+        }
+        {
+            "name": "Launch Debug icsdebug.py",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}\\.venv\\Scripts\\python.exe", /* My virtual env */
+            "args": ["${workspaceFolder}\\src\\icsdebug.py"],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            //"MIMode": "gdb",
+            //"miDebuggerPath": "/usr/bin/gdb",
+            //"setupCommands": [
+            //    {
+            //        "description": "Enable pretty-printing for gdb",
+            //        "text": "-enable-pretty-printing",
+            //        "ignoreFailures": true
+            //    }
+            //]
+        }
     ]
 }
