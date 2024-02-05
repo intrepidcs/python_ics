@@ -35,6 +35,26 @@ http://python-ics.readthedocs.io/
 
 - Building from source requires clang and clang-format to be present on the build machine.
 
+# Debugging on Windows
+
+- Build and install python_ics for debug. When installing python choose the following:
+    - Customize Installation -> Advanced Options
+        - Check Download debugging symbols
+        - Check Download debug binaries
+- Build python with debug:
+    - `python -m menv .env`
+    - `.\.venv\Scripts\Activate.ps1`
+    - `python -m pip install -r requirements.txt`
+    - `python setup.py build -g`
+    - `python setup.py install --force`
+- Place a breakpoint in `src/icsdebug.py`
+- launch "Python: Debug icsdebug.py"
+    - Note the PID that is outputted to terminal (Can also add `os.getpid()` to watch window)
+- Place a breakpoint inside the function you'd like to debug in `methods.cpp`
+- launch "Debugger Attach" (`launch.json`) and enter the pid when prompted.
+
+*NOTE: As of 2/5/24, it looks like MSVC 2022 does not build correctly with setuptools.
+
 # License - MIT
 
 Copyright (c) Intrepid Control Systems, Inc.
