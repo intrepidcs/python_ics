@@ -75,7 +75,7 @@ PS > python -m pip install .
         - Open the root python_ics directory
             - `code C:\Path\To\python_ics`
         - Make sure the python extension is installed (ctrl+shift+x)
-            - [Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python])
+            - [Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python)
             - [Python Debugger](https://marketplace.visualstudio.com/items?itemName=ms-python.debugpy)
         - Select the python interpreter from our virtual environment (bottom right with a python file open in the editor).
         - Open and place a breakpoint in `src/icsdebug.py`
