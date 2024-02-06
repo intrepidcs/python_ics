@@ -34,26 +34,58 @@ http://python-ics.readthedocs.io/
 # Building from source
 
 - Building from source requires clang and clang-format to be present on the build machine.
+- python_ics has submodules, please be sure to initial all submodules also.
+```powershell
+PS > git clone git@github.com:intrepidcs/python_ics.git
 
-# Debugging on Windows
+PS > cd python_ics
+
+PS > git submodule update --init
+
+PS > clang --version
+clang version 11.1.0
+Target: x86_64-pc-windows-msvc
+Thread model: posix
+InstalledDir: C:\Program Files\LLVM\bin
+
+PS > clang-format --version
+clang-format version 11.1.0
+
+PS > python -m pip install .
+```
+
+# Debugging on Windows with Visual Studio Code
 
 - Build and install python_ics for debug. When installing python choose the following:
     - Customize Installation -> Advanced Options
         - Check Download debugging symbols
         - Check Download debug binaries
 - Build python with debug:
-    - `python -m menv .env`
-    - `.\.venv\Scripts\Activate.ps1`
-    - `python -m pip install -r requirements.txt`
-    - `python setup.py build -g`
-    - `python setup.py install --force`
-- Place a breakpoint in `src/icsdebug.py`
-- launch "Python: Debug icsdebug.py"
-    - Note the PID that is outputted to terminal (Can also add `os.getpid()` to watch window)
-- Place a breakpoint inside the function you'd like to debug in `methods.cpp`
-- launch "Debugger Attach" (`launch.json`) and enter the pid when prompted.
+    - Install Visual Studio 2019 build tools(NOTE: As of 2/5/24, it looks like MSVC 2022 does not build correctly with setuptools and debug configurations). You should be able to build from source already.
+    - Create virtual environment and activate it (powershell):
+        - `python -m venv .venv`
+        - `.\.venv\Scripts\Activate.ps1`
+    - Install dependencies:
+        - `python -m pip install -r requirements.txt`
+    - Build in debug (`-g` flag):
+        - `python setup.py build -g`
+    - Install into our virtual environment:
+        - `python setup.py install --force`
+    - Inside visual studio code:
+        - Open the root python_ics directory
+            - `code C:\Path\To\python_ics`
+        - Make sure the python extension is installed (ctrl+shift+x)
+            - [Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python])
+            - [Python Debugger](https://marketplace.visualstudio.com/items?itemName=ms-python.debugpy)
+        - Select the python interpreter from our virtual environment.
+        - Open and place a breakpoint in `src/icsdebug.py`
+        - launch "Python: Debug icsdebug.py"
+            - Note the PID that is outputted to terminal (Can also add `os.getpid()` to watch window)
+        - Place a breakpoint inside the function you'd like to debug in `methods.cpp`
+        - launch "Debugger Attach" (`launch.json`) and enter the pid when prompted.
+        - enjoy!
 
-*NOTE: As of 2/5/24, it looks like MSVC 2022 does not build correctly with setuptools.
+*
 
 # License - MIT
 
