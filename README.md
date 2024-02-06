@@ -77,15 +77,13 @@ PS > python -m pip install .
         - Make sure the python extension is installed (ctrl+shift+x)
             - [Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python])
             - [Python Debugger](https://marketplace.visualstudio.com/items?itemName=ms-python.debugpy)
-        - Select the python interpreter from our virtual environment.
+        - Select the python interpreter from our virtual environment (bottom right with a python file open in the editor).
         - Open and place a breakpoint in `src/icsdebug.py`
         - launch "Python: Debug icsdebug.py"
             - Note the PID that is outputted to terminal (Can also add `os.getpid()` to watch window)
         - Place a breakpoint inside the function you'd like to debug in `methods.cpp`
         - launch "Debugger Attach" (`launch.json`) and enter the pid when prompted.
         - enjoy!
-
-*
 
 # License - MIT
 
