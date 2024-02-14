@@ -4,7 +4,9 @@
 
 #define MODULE_NAME "ics.ics"
 #define MODULE_DESCRIPTION "Copyright Intrepid Control Systems, Inc."
-#define VSPY3_BUILD_VERSION 901
+
+#define MIN_BASE36_SERIAL (16796160)
+#define MAX_SERIAL (2176782335)
 
 // https://bugs.python.org/issue28769
 // 2.x     = char* PyString_AsString(return_value);

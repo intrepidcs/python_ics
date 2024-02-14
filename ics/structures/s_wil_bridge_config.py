@@ -7,10 +7,10 @@ import enum
 class config(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
-        ('can_id', ctypes.c_uint, 29),
-        ('can_id_isExtended', ctypes.c_uint, 1),
-        ('tcp_port', ctypes.c_uint16),
-        ('reserved', ctypes.c_uint, 18),
+        ('can_id', ctypes.c_uint64, 29),
+        ('can_id_isExtended', ctypes.c_uint64, 1),
+        ('tcp_port', ctypes.c_uint64, 16),
+        ('reserved', ctypes.c_uint64, 18),
     ]
 
 

@@ -1,13 +1,15 @@
 import unittest
 import sys
 import os
-#print(os.getcwd())
-print(os.path.abspath('../'))
-sys.path.append('../')
+
+# print(os.getcwd())
+print(os.path.abspath("../"))
+sys.path.append("../")
 
 from ics.structures.inner_structure import *
 from ics.structures.test_structure import *
 from ics.structures.test import *
+
 
 class TestTestEnum(unittest.TestCase):
     def test_all(self):
@@ -18,32 +20,33 @@ class TestTestEnum(unittest.TestCase):
         self.assertEqual(test.TestD, 4)
         self.assertEqual(test.TestE, 5)
 
+
 class TestInnerStructure(unittest.TestCase):
     def test_all(self):
         t = inner_structure()
         self.assertTrue(isinstance(t, ctypes.Structure))
 
         # default init
-        self.assertEqual(t.a, b'\x00')
+        self.assertEqual(t.a, b"\x00")
         self.assertEqual(t.b, 0)
         self.assertEqual(t.t, 0)
-        t.a = b'Z'
-        self.assertEqual(t.a, b'Z')
+        t.a = b"Z"
+        self.assertEqual(t.a, b"Z")
         self.assertEqual(t.b, 0)
         self.assertEqual(t.t, 0)
-        t.a = b'\x00'
+        t.a = b"\x00"
         t.b = 10
-        self.assertEqual(t.a, b'\x00')
+        self.assertEqual(t.a, b"\x00")
         self.assertEqual(t.b, 10)
         self.assertEqual(t.t, 0)
         t.b = 0
         t.t = test.TestD
-        self.assertEqual(t.a, b'\x00')
+        self.assertEqual(t.a, b"\x00")
         self.assertEqual(t.b, 0)
         self.assertEqual(t.t, test.TestD)
 
 
-class TestTestStructure(unittest.TestCase):    
+class TestTestStructure(unittest.TestCase):
     def test_a(self):
         t = A()
         self.assertTrue(isinstance(t, ctypes.Structure))
@@ -65,7 +68,7 @@ class TestTestStructure(unittest.TestCase):
         self.assertEqual(t.a, 0)
         self.assertEqual(t.b, 0)
         self.assertEqual(t.c, 10)
-    
+
     def test_b(self):
         t = B()
         self.assertTrue(isinstance(t, ctypes.Structure))
@@ -87,7 +90,7 @@ class TestTestStructure(unittest.TestCase):
         self.assertEqual(t.d, 0)
         self.assertEqual(t.e, 0)
         self.assertEqual(t.f, 1)
-    
+
     def test_c(self):
         t = C()
         self.assertTrue(isinstance(t, ctypes.Union))
@@ -151,7 +154,7 @@ class TestTestStructure(unittest.TestCase):
         self.assertEqual(t.j, 1)
         self.assertEqual(t.k, 1)
         self.assertEqual(t.m, 1)
-    
+
     def test_e(self):
         t = E()
         self.assertTrue(isinstance(t, ctypes.Structure))
@@ -203,7 +206,7 @@ class TestTestStructure(unittest.TestCase):
         self.assertEqual(t.r, 0)
         self.assertEqual(t.s, 0)
         self.assertEqual(t.t, 0)
-    
+
     def test_anonymous(self):
         t = test_structure()
         self.assertTrue(isinstance(t, ctypes.Structure))
@@ -232,7 +235,7 @@ class TestTestStructure(unittest.TestCase):
         self.assertEqual(t.B.d, 0)
         self.assertEqual(t.B.e, 0)
         self.assertEqual(t.B.f, 1)
-        t._def = 0x7 
+        t._def = 0x7
         self.assertEqual(t._def, 0x7)
         self.assertEqual(t.B.d, 1)
         self.assertEqual(t.B.e, 1)
@@ -243,4 +246,4 @@ if __name__ == "__main__":
     try:
         unittest.main()
     except SystemExit as ex:
-        print(f'Return code: {int(ex.code)}')
+        print(f"Return code: {int(ex.code)}")
