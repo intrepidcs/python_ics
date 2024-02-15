@@ -173,12 +173,12 @@ python_ics does not provide binaries for linux distributions so we will have to 
 Fedora Dependencies (FC28)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-``sudo dnf install redhat-rpm-config gcc g++ python3-devel clang clang-tools-extra``
+``sudo dnf install redhat-rpm-config gcc g++ python3-devel clang clang-tools-extra flex bison``
 
 Debian/Ubuntu Dependencies
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-``sudo apt install build-essential python-dev clang-format``
+``sudo apt install build-essential python-dev clang-format flex bison``
 
 libicsneo library
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

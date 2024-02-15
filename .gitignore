@@ -103,3 +103,4 @@ msvc/ipch*
 # in-tree builds
 /libusb
 /libicsneo
+/libpcap

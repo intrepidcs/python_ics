@@ -12,7 +12,7 @@ function repair_wheel {
 
 
 # Install a system package required by our library
-dnf install -y clang clang-tools-extra
+dnf install -y clang clang-tools-extra flex bison
 
 # Compile wheels
 for PYBIN in /opt/python/*/bin; do

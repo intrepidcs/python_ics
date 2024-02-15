@@ -3,11 +3,11 @@
 python_directory="/Library/Frameworks/Python.framework/Versions"
 python_versions=("3.7" "3.8" "3.9" "3.10" "3.11")
 
-# libusb dependencies
-brew install automake libtool cmake clang-format
+# dependencies
+brew install cmake clang-format
 ret_value=$?
 if [ $ret_value -ne 0 ]; then
-    echo "Failed to install automake/libtoolgit..."
+    echo "Failed to install clang/clang-format..."
     exit $ret_value
 fi
 

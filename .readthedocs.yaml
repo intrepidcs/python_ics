@@ -8,11 +8,12 @@ version: 2
 build:
   os: ubuntu-22.04
   apt_packages:
+    - curl
+    - flex
+    - bison
     - clang
     - clang-format
     - build-essential
-    - libpcap0.8-dev 
-    - libusb-1.0-0-dev 
     - cmake
   tools:
     python: "3.11"
