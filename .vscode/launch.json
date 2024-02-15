@@ -37,5 +37,18 @@
             "console": "integratedTerminal",
             "args": ["include/ics/icsnVC40.h", ],
         },
+        {
+            "name": "Python: Debug icsdebug.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "src\\icsdebug.py",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Debugger Attach",
+            "type": "cppvsdbg",
+            "request": "attach",
+            "pid": "${command:pickProcess}",
+        }
     ]
 }

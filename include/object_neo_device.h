@@ -42,14 +42,14 @@
 #define ICS_HANDLE_PY_TYPE T_INT
 #else
 #define ICS_HANDLE void*
-#define ICS_HANDLE_PY_TYPE T_INT
+#define ICS_HANDLE_PY_TYPE T_ULONGLONG
 #endif
 
 typedef struct
 {
     PyObject_HEAD NeoDevice dev;
     PyObject* name;
-    char auto_cleanup;
+    bool auto_cleanup;
     ICS_HANDLE handle;
     PyObject* dict;
 } neo_device_object;
@@ -67,16 +67,11 @@ static PyMemberDef neo_device_object_members[] = {
     { "MaxAllowedClients", T_INT, offsetof(neo_device_object, dev.MaxAllowedClients), 0, "" },
     { "AutoHandleClose",
       T_BOOL,
-      offsetof(neo_device_object, dev.MaxAllowedClients),
+      offsetof(neo_device_object, auto_cleanup),
       0,
       "When " NEO_DEVICE_OBJECT_NAME " is freed the handle will automatically be closed, if true." },
     { "_Handle",
       ICS_HANDLE_PY_TYPE,
-      offsetof(neo_device_object, handle),
-      0,
-      "This contains the handle returned from icsneoOpenDevice() API. If uncertain, don't use this." },
-    { "IsOpen",
-      T_BOOL,
       offsetof(neo_device_object, handle),
       0,
       "This contains the handle returned from icsneoOpenDevice() API. If uncertain, don't use this." },
@@ -146,7 +141,7 @@ static PyObject* neo_device_object_tp_repr(PyObject* o)
     // Check range is 0A0000-ZZZZZZ
     PyObject* sn = NULL;
     uint32_t serial = (uint32_t)nd->dev.SerialNumber;
-    if (16796160 <= serial && serial <= 2176782335)
+    if (MIN_BASE36_SERIAL <= serial && serial <= MAX_SERIAL)
         sn = convert_to_base36(serial);
     else
         sn = PyUnicode_FromFormat("%lu", nd->dev.SerialNumber);

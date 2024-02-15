@@ -490,6 +490,10 @@ Module Structures
             :members:
             :undoc-members:
 
+    .. autoclass:: ics.structures.ics_spy_messagew_bms.ics_spy_messagew_bms
+            :members:
+            :undoc-members:
+
     .. autoclass:: ics.structures.ics_vcan4_device_status.ics_vcan4_device_status
             :members:
             :undoc-members:
@@ -519,6 +523,62 @@ Module Structures
             :undoc-members:
 
     .. autoclass:: ics.structures.logger_settings.logger_settings
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.mac_sec_flags.mac_sec_flags
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.mac_sec_map.mac_sec_map
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.mac_sec_rule.mac_sec_rule
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.mac_sec_sa.mac_sec_sa
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.mac_sec_sc.mac_sec_sc
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.mac_sec_sec_y.mac_sec_sec_y
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.macsec_cipher_suite.macsec_cipher_suite
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.macsec_config.macsec_config
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.macsec_mpls_outer.macsec_mpls_outer
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.macsec_packet_type.macsec_packet_type
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.macsec_settings.macsec_settings
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.macsec_strip_sectag_icv.macsec_strip_sectag_icv
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.macsec_validateframe.macsec_validateframe
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.macsec_vlantag.macsec_vlantag
             :members:
             :undoc-members:
 
@@ -802,6 +862,10 @@ Module Structures
             :members:
             :undoc-members:
 
+    .. autoclass:: ics.structures.sfp_id.sfp_id
+            :members:
+            :undoc-members:
+
     .. autoclass:: ics.structures.sievb_settings.sievb_settings
             :members:
             :undoc-members:
@@ -1080,7 +1144,7 @@ Module Variables
             :annotation: = 6
 
     .. py:data:: BUILD_DATETIME
-            :annotation: = Jun 28 2023 16:13:59
+            :annotation: = Feb  1 2024 11:29:42
 
     .. py:data:: CANFD_BRS_ENABLED
             :annotation: = 2
@@ -1154,6 +1218,12 @@ Module Variables
     .. py:data:: ETHERNET10G_SETTINGS_SIZE
             :annotation: = 24
 
+    .. py:data:: ETHERNET10T1S_SETTINGS_FLAG_BUS_DECODING_ALL
+            :annotation: = 8
+
+    .. py:data:: ETHERNET10T1S_SETTINGS_FLAG_BUS_DECODING_BEACONS
+            :annotation: = 4
+
     .. py:data:: ETHERNET10T1S_SETTINGS_FLAG_ENABLE_PLCA
             :annotation: = 1
 
@@ -1204,6 +1274,12 @@ Module Variables
 
     .. py:data:: ETHERNET_SETTINGS2_FLAG2_PHY_MODE
             :annotation: = 2
+
+    .. py:data:: ETHERNET_SETTINGS2_FLAG2_SFP_ID_MASK
+            :annotation: = 240
+
+    .. py:data:: ETHERNET_SETTINGS2_FLAG2_SFP_ID_SHIFT
+            :annotation: = 4
 
     .. py:data:: ETHERNET_SETTINGS2_FLAG_AUTO_NEG
             :annotation: = 2
@@ -1311,7 +1387,7 @@ Module Variables
             :annotation: = 1
 
     .. py:data:: GLOBAL_SETTINGS_SIZE
-            :annotation: = 1478
+            :annotation: = 1480
 
     .. py:data:: GS_VERSION
             :annotation: = 5
@@ -1388,15 +1464,6 @@ Module Variables
     .. py:data:: J1708_SETTINGS_SIZE
             :annotation: = 2
 
-    .. py:data:: JUPITER_PTP_ROLE_DISABLED
-            :annotation: = 0
-
-    .. py:data:: JUPITER_PTP_ROLE_MASTER
-            :annotation: = 1
-
-    .. py:data:: JUPITER_PTP_ROLE_SLAVE
-            :annotation: = 2
-
     .. py:data:: LINUX_BOOT_ALLOWED
             :annotation: = 1
 
@@ -1424,6 +1491,102 @@ Module Variables
     .. py:data:: LOOPBACK
             :annotation: = 2
 
+    .. py:data:: MACSEC_CIPHER_GCM_AES_128
+            :annotation: = 0
+
+    .. py:data:: MACSEC_CIPHER_GCM_AES_128_XPN
+            :annotation: = 2
+
+    .. py:data:: MACSEC_CIPHER_GCM_AES_256
+            :annotation: = 1
+
+    .. py:data:: MACSEC_CIPHER_GCM_AES_256_XPN
+            :annotation: = 3
+
+    .. py:data:: MACSEC_NUM_FLAGS_PER_CONFIG
+            :annotation: = 1
+
+    .. py:data:: MACSEC_NUM_MAPS_PER_CONFIG
+            :annotation: = 2
+
+    .. py:data:: MACSEC_NUM_RULES_PER_CONFIG
+            :annotation: = 2
+
+    .. py:data:: MACSEC_NUM_SA_PER_CONFIG
+            :annotation: = 4
+
+    .. py:data:: MACSEC_NUM_SC_PER_CONFIG
+            :annotation: = 2
+
+    .. py:data:: MACSEC_NUM_SECY_PER_CONFIG
+            :annotation: = 2
+
+    .. py:data:: MACSEC_PACKET_DUAL_VLAN
+            :annotation: = 2
+
+    .. py:data:: MACSEC_PACKET_DUAL_VLAN_FOLLOW_BY_MPLS
+            :annotation: = 5
+
+    .. py:data:: MACSEC_PACKET_MPLS
+            :annotation: = 3
+
+    .. py:data:: MACSEC_PACKET_NO_VLAN_OR_MPLS
+            :annotation: = 0
+
+    .. py:data:: MACSEC_PACKET_SINGLE_VLAN
+            :annotation: = 1
+
+    .. py:data:: MACSEC_PACKET_SINGLE_VLAN_FOLLOW_BY_MPLS
+            :annotation: = 4
+
+    .. py:data:: MACSEC_PACKET_UNSUPPORTED_TYPE
+            :annotation: = 6
+
+    .. py:data:: MACSEC_SECTAG_ICV_BOTH_STRIP
+            :annotation: = 0
+
+    .. py:data:: MACSEC_SECTAG_ICV_NO_STRIP
+            :annotation: = 3
+
+    .. py:data:: MACSEC_SECTAG_ICV_RESERVED
+            :annotation: = 1
+
+    .. py:data:: MACSEC_SECTAG_ICV_STRIP_ICV_ONLY
+            :annotation: = 2
+
+    .. py:data:: MACSEC_SETTINGS_FLAGS_SIZE
+            :annotation: = 4
+
+    .. py:data:: MACSEC_SETTINGS_MAP_SIZE
+            :annotation: = 20
+
+    .. py:data:: MACSEC_SETTINGS_RULE_SIZE
+            :annotation: = 88
+
+    .. py:data:: MACSEC_SETTINGS_SA_SIZE
+            :annotation: = 80
+
+    .. py:data:: MACSEC_SETTINGS_SC_SIZE
+            :annotation: = 24
+
+    .. py:data:: MACSEC_SETTINGS_SECY_SIZE
+            :annotation: = 24
+
+    .. py:data:: MACSEC_SETTINGS_SIZE
+            :annotation: = 1400
+
+    .. py:data:: MACSEC_VF_CHECK
+            :annotation: = 1
+
+    .. py:data:: MACSEC_VF_DISABLED
+            :annotation: = 0
+
+    .. py:data:: MACSEC_VF_NA
+            :annotation: = 3
+
+    .. py:data:: MACSEC_VF_STRICT
+            :annotation: = 2
+
     .. py:data:: MAIN_VNET
             :annotation: = 1
 
@@ -1439,11 +1602,17 @@ Module Variables
     .. py:data:: MAX_REPORTED_VERSIONS
             :annotation: = 16
 
+    .. py:data:: MAX_SERIAL
+            :annotation: = 2176782335
+
     .. py:data:: MAX_VL_FORWARDING_ENTRIES
             :annotation: = 1024
 
     .. py:data:: MAX_VL_POLICING_ENTRIES
             :annotation: = 1024
+
+    .. py:data:: MIN_BASE36_SERIAL
+            :annotation: = 16796160
 
     .. py:data:: NEODEVICE_ANY_ION
             :annotation: = 262144
@@ -1528,6 +1697,9 @@ Module Variables
 
     .. py:data:: NEODEVICE_NEOECUCHIP
             :annotation: = 256
+
+    .. py:data:: NEODEVICE_NEW_DEVICE_27
+            :annotation: = 39
 
     .. py:data:: NEODEVICE_NEW_DEVICE_58
             :annotation: = 31
@@ -1659,7 +1831,7 @@ Module Variables
             :annotation: = 0.065536
 
     .. py:data:: NEOVI_3G_MAX_SETTINGS_SIZE
-            :annotation: = 1478
+            :annotation: = 1480
 
     .. py:data:: NEOVI_COMMTYPE_FIRE_USB
             :annotation: = 5
@@ -2678,6 +2850,27 @@ Module Variables
     .. py:data:: SERDESPOC_SETTINGS_SIZE
             :annotation: = 10
 
+    .. py:data:: SFP_ID_FINISAR_FCLF8522P2BTL
+            :annotation: = 1
+
+    .. py:data:: SFP_ID_FS_GB_GE_T
+            :annotation: = 2
+
+    .. py:data:: SFP_ID_ICS_MV2112A2
+            :annotation: = 3
+
+    .. py:data:: SFP_ID_ICS_MV2221MB1
+            :annotation: = 4
+
+    .. py:data:: SFP_ID_ICS_MV3244
+            :annotation: = 5
+
+    .. py:data:: SFP_ID_MAX
+            :annotation: = 6
+
+    .. py:data:: SFP_ID_UNKNOWN
+            :annotation: = 0
+
     .. py:data:: SLAVE_VNET_A
             :annotation: = 2
 
@@ -2851,6 +3044,15 @@ Module Variables
 
     .. py:data:: SPY_STATUS2_ETHERNET_PREEMPTION_ENABLED
             :annotation: = 33554432
+
+    .. py:data:: SPY_STATUS2_ETHERNET_T1S_BURST
+            :annotation: = 1073741824
+
+    .. py:data:: SPY_STATUS2_ETHERNET_T1S_ETHERNET
+            :annotation: = -2147483648
+
+    .. py:data:: SPY_STATUS2_ETHERNET_T1S_SYMBOL
+            :annotation: = 536870912
 
     .. py:data:: SPY_STATUS2_ETHERNET_UPDATE_CHECKSUMS
             :annotation: = 67108864
@@ -3027,7 +3229,7 @@ Module Variables
             :annotation: = 2
 
     .. py:data:: SPY_STATUS_A2B_CONTROL
-            :annotation: = 524288
+            :annotation: = 268435456
 
     .. py:data:: SPY_STATUS_A2B_MONITOR
             :annotation: = 536870912
