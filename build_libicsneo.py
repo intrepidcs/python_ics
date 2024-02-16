@@ -78,6 +78,17 @@ def _build_libpcap():
     subprocess.check_output([
         f"{LIBPCAP_SOURCE}/configure",
         "--disable-shared",
+        "--disable-usb",
+        "--disable-netmap",
+        "--disable-bluetooth",
+        "--disable-dbus",
+        "--disable-rdma",
+        "--without-dag",
+        "--without-septel",
+        "--without-snf",
+        "--without-turbocap",
+        "--without-dpdk",
+        "--without-libnl",
         f"--prefix={LIBPCAP_INSTALL}",
     ], cwd=LIBPCAP_BUILD, env=env)
 
