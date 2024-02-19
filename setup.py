@@ -7,6 +7,7 @@ import platform
 import sys
 import unittest
 import shutil
+from pathlib import Path
 
 MAJOR_VERSION = 914
 MINOR_VERSION = 14
@@ -152,7 +153,8 @@ setup(
         "test": UnitTests,
     },
     download_url="https://github.com/intrepidcs/python_ics/releases",
-    packages=["ics", "ics.structures"],
+    packages=["gen/ics", "gen/ics.structures"],
+    package_dir={"ics": "gen/ics", "ics.structures": "gen/ics/structures"},
     package_data=package_data,
     include_package_data=True,
     ext_modules=[ics_extension],

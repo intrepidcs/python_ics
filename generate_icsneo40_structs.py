@@ -2,13 +2,17 @@
 import re
 import os.path
 from collections import OrderedDict
-import sys
 from subprocess import STDOUT, CalledProcessError, run, PIPE
 from enum import Enum, auto
 import random
-import ctypes
+from pathlib import Path
+import sys
+import ctypes #used with eval...
 
 debug_print = False
+
+
+OUTPUT_DIR = Path("./gen/ics")
 
 __unique_numbers = []
 
@@ -624,7 +628,7 @@ def generate(filename="include/ics/icsnVC40.h"):
     with open(f"{basename}.enums.json", "w+") as f:
         f.write(j)
     # generate the python files
-    output_dir = "./ics/structures"
+    output_dir = OUTPUT_DIR / "structures"
     print(f"Removing {output_dir}...")
     try:
         shutil.rmtree(output_dir)
@@ -719,7 +723,8 @@ def generate(filename="include/ics/icsnVC40.h"):
             f.write('",\n')
         f.write("]\n")
     # write a hidden_import python file for pyinstaller
-    with open("./ics/hiddenimports.py", "w+") as f:
+    hidden_imports_path = OUTPUT_DIR / "hiddenimports.py"
+    with open(hidden_imports_path, "w+") as f:
         f.write("hidden_imports = [\n")
         for file_name in file_names:
             fname = re.sub(r"(\.py)", "", file_name)
@@ -731,18 +736,16 @@ def generate(filename="include/ics/icsnVC40.h"):
         f.write("]\n\n")
 
     # Verify We can at least import all of the modules - quick check to make sure parser worked.
-    # TODO: This is broke
-    """
     sys.path.insert(0, output_dir)
     for file_name in file_names:
         import_line = "from ics.structures import {}".format(
             re.sub(r'(\.py)', '', file_name))
         try:
-            print("Importing / Verifying {}...".format(file_name))
+            print(f"Importing / Verifying {output_dir / file_name}...")
             exec(import_line)
         except Exception as ex:
-            print("ERROR: ", ex, 'IMPORT LINE:', import_line)
-    """
+            print(f"""ERROR: {ex} IMPORT LINE: '{import_line}'""")
+            raise ex
     print("Done.")
 
 
