@@ -142,9 +142,9 @@ def build():
 
 def copy():
     if sys.platform == "darwin":
-        shutil.copyfile(f"{LIBICSNEO_BUILD}/libicsneolegacy.dylib", "ics/libicsneolegacy.dylib")
+        shutil.copyfile(f"{LIBICSNEO_BUILD}/libicsneolegacy.dylib", "gen/ics/libicsneolegacy.dylib")
     elif sys.platform == "linux":
-        shutil.copyfile(f"{LIBICSNEO_BUILD}/libicsneolegacy.so", "ics/libicsneolegacy.so")
+        shutil.copyfile(f"{LIBICSNEO_BUILD}/libicsneolegacy.so", "gen/ics/libicsneolegacy.so")
 
 
 def clean():
