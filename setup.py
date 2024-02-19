@@ -153,7 +153,7 @@ setup(
         "test": UnitTests,
     },
     download_url="https://github.com/intrepidcs/python_ics/releases",
-    packages=["gen/ics", "gen/ics.structures"],
+    packages=["ics", "ics.structures"],
     package_dir={"ics": "gen/ics", "ics.structures": "gen/ics/structures"},
     package_data=package_data,
     include_package_data=True,
