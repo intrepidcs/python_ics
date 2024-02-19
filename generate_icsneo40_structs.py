@@ -635,6 +635,7 @@ def generate(filename="include/ics/icsnVC40.h"):
     except FileNotFoundError:
         pass
     ignore_names = [
+        "fsid_t__",
         "__fsid_t",
         "__darwin_pthread_handler_rec",
         "_mbstate_t",
@@ -737,9 +738,8 @@ def generate(filename="include/ics/icsnVC40.h"):
 
     # Verify We can at least import all of the modules - quick check to make sure parser worked.
     ics_module_path = OUTPUT_DIR.parent.resolve()
-    sys.path.insert(0, ics_module_path)
-    os.chdir(ics_module_path)
-    print("CWD:", os.getcwd(), OUTPUT_DIR, ics_module_path)
+    # Add the module to the eval sys.path.
+    eval("""sys.path.insert(0, f"{ics_module_path}")""")
     for file_name in file_names:
         import_line = "from ics.structures import {}".format(
             re.sub(r'(\.py)', '', file_name))
@@ -910,15 +910,16 @@ def create_ics_init():
     fdata = \
 """try:
     # Release environment
+    print("Release")
     from ics.ics import *
     from ics.ics.structures import *
     from ics.ics.hiddenimports import hidden_imports
 except Exception as ex:
+    print("Debug", ex)
     # Build environment
     from ics import *
     from ics.structures import *
     from ics.hiddenimports import hidden_imports
-
 """
     init_path = OUTPUT_DIR / "__init__.py"
     print(f"Creating '{init_path}'...")
