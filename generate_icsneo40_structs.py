@@ -736,7 +736,10 @@ def generate(filename="include/ics/icsnVC40.h"):
         f.write("]\n\n")
 
     # Verify We can at least import all of the modules - quick check to make sure parser worked.
-    sys.path.insert(0, output_dir)
+    ics_module_path = OUTPUT_DIR.parent.resolve()
+    sys.path.insert(0, ics_module_path)
+    os.chdir(ics_module_path)
+    print("CWD:", os.getcwd(), OUTPUT_DIR, ics_module_path)
     for file_name in file_names:
         import_line = "from ics.structures import {}".format(
             re.sub(r'(\.py)', '', file_name))
@@ -903,12 +906,35 @@ def generate_pyfile(c_object, path):
         _write_c_object(f, c_object)
     return fname, fname_with_path
 
+def create_ics_init():
+    fdata = \
+"""from ics.structures import *
+
+try:
+    from ics import *
+    from ics.ics import *
+    from ics.structures import *
+    from ics.hiddenimports import hidden_imports
+except Exception as ex:
+    print(ex)
+    from ics.ics import *
+    from ics.ics.ics import *
+    from ics.ics.structures import *
+    from ics.ics.hiddenimports import hidden_imports
+"""
+    init_path = OUTPUT_DIR / "__init__.py"
+    print(f"Creating '{init_path}'...")
+    with open(init_path, "w+") as f:
+        f.write(fdata)
 
 def generate_all_files():
     import sys
     import os
     import pathlib
 
+    print(f"Creating directory '{OUTPUT_DIR}'...")
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    create_ics_init()
     filenames = ("icsnVC40.h", "icsnVC40Internal.h")
     for filename in filenames:
         path = pathlib.Path("include/ics/")
@@ -918,7 +944,6 @@ def generate_all_files():
                 print("WARNING: Generating internal header!")
             print(f"Parsing {str(path)}...")
             generate(str(path))
-
 
 if __name__ == "__main__":
     generate_all_files()
