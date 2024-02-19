@@ -910,13 +910,13 @@ def create_ics_init():
     fdata = \
 """try:
     # Release environment
-    print("Release")
+    #print("Release")
     from ics.ics import *
-    from ics.ics.structures import *
-    from ics.ics.hiddenimports import hidden_imports
+    from ics.structures import *
+    from ics.hiddenimports import hidden_imports
 except Exception as ex:
-    print("Debug", ex)
     # Build environment
+    #print("Debug", ex)
     from ics import *
     from ics.structures import *
     from ics.hiddenimports import hidden_imports
