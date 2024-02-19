@@ -54,14 +54,15 @@ except ImportError:
         def run(self):
             _run_tests()
 
+# force this to happen every single time, fixes sync issues.
+import extract_icsneo40_defines
+import generate_icsneo40_structs
+
+extract_icsneo40_defines.extract()
+generate_icsneo40_structs.generate_all_files()
 
 class build(build_module.build):
     def run(self):
-        import extract_icsneo40_defines
-        import generate_icsneo40_structs
-
-        extract_icsneo40_defines.extract()
-        generate_icsneo40_structs.generate_all_files()
         if platform.system().upper() in ("DARWIN", "LINUX"):
             import build_libicsneo
 
