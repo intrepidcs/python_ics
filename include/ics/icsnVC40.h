@@ -522,6 +522,12 @@ typedef unsigned __int64 uint64_t;
 #define HARDWARE_TIMESTAMP_ID_NEORED_25NS (unsigned char)9
 #define HARDWARE_TIMESTAMP_ID_NEORED_10NS (unsigned char)10
 
+//flag to indicate if the timestamp is a fixed value, or if it is a timestamp referenced to a network object
+//if this flag is NOT set, then the TimeStampHardwareID is a 1-based index for GetHWAt(index)
+//see CMessageTimeDecoder::GetSpyTimeType()
+//see cicsSpyCE::GetSpyTimeType()
+#define HADRWARE_TIMESTAMP_ID_FIXED 0x80
+
 #define FIRE2_REPORT_PERIODIC (0x0001)
 #define FIRE2_REPORT_EMISC1_DIGITAL (0x0002)
 #define FIRE2_REPORT_EMISC2_DIGITAL (0x0004)
@@ -1399,25 +1405,26 @@ typedef struct ETHERNET10T1S_SETTINGS_t
  * @brief Structure of Vlan tag
  * 
  */
-typedef struct MACSEC_VLANTAG_t
+#pragma pack(push, 1)
+typedef struct
 {
 	uint16_t VID; /*!< 12 bits */
 	uint8_t PRI_CFI; /*!< PRI - 3 bits, CFI - 1bit */
-} MACSEC_VLANTAG;
+} MACSEC_VLANTAG_t;
 /**
  * @brief Structure of MPLS
  * 
  */
-typedef struct MACSEC_MPLS_OUTER_t
+typedef struct
 {
 	uint32_t MPLS_label; /*!< 20 bits */
 	uint8_t exp; /*!< 3 bits */
-} MACSEC_MPLS_OUTER;
+} MACSEC_MPLS_OUTER_t;
 /**
  * @brief Define Encoded Packet Type from the parser
  * 
  */
-typedef enum MACSEC_PACKET_TYPE_t
+typedef enum
 {
 	MACSEC_PACKET_NO_VLAN_OR_MPLS = 0,
 	MACSEC_PACKET_SINGLE_VLAN = 1,
@@ -1428,64 +1435,72 @@ typedef enum MACSEC_PACKET_TYPE_t
 	MACSEC_PACKET_UNSUPPORTED_TYPE = 6
 } MACSEC_PACKET_TYPE;
 #define MACSEC_SETTINGS_RULE_SIZE (88)
-typedef struct MACSecRule_t
+typedef union _MACSecRule
 {
-	uint8_t index;
-	uint8_t key_MAC_DA[6]; /*!< MAC DA field extracted from the packet */
-	uint8_t mask_MAC_DA[6]; /*!< Set bits to 1 to mask/exclude corresponding flowid_tcam_data bit from compare */
-	uint8_t key_MAC_SA[6]; /*!< MAC SA field extracted from the packet */
-	uint8_t mask_MAC_SA[6]; /*!< Set bits to 1 to mask/exclude corresponding flowid_tcam_data bit from compare */
-	uint16_t key_Ethertype; /*!< First E-Type found in the packet that doesn't match one of the preconfigured custom tag. */
-	uint16_t mask_Ethertype; /*!< Set bits to 1 to mask/exclude corresponding flowid_tcam_data bit from compare */
-	MACSEC_VLANTAG key_vlantag_outer1; /*!< outermost/1st VLAN ID {8'd0, VLAN_ID[11:0]}, or 20-bit MPLS label. */
-	MACSEC_MPLS_OUTER key_MPLS_outer1;
-	MACSEC_VLANTAG mask_vlantag_outer1; /*!< Set bits to 1 to mask/exclude corresponding flowid_tcam_data bit from compare */
-	MACSEC_MPLS_OUTER mask_MPLS_outer1;
-	MACSEC_VLANTAG key_vlantag_outer2; /*!< 2nd outermost VLAN ID {8'd0, VLAN_ID[11:0]}, or 20-bit MPLS label. */
-	MACSEC_MPLS_OUTER key_MPLS_outer2;
-	MACSEC_VLANTAG mask_vlantag_outer2; /*!< Set bits to 1 to mask/exclude corresponding flowid_tcam_data bit from compare */
-	MACSEC_MPLS_OUTER mask_MPLS_outer2;
-	uint16_t key_bonus_data; /*!< 2 bytes of additional bonus data extracted from one of the custom tags. */
-	uint16_t mask_bonus_data; /*!< Set bits to 1 to mask/exclude corresponding flowid_tcam_data bit from compare */
-	uint8_t
-		key_tag_match_bitmap; /*!< 8 bits total. Maps 1 to 1 bitwise with the set of custom tags. (set bit[N]=1 if check Nth custom tag) */
-	uint8_t mask_tag_match_bitmap; /*!< Set bits to 1 to mask/exclude corresponding flowid_tcam_data bit from compare */
-	MACSEC_PACKET_TYPE key_packet_type; /*!< Encoded Packet Type, see MACSEC_PACKET_TYPE */
-	uint8_t mask_packet_type; /*!< Set bits to 1 to mask/exclude corresponding flowid_tcam_data bit from compare */
-	uint16_t
-		key_inner_vlan_type; /*!< 3 bits total. Encoded value indicating which VLAN TPID value matched for the second outermost VLAN Tag. */
-	uint16_t mask_inner_vlan_type; /*!< Set bits to 1 to mask/exclude corresponding flowid_tcam_data bit from compare */
-	uint16_t key_outer_vlan_type; /*!< 3 bits total. Encoded value indicating which VLAN TPID value matched for the outermost VLAN Tag. */
-	uint16_t mask_outer_vlan_type; /*!< Set bits to 1 to mask/exclude corresponding flowid_tcam_data bit from compare */
-	uint8_t
-		key_num_tags; /*!< 7 bits total. Number of VLAN/custom tags or MPLS lables detected. Ingress: before SecTag; Egress: total detected. Exclude MCS header tags. i.e. Bit 2: 2 tags/labels before SecTAG...Bit 6: 6 or more tags/labels before SecTAG. */
-	uint8_t mask_num_tags; /*!< Set bits to 1 to mask/exclude corresponding flowid_tcam_data bit from compare */
-	uint8_t key_express; /*!< 1 bits. Express packet. */
-	uint8_t mask_express; /*!< Set bits to 1 to mask/exclude corresponding flowid_tcam_data bit from compare */
-	uint8_t isMPLS;
-	uint8_t rsvd[5];
-	uint8_t enable;
-} MACSecRule;
+	struct
+	{
+		uint8_t index;
+		uint8_t key_MAC_DA[6]; /*!< MAC DA field extracted from the packet */
+		uint8_t mask_MAC_DA[6]; /*!< Set bits to 1 to mask/exclude corresponding flowid_tcam_data bit from compare */
+		uint8_t key_MAC_SA[6]; /*!< MAC SA field extracted from the packet */
+		uint8_t mask_MAC_SA[6]; /*!< Set bits to 1 to mask/exclude corresponding flowid_tcam_data bit from compare */
+		uint16_t key_Ethertype; /*!< First E-Type found in the packet that doesn't match one of the preconfigured custom tag. */
+		uint16_t mask_Ethertype; /*!< Set bits to 1 to mask/exclude corresponding flowid_tcam_data bit from compare */
+		MACSEC_VLANTAG_t key_vlantag_outer1; /*!< outermost/1st VLAN ID {8'd0, VLAN_ID[11:0]}, or 20-bit MPLS label. */
+		MACSEC_MPLS_OUTER_t key_MPLS_outer1;
+		MACSEC_VLANTAG_t mask_vlantag_outer1; /*!< Set bits to 1 to mask/exclude corresponding flowid_tcam_data bit from compare */
+		MACSEC_MPLS_OUTER_t mask_MPLS_outer1;
+		MACSEC_VLANTAG_t key_vlantag_outer2; /*!< 2nd outermost VLAN ID {8'd0, VLAN_ID[11:0]}, or 20-bit MPLS label. */
+		MACSEC_MPLS_OUTER_t key_MPLS_outer2;
+		MACSEC_VLANTAG_t mask_vlantag_outer2; /*!< Set bits to 1 to mask/exclude corresponding flowid_tcam_data bit from compare */
+		MACSEC_MPLS_OUTER_t mask_MPLS_outer2;
+		uint16_t key_bonus_data; /*!< 2 bytes of additional bonus data extracted from one of the custom tags. */
+		uint16_t mask_bonus_data; /*!< Set bits to 1 to mask/exclude corresponding flowid_tcam_data bit from compare */
+		uint8_t
+			key_tag_match_bitmap; /*!< 8 bits total. Maps 1 to 1 bitwise with the set of custom tags. (set bit[N]=1 if check Nth custom tag) */
+		uint8_t mask_tag_match_bitmap; /*!< Set bits to 1 to mask/exclude corresponding flowid_tcam_data bit from compare */
+		uint8_t key_packet_type; /*!< Encoded Packet Type, see MACSEC_PACKET_TYPE */
+		uint8_t mask_packet_type; /*!< Set bits to 1 to mask/exclude corresponding flowid_tcam_data bit from compare */
+		uint16_t
+			key_inner_vlan_type; /*!< 3 bits total. Encoded value indicating which VLAN TPID value matched for the second outermost VLAN Tag. */
+		uint16_t mask_inner_vlan_type; /*!< Set bits to 1 to mask/exclude corresponding flowid_tcam_data bit from compare */
+		uint16_t key_outer_vlan_type; /*!< 3 bits total. Encoded value indicating which VLAN TPID value matched for the outermost VLAN Tag. */
+		uint16_t mask_outer_vlan_type; /*!< Set bits to 1 to mask/exclude corresponding flowid_tcam_data bit from compare */
+		uint8_t
+			key_num_tags; /*!< 7 bits total. Number of VLAN/custom tags or MPLS lables detected. Ingress: before SecTag; Egress: total detected. Exclude MCS header tags. i.e. Bit 2: 2 tags/labels before SecTAG...Bit 6: 6 or more tags/labels before SecTAG. */
+		uint8_t mask_num_tags; /*!< Set bits to 1 to mask/exclude corresponding flowid_tcam_data bit from compare */
+		uint8_t key_express; /*!< 1 bits. Express packet. */
+		uint8_t mask_express; /*!< Set bits to 1 to mask/exclude corresponding flowid_tcam_data bit from compare */
+		uint8_t isMPLS;
+		uint8_t rsvd[5];
+		uint8_t enable;
+	};
+	uint8_t byte[MACSEC_SETTINGS_RULE_SIZE];
+} MACSecRule_t;
 /* MACsec Map */
 #define MACSEC_SETTINGS_MAP_SIZE (20)
-typedef struct MACSecMap_t
+typedef union _MACSecMap
 {
-	uint8_t index;
-	uint64_t sectag_sci; /*!< Identifies the SecTAG SCI for this Flow. */
-	uint8_t secYIndex; /*!< index for entry in Egress secY Policy */
-	uint8_t isControlPacket; /*!< Identifies all packets matching this index lookup as control packets. */
-	uint8_t scIndex; /*!< Identifies the SC for this Flow. */
-	uint8_t auxiliary_plcy; /*!< Auxiliary policy bits. */
-	uint8_t ruleId; /*!< Identifies the Rule for this Flow. */
-	uint8_t rsvd[5];
-	uint8_t enable;
-} MACSecMap;
+	struct
+	{
+		uint8_t index;
+		uint64_t sectag_sci; /*!< Identifies the SecTAG SCI for this Flow. */
+		uint8_t secYIndex; /*!< index for entry in Egress secY Policy */
+		uint8_t isControlPacket; /*!< Identifies all packets matching this index lookup as control packets. */
+		uint8_t scIndex; /*!< Identifies the SC for this Flow. */
+		uint8_t auxiliary_plcy; /*!< Auxiliary policy bits. */
+		uint8_t ruleId; /*!< Identifies the Rule for this Flow. */
+		uint8_t rsvd[5];
+		uint8_t enable;
+	};
+	uint8_t byte[MACSEC_SETTINGS_MAP_SIZE];
+} MACSecMap_t;
 /* MACsec SecY */
 /**
  * @brief Define the permit police for frames as defined in 802.1ae
  * 
  */
-typedef enum MACSEC_VALIDATEFRAME_t
+typedef enum
 {
 	MACSEC_VF_DISABLED = 0, /*!< Disable validation */
 	MACSEC_VF_CHECK = 1, /*!< Enable validation, do not discard invalid frames*/
@@ -1496,7 +1511,7 @@ typedef enum MACSEC_VALIDATEFRAME_t
  * @brief Define SecTag and ICV configuration.
  * 
  */
-typedef enum MACSEC_STRIP_SECTAG_ICV_t
+typedef enum
 {
 	MACSEC_SECTAG_ICV_BOTH_STRIP = 0, /*!< Strip both SecTag and ICV from packet */
 	MACSEC_SECTAG_ICV_RESERVED = 1,
@@ -1507,7 +1522,7 @@ typedef enum MACSEC_STRIP_SECTAG_ICV_t
  * @brief Define the cipher suite to use for this SecY
  * 
  */
-typedef enum MACSEC_CIPHER_SUITE_t
+typedef enum
 {
 	MACSEC_CIPHER_GCM_AES_128 = 0,
 	MACSEC_CIPHER_GCM_AES_256 = 1,
@@ -1515,65 +1530,81 @@ typedef enum MACSEC_CIPHER_SUITE_t
 	MACSEC_CIPHER_GCM_AES_256_XPN = 3
 } MACSEC_CIPHER_SUITE;
 #define MACSEC_SETTINGS_SECY_SIZE (24)
-typedef struct MACSecSecY_t
+typedef union _MACSecSecY
 {
-	uint8_t index; /*!< Identifies the SecY for this Flow. */
-	uint8_t controlled_port_enabled; /*!< Enable (or disable) operation of the Controlled port associated with this SecY */
-	MACSEC_VALIDATEFRAME validate_frames; /*!< see MACSEC_VALIDATEFRAME */
-	MACSEC_STRIP_SECTAG_ICV strip_sectag_icv; /*!< see MACSEC_STRIP_SECTAG_ICV */
-	MACSEC_CIPHER_SUITE cipher; /*!< Define the cipher suite to use for this SecY */
-	uint8_t confidential_offset; /*!< Define the number of bytes that are unencrypted following the SecTag. */
-	uint8_t icv_includes_da_sa; /*!< When set, the outer DA/SA bytes are included in the authentication GHASH calculation */
-	uint8_t replay_protect; /*!< Enables Anti-Replay protection */
-	uint32_t replay_window; /*!< Unsigned value indicating the size of the anti-replay window. */
-	uint8_t
-		protect_frames; /*!< 0 = do not encrypt or authenticate this packet; 1 = always Authenticate frame and if SecTag.TCI.E = 1 encrypt the packet as well. */
-	uint8_t
-		sectag_offset; /*!< Define the offset in bytes from either the start of the packet or a matching Etype depending on SecTag_Insertion_Mode. */
-	uint8_t sectag_tci; /*!< Tag Control Information excluding the AN field which originates from the SA Policy table */
-	uint16_t mtu; /*!< Specifies the outgoing MTU for this SecY */
-	uint8_t rsvd[6];
-	uint8_t enable;
-} MACSecSecY;
+	struct
+	{
+		uint8_t index; /*!< Identifies the SecY for this Flow. */
+		uint8_t controlled_port_enabled; /*!< Enable (or disable) operation of the Controlled port associated with this SecY */
+		uint8_t validate_frames; /*!< see MACSEC_VALIDATEFRAME */
+		uint8_t strip_sectag_icv; /*!< see MACSEC_STRIP_SECTAG_ICV */
+		uint8_t cipher; /*!< Define the cipher suite to use for this SecY see MACSEC_CIPHER_SUITE */
+		uint8_t confidential_offset; /*!< Define the number of bytes that are unencrypted following the SecTag. */
+		uint8_t icv_includes_da_sa; /*!< When set, the outer DA/SA bytes are included in the authentication GHASH calculation */
+		uint8_t replay_protect; /*!< Enables Anti-Replay protection */
+		uint32_t replay_window; /*!< Unsigned value indicating the size of the anti-replay window. */
+		uint8_t
+			protect_frames; /*!< 0 = do not encrypt or authenticate this packet; 1 = always Authenticate frame and if SecTag.TCI.E = 1 encrypt the packet as well. */
+		uint8_t
+			sectag_offset; /*!< Define the offset in bytes from either the start of the packet or a matching Etype depending on SecTag_Insertion_Mode. */
+		uint8_t sectag_tci; /*!< Tag Control Information excluding the AN field which originates from the SA Policy table */
+		uint16_t mtu; /*!< Specifies the outgoing MTU for this SecY */
+		uint8_t rsvd[6];
+		uint8_t enable;
+	};
+	uint8_t byte[MACSEC_SETTINGS_SECY_SIZE];
+} MACSecSecY_t;
 /* MACsec SC */
 #define MACSEC_SETTINGS_SC_SIZE (24)
-typedef struct MACSecSc_t
+typedef union _MACSecSc
 {
-	uint8_t index; /*!< SC index. */
-	uint8_t secYIndex; /*!< SecY associated with this packet. */
-	uint64_t sci; /*!< The Secure Channel Identifier. */
-	uint8_t sa_index0; /*!< Define the 1st SA to use */
-	uint8_t sa_index1; /*!< Define the 2nd SA to use */
-	uint8_t sa_index0_in_use; /*!< Specifies whether 1st SA is in use or not. */
-	uint8_t sa_index1_in_use; /*!< Specifies whether 2nd SA is in use or not.  */
-	uint8_t enable_auto_rekey; /*!< If enabled, then once the pn_threshold is reached, auto rekey will happen. */
-	uint8_t
-		isActiveSA1; /*!< If set, then sa_index1 is the currently active SA index. If cleared, the sa_index0 is the currently active SA index). */
-	uint8_t rsvd[7];
-	uint8_t enable;
-} MACSecSc;
+	struct
+	{
+		uint8_t index; /*!< SC index. */
+		uint8_t secYIndex; /*!< SecY associated with this packet. */
+		uint64_t sci; /*!< The Secure Channel Identifier. */
+		uint8_t sa_index0; /*!< Define the 1st SA to use */
+		uint8_t sa_index1; /*!< Define the 2nd SA to use */
+		uint8_t sa_index0_in_use; /*!< Specifies whether 1st SA is in use or not. */
+		uint8_t sa_index1_in_use; /*!< Specifies whether 2nd SA is in use or not.  */
+		uint8_t enable_auto_rekey; /*!< If enabled, then once the pn_threshold is reached, auto rekey will happen. */
+		uint8_t
+			isActiveSA1; /*!< If set, then sa_index1 is the currently active SA index. If cleared, the sa_index0 is the currently active SA index). */
+		uint8_t rsvd[7];
+		uint8_t enable;
+	};
+	uint8_t byte[MACSEC_SETTINGS_SC_SIZE];
+} MACSecSc_t;
 /* MACsec SA */
 #define MACSEC_SETTINGS_SA_SIZE (80)
-typedef struct MACSecSa_t
+typedef union _MACSecSa
 {
-	uint8_t index; /*!< SA index */
-	uint8_t
-		sak[32]; /*!< 256b SAK: Define the encryption key to be used to encrypte this packet. The lower 128 bits are used for 128-bit ciphers. */
-	uint8_t hashKey[16]; /*!< 128b Hash Key: Key used for authentication. */
-	uint8_t salt[12]; /*!< 96b Salt value: Salt value used in XPN ciphers. */
-	uint32_t ssci; /*!< 32b SSCI value: Short Secure Channel Identifier, used in XPN ciphers. */
-	uint8_t AN; /*!< 2b SecTag Association Number (AN) */
-	uint64_t nextPN; /*!< 64b next_pn value: Next packet number to insert into outgoing packet on a particular SA. */
-	uint8_t rsvd[5];
-	uint8_t enable;
-} MACSecSa;
+	struct
+	{
+		uint8_t index; /*!< SA index */
+		uint8_t
+			sak[32]; /*!< 256b SAK: Define the encryption key to be used to encrypte this packet. The lower 128 bits are used for 128-bit ciphers. */
+		uint8_t hashKey[16]; /*!< 128b Hash Key: Key used for authentication. */
+		uint8_t salt[12]; /*!< 96b Salt value: Salt value used in XPN ciphers. */
+		uint32_t ssci; /*!< 32b SSCI value: Short Secure Channel Identifier, used in XPN ciphers. */
+		uint8_t AN; /*!< 2b SecTag Association Number (AN) */
+		uint64_t nextPN; /*!< 64b next_pn value: Next packet number to insert into outgoing packet on a particular SA. */
+		uint8_t rsvd[5];
+		uint8_t enable;
+	};
+	uint8_t byte[MACSEC_SETTINGS_SA_SIZE];
+} MACSecSa_t;
 /* MACsec Flags */
 #define MACSEC_SETTINGS_FLAGS_SIZE (4)
-typedef struct MACSecFlags_t
+typedef union _MACSecFlags
 {
-	uint32_t en : 1; // '1' = enable; '0' = disable
-	uint32_t reserved : 31;
-} MACSecFlags;
+	struct
+	{
+		uint32_t en : 1; // '1' = enable; '0' = disable
+		uint32_t reserved : 31;
+	};
+	uint32_t flags_32b;
+} MACSecFlags_t;
 /* MACSec Settings for 1 port/phy */
 #define MACSEC_NUM_FLAGS_PER_CONFIG (1)
 #define MACSEC_NUM_RULES_PER_CONFIG (2)
@@ -1583,228 +1614,35 @@ typedef struct MACSecFlags_t
 #define MACSEC_NUM_SA_PER_CONFIG (4)
 typedef struct MACSEC_CONFIG_t
 {
-	MACSecFlags flags;
-	MACSecRule rule[MACSEC_NUM_RULES_PER_CONFIG];
-	MACSecMap map[MACSEC_NUM_MAPS_PER_CONFIG];
-	MACSecSecY secy[MACSEC_NUM_SECY_PER_CONFIG];
-	MACSecSc sc[MACSEC_NUM_SC_PER_CONFIG];
-	MACSecSa sa[MACSEC_NUM_SA_PER_CONFIG];
+	MACSecFlags_t flags;
+	MACSecRule_t rule[MACSEC_NUM_RULES_PER_CONFIG];
+	MACSecMap_t map[MACSEC_NUM_MAPS_PER_CONFIG];
+	MACSecSecY_t secy[MACSEC_NUM_SECY_PER_CONFIG];
+	MACSecSc_t sc[MACSEC_NUM_SC_PER_CONFIG];
+	MACSecSa_t sa[MACSEC_NUM_SA_PER_CONFIG];
 } MACSEC_CONFIG;
-#define MACSEC_SETTINGS_SIZE (2 * sizeof(MACSEC_CONFIG))
-typedef struct MACSEC_SETTINGS_t
+typedef union _MACSecGlobalFlags
 {
-	MACSEC_CONFIG rx;
-	MACSEC_CONFIG tx;
+	struct
+	{
+		uint32_t en : 1; // '1' = enable; '0' = disable
+		uint32_t nvm : 1; // store macsec config in non-volatile memory
+		uint32_t reserved : 30;
+	};
+	uint32_t flags_32b;
+} MACSecGlobalFlags_t;
+#define MACSEC_SETTINGS_SIZE (2040) // leave space for expansion and keep nicely aligned for flashing
+typedef union _MACSEC_SETTINGS
+{
+	struct
+	{
+		MACSecGlobalFlags_t flags;
+		MACSEC_CONFIG rx;
+		MACSEC_CONFIG tx;
+	};
+	uint8_t byte[MACSEC_SETTINGS_SIZE];
 } MACSEC_SETTINGS;
-/* 
- * END - MACsec Definitions 
- */
-
-/* 
- * START - MACsec Definitions 
- */
-/* MACsec Rule */
-/**
- * @brief Structure of Vlan tag
- * 
- */
-typedef struct MACSEC_VLANTAG_t
-{
-	uint16_t VID; /*!< 12 bits */
-	uint8_t PRI_CFI; /*!< PRI - 3 bits, CFI - 1bit */
-} MACSEC_VLANTAG;
-/**
- * @brief Structure of MPLS
- * 
- */
-typedef struct MACSEC_MPLS_OUTER_t
-{
-	uint32_t MPLS_label; /*!< 20 bits */
-	uint8_t exp; /*!< 3 bits */
-} MACSEC_MPLS_OUTER;
-/**
- * @brief Define Encoded Packet Type from the parser
- * 
- */
-typedef enum MACSEC_PACKET_TYPE_t
-{
-	MACSEC_PACKET_NO_VLAN_OR_MPLS = 0,
-	MACSEC_PACKET_SINGLE_VLAN = 1,
-	MACSEC_PACKET_DUAL_VLAN = 2,
-	MACSEC_PACKET_MPLS = 3,
-	MACSEC_PACKET_SINGLE_VLAN_FOLLOW_BY_MPLS = 4,
-	MACSEC_PACKET_DUAL_VLAN_FOLLOW_BY_MPLS = 5,
-	MACSEC_PACKET_UNSUPPORTED_TYPE = 6
-} MACSEC_PACKET_TYPE;
-#define MACSEC_SETTINGS_RULE_SIZE (88)
-typedef struct MACSecRule_t
-{
-	uint8_t index;
-	uint8_t key_MAC_DA[6]; /*!< MAC DA field extracted from the packet */
-	uint8_t mask_MAC_DA[6]; /*!< Set bits to 1 to mask/exclude corresponding flowid_tcam_data bit from compare */
-	uint8_t key_MAC_SA[6]; /*!< MAC SA field extracted from the packet */
-	uint8_t mask_MAC_SA[6]; /*!< Set bits to 1 to mask/exclude corresponding flowid_tcam_data bit from compare */
-	uint16_t key_Ethertype; /*!< First E-Type found in the packet that doesn't match one of the preconfigured custom tag. */
-	uint16_t mask_Ethertype; /*!< Set bits to 1 to mask/exclude corresponding flowid_tcam_data bit from compare */
-	MACSEC_VLANTAG key_vlantag_outer1; /*!< outermost/1st VLAN ID {8'd0, VLAN_ID[11:0]}, or 20-bit MPLS label. */
-	MACSEC_MPLS_OUTER key_MPLS_outer1;
-	MACSEC_VLANTAG mask_vlantag_outer1; /*!< Set bits to 1 to mask/exclude corresponding flowid_tcam_data bit from compare */
-	MACSEC_MPLS_OUTER mask_MPLS_outer1;
-	MACSEC_VLANTAG key_vlantag_outer2; /*!< 2nd outermost VLAN ID {8'd0, VLAN_ID[11:0]}, or 20-bit MPLS label. */
-	MACSEC_MPLS_OUTER key_MPLS_outer2;
-	MACSEC_VLANTAG mask_vlantag_outer2; /*!< Set bits to 1 to mask/exclude corresponding flowid_tcam_data bit from compare */
-	MACSEC_MPLS_OUTER mask_MPLS_outer2;
-	uint16_t key_bonus_data; /*!< 2 bytes of additional bonus data extracted from one of the custom tags. */
-	uint16_t mask_bonus_data; /*!< Set bits to 1 to mask/exclude corresponding flowid_tcam_data bit from compare */
-	uint8_t
-		key_tag_match_bitmap; /*!< 8 bits total. Maps 1 to 1 bitwise with the set of custom tags. (set bit[N]=1 if check Nth custom tag) */
-	uint8_t mask_tag_match_bitmap; /*!< Set bits to 1 to mask/exclude corresponding flowid_tcam_data bit from compare */
-	MACSEC_PACKET_TYPE key_packet_type; /*!< Encoded Packet Type, see MACSEC_PACKET_TYPE */
-	uint8_t mask_packet_type; /*!< Set bits to 1 to mask/exclude corresponding flowid_tcam_data bit from compare */
-	uint16_t
-		key_inner_vlan_type; /*!< 3 bits total. Encoded value indicating which VLAN TPID value matched for the second outermost VLAN Tag. */
-	uint16_t mask_inner_vlan_type; /*!< Set bits to 1 to mask/exclude corresponding flowid_tcam_data bit from compare */
-	uint16_t key_outer_vlan_type; /*!< 3 bits total. Encoded value indicating which VLAN TPID value matched for the outermost VLAN Tag. */
-	uint16_t mask_outer_vlan_type; /*!< Set bits to 1 to mask/exclude corresponding flowid_tcam_data bit from compare */
-	uint8_t
-		key_num_tags; /*!< 7 bits total. Number of VLAN/custom tags or MPLS lables detected. Ingress: before SecTag; Egress: total detected. Exclude MCS header tags. i.e. Bit 2: 2 tags/labels before SecTAG...Bit 6: 6 or more tags/labels before SecTAG. */
-	uint8_t mask_num_tags; /*!< Set bits to 1 to mask/exclude corresponding flowid_tcam_data bit from compare */
-	uint8_t key_express; /*!< 1 bits. Express packet. */
-	uint8_t mask_express; /*!< Set bits to 1 to mask/exclude corresponding flowid_tcam_data bit from compare */
-	uint8_t isMPLS;
-	uint8_t rsvd[5];
-	uint8_t enable;
-} MACSecRule;
-/* MACsec Map */
-#define MACSEC_SETTINGS_MAP_SIZE (20)
-typedef struct MACSecMap_t
-{
-	uint8_t index;
-	uint64_t sectag_sci; /*!< Identifies the SecTAG SCI for this Flow. */
-	uint8_t secYIndex; /*!< index for entry in Egress secY Policy */
-	uint8_t isControlPacket; /*!< Identifies all packets matching this index lookup as control packets. */
-	uint8_t scIndex; /*!< Identifies the SC for this Flow. */
-	uint8_t auxiliary_plcy; /*!< Auxiliary policy bits. */
-	uint8_t ruleId; /*!< Identifies the Rule for this Flow. */
-	uint8_t rsvd[5];
-	uint8_t enable;
-} MACSecMap;
-/* MACsec SecY */
-/**
- * @brief Define the permit police for frames as defined in 802.1ae
- * 
- */
-typedef enum MACSEC_VALIDATEFRAME_t
-{
-	MACSEC_VF_DISABLED = 0, /*!< Disable validation */
-	MACSEC_VF_CHECK = 1, /*!< Enable validation, do not discard invalid frames*/
-	MACSEC_VF_STRICT = 2, /*!< Enable validation and discard invalid frames */
-	MACSEC_VF_NA = 3 /*!< No processing or accounting */
-} MACSEC_VALIDATEFRAME;
-/**
- * @brief Define SecTag and ICV configuration.
- * 
- */
-typedef enum MACSEC_STRIP_SECTAG_ICV_t
-{
-	MACSEC_SECTAG_ICV_BOTH_STRIP = 0, /*!< Strip both SecTag and ICV from packet */
-	MACSEC_SECTAG_ICV_RESERVED = 1,
-	MACSEC_SECTAG_ICV_STRIP_ICV_ONLY = 2, /*!< Preserve SecTag, Strip ICV */
-	MACSEC_SECTAG_ICV_NO_STRIP = 3 /*!< Preserve both SecTag and ICV */
-} MACSEC_STRIP_SECTAG_ICV;
-/**
- * @brief Define the cipher suite to use for this SecY
- * 
- */
-typedef enum MACSEC_CIPHER_SUITE_t
-{
-	MACSEC_CIPHER_GCM_AES_128 = 0,
-	MACSEC_CIPHER_GCM_AES_256 = 1,
-	MACSEC_CIPHER_GCM_AES_128_XPN = 2,
-	MACSEC_CIPHER_GCM_AES_256_XPN = 3
-} MACSEC_CIPHER_SUITE;
-#define MACSEC_SETTINGS_SECY_SIZE (24)
-typedef struct MACSecSecY_t
-{
-	uint8_t index; /*!< Identifies the SecY for this Flow. */
-	uint8_t controlled_port_enabled; /*!< Enable (or disable) operation of the Controlled port associated with this SecY */
-	MACSEC_VALIDATEFRAME validate_frames; /*!< see MACSEC_VALIDATEFRAME */
-	MACSEC_STRIP_SECTAG_ICV strip_sectag_icv; /*!< see MACSEC_STRIP_SECTAG_ICV */
-	MACSEC_CIPHER_SUITE cipher; /*!< Define the cipher suite to use for this SecY */
-	uint8_t confidential_offset; /*!< Define the number of bytes that are unencrypted following the SecTag. */
-	uint8_t icv_includes_da_sa; /*!< When set, the outer DA/SA bytes are included in the authentication GHASH calculation */
-	uint8_t replay_protect; /*!< Enables Anti-Replay protection */
-	uint32_t replay_window; /*!< Unsigned value indicating the size of the anti-replay window. */
-	uint8_t
-		protect_frames; /*!< 0 = do not encrypt or authenticate this packet; 1 = always Authenticate frame and if SecTag.TCI.E = 1 encrypt the packet as well. */
-	uint8_t
-		sectag_offset; /*!< Define the offset in bytes from either the start of the packet or a matching Etype depending on SecTag_Insertion_Mode. */
-	uint8_t sectag_tci; /*!< Tag Control Information excluding the AN field which originates from the SA Policy table */
-	uint16_t mtu; /*!< Specifies the outgoing MTU for this SecY */
-	uint8_t rsvd[6];
-	uint8_t enable;
-} MACSecSecY;
-/* MACsec SC */
-#define MACSEC_SETTINGS_SC_SIZE (24)
-typedef struct MACSecSc_t
-{
-	uint8_t index; /*!< SC index. */
-	uint8_t secYIndex; /*!< SecY associated with this packet. */
-	uint64_t sci; /*!< The Secure Channel Identifier. */
-	uint8_t sa_index0; /*!< Define the 1st SA to use */
-	uint8_t sa_index1; /*!< Define the 2nd SA to use */
-	uint8_t sa_index0_in_use; /*!< Specifies whether 1st SA is in use or not. */
-	uint8_t sa_index1_in_use; /*!< Specifies whether 2nd SA is in use or not.  */
-	uint8_t enable_auto_rekey; /*!< If enabled, then once the pn_threshold is reached, auto rekey will happen. */
-	uint8_t
-		isActiveSA1; /*!< If set, then sa_index1 is the currently active SA index. If cleared, the sa_index0 is the currently active SA index). */
-	uint8_t rsvd[7];
-	uint8_t enable;
-} MACSecSc;
-/* MACsec SA */
-#define MACSEC_SETTINGS_SA_SIZE (80)
-typedef struct MACSecSa_t
-{
-	uint8_t index; /*!< SA index */
-	uint8_t
-		sak[32]; /*!< 256b SAK: Define the encryption key to be used to encrypte this packet. The lower 128 bits are used for 128-bit ciphers. */
-	uint8_t hashKey[16]; /*!< 128b Hash Key: Key used for authentication. */
-	uint8_t salt[12]; /*!< 96b Salt value: Salt value used in XPN ciphers. */
-	uint32_t ssci; /*!< 32b SSCI value: Short Secure Channel Identifier, used in XPN ciphers. */
-	uint8_t AN; /*!< 2b SecTag Association Number (AN) */
-	uint64_t nextPN; /*!< 64b next_pn value: Next packet number to insert into outgoing packet on a particular SA. */
-	uint8_t rsvd[5];
-	uint8_t enable;
-} MACSecSa;
-/* MACsec Flags */
-#define MACSEC_SETTINGS_FLAGS_SIZE (4)
-typedef struct MACSecFlags_t
-{
-	uint32_t en : 1; // '1' = enable; '0' = disable
-	uint32_t reserved : 31;
-} MACSecFlags;
-/* MACSec Settings for 1 port/phy */
-#define MACSEC_NUM_FLAGS_PER_CONFIG (1)
-#define MACSEC_NUM_RULES_PER_CONFIG (2)
-#define MACSEC_NUM_MAPS_PER_CONFIG (2)
-#define MACSEC_NUM_SECY_PER_CONFIG (2)
-#define MACSEC_NUM_SC_PER_CONFIG (2)
-#define MACSEC_NUM_SA_PER_CONFIG (4)
-typedef struct MACSEC_CONFIG_t
-{
-	MACSecFlags flags;
-	MACSecRule rule[MACSEC_NUM_RULES_PER_CONFIG];
-	MACSecMap map[MACSEC_NUM_MAPS_PER_CONFIG];
-	MACSecSecY secy[MACSEC_NUM_SECY_PER_CONFIG];
-	MACSecSc sc[MACSEC_NUM_SC_PER_CONFIG];
-	MACSecSa sa[MACSEC_NUM_SA_PER_CONFIG];
-} MACSEC_CONFIG;
-#define MACSEC_SETTINGS_SIZE (2 * sizeof(MACSEC_CONFIG))
-typedef struct MACSEC_SETTINGS_t
-{
-	MACSEC_CONFIG rx;
-	MACSEC_CONFIG tx;
-} MACSEC_SETTINGS;
+#pragma pack(pop)
 /* 
  * END - MACsec Definitions 
  */
