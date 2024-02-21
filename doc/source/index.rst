@@ -41,7 +41,7 @@ Module Functions
     ics.enable_network_com
     ics.find_devices
     ics.firmware_update_required
-    ics.flash_phy_firmware
+    ics.flash_accessory_firmware
     ics.force_firmware_update
     ics.generic_api_get_status
     ics.generic_api_read_data
@@ -65,7 +65,7 @@ Module Functions
     ics.get_messages
     ics.get_pcb_serial_number
     ics.get_performance_parameters
-    ics.get_phy_firmware_version
+    ics.get_accessory_firmware_version
     ics.get_rtc
     ics.get_script_status
     ics.get_serial_number
@@ -109,7 +109,7 @@ Module Functions
     ics.EnableNetworkCom
     ics.FindNeoDevices
     ics.FirmwareUpdateRequired
-    ics.FlashPhyFirmware
+    ics.FlashAccessoryFirmware
     ics.ForceFirmwareUpdate
     ics.GenericAPIGetStatus
     ics.GenericAPIReadData
@@ -130,7 +130,7 @@ Module Functions
     ics.GetMessages
     ics.GetPCBSerialNumber
     ics.GetPerformanceParameters
-    ics.GetPhyFwVersion
+    ics.GetAccessoryFwVersion
     ics.GetRTC
     ics.GetSerialNumber
     ics.GetTimeStampForMsg
@@ -188,7 +188,7 @@ Module Functions
     ics.icsneoEnableNetworkCom
     ics.icsneoFindNeoDevices
     ics.icsneoFirmwareUpdateRequired
-    ics.icsneoFlashPhyFirmware
+    ics.icsneoFlashAccessoryFirmware
     ics.icsneoForceFirmwareUpdate
     ics.icsneoGenericAPIGetStatus
     ics.icsneoGenericAPIReadData
@@ -209,7 +209,7 @@ Module Functions
     ics.icsneoGetMessages
     ics.icsneoGetPCBSerialNumber
     ics.icsneoGetPerformanceParameters
-    ics.icsneoGetPhyFwVersion
+    ics.icsneoGetAccessoryFwVersion
     ics.icsneoGetRTC
     ics.icsneoGetSerialNumber
     ics.icsneoGetTimeStampForMsg

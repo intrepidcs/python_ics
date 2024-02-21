@@ -99,8 +99,8 @@ extern "C"
     PyObject* meth_generic_api_get_status(PyObject* self, PyObject* args);
     PyObject* meth_get_gptp_status(PyObject* self, PyObject* args);       // icsneoGetGPTPStatus
     PyObject* meth_get_all_chip_versions(PyObject* self, PyObject* args); // icsneoGetAllChipVersions
-    PyObject* meth_flash_phy_firmware(PyObject* self, PyObject* args);
-    PyObject* meth_get_phy_firmware_version(PyObject* self, PyObject* args);
+    PyObject* meth_flash_accessory_firmware(PyObject* self, PyObject* args);
+    PyObject* meth_get_accessory_firmware_version(PyObject* self, PyObject* args);
 
 #ifdef _cplusplus
 }
@@ -1872,10 +1872,10 @@ extern "C"
                 "(:class:`ics.structures.st_chip_versions.st_chip_versions`)\n\n"                                      \
                 "\n"
 
-#define _DOC_FLASH_PHY_FIRMWARE                                                                                        \
-    MODULE_NAME ".flash_phy_firmware(device, data, phy_index[, check_success])\n"                                      \
+#define _DOC_FLASH_ACCESSORY_FIRMWARE                                                                                        \
+    MODULE_NAME ".flash_accessory_firmware(device, data, index[, check_success])\n"                                      \
                 "\n"                                                                                                   \
-                "Flashes PHY Firmware. If not sure, don't use this method\n"                                           \
+                "Flashes Accessory Firmware. If not sure, don't use this method\n"                                           \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
                 "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
@@ -1883,7 +1883,7 @@ extern "C"
                 "\n"                                                                                                   \
                 "\tdata (:class:`bytes`): :class:`bytes`: data of the firmware binary.\n\n"                            \
                 "\n"                                                                                                   \
-                "\tphy_index (:class:`int`): :class:`int`: phy Index enum.\n\n"                                        \
+                "\tindex (:class:`int`): :class:`int`: Index enum.\n\n"                                        \
                 "\n"                                                                                                   \
                 "\tcheck_success (:class:`bool`): :class:`bool`: Optional, raises an exception if not successful \n\n" \
                 "\n"                                                                                                   \
@@ -1894,16 +1894,16 @@ extern "C"
                 "\tNone\n"                                                                                             \
                 "\n"
 
-#define _DOC_GET_PHY_FIRMWARE_VERSION                                                                                  \
-    MODULE_NAME ".get_phy_firmware_version(device, phy_index[, check_success])\n"                                      \
+#define _DOC_GET_ACCESSORY_FIRMWARE_VERSION                                                                                  \
+    MODULE_NAME ".get_Accessory_firmware_version(device, index[, check_success])\n"                                      \
                 "\n"                                                                                                   \
-                "Gets PHY Firmware version. If not sure, don't use this method\n"                                      \
+                "Gets Accessory Firmware version. If not sure, don't use this method\n"                                      \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
                 "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
                 "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
                 "\n"                                                                                                   \
-                "\tphy_index (:class:`int`): :class:`int`: phy Index enum.\n\n"                                        \
+                "\tindex (:class:`int`): :class:`int`: Index enum.\n\n"                                        \
                 "\n"                                                                                                   \
                 "\tcheck_success (:class:`bool`): :class:`bool`: Optional, raises an exception if not successful \n\n" \
                 "\n"                                                                                                   \
@@ -2411,18 +2411,18 @@ static PyMethodDef IcsMethods[] = {
                           METH_VARARGS,
                           _DOC_GET_ALL_CHIP_VERSIONS),
 
-    _EZ_ICS_STRUCT_METHOD("flash_phy_firmware",
-                          "icsneoFlashPhyFirmware",
-                          "FlashPhyFirmware",
-                          meth_flash_phy_firmware,
+    _EZ_ICS_STRUCT_METHOD("flash_accessory_firmware",
+                          "icsneoFlashAccessoryFirmware",
+                          "FlashAccessoryFirmware",
+                          meth_flash_accessory_firmware,
                           METH_VARARGS,
-                          _DOC_FLASH_PHY_FIRMWARE),
-    _EZ_ICS_STRUCT_METHOD("get_phy_firmware_version",
-                          "icsneoGetPhyFwVersion",
-                          "GetPhyFwVersion",
-                          meth_get_phy_firmware_version,
+                          _DOC_FLASH_ACCESSORY_FIRMWARE),
+    _EZ_ICS_STRUCT_METHOD("get_accessory_firmware_version",
+                          "icsneoGetAccessoryFwVersion",
+                          "GetAccessoryFwVersion",
+                          meth_get_accessory_firmware_version,
                           METH_VARARGS,
-                          _DOC_GET_PHY_FIRMWARE_VERSION),
+                          _DOC_GET_ACCESSORY_FIRMWARE_VERSION),
 
     { "override_library_name", (PyCFunction)meth_override_library_name, METH_VARARGS, _DOC_OVERRIDE_LIBRARY_NAME },
     { "get_library_path", (PyCFunction)meth_get_library_path, METH_NOARGS, "" },
