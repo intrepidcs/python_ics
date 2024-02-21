@@ -133,7 +133,7 @@ def extract():
                         # DEBUG: print('\t\t' + str(line_number) + '\t' + str(sline))
                         if any(x in sline[1] for x in ignores):
                             continue
-                        if len(sline) >= 3 and re.match("^\d+?\.\d+?$", sline[2]) is not None:
+                        if len(sline) >= 3 and re.match(r"^\d+?\.\d+?$", sline[2]) is not None:
                             # Value is a float
                             print(
                                 '\tresult += PyModule_AddObject(module, "{0}", PyFloat_FromDouble({0}));'.format(

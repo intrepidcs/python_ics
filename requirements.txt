@@ -1,0 +1,2 @@
+setuptools >= 69
+dunamai >= 1.19.2
