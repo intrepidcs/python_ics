@@ -2,13 +2,17 @@
 import re
 import os.path
 from collections import OrderedDict
-import sys
 from subprocess import STDOUT, CalledProcessError, run, PIPE
 from enum import Enum, auto
 import random
-import ctypes
+from pathlib import Path
+import sys
+import ctypes #used with eval...
 
 debug_print = False
+
+
+OUTPUT_DIR = Path("./gen/ics")
 
 __unique_numbers = []
 
@@ -136,7 +140,7 @@ def is_line_start_of_object(line):
     for regex in _start_of_obj_blacklist:
         if bool(regex.search(line)):
             return False
-    return bool(re.search("\btypedef struct$|struct$|struct \S*$|enum$|enum |union$|union ", line))
+    return bool(re.search(r"\btypedef struct$|struct$|struct \S*$|enum$|enum |union$|union ", line))
 
 
 # This contains all the objects that don't pass convert_to_ctype_object
@@ -173,7 +177,7 @@ def parse_object(f, pos=-1, pack_size=None, is_embedded=False):
         new_obj = CObject()
         new_obj.packing = pack_size
         # Grab the object name
-        name = re.sub("typedef|struct|enum|union|\{|\s*", "", line)
+        name = re.sub(r"typedef|struct|enum|union|\{|\s*", "", line)
         # Only append the name if its not anonymous
         if name:
             new_obj.names.append(name)
@@ -206,7 +210,7 @@ def parse_object(f, pos=-1, pack_size=None, is_embedded=False):
                 opening_bracket_count -= line.count("}")
                 assert opening_bracket_count >= 0
                 # Determine if we are at the end of the struct
-                if opening_bracket_count == 0 and re.match("}.*;", line):
+                if opening_bracket_count == 0 and re.match(r"}.*;", line):
                     extra_names = "".join(line.split()).strip("};").split(",")
                     try:
                         # Remove dangling empty string
@@ -219,7 +223,7 @@ def parse_object(f, pos=-1, pack_size=None, is_embedded=False):
                     finished = True
                     break
                 # Nothing to do with this line anymore
-                if re.match(".*{.*", line):
+                if re.match(r".*{.*", line):
                     continue
                 # Parse the member
                 if new_obj.data_type == DataType.Enum:
@@ -275,18 +279,18 @@ def parse_struct_member(buffered_line):
     #    for line in buffered_line.split('\n'):
     #        new_buffered_line += re.sub('{|union|}|;', '', line) + '\n'
     #    buffered_line = new_buffered_line
-    buffered_line = re.sub("\s*\[", "[", " ".join(buffered_line.split()))
+    buffered_line = re.sub(r"\s*\[", "[", " ".join(buffered_line.split()))
     # print("DEBUG AFTER:", buffered_line)
 
     # Figure out if we are an array type and get the array length
-    array_subsection = re.search("\[.*\]", buffered_line)
+    array_subsection = re.search(r"\[.*\]", buffered_line)
     is_array = array_subsection is not None
     if is_array:
         array_length = int(eval(array_subsection.group(0).strip("[]")))
     else:
         array_length = 0
     # Remove the array portion
-    buffered_line = re.sub("\[.*\]", "", buffered_line)
+    buffered_line = re.sub(r"\[.*\]", "", buffered_line)
     # split up the remaining
     words = buffered_line.split()
     if not len(words):
@@ -294,7 +298,7 @@ def parse_struct_member(buffered_line):
     if ":" in words:
         # we are a bitfield ;(
         try:
-            bitwise_length = int(re.search("\d*", words[words.index(":") + 1]).group(0))
+            bitwise_length = int(re.search(r"\d*", words[words.index(":") + 1]).group(0))
         except Exception as ex:
             if debug_print:
                 print("EXCEPTION:", ex)
@@ -320,15 +324,15 @@ def parse_struct_member(buffered_line):
     # print("DEBUG:", words, buffered_line)
 
     # remove stuff that shouldn't be in the name
-    data_name = re.sub("{|{|}|\s*", "", data_name)
-    data_type = re.sub("union|{|{|}|^struct", "", data_type)
+    data_name = re.sub(r"{|{|}|\s*", "", data_name)
+    data_type = re.sub(r"union|{|{|}|^struct", "", data_type)
     data_type = data_type.strip()
     if not data_type:
         data_name = ""
     # Any object that starts with _ won't be imported with import * statement so lets push it to the end
     if data_type.startswith("_") and not convert_to_ctype_object(data_type):
         data_type = reverse_leading_underscores(data_type)
-    return re.sub("\[.*\]|;", "", data_name), data_type, array_length, bitwise_length
+    return re.sub(r"\[.*\]|;", "", data_name), data_type, array_length, bitwise_length
 
 
 def parse_enum_member(buffered_line):
@@ -336,12 +340,12 @@ def parse_enum_member(buffered_line):
     # VARIABLE_NAME = 0,
 
     # remove all unneeded whitespace
-    buffered_line = re.sub("\s*\[", "[", " ".join(buffered_line.split()))
+    buffered_line = re.sub(r"\s*\[", "[", " ".join(buffered_line.split()))
 
     if "=" in buffered_line:
         name = buffered_line.split("=")[0]
         value = buffered_line.split("=")[1]
-        value = re.sub("{|{|}|,|\s*", "", value)
+        value = re.sub(r"{|{|}|,|\s*", "", value)
         try:
             value = int(value)
         except ValueError as ex:
@@ -350,14 +354,14 @@ def parse_enum_member(buffered_line):
             elif "0B" in value.upper():
                 value = int(value, 2)
     else:
-        name = re.sub(",", "", buffered_line)
+        name = re.sub(r",", "", buffered_line)
         value = None
     return name, value
 
 
 def get_struct_name_from_header(line):
     # line.split('struct ')[-1]
-    struct_name = re.sub("typedef|struct|enum|union|\{|\s*", "", line)
+    struct_name = re.sub(r"typedef|struct|enum|union|\{|\s*", "", line)
     if not struct_name:  # == 'typedef struct':
         anonymous_struct = True
         struct_name = "anonymous"
@@ -389,9 +393,9 @@ def get_struct_names(data):
 def get_preferred_struct_name(_names):
     # Remove the reference
     names = _names[:]
-    r = re.compile("^[sS].*")
-    r_underscore = re.compile("^(?![_]).*")
-    r_end_t = re.compile("^.*(_[tT])$")
+    r = re.compile(r"^[sS].*")
+    r_underscore = re.compile(r"^(?![_]).*")
+    r_end_t = re.compile(r"^.*(_[tT])$")
     # Remove all instances of _t at end unless that is all we have
     setting_structures_with_t = list(filter(r_end_t.match, names))
     if len(setting_structures_with_t):
@@ -415,8 +419,8 @@ def get_preferred_struct_name(_names):
 
 def convert_to_snake_case(name):
     # return name
-    s1 = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", name)
-    s2 = re.sub("([a-z0-9])([A-Z])", r"\1_\2", s1).lower()
+    s1 = re.sub(r"(.)([A-Z][a-z]+)", r"\1_\2", name)
+    s2 = re.sub(r"([a-z0-9])([A-Z])", r"\1_\2", s1).lower()
     return re.sub(r"(_)\1{1,}", "_", s2)
 
 
@@ -535,16 +539,16 @@ def parse_header_file(filename):
                 # Remove preprocessor statements
                 if line.startswith("#"):
                     # get the pack size
-                    if re.match("#pragma.*pack.*.*pop.*", line):
+                    if re.match(r"#pragma.*pack.*.*pop.*", line):
                         if pack_size_stack:
                             pack_size = pack_size_stack.pop()
                         else:
                             pack_size = 0
-                    elif re.match("#pragma.*pack.*.*push.*", line) or re.match("#pragma.*pack\(\d\)", line):
+                    elif re.match(r"#pragma.*pack.*.*push.*", line) or re.match(r"#pragma.*pack\(\d\)", line):
                         pushing = "push" in line
                         try:
                             last = pack_size
-                            pack_size = int(re.search("\d{1,}", line).group(0))
+                            pack_size = int(re.search(r"\d{1,}", line).group(0))
                             if pushing:
                                 pack_size_stack.append(last)
                         except AttributeError:
@@ -554,7 +558,7 @@ def parse_header_file(filename):
                         if debug_print:
                             print("PACK SIZE:", pack_size)
                     elif (
-                        re.match("#define.*", line)
+                        re.match(r"#define.*", line)
                         and len(line.split(" ")) == 3
                         and not "\\" in line
                         and not "sizeof" in line
@@ -624,13 +628,14 @@ def generate(filename="include/ics/icsnVC40.h"):
     with open(f"{basename}.enums.json", "w+") as f:
         f.write(j)
     # generate the python files
-    output_dir = "./ics/structures"
+    output_dir = OUTPUT_DIR / "structures"
     print(f"Removing {output_dir}...")
     try:
         shutil.rmtree(output_dir)
     except FileNotFoundError:
         pass
     ignore_names = [
+        "fsid_t__",
         "__fsid_t",
         "__darwin_pthread_handler_rec",
         "_mbstate_t",
@@ -709,8 +714,8 @@ def generate(filename="include/ics/icsnVC40.h"):
     with open(os.path.join(output_dir, "__init__.py"), "w+") as f:
         f.write("__all__ = [\n")
         for file_name in file_names:
-            fname = re.sub("(\.py)", "", file_name)
-            r = re.compile("(" + fname + ")")
+            fname = re.sub(r"(\.py)", "", file_name)
+            r = re.compile(r"(" + fname + ")")
             if list(filter(r.match, ignore_names)):
                 # print("IGNORING:", fname)
                 continue
@@ -719,11 +724,12 @@ def generate(filename="include/ics/icsnVC40.h"):
             f.write('",\n')
         f.write("]\n")
     # write a hidden_import python file for pyinstaller
-    with open("./ics/hiddenimports.py", "w+") as f:
+    hidden_imports_path = OUTPUT_DIR / "hiddenimports.py"
+    with open(hidden_imports_path, "w+") as f:
         f.write("hidden_imports = [\n")
         for file_name in file_names:
-            fname = re.sub("(\.py)", "", file_name)
-            r = re.compile("(" + fname + ")")
+            fname = re.sub(r"(\.py)", "", file_name)
+            r = re.compile(r"(" + fname + ")")
             if list(filter(r.match, ignore_names)):
                 # print("IGNORING:", fname)
                 continue
@@ -731,18 +737,20 @@ def generate(filename="include/ics/icsnVC40.h"):
         f.write("]\n\n")
 
     # Verify We can at least import all of the modules - quick check to make sure parser worked.
-    # TODO: This is broke
-    """
-    sys.path.insert(0, output_dir)
+    ics_module_path = OUTPUT_DIR.parent.resolve()
+    # Add the module to the eval sys.path.
+    eval("""sys.path.insert(0, f"{ics_module_path}")""")
     for file_name in file_names:
+        if file_name.startswith("__"):
+            continue
         import_line = "from ics.structures import {}".format(
-            re.sub('(\.py)', '', file_name))
+            re.sub(r'(\.py)', '', file_name))
         try:
-            print("Importing / Verifying {}...".format(file_name))
+            print(f"Importing / Verifying {output_dir / file_name}...")
             exec(import_line)
         except Exception as ex:
-            print("ERROR: ", ex, 'IMPORT LINE:', import_line)
-    """
+            print(f"""ERROR: {ex} IMPORT LINE: '{import_line}'""")
+            raise ex
     print("Done.")
 
 
@@ -835,7 +843,7 @@ def _write_c_object(f, c_object):
         # Ignore the actual object name
         if name == c_object.preferred_name:
             continue
-        f.write("{} = {}\n".format(re.sub("^\*", "", name), c_object.preferred_name))
+        f.write("{} = {}\n".format(re.sub(r"^\*", "", name), c_object.preferred_name))
     f.write("\n")
 
 
@@ -900,12 +908,42 @@ def generate_pyfile(c_object, path):
         _write_c_object(f, c_object)
     return fname, fname_with_path
 
+def create_ics_init():
+    fdata = \
+"""try:
+    import ics.__version
+    __version__ = ics.__version.__version__
+    __full_version__ = ics.__version.__full_version__
+except Exception as ex:
+    print(ex)
+
+try:
+    # Release environment
+    #print("Release")
+    from ics.ics import *
+    from ics.structures import *
+    from ics.hiddenimports import hidden_imports
+except Exception as ex:
+    # Build environment
+    #print("Debug", ex)
+    from ics import *
+    from ics.structures import *
+    from ics.hiddenimports import hidden_imports
+
+"""
+    init_path = OUTPUT_DIR / "__init__.py"
+    print(f"Creating '{init_path}'...")
+    with open(init_path, "w+") as f:
+        f.write(fdata)
 
 def generate_all_files():
     import sys
     import os
     import pathlib
 
+    print(f"Creating directory '{OUTPUT_DIR}'...")
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    create_ics_init()
     filenames = ("icsnVC40.h", "icsnVC40Internal.h")
     for filename in filenames:
         path = pathlib.Path("include/ics/")
@@ -915,7 +953,6 @@ def generate_all_files():
                 print("WARNING: Generating internal header!")
             print(f"Parsing {str(path)}...")
             generate(str(path))
-
 
 if __name__ == "__main__":
     generate_all_files()

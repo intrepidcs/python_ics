@@ -7,15 +7,22 @@ import platform
 import sys
 import unittest
 import shutil
+from pathlib import Path
+import codecs
+import os.path
+import extract_icsneo40_defines
+import generate_icsneo40_structs
+from create_version import get_pkg_version, create_version_py
 
-MAJOR_VERSION = 914
-MINOR_VERSION = 14
-POST_VERSION = 1
+# force this to happen every single time, fixes sync issues.
+extract_icsneo40_defines.extract()
+generate_icsneo40_structs.generate_all_files()
 
-if POST_VERSION:
-    VERSION_STRING = "%d.%d-%d" % (MAJOR_VERSION, MINOR_VERSION, POST_VERSION)
-else:
-    VERSION_STRING = "%d.%d" % (MAJOR_VERSION, MINOR_VERSION)
+
+create_version_py()
+    
+MAJOR_VERSION = int(get_pkg_version().split(".")[0])
+MINOR_VERSION = int(get_pkg_version().split(".")[1])
 
 
 def _run_tests():
@@ -54,13 +61,9 @@ except ImportError:
             _run_tests()
 
 
+
 class build(build_module.build):
     def run(self):
-        import extract_icsneo40_defines
-        import generate_icsneo40_structs
-
-        extract_icsneo40_defines.extract()
-        generate_icsneo40_structs.generate_all_files()
         if platform.system().upper() in ("DARWIN", "LINUX"):
             import build_libicsneo
 
@@ -137,33 +140,15 @@ elif "LINUX" in platform.system().upper():
 
 setup(
     name="python_ics",
-    version=VERSION_STRING,
-    description="Library for interfacing with Intrepid devices in Python",
-    long_description=read("README.md"),
-    long_description_content_type="text/markdown",
-    license="MIT",
-    author="David Rebbe",
-    author_email="drebbe@intrepidcs.com",
-    maintainer="David Rebbe",
-    maintainer_email="drebbe@intrepidcs.com",
-    url="https://github.com/intrepidcs/python_ics/",
+    version=get_pkg_version(),
     cmdclass={
         "build": build,
         "test": UnitTests,
     },
     download_url="https://github.com/intrepidcs/python_ics/releases",
     packages=["ics", "ics.structures"],
+    package_dir={"ics": "gen/ics", "ics.structures": "gen/ics/structures"},
     package_data=package_data,
     include_package_data=True,
     ext_modules=[ics_extension],
-    classifiers=[
-        "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.10",
-        "Programming Language :: Python :: 3.11",
-        "Programming Language :: Python :: 3.12",
-    ],
 )

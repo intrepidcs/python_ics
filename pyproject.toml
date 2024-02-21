@@ -1,3 +1,47 @@
+[project]
+name = "ics"
+dynamic = ["version"]
+authors = [
+  {name = "David Rebbe", email = "drebbe@intrepidcs.com"},
+]
+maintainers = [
+  {name = "David Rebbe", email = "drebbe@intrepidcs.com"},
+]
+description = "Python wrapper for interfacing to IntrepidCS Hardware."
+keywords = ["intrepidcs", "CAN", "Ethernet", "Automotive", "ICS"]
+readme = {file = "README.md", content-type = "text/markdown"}
+requires-python = ">=3.8"
+classifiers=[ 
+        "Development Status :: 5 - Production/Stable",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+        "Topic :: Software Development :: Libraries :: Python Modules",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+    ]
+license = {file = "LICENSE"}
+
+[project.urls]
+Homepage = "https://intrepidcs.com"
+Documentation = "http://python-ics.readthedocs.io/"
+Repository = "https://github.com/intrepidcs/python_ics/"
+Issues = "https://github.com/intrepidcs/python_ics/issues"
+
+[tool.setuptools.dynamic]
+version = {attr = "ics.__version__"}
+
+[build-system]
+requires = [
+  "setuptools",
+  "wheel",
+  "dunamai",
+]
 [tool.cibuildwheel]
 build = "{*-win32,*-win_amd64,*-macosx_universal2,*-manylinux_x86_64,*-manylinux_aarch64}"
 skip = "cp36-* pp* *-manylinux_i686 *-musllinux_*"
