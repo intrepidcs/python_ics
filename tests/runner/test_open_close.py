@@ -43,7 +43,7 @@ class TestOpenClose(unittest.TestCase):
 
     def test_find_fire2_and_vcan42(self):
         self._check_devices()
-        devices = ics.find_devices([ics.NEODEVICE_FIRE2 | ics.NEODEVICE_VCAN42])
+        devices = ics.find_devices([ics.NEODEVICE_FIRE2, ics.NEODEVICE_VCAN42])
         self.assertTrue(len(devices) == 2)
 
     def test_open_close(self):
