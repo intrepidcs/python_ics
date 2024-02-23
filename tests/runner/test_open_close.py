@@ -5,13 +5,12 @@ import ics
 class TestOpenClose(unittest.TestCase):
     @classmethod
     def setUpClass(self):
-        expected_dev_count = 3
+        self.expected_dev_count = 3
         self.devices = ics.find_devices()
-        self.assertEqual(len(self.devices), expected_dev_count, f"Expected {expected_dev_count}, found {len(self.devices)}...")
 
     @classmethod
     def setUp(self):
-        pass  # time.sleep(2)
+        pass
 
     @classmethod
     def tearDownClass(self):
@@ -20,27 +19,40 @@ class TestOpenClose(unittest.TestCase):
         # Lets force it here.
         del self.devices
 
+    def _check_devices(self):
+        self.assertEqual(
+            len(self.devices),
+            self.expected_dev_count,
+            f"Expected {self.expected_dev_count}, found {len(self.devices)}...",
+        )
+
     def test_find_fire3(self):
+        self._check_devices()
         devices = ics.find_devices([ics.NEODEVICE_FIRE3])
         self.assertTrue(len(devices) == 1)
 
     def test_find_fire2(self):
+        self._check_devices()
         devices = ics.find_devices([ics.NEODEVICE_FIRE2])
         self.assertTrue(len(devices) == 1)
 
     def test_find_vcan42(self):
+        self._check_devices()
         devices = ics.find_devices([ics.NEODEVICE_VCAN42])
         self.assertTrue(len(devices) == 1)
 
     def test_find_fire2_and_vcan42(self):
+        self._check_devices()
         devices = ics.find_devices([ics.NEODEVICE_FIRE2 | ics.NEODEVICE_VCAN42])
         self.assertTrue(len(devices) == 2)
-    
+
     def test_open_close(self):
+        self._check_devices()
         for device in self.devices:
             d = ics.open_device(device)
-            self.assertEquals(device, d)
+            self.assertEqual(device, d)
             ics.close_device(d)
+
 
 if __name__ == "__main__":
     unittest.main()
