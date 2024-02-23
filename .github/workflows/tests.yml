@@ -9,14 +9,11 @@ jobs:
         with:
           submodules: recursive
           fetch-depth: 0 # needed for history/tags
-      
-      - name: Set up Python 3.12
-        uses: actions/setup-python@v5
-        #with:
-        #  python-version: '3.12.2' 
 
-      - name: Install dependencies
+      - name: Setup Python
         run: |
+          python -m venv .venv
+          source .venv/bin/activate
           python -m pip install --upgrade pip
           pip install .
       
