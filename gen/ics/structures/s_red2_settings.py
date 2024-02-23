@@ -15,7 +15,7 @@ from ics.structures.srad_gptp_settings_s import *
 from ics.structures.timesync_icshardware_settings import *
 
 
-class Nameless39639(ctypes.Structure):
+class Nameless9252(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
         ('network_enables', ctypes.c_uint16),
@@ -28,10 +28,10 @@ class Nameless39639(ctypes.Structure):
 
 class network_enables(ctypes.Union):
     _pack_ = 2
-    _anonymous_  = ('Nameless39639',)
+    _anonymous_  = ('Nameless9252',)
     _fields_ = [
         ('word', ctypes.c_uint64),
-        ('Nameless39639', Nameless39639),
+        ('Nameless9252', Nameless9252),
     ]
 
 

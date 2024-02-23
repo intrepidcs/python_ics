@@ -16,6 +16,5 @@ class macsec_strip_sectag_icv(enum.IntEnum):
     MACSEC_SECTAG_ICV_NO_STRIP  = 3
 
 
-MACSEC_STRIP_SECTAG_ICV_t = macsec_strip_sectag_icv
 MACSEC_STRIP_SECTAG_ICV = macsec_strip_sectag_icv
 
