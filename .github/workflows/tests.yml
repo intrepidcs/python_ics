@@ -3,6 +3,7 @@ on: [push, pull_request]
 
 jobs:
   build:
+    name: Linux ARM64 unit tests
     runs-on: [ self-hosted, Linux, ARM64, intrepidcs ]
     steps:
       - uses: actions/checkout@v4
