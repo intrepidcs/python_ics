@@ -1,0 +1,9 @@
+{
+    "recommendations": [
+        "ms-python.python",
+        "charliermarsh.ruff",
+        "mikoz.black-py",
+        "xaver.clang-format",
+        "webfreak.debug"
+    ]
+}
