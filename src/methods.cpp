@@ -1150,8 +1150,8 @@ PyObject* meth_get_error_messages(PyObject* self, PyObject* args)
         ice::Function<int __stdcall(ICS_HANDLE, int*, int*)> icsneoGetErrorMessages(lib, "icsneoGetErrorMessages");
         Py_BEGIN_ALLOW_THREADS;
         if (!icsneoGetErrorMessages(handle, errors, &error_count)) {
-            Py_UNBLOCK_THREADS return set_ics_exception(exception_runtime_error(),
-                                                        "icsneoScriptGetScriptStatusEx() Failed");
+            Py_BLOCK_THREADS return set_ics_exception(exception_runtime_error(),
+                                                        "icsneoGetErrorMessages() Failed");
         }
         Py_END_ALLOW_THREADS;
         ice::Function<int __stdcall(int, char*, char*, int*, int*, int*, int*)> icsneoGetErrorInfo(
