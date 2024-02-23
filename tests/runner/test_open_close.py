@@ -73,9 +73,12 @@ class TestOpenClose(unittest.TestCase):
     def test_open_close_100_times(self):
         for device in self.devices:
             for x in range(100):
-                ics.open_device(device)
-                ics.close_device(device)
-
+                try:
+                    ics.open_device(device)
+                    ics.close_device(device)
+                except Exception as ex:
+                    print(f"Failed at iteration {x}...")
+                    raise ex
 
 if __name__ == "__main__":
     unittest.main()
