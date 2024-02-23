@@ -53,6 +53,29 @@ class TestOpenClose(unittest.TestCase):
             self.assertEqual(device, d)
             ics.close_device(d)
 
+    def test_open_close_by_serial(self):
+        # Open by serial number
+        for device in self.devices:
+            d = ics.open_device(device.SerialNumber)
+            self.assertEqual(d.SerialNumber, device.SerialNumber)
+            ics.close_device(d)
+
+    def test_open_close_first_found(self):
+        # Open by first found
+        first_devices = []
+        for device in self.devices:
+            first_devices.append(ics.open_device())
+        self.assertEqual(len(self.devices), len(first_devices))
+        # Close by API
+        for device in first_devices:
+            ics.close_device(device)
+
+    def test_open_close_100_times(self):
+        for device in self.devices:
+            for x in range(100):
+                ics.open_device(device)
+                ics.close_device(device)
+
 
 if __name__ == "__main__":
     unittest.main()
