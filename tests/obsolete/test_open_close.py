@@ -51,5 +51,9 @@ class testneoVIFIRENetworks(unittest.TestCase):
 
     def testOpenClose100Times(self):
         for x in range(100):
-            ics.open_device(self.devices[0])
-            ics.close_device(self.devices[0])
+            try:
+                ics.open_device(self.devices[0])
+                ics.close_device(self.devices[0])
+            except Exception as ex:
+                print(f"Failed at iteration {x}...")
+                raise ex
