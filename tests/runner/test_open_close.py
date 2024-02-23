@@ -1,6 +1,8 @@
 import unittest
 import ics
 
+unittest.TestLoader.sortTestMethodsUsing = None
+
 
 class TestOpenClose(unittest.TestCase):
     @classmethod
@@ -77,7 +79,7 @@ class TestOpenClose(unittest.TestCase):
                     ics.open_device(device)
                     ics.close_device(device)
                 except Exception as ex:
-                    print(f"Failed at iteration {x}...")
+                    print(f"Failed at iteration {x} {device}...")
                     raise ex
 
 if __name__ == "__main__":

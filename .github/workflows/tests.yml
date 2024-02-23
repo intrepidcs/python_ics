@@ -1,4 +1,4 @@
-name: Run Unit tests
+name: Run Unit Tests
 on: [push, pull_request]
 
 jobs:
@@ -21,4 +21,4 @@ jobs:
       - name: Run unit tests
         run: |
           source .venv/bin/activate
-          python -m unittest discover -s tests.runner
+          python -m unittest discover -s tests.runner --verbose

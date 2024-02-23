@@ -1,6 +1,7 @@
 import unittest
 import ics
 
+unittest.TestLoader.sortTestMethodsUsing = None
 
 class TestFIRE3Settings(unittest.TestCase):
     def _get_device(self) -> ics.NeoDevice:
