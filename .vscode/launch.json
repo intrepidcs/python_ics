@@ -41,12 +41,18 @@
             "name": "Python: Debug icsdebug.py",
             "type": "debugpy",
             "request": "launch",
-            "program": "src\\icsdebug.py",
+            "program": "src/icsdebug.py",
             "console": "integratedTerminal"
         },
         {
             "name": "Debugger Attach",
             "type": "cppvsdbg",
+            "request": "attach",
+            "pid": "${command:pickProcess}",
+        }
+        {
+            "name": "Debugger Attach lldb",
+            "type": "lldb",
             "request": "attach",
             "pid": "${command:pickProcess}",
         }
