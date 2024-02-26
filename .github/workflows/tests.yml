@@ -2,7 +2,8 @@ name: Run Unit Tests
 on: [push, pull_request]
 
 jobs:
-  build:
+  test_arm64:
+    if: github.repository == 'intrepidcs/python_ics'
     name: Linux ARM64 unit tests
     runs-on: [ self-hosted, Linux, ARM64, intrepidcs ]
     steps:
