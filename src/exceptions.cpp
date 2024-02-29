@@ -2,8 +2,6 @@
 #include "defines.h"
 #include <sstream>
 
-#include "object_neo_device.h"
-
 static PyObject* IcsArgumentError = NULL;
 static PyObject* IcsRuntimeError = NULL;
 
@@ -83,7 +81,7 @@ PyObject* _set_ics_exception_dev(PyObject* exception, PyObject* obj, char* msg, 
         function.erase(loc, 5);
     }
     ss << "Error: " << function << "(): " << msg;
-    if (obj && PyNeoDevice_CheckExact(obj)) {
+    if (obj && PyNeoDeviceEx_CheckExact(obj)) {
         ss << " (";
         // Grab the String "name" out of the NeoDeviceObject
         char* name = PyUniStr_AsStrOrUTF8(PyNeoDevice_GetNeoDevice(obj)->name);

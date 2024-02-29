@@ -6,7 +6,6 @@
 #include "methods.h"
 #include "exceptions.h"
 #include "object_spy_message.h"
-#include "object_neo_device.h"
 
 #define _DOC_ICS_MODULE                                                                                                \
     "Python C Code module for interfacing to the icsneo40 dynamic library. Code tries\n"                               \
@@ -86,8 +85,6 @@ extern "C"
 
         initialize_exceptions(module);
 
-        // These were a WIP, as you get towards the bottom the code structure is simplier.
-        setup_neo_device_object(module);
         setup_spy_message_object(module);
 
         return module;
