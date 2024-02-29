@@ -1,5 +1,7 @@
 __all__ = [
     "s_extended_data_flash_header",
+    "neo_device",
+    "neo_device_ex",
     "tag_options_open_neo_ex",
     "tag_options_find_neo_ex",
     "tagicsneo_vi_command",

@@ -61,8 +61,15 @@ class TestOpenClose(unittest.TestCase):
                 self.assertEqual(device, d)
                 self.assertEqual(device.NumberOfClients, 1)
                 self.assertEqual(device.MaxAllowedClients, 1)
+
+                self.assertEqual(d.NumberOfClients, 1)
+                self.assertEqual(d.MaxAllowedClients, 1)
             finally:
+                self.assertEqual(device.NumberOfClients, 1)
+                self.assertEqual(d.NumberOfClients, 1)
                 ics.close_device(d)
+                self.assertEqual(device.NumberOfClients, 0)
+                self.assertEqual(d.NumberOfClients, 0)
 
     def test_open_close_by_serial(self):
         # Open by serial number
@@ -74,9 +81,10 @@ class TestOpenClose(unittest.TestCase):
     def test_open_close_first_found(self):
         # Open by first found
         first_devices = []
-        for device in enumerate(self.devices):
+        for x, device in enumerate(self.devices):
             try:
                 print(device)
+                self.assertEqual(device.NumberOfClients, 0, f"{device}")
                 first_devices.append(ics.open_device())
             except ics.RuntimeError as ex:
                 raise RuntimeError(f"Failed to open {device}... Iteration {len(first_devices)} ({ex})")
@@ -89,11 +97,15 @@ class TestOpenClose(unittest.TestCase):
         for device in self.devices:
             for x in range(10):
                 try:
+                    self.assertEqual(device.NumberOfClients, 0)
                     ics.open_device(device)
+                    self.assertEqual(device.NumberOfClients, 1)
                     error_count = ics.close_device(device)
+                    self.assertEqual(device.NumberOfClients, 0)
                     self.assertEqual(error_count, 0, "Error count was not 0 on {device} iteration {x}...")
                 except Exception as ex:
                     print(f"Failed at iteration {x} {device}: {ex}...")
+                    raise ex
 
 if __name__ == "__main__":
     unittest.main()

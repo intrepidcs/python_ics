@@ -49,12 +49,25 @@
             "type": "cppvsdbg",
             "request": "attach",
             "pid": "${command:pickProcess}",
-        }
+        },
+        /*
         {
             "name": "Debugger Attach lldb",
             "type": "lldb",
             "request": "attach",
             "pid": "${command:pickProcess}",
         }
+        */
+        {
+            "name": "Debugger attach gdbserver",
+            "type": "gdb",
+            "request": "attach",
+            "executable": "python icsdebug.py",
+            "target": "127.0.0.1:1234",
+            "remote": true,
+            "cwd": "${workspaceRoot}",
+            "gdbpath": "gdb",
+            "autorun": []
+        },
     ]
 }

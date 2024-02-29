@@ -1,5 +1,7 @@
 hidden_imports = [
     "ics.structures.s_extended_data_flash_header",
+    "ics.structures.neo_device",
+    "ics.structures.neo_device_ex",
     "ics.structures.tag_options_open_neo_ex",
     "ics.structures.tag_options_find_neo_ex",
     "ics.structures.tagicsneo_vi_command",

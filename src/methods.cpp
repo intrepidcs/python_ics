@@ -520,6 +520,7 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
         if (device_need_ref_inc) {
             Py_INCREF(device);
         }
+        PyNeoDevice_GetNeoDevice(device)->dev = neo_device_ex.neoDevice;
         return device;
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());

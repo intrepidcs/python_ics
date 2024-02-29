@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+import sys
+sys.settrace
 from setuptools import setup, Extension
 
 from distutils.command import build as build_module
@@ -13,54 +15,30 @@ import os.path
 import extract_icsneo40_defines
 import generate_icsneo40_structs
 from create_version import get_pkg_version, create_version_py
+import shutil
+import pathlib
 
 # force this to happen every single time, fixes sync issues.
 extract_icsneo40_defines.extract()
 generate_icsneo40_structs.generate_all_files()
 
-
 create_version_py()
-    
+
+
+src_path = pathlib.Path("./src/")
+gen_path = pathlib.Path("./gen/")
+
+print("Copy python source files over to gen...")
+for dirpath, dirnames, filenames in src_path.walk():
+    for name in filenames:
+        if pathlib.Path(name).suffix == ".py" and not 'icsdebug' in name:
+            src = (dirpath / name)
+            dest = (gen_path / dirpath.relative_to(src_path) / name)
+            print(f"Copying {src} to {dest}")
+            shutil.copy(src, dest)
+
 MAJOR_VERSION = int(get_pkg_version().split(".")[0])
 MINOR_VERSION = int(get_pkg_version().split(".")[1])
-
-
-def _run_tests():
-    directory = os.path.abspath(os.path.dirname(sys.modules["__main__"].__file__))
-    loader = unittest.defaultTestLoader
-    runner = unittest.TextTestRunner()
-    suite = loader.discover(os.path.join(directory, "test"))
-    runner.run(suite)
-
-
-try:
-    from setuptools.command.test import test
-
-    class UnitTests(test):
-        def finalize_options(self):
-            test.finalize_options(self)
-            self.test_args = []
-            self.test_suite = True
-
-        def run_tests(self):
-            _run_tests()
-
-except ImportError:
-    from distutils.core import Command
-
-    class UnitTests(Command):
-        user_options = []
-
-        def initialize_options(self):
-            pass
-
-        def finalize_options(self):
-            pass
-
-        def run(self):
-            _run_tests()
-
-
 
 class build(build_module.build):
     def run(self):
@@ -117,11 +95,6 @@ if not os.getenv("READTHEDOCS"):
     if not shutil.which("clang-format"):
         raise RuntimeError("clang-format is required for building python_ics.")
 
-
-def read(fname):
-    return open(os.path.join(os.path.dirname(__file__), fname)).read()
-
-
 ics_extension = Extension(
     "ics.ics",
     define_macros=[("MAJOR_VERSION", MAJOR_VERSION), ("MINOR_VERSION", MINOR_VERSION), ("EXTERNAL_PROJECT", 1)],
@@ -143,7 +116,6 @@ setup(
     version=get_pkg_version(),
     cmdclass={
         "build": build,
-        "test": UnitTests,
     },
     download_url="https://github.com/intrepidcs/python_ics/releases",
     packages=["ics", "ics.structures"],
