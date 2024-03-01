@@ -1,7 +1,6 @@
 #ifndef _METHODS_H_
 #define _METHODS_H_
 #include <Python.h>
-#include "object_neo_device.h"
 #include "object_spy_message.h"
 #include "setup_module_auto_defines.h"
 
@@ -134,7 +133,7 @@ extern "C"
 #define _DOC_FIND_DEVICES                                                                                              \
     MODULE_NAME ".find_devices(device_type=" MODULE_NAME ".NEODEVICE_ALL)\n"                                           \
                 "\n"                                                                                                   \
-                "Finds all connected devices and returns a tuple of :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME   \
+                "Finds all connected devices and returns a tuple of :class:` PyNeoDeviceEx"   \
                 "` for use in :func:`" MODULE_NAME ".open_device`\n"                                                   \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
@@ -147,7 +146,7 @@ extern "C"
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
                 "\n"                                                                                                   \
                 "Returns:\n"                                                                                           \
-                "\tTuple of :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "` for use in :func:`" MODULE_NAME        \
+                "\tTuple of :class:` PyNeoDeviceEx" "` for use in :func:`" MODULE_NAME        \
                 ".open_device`\n"                                                                                      \
                 "\n"                                                                                                   \
                 "\t>>> for device in ics.find_devices():\n"                                                            \
@@ -164,13 +163,13 @@ extern "C"
     MODULE_NAME                                                                                                        \
     ".open_device(device)\n"                                                                                           \
     "\n"                                                                                                               \
-    "Opens the device. `device` can be omitted to return a :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME            \
+    "Opens the device. `device` can be omitted to return a :class:` PyNeoDeviceEx"            \
     "` of the\n"                                                                                                       \
-    "first free availible device, a :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME                                   \
+    "first free availible device, a :class:` PyNeoDeviceEx"                                   \
     "`, or a serial number of the device.\n"                                                                           \
     "\n"                                                                                                               \
     "Args:\n"                                                                                                          \
-    "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME  \
+    "\tdevice (:class:` PyNeoDeviceEx" "`): :class:` PyNeoDeviceEx"  \
     "`\n\n"                                                                                                            \
     "\tdevice (int): Serial Number of the device\n\n"                                                                  \
     "\tnetwork_ids (List/Tuple): This is an array of number IDs which specify the NetworkID parameter of each "        \
@@ -187,17 +186,17 @@ extern "C"
     "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                                        \
     "\n"                                                                                                               \
     "Returns:\n"                                                                                                       \
-    "\tIf :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "` is passed as a parameter, None. \n"                      \
-    "\tIf serial number is passed as a parameter, a :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME                   \
+    "\tIf :class:` PyNeoDeviceEx" "` is passed as a parameter, None. \n"                      \
+    "\tIf serial number is passed as a parameter, a :class:` PyNeoDeviceEx"                   \
     "` will be returned. \n"                                                                                           \
-    "\tIf `device` parameter is omitted, a :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME                            \
+    "\tIf `device` parameter is omitted, a :class:` PyNeoDeviceEx"                            \
     "` will be returned with the first availible free device. \n"                                                      \
     "\n"                                                                                                               \
     "\t>>> for device in ics.find_devices():\n"                                                                        \
     "\t...     ics.open_device(device)\n"                                                                              \
     "\t...\n"                                                                                                          \
     "\n"                                                                                                               \
-    ".. note::\n\t:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME                                                     \
+    ".. note::\n\t:class:` PyNeoDeviceEx"                                                     \
     "` will automatically close the device when it goes out of scope.\n\n"
 
 #define _DOC_CLOSE_DEVICES                                                                                             \
@@ -206,8 +205,8 @@ extern "C"
                 "Closes the device.\n"                                                                                 \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
@@ -221,7 +220,7 @@ extern "C"
                 "\t...     ics.close_device(device)\n"                                                                 \
                 "\t...\n"                                                                                              \
                 "\n"                                                                                                   \
-                ".. note::\n\t:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME                                         \
+                ".. note::\n\t:class:` PyNeoDeviceEx"                                         \
                 "` will automatically close the device when it goes out of scope.\n\n"
 
 #define _DOC_GET_RTC                                                                                                   \
@@ -230,8 +229,8 @@ extern "C"
                 "Gets the Real-Time Clock of the device.\n"                                                            \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
@@ -249,8 +248,8 @@ extern "C"
                 "Sets the Real-Time Clock of the device.\n"                                                            \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\ttime (:class:`datetime.datetime`): Optional. Sets to current time, if omitted.\n\n"                 \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
@@ -268,8 +267,8 @@ extern "C"
                 "Loads the CoreMini into the device.\n"                                                                \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tcoremini (str/tuple): Use string to load from file, Use Tuple if file data.\n\n"                    \
                 "\tlocation (int): Accepts :class:`" MODULE_NAME ".SCRIPT_LOCATION_FLASH_MEM`, :class:`" MODULE_NAME   \
                 ".SCRIPT_LOCATION_SDCARD`, or :class:`" MODULE_NAME ".SCRIPT_LOCATION_VCAN3_MEM`\n\n"                  \
@@ -289,8 +288,8 @@ extern "C"
                 "Starts the CoreMini into the device.\n"                                                               \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tlocation (int): Accepts :class:`" MODULE_NAME ".SCRIPT_LOCATION_FLASH_MEM`, :class:`" MODULE_NAME   \
                 ".SCRIPT_LOCATION_SDCARD`, or :class:`" MODULE_NAME ".SCRIPT_LOCATION_VCAN3_MEM`\n\n"                  \
                 "\n"                                                                                                   \
@@ -309,8 +308,8 @@ extern "C"
                 "Stops the CoreMini into the device.\n"                                                                \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
@@ -327,8 +326,8 @@ extern "C"
                 "Clears the CoreMini into the device.\n"                                                               \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tlocation (int): Accepts :class:`" MODULE_NAME ".SCRIPT_LOCATION_FLASH_MEM`, :class:`" MODULE_NAME   \
                 ".SCRIPT_LOCATION_SDCARD`, or :class:`" MODULE_NAME ".SCRIPT_LOCATION_VCAN3_MEM`\n\n"                  \
                 "\n"                                                                                                   \
@@ -347,8 +346,8 @@ extern "C"
                 "Gets the status of the CoreMini in the device.\n"                                                     \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
@@ -367,8 +366,8 @@ extern "C"
                 "." SPY_MESSAGE_OBJECT_NAME "`\n"                                                                      \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tmessages (:class:`" MODULE_NAME "." SPY_MESSAGE_OBJECT_NAME "`): :class:`" MODULE_NAME              \
                 "." SPY_MESSAGE_OBJECT_NAME "`\n\n"                                                                    \
                 "\n"                                                                                                   \
@@ -392,8 +391,8 @@ extern "C"
                 "Gets the message(s) on the device.\n"                                                                 \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tj1850 (:class:`bool`): Return :class:`" MODULE_NAME "." SPY_MESSAGE_J1850_OBJECT_NAME               \
                 "` instead.\n\n"                                                                                       \
                 "\ttimeout (:class:`float`): Optional timeout to wait for messages in seconds (0.1 = 100ms).\n\n"      \
@@ -416,15 +415,15 @@ extern "C"
                 "\t>>> errors\n"                                                                                       \
                 "\t0\n"
 
-//"Accepts a " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME ", exception on error. Returns a list of (error #, string)"
+//"Accepts a  PyNeoDeviceEx" ", exception on error. Returns a list of (error #, string)"
 #define _DOC_GET_ERROR_MESSAGES                                                                                        \
     MODULE_NAME ".get_error_messages(device[, j1850, timeout])\n"                                                      \
                 "\n"                                                                                                   \
                 "Gets the error message(s) on the device.\n"                                                           \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
@@ -465,7 +464,7 @@ extern "C"
     "Gets the settings in the device. vnet_slot defaults to " MODULE_NAME ".PlasmaIonVnetChannelMain\n"                \
     "\n"                                                                                                               \
     "Args:\n"                                                                                                          \
-    "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME  \
+    "\tdevice (:class:` PyNeoDeviceEx" "`): :class:` PyNeoDeviceEx"  \
     "`\n\n"                                                                                                            \
     "\tdevice_type (EDeviceSettingsType): Optional: Overrides default device setings type. Defaults to '-1'\n\n"       \
     "\tvnet_slot (PlasmaIonVnetChannelMain): Optional: Defaults to PlasmaIonVnetChannelMain, Used only for "           \
@@ -505,8 +504,8 @@ extern "C"
                 "Sets the settings in the device. vnet_slot defaults to " MODULE_NAME ".PlasmaIonVnetChannelMain\n"    \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tsettings (:class:`" MODULE_NAME "."                                                                 \
                 "device_settings"                                                                                      \
                 "`): :class:`" MODULE_NAME "."                                                                         \
@@ -534,15 +533,15 @@ extern "C"
                 "\t>>> ics.set_device_settings(d, s, True, ics.PlasmaIonVnetChannelA)\n"                               \
                 "\t>>> \n"
 
-//"Accepts a " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME ", exception on error."
+//"Accepts a  PyNeoDeviceEx" ", exception on error."
 #define _DOC_LOAD_DEFAULT_SETTINGS                                                                                     \
     MODULE_NAME ".load_default_settings(device)\n"                                                                     \
                 "\n"                                                                                                   \
                 "Load the default settings in the device.\n"                                                           \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
@@ -590,8 +589,8 @@ extern "C"
                 "Starts a Coremini Function Block at `index` on `device`.\n"                                           \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tindex (int): Index of the function block.\n\n"                                                      \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
@@ -609,8 +608,8 @@ extern "C"
                 "Stops a Coremini Function Block at `index` on `device`.\n"                                            \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tindex (int): Index of the function block.\n\n"                                                      \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
@@ -628,8 +627,8 @@ extern "C"
                 "Gets the status of a Coremini Function Block at `index` on `device`.\n"                               \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tindex (int): Index of the function block.\n\n"                                                      \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
@@ -648,8 +647,8 @@ extern "C"
                 "Gets the value of a Coremini application signal at `index` on `device`.\n"                            \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tindex (int): Index of the application signal.\n\n"                                                  \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
@@ -668,8 +667,8 @@ extern "C"
                 "Sets the value of a Coremini application signal at `index` on `device`.\n"                            \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tindex (int): Index of the application signal.\n\n"                                                  \
                 "\tvalue (float): New value of the application signal.\n\n"                                            \
                 "\n"                                                                                                   \
@@ -689,8 +688,8 @@ extern "C"
                 "Gets the value of a Coremini Message at `index` on `device`.\n"                                       \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tindex (int): Index of the application signal.\n\n"                                                  \
                 "\tj1850 (bool): Use :class:`" MODULE_NAME "." SPY_MESSAGE_J1850_OBJECT_NAME "` instead.\n\n"          \
                 "\n"                                                                                                   \
@@ -709,8 +708,8 @@ extern "C"
                 "Gets the value of a Coremini Message at `index` on `device`.\n"                                       \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tindex (int): Index of the application signal.\n\n"                                                  \
                 "\tj1850 (bool): Use :class:`" MODULE_NAME "." SPY_MESSAGE_J1850_OBJECT_NAME "` instead.\n\n"          \
                 "\n"                                                                                                   \
@@ -737,8 +736,8 @@ extern "C"
                 "Gets the Performance Parameters on `device`.\n"                                                       \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
@@ -757,8 +756,8 @@ extern "C"
                 "Validates the handle is valid for a `device`. Handles are only valid when the device is open.\n"      \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tor:\n\n"                                                                                            \
                 "\tdevice (int): c style integer handle to the device.\n\n"                                            \
                 "\n"                                                                                                   \
@@ -780,8 +779,8 @@ extern "C"
                 "Gets the error message from the last API call.\n"                                                     \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
@@ -839,8 +838,8 @@ extern "C"
                 "Gets the serial number out of the device.\n"                                                          \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
@@ -860,8 +859,8 @@ extern "C"
                 "This API allows Android/Linux applications to invoke power management.\n"                             \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "\ttimeout_ms (int): 16bit word for how long to wait on idle bus before going to sleep. "              \
                 "If caller does not want to change it pass in 65535 (0xFFFF) and it "                                  \
@@ -899,8 +898,8 @@ extern "C"
                 "create logical connections to found CAN Nodes.\n"                                                     \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
@@ -917,8 +916,8 @@ extern "C"
                 "Forces the device to flash firmware.\n"                                                               \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
@@ -935,8 +934,8 @@ extern "C"
                 "Determines if the device firmware needs flashing.\n"                                                  \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
@@ -953,8 +952,8 @@ extern "C"
                 "Returns the DLL firmware info for the device.\n"                                                      \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
@@ -978,8 +977,8 @@ extern "C"
                 "Returns the device firmware info for the device.\n"                                                   \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
@@ -1003,8 +1002,8 @@ extern "C"
                 "Returns the device backup power enabled for the device.\n"                                            \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
@@ -1019,8 +1018,8 @@ extern "C"
                 "Sets the device backup power enabled for the device.\n"                                               \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
@@ -1035,8 +1034,8 @@ extern "C"
                 "Returns the device backup power is ready for the device.\n"                                           \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
@@ -1054,8 +1053,8 @@ extern "C"
                 "Transmits an ISO15765 Message.\n"                                                                     \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "\tpMsg (:class:`" MODULE_NAME "."                                                                     \
                 "st_cm_iso157652_tx_message"                                                                           \
@@ -1077,8 +1076,8 @@ extern "C"
                 "Setup rx ISO15765 Message.\n"                                                                         \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "\tprx_msg (:class:`" MODULE_NAME "."                                                                  \
                 "st_cm_iso157652_rx_message"                                                                           \
@@ -1099,8 +1098,8 @@ extern "C"
                 "Enables ISO15765 networks.\n"                                                                         \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
@@ -1115,8 +1114,8 @@ extern "C"
                 "Disables ISO15765 networks.\n"                                                                        \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
@@ -1131,8 +1130,8 @@ extern "C"
                 "Gets active vnet channel for the device.\n"                                                           \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
@@ -1147,8 +1146,8 @@ extern "C"
                 "Sets active vnet channel for the device.\n"                                                           \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
@@ -1196,7 +1195,7 @@ extern "C"
     "For the network NETID_FIRE_CGI valid bit rates are 625000 and 115200\n"                                           \
     "\n"                                                                                                               \
     "Args:\n"                                                                                                          \
-    "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME  \
+    "\tdevice (:class:` PyNeoDeviceEx" "`): :class:` PyNeoDeviceEx"  \
     "`\n\n"                                                                                                            \
     "\n"                                                                                                               \
     "Raises:\n"                                                                                                        \
@@ -1212,8 +1211,8 @@ extern "C"
                 "Sets the FD bitrate for a given Network ID on the device..\n"                                         \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
@@ -1228,8 +1227,8 @@ extern "C"
                 "Sets the bitrate for a given Network ID on the device with extended options.\n"                       \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
@@ -1244,8 +1243,8 @@ extern "C"
                 "Calculates the timestamp for a message.\n"                                                            \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "\tmsg (:class:`" MODULE_NAME "." SPY_MESSAGE_OBJECT_NAME "`): :class:`" MODULE_NAME                   \
                 "." SPY_MESSAGE_OBJECT_NAME "`\n\n"                                                                    \
@@ -1268,8 +1267,8 @@ extern "C"
                 "Returns the device status.\n"                                                                         \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
@@ -1291,8 +1290,8 @@ extern "C"
                 "Enable or disable network communication.\n"                                                           \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "\tenable (:class:`bool`): :class:`bool`\n\n"                                                          \
                 "\n"                                                                                                   \
@@ -1315,8 +1314,8 @@ extern "C"
                 "Enable or disable bus voltage monitoring.\n"                                                          \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "\tenable (:class:`bool`): :class:`int`\n\n"                                                           \
                 "\n"                                                                                                   \
@@ -1339,8 +1338,8 @@ extern "C"
                 "Reads bus voltage. (:class:`" MODULE_NAME ".enable_bus_voltage_monitor`) needs to be called first.\n" \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "\treserved (:class:`int`): :class:`int`: Optional. Should be set to zero. Don't set, if unsure.\n\n"  \
                 "\n"                                                                                                   \
@@ -1363,8 +1362,8 @@ extern "C"
                 "Reads firmware binary from a RAD-Jupiter. If not sure, don't use this method\n"                       \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "\tsize (:class:`int`): :class:`int`: size of the bytes to read of the firmware binary.\n\n"           \
                 "\n"                                                                                                   \
@@ -1383,8 +1382,8 @@ extern "C"
                 "Writes firmware binary to a RAD-Jupiter. If not sure, don't use this method\n"                        \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "\tbytes (:class:`bytes`): :class:`bytes`: bytes of the firmware binary.\n\n"                          \
                 "\n"                                                                                                   \
@@ -1403,8 +1402,8 @@ extern "C"
                 "Returns the device disk details.\n"                                                                   \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
@@ -1426,8 +1425,8 @@ extern "C"
                 "Starts disk formatting on the device.\n"                                                              \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
@@ -1448,8 +1447,8 @@ extern "C"
                 "Cancel in progress disk formatting on the device.\n"                                                  \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
@@ -1469,8 +1468,8 @@ extern "C"
                 "Returns the device disk formatting progress.\n"                                                       \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
@@ -1493,8 +1492,8 @@ extern "C"
                 "Activate or De-activate DOIP Line.\n"                                                                 \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "\tenable (:class:`bool`): :class:`bool`\n\n"                                                          \
                 "\n"                                                                                                   \
@@ -1516,8 +1515,8 @@ extern "C"
                 "ValueCAN4-4 and ValueCAN4-Industrial are supported.\n"                                                \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "\tenable (:class:`DeviceFeature`): :class:`DeviceFeature`\n\n"                                        \
                 "\n"                                                                                                   \
@@ -1539,8 +1538,8 @@ extern "C"
                 "Gets the unique PCB serial number of the device.\n"                                                   \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
@@ -1559,8 +1558,8 @@ extern "C"
                 "Sets the LED property on the device.\n"                                                               \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tled (:class:`int`): Index or position of the LED\n\n"                                               \
                 "\tprop (:class:`int`): Property of the LED\n\n"                                                       \
                 "\tvalue (:class:`int`): Value of the LED Property\n\n"                                                \
@@ -1583,8 +1582,8 @@ extern "C"
                 "Starts a DHCP Server.\n"                                                                              \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tnetwork_id (:class:`int`): NetworkID\n\n"                                                           \
                 "\tdevice_ip_address (:class:`str`): Device IP Address\n\n"                                            \
                 "\tsubnet_mask (:class:`str`): Subnet Mask\n\n"                                                        \
@@ -1612,8 +1611,8 @@ extern "C"
                 "Stops the DHCP Server\n"                                                                              \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tnetwork_id (:class:`int`): NetworkID\n\n"                                                           \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
@@ -1633,8 +1632,8 @@ extern "C"
                 "Sets the lock state on the manager\n"                                                                 \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tmanager (:class:`" MODULE_NAME                                                                      \
                 ".structures.ew_bms_manager_port_t.ew_bms_manager_port_t`): :class:`" MODULE_NAME                      \
                 ".structures.ew_bms_manager_port_t.ew_bms_manager_port_t`\n\n"                                         \
@@ -1662,8 +1661,8 @@ extern "C"
                 "Resets the manager\n"                                                                                 \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tmanager (:class:`" MODULE_NAME                                                                      \
                 ".structures.ew_bms_manager_port_t.ew_bms_manager_port_t`): :class:`" MODULE_NAME                      \
                 ".structures.ew_bms_manager_port_t.ew_bms_manager_port_t`\n\n"                                         \
@@ -1686,8 +1685,8 @@ extern "C"
                 "Writes UART on the given port\n"                                                                      \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tport (:class:`" MODULE_NAME ".structures.e_uart_port_t.e_uart_port_t`): :class:`" MODULE_NAME       \
                 ".structures.e_uart_port_t.e_uart_port_t`\n\n"                                                         \
                 "\tdata (:class:`bytes`): :class:`bytes`\n\n"                                                          \
@@ -1710,8 +1709,8 @@ extern "C"
                 "Reads UART on the given port. \n"                                                                     \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tport (:class:`" MODULE_NAME ".structures.e_uart_port_t.e_uart_port_t`): :class:`" MODULE_NAME       \
                 ".structures.e_uart_port_t.e_uart_port_t`\n\n"                                                         \
                 "\tbytes_to_read (:class:`int`): Optional. How many bytes to read from the UART, 256 if omitted.\n\n"  \
@@ -1736,8 +1735,8 @@ extern "C"
                 "Sets the UART baudrate on the given port. \n"                                                         \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tport (:class:`" MODULE_NAME ".structures.e_uart_port_t.e_uart_port_t`): :class:`" MODULE_NAME       \
                 ".structures.e_uart_port_t.e_uart_port_t`\n\n"                                                         \
                 "\tbaudrate (:class:`int`): Baudrate of the UART to set.\n\n"                                          \
@@ -1761,8 +1760,8 @@ extern "C"
                 "Gets the UART baudrate on the given port. \n"                                                         \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tport (:class:`" MODULE_NAME ".structures.e_uart_port_t.e_uart_port_t`): :class:`" MODULE_NAME       \
                 ".structures.e_uart_port_t.e_uart_port_t`\n\n"                                                         \
                 "\n"                                                                                                   \
@@ -1784,8 +1783,8 @@ extern "C"
                 "Sends a command in a generic way.\n"                                                                  \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tapi_index (:class:`int`): api_index.\n\n"                                                           \
                 "\tinstance_index (:class:`int`): instance_index.\n\n"                                                 \
                 "\tfunction_index (:class:`int`): function_index.\n\n"                                                 \
@@ -1806,7 +1805,7 @@ extern "C"
     "Reads data in a generic way.\n"                                                                                   \
     "\n"                                                                                                               \
     "Args:\n"                                                                                                          \
-    "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME  \
+    "\tdevice (:class:` PyNeoDeviceEx" "`): :class:` PyNeoDeviceEx"  \
     "`\n\n"                                                                                                            \
     "\tapi_index (:class:`int`): api_index.\n\n"                                                                       \
     "\tinstance_index (:class:`int`): instance_index.\n\n"                                                             \
@@ -1827,8 +1826,8 @@ extern "C"
                 "Reads data in a generic way.\n"                                                                       \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tapi_index (:class:`int`): api_index.\n\n"                                                           \
                 "\tinstance_index (:class:`int`): instance_index.\n\n"                                                 \
                 "\n"                                                                                                   \
@@ -1845,8 +1844,8 @@ extern "C"
                 "Gets the gPTP Status from the device.\n"                                                              \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
@@ -1861,8 +1860,8 @@ extern "C"
                 "Get all the chip (firmware) versions of the device.\n"                                                \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
@@ -1878,8 +1877,8 @@ extern "C"
                 "Flashes Accessory Firmware. If not sure, don't use this method\n"                                           \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "\tdata (:class:`bytes`): :class:`bytes`: data of the firmware binary.\n\n"                            \
                 "\n"                                                                                                   \
@@ -1900,8 +1899,8 @@ extern "C"
                 "Gets Accessory Firmware version. If not sure, don't use this method\n"                                      \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "\tindex (:class:`int`): :class:`int`: Index enum.\n\n"                                        \
                 "\n"                                                                                                   \
@@ -1982,7 +1981,7 @@ static PyMethodDef IcsMethods[] = {
                           "ScriptGetScriptStatusEx",
                           meth_get_script_status,
                           METH_VARARGS,
-                          "Accepts a " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME
+                          "Accepts a  PyNeoDeviceEx"
                           ", exception on error. Returns a list of values of what ulParameters would hold"),
     _EZ_ICS_STRUCT_METHOD("get_error_messages",
                           "icsneoGetErrorMessages",
@@ -2032,14 +2031,14 @@ static PyMethodDef IcsMethods[] = {
                           "ReadSDCard",
                           meth_read_sdcard,
                           METH_VARARGS,
-                          "icsneoReadSDCard(), Accepts a " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME
+                          "icsneoReadSDCard(), Accepts a  PyNeoDeviceEx"
                           " and sector index. Returns a bytearray of 512 bytes max. Exception on error."),
     _EZ_ICS_STRUCT_METHOD("write_sdcard",
                           "icsneoWriteSDCard",
                           "WriteSDCard",
                           meth_write_sdcard,
                           METH_VARARGS,
-                          "icsneoReadSDCard(), Accepts a " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME
+                          "icsneoReadSDCard(), Accepts a  PyNeoDeviceEx"
                           ", sector index, and a bytearray of 512 bytes. Exception on error."),
     { "create_neovi_radio_message",
       (PyCFunction)meth_create_neovi_radio_message,
