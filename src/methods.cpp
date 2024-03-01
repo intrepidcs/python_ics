@@ -369,6 +369,13 @@ int PyNeoDeviceEx_IsHandleValid(PyObject* object)
     return PyCapsule_CheckExact(_handle) == 1 ? 1 : -1;
 }
 
+void __destroy_PyNeoDeviceEx_Handle(PyObject* handle)
+{
+    if (handle) {
+        delete (long*)handle;
+    }
+}
+
 // Set the _handle attribute of PyNeoDeviceEx. Will create the PyCapsule if needed.
 // Returns false on error and exception is set. Returns true on success.
 bool PyNeoDeviceEx_SetHandle(PyObject* object, void* handle)
@@ -388,12 +395,23 @@ bool PyNeoDeviceEx_SetHandle(PyObject* object, void* handle)
     }
     if (!PyCapsule_CheckExact(_handle)) {
         // Create a new PyCapsule, we haven't initialized it yet.
-        _handle = PyCapsule_New(handle, NULL, NULL);
+        static_assert(sizeof(long) == sizeof(void*));
+        long* handle_value = new long();
+        *handle_value = (long)handle;
+        _handle = PyCapsule_New((void*)handle_value, NULL, __destroy_PyNeoDeviceEx_Handle);
         if (!_handle) {
             return false;
         }
+        if (PyObject_SetAttrString(object, "_handle", _handle) != 0) {
+            return false;
+        }
     }
-    return PyCapsule_SetPointer(_handle, handle) == 0;
+    long* ptr = (long*)PyCapsule_GetPointer(_handle, NULL);
+    if (!ptr) {
+        return false;
+    }
+    *ptr = (long)handle;
+    return true;
 }
 
 // Get the _name attribute of PyNeoDeviceEx.
@@ -508,6 +526,9 @@ PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
             }
             // Copy the NeoDeviceEx struct into our python NeoDevice object
             if (!PyNeoDeviceEx_SetNeoDeviceEx(obj, &devices[i])) {
+                return NULL;
+            }
+            if (!PyNeoDeviceEx_SetHandle(obj, NULL)) {
                 return NULL;
             }
             if (!PyNeoDeviceEx_SetName(obj, 
@@ -650,6 +671,9 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
                 if (!PyNeoDeviceEx_SetNeoDeviceEx(device, &devices[i])) {
                     return NULL;
                 }
+                if (!PyNeoDeviceEx_SetHandle(device, NULL)) {
+                    return NULL;
+                }
                 if (!PyNeoDeviceEx_SetName(device, 
                     PyUnicode_FromString(
                         neodevice_to_string(devices[i].neoDevice.DeviceType)
@@ -687,7 +711,7 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
             popts = &opts;
         // Get the handle from PyNeoDeviceEx
         void* handle = NULL;
-        if (!PyNeoDeviceEx_SetHandle(device, handle)) {
+        if (!PyNeoDeviceEx_GetHandle(device, handle)) {
             return NULL;
         }
         // Get the NeoDeviceEx from PyNeoDeviceEx
@@ -744,9 +768,13 @@ PyObject* meth_close_device(PyObject* self, PyObject* args)
         ice::Function<void __stdcall(void*)> icsneoFreeObject(lib, "icsneoFreeObject");
         int error_count = 0;
         void* handle = NULL;
-    if (!PyNeoDeviceEx_GetHandle(obj, handle)) {
-        return NULL;
-    }
+        if (!PyNeoDeviceEx_GetHandle(obj, handle)) {
+            return NULL;
+        }
+        // nothing to do here, we have an invalid handle. We probably were never opened.
+        if (!handle) {
+            return Py_BuildValue("i", error_count);
+        }
         Py_BEGIN_ALLOW_THREADS;
         if (!icsneoClosePort(handle, &error_count)) {
             Py_BLOCK_THREADS;

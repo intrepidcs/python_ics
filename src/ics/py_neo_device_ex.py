@@ -1,5 +1,5 @@
 import ics
-
+import ctypes
 
 class PyNeoDeviceEx(ics.neo_device_ex.neo_device_ex):
     """Wrapper class around ics.neo_device_ex.neo_device_ex to support a more pythonic way of doing things."""
@@ -44,7 +44,9 @@ class PyNeoDeviceEx(ics.neo_device_ex.neo_device_ex):
     @property
     def _Handle(self):
         """Return the internal device handle from icsneoOpenDevice()"""
-        return self._handle
+        ctypes.pythonapi.PyCapsule_GetPointer.restype = ctypes.c_void_p
+        ctypes.pythonapi.PyCapsule_GetPointer.argtypes = [ctypes.py_object, ctypes.c_char_p]
+        return ctypes.pythonapi.PyCapsule_GetPointer(self._handle, None)
 
     @property
     def Name(self) -> str:
