@@ -296,7 +296,7 @@ bool PyNeoDeviceEx_GetNeoDeviceEx(PyObject* object, Py_buffer* buffer, NeoDevice
         nde = NULL;
         return false;
     }
-    if (PyObject_GetBuffer(object, buffer, PyBUF_C_CONTIGUOUS | PyBUF_WRITABLE) != 0) {
+    if (PyObject_GetBuffer(object, buffer, PyBUF_CONTIG) != 0) {
         nde = NULL;
         return false;
     }
@@ -318,11 +318,9 @@ bool PyNeoDeviceEx_SetNeoDeviceEx(PyObject* object, NeoDeviceEx* src_nde)
     // Get the NeoDeviceEx from PyNeoDeviceEx
     Py_buffer buffer = {};
     NeoDeviceEx* nde = NULL;
-    if (!PyNeoDeviceEx_GetNeoDeviceEx(object, &buffer, nde)) {
-        PyBuffer_Release(&buffer);
-        return false;
-    }
-    memcpy(nde, src_nde, sizeof(*nde));
+    int res = PyObject_GetBuffer(object, &buffer, PyBUF_CONTIG);
+    memcpy(buffer.buf, src_nde, sizeof(*src_nde));
+    PyBuffer_Release(&buffer);
     return true;
 }
 
@@ -1596,7 +1594,7 @@ PyObject* meth_get_device_settings(PyObject* self, PyObject* args)
     }
     // Grab the buffer out of the newly created object - make sure to call PyBuffer_Release(&settings_buffer) when done.
     Py_buffer settings_buffer = {};
-    PyObject_GetBuffer(settings, &settings_buffer, PyBUF_C_CONTIGUOUS | PyBUF_WRITABLE);
+    PyObject_GetBuffer(settings, &settings_buffer, PyBUF_CONTIG);
 
     // Verify we have a valid NeoDevice Object - This comes after s_device_settings allocation for testing purposes
     if (!PyNeoDeviceEx_CheckExact(obj)) {
@@ -1682,7 +1680,7 @@ PyObject* meth_set_device_settings(PyObject* self, PyObject* args)
         ice::Function<int __stdcall(void*, SDeviceSettings*, int, int, EPlasmaIonVnetChannel_t)>
             icsneoSetDeviceSettings(lib, "icsneoSetDeviceSettings");
         Py_buffer settings_buffer = {};
-        PyObject_GetBuffer(settings, &settings_buffer, PyBUF_C_CONTIGUOUS | PyBUF_WRITABLE);
+        PyObject_GetBuffer(settings, &settings_buffer, PyBUF_CONTIG);
         Py_BEGIN_ALLOW_THREADS;
         if (!icsneoSetDeviceSettings(
                 handle, (SDeviceSettings*)settings_buffer.buf, settings_buffer.len, save_to_eeprom, vnet_slot)) {
@@ -2553,7 +2551,7 @@ PyObject* meth_get_hw_firmware_info(PyObject* self, PyObject* args)
             return NULL;
         }
         Py_buffer info_buffer = {};
-        PyObject_GetBuffer(info, &info_buffer, PyBUF_SIMPLE);
+        PyObject_GetBuffer(info, &info_buffer, PyBUF_CONTIG);
 
         Py_BEGIN_ALLOW_THREADS;
         if (!icsneoGetHWFirmwareInfo(handle, (stAPIFirmwareInfo*)info_buffer.buf)) {
@@ -2755,7 +2753,7 @@ PyObject* meth_get_dll_firmware_info(PyObject* self, PyObject* args)
             return NULL;
         }
         Py_buffer info_buffer = {};
-        PyObject_GetBuffer(info, &info_buffer, PyBUF_SIMPLE);
+        PyObject_GetBuffer(info, &info_buffer, PyBUF_CONTIG);
         Py_BEGIN_ALLOW_THREADS;
         if (!icsneoGetDLLFirmwareInfo(handle, (stAPIFirmwareInfo*)info_buffer.buf)) {
             Py_BLOCK_THREADS;
@@ -2982,7 +2980,7 @@ PyObject* meth_iso15765_transmit_message(PyObject* self, PyObject* args)
         return NULL;
     }
     Py_buffer obj_tx_msg_buffer = {};
-    PyObject_GetBuffer(obj_tx_msg, &obj_tx_msg_buffer, PyBUF_SIMPLE);
+    PyObject_GetBuffer(obj_tx_msg, &obj_tx_msg_buffer, PyBUF_CONTIG);
 
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, handle)) {
@@ -3030,7 +3028,7 @@ PyObject* meth_iso15765_receive_message(PyObject* self, PyObject* args)
         return NULL;
     }
     Py_buffer obj_rx_msg_buffer = {};
-    PyObject_GetBuffer(obj_rx_msg, &obj_rx_msg_buffer, PyBUF_SIMPLE);
+    PyObject_GetBuffer(obj_rx_msg, &obj_rx_msg_buffer, PyBUF_CONTIG);
 
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, handle)) {
@@ -3382,7 +3380,7 @@ PyObject* meth_get_device_status(PyObject* self, PyObject* args)
             return NULL;
         }
         Py_buffer device_status_buffer = {};
-        PyObject_GetBuffer(device_status, &device_status_buffer, PyBUF_SIMPLE);
+        PyObject_GetBuffer(device_status, &device_status_buffer, PyBUF_CONTIG);
 
         size_t device_status_size = device_status_buffer.len;
         ice::Function<int __stdcall(void*, icsDeviceStatus*, size_t*)> icsneoGetDeviceStatus(
@@ -3570,7 +3568,7 @@ PyObject* meth_read_jupiter_firmware(PyObject* self, PyObject* args)
 
         // Grab the ByteArray Buffer Object
         Py_buffer ba_buffer = {};
-        PyObject_GetBuffer(ba, &ba_buffer, PyBUF_C_CONTIGUOUS | PyBUF_WRITABLE);
+        PyObject_GetBuffer(ba, &ba_buffer, PyBUF_CONTIG);
 
         Py_BEGIN_ALLOW_THREADS;
         if (!icsneoReadJupiterFirmware(handle, (char*)ba_buffer.buf, &fileSize, channel)) {
@@ -3628,10 +3626,6 @@ PyObject* meth_write_jupiter_firmware(PyObject* self, PyObject* args)
             return NULL;
         }
 
-        // Grab the ByteArray Buffer Object
-        // Py_buffer bytes_buffer = {};
-        // PyObject_GetBuffer(bytes, &bytes_buffer, PyBUF_C_CONTIGUOUS);
-
         Py_BEGIN_ALLOW_THREADS;
         // if (!icsneoWriteJupiterFirmware(handle, (char*)bytes_buffer.buf, bytes_buffer.len, channel)) {
         if (!icsneoWriteJupiterFirmware(handle, bytes_str, bsize, channel)) {
@@ -3685,7 +3679,7 @@ PyObject* meth_flash_accessory_firmware(PyObject* self, PyObject* args)
             lib, "icsneoFlashAccessoryFirmware");
 
         Py_buffer parms_buffer = {};
-        PyObject_GetBuffer(parms, &parms_buffer, PyBUF_C_CONTIGUOUS);
+        PyObject_GetBuffer(parms, &parms_buffer, PyBUF_CONTIG_RO);
 
         Py_BEGIN_ALLOW_THREADS;
         if (!icsneoFlashAccessoryFirmware(handle, (FlashAccessoryFirmwareParams*)parms_buffer.buf, &function_error)) {
@@ -3923,7 +3917,7 @@ PyObject* meth_get_disk_details(PyObject* self, PyObject* args)
             return NULL;
         }
         Py_buffer details_buffer = {};
-        PyObject_GetBuffer(details, &details_buffer, PyBUF_SIMPLE);
+        PyObject_GetBuffer(details, &details_buffer, PyBUF_CONTIG);
 
         Py_BEGIN_ALLOW_THREADS;
         if (!icsneoRequestDiskDetails(handle, (SDiskDetails*)details_buffer.buf)) {
@@ -3963,7 +3957,7 @@ PyObject* meth_disk_format(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         Py_buffer details_buffer = {};
-        PyObject_GetBuffer(details, &details_buffer, PyBUF_C_CONTIGUOUS | PyBUF_WRITABLE);
+        PyObject_GetBuffer(details, &details_buffer, PyBUF_CONTIG);
         ice::Function<int __stdcall(void*, SDiskDetails*)> icsneoRequestDiskFormat(lib, "icsneoRequestDiskFormat");
 
         Py_BEGIN_ALLOW_THREADS;
@@ -4044,7 +4038,7 @@ PyObject* meth_get_disk_format_progress(PyObject* self, PyObject* args)
             return NULL;
         }
         Py_buffer progress_buffer = {};
-        PyObject_GetBuffer(progress, &progress_buffer, PyBUF_SIMPLE);
+        PyObject_GetBuffer(progress, &progress_buffer, PyBUF_CONTIG);
 
         Py_BEGIN_ALLOW_THREADS;
         if (!icsneoRequestDiskFormatProgress(handle, (SDiskFormatProgress*)progress_buffer.buf)) {
@@ -4765,7 +4759,7 @@ PyObject* meth_get_gptp_status(PyObject* self, PyObject* args)
     }
     // Grab the buffer out of the newly created object - make sure to call PyBuffer_Release(&status_buffer) when done.
     Py_buffer status_buffer = {};
-    PyObject_GetBuffer(status, &status_buffer, PyBUF_C_CONTIGUOUS | PyBUF_WRITABLE);
+    PyObject_GetBuffer(status, &status_buffer, PyBUF_CONTIG);
     // Verify we have a valid NeoDevice Object - This comes after gptp_status allocation for testing purposes
     if (!PyNeoDeviceEx_CheckExact(obj)) {
         PyBuffer_Release(&status_buffer);
@@ -4820,7 +4814,7 @@ PyObject* meth_get_all_chip_versions(PyObject* self, PyObject* args)
     // Grab the buffer out of the newly created object - make sure to call PyBuffer_Release(&py_struct_buffer) when
     // done.
     Py_buffer py_struct_buffer = {};
-    PyObject_GetBuffer(py_struct, &py_struct_buffer, PyBUF_C_CONTIGUOUS | PyBUF_WRITABLE);
+    PyObject_GetBuffer(py_struct, &py_struct_buffer, PyBUF_CONTIG);
     // Verify we have a valid NeoDevice Object - This comes after ctypes struct allocation for testing purposes
     if (!PyNeoDeviceEx_CheckExact(obj)) {
         PyBuffer_Release(&py_struct_buffer);
