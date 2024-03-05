@@ -265,9 +265,20 @@ int _isPythonModuleObject_IsInstance(PyObject* object, const char* module_name, 
 }
 
 // Returns true if object instance is the same as ics.py_neo_device_ex.PyNeoDeviceEx
-int PyNeoDeviceEx_CheckExact(PyObject* object)
+bool PyNeoDeviceEx_CheckExact(PyObject* object)
 {
-    return _isPythonModuleObject_IsInstance(object, "ics.py_neo_device_ex", "PyNeoDeviceEx") == 1;
+    const char* CLASS_NAME = "PyNoDeviceEx";
+    if (!object) {
+        return false;
+    }
+    PyTypeObject* type_obj = Py_TYPE(object);
+    if (!type_obj && !type_obj->tp_name) {
+        return false;
+    }
+
+    return strncmp(type_obj->tp_name, CLASS_NAME, sizeof(CLASS_NAME) / sizeof(CLASS_NAME[0]));
+    // This will fail on cleanup because we can't import ics anymore...
+    //return _isPythonModuleObject_IsInstance(object, "ics.py_neo_device_ex", "PyNeoDeviceEx") == 1;
 }
 
 
@@ -753,6 +764,10 @@ PyObject* meth_close_device(PyObject* self, PyObject* args)
     PyObject* obj = NULL;
     if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
         return NULL;
+    }
+    if (obj == NULL) {
+        return set_ics_exception(exception_runtime_error(),
+                                 "Argument must be of type PyNeoDeviceEx, got NULL");
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
         return set_ics_exception(exception_runtime_error(),
