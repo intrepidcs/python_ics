@@ -1,5 +1,6 @@
 import ics
 import ctypes
+from typing import Self
 
 class PyNeoDeviceEx(ics.neo_device_ex.neo_device_ex):
     """Wrapper class around ics.neo_device_ex.neo_device_ex to support a more pythonic way of doing things."""
@@ -87,3 +88,12 @@ class PyNeoDeviceEx(ics.neo_device_ex.neo_device_ex):
             return ics.base36enc(self.SerialNumber)
         else:
             raise ValueError(f"Failed to convert SerialNumber {self.SerialNumber} to a valid serial number.")
+
+    def open(self, *args, **kwargs) -> Self:
+        return ics.open_device(self, *args, **kwargs)
+
+    def close(self):
+        return ics.close_device(self)
+
+    def load_default_settings(self):
+        return ics.load_default_settings(self)
