@@ -19,6 +19,7 @@ LIBICSNEO_ROOT = f"{ROOT}/libicsneo/{LIBICSNEO_VERSION}"
 LIBICSNEO_SOURCE = f"{LIBICSNEO_ROOT}/source"
 LIBICSNEO_BUILD = f"{LIBICSNEO_ROOT}/build"
 LIBICSNEO_INSTALL = f"{LIBICSNEO_ROOT}/install"
+print(f"LIBICSNEO PATH: {LIBICSNEO_ROOT}")
 
 LIBPCAP_VERSION = "1.10.4"
 LIBPCAP_ROOT = f"{ROOT}/libpcap/{LIBPCAP_VERSION}"
@@ -96,9 +97,11 @@ def _build_libpcap():
     subprocess.check_output(["make", "install"], cwd=LIBPCAP_BUILD)
 
 def _build_libicsneo_linux():
+    print("Cleaning libicsneo...")
     subprocess.check_output(["git", "clean", "-xdf"], cwd="libicsneo")
     subprocess.check_output(["mkdir", "-p", "libicsneo/build"])
 
+    print("cmake libicsneo...")
     subprocess.check_output(
         [
             "cmake",
@@ -106,9 +109,11 @@ def _build_libicsneo_linux():
             "-DLIBICSNEO_BUILD_ICSNEOLEGACY=ON",
             f"-DCMAKE_PREFIX_PATH={LIBUSB_INSTALL};{LIBPCAP_INSTALL}",
             "-S", LIBICSNEO_SOURCE,
-            "-B", LIBICSNEO_BUILD
+            "-B", LIBICSNEO_BUILD,
+            "-Wno-dev",
         ]
     )
+    print("cmake build libicsneo...")
     subprocess.check_output(
         ["cmake", "--build", LIBICSNEO_BUILD, "--target", "icsneolegacy", "--parallel", CPUS]
     )
@@ -132,8 +137,9 @@ def _build_libicsneo_macos():
     )
 
 def build():
-    print("Building libicsneo...")
+    print("Building libusb...")
     _build_libusb()
+    print("Building libpcap...")
     _build_libpcap()
     if sys.platform == "darwin":
         _build_libicsneo_macos()
@@ -156,6 +162,10 @@ if __name__ == "__main__":
     if "--clean" in sys.argv:
         clean()
         exit(0)
+    
+    print("Checking out libicsneo...")
     checkout()
+    print("Building libicsneo...")
     build()
+    print("Copy libicsneo...")
     copy()
