@@ -267,7 +267,7 @@ int _isPythonModuleObject_IsInstance(PyObject* object, const char* module_name, 
 // Returns true if object instance is the same as ics.py_neo_device_ex.PyNeoDeviceEx
 bool PyNeoDeviceEx_CheckExact(PyObject* object)
 {
-    const char* CLASS_NAME = "PyNoDeviceEx";
+    const char CLASS_NAME[] = "PyNeoDeviceEx";
     if (!object) {
         return false;
     }
@@ -276,7 +276,7 @@ bool PyNeoDeviceEx_CheckExact(PyObject* object)
         return false;
     }
 
-    return strncmp(type_obj->tp_name, CLASS_NAME, sizeof(CLASS_NAME) / sizeof(CLASS_NAME[0]));
+    return strncmp(type_obj->tp_name, CLASS_NAME, sizeof(CLASS_NAME) / sizeof(CLASS_NAME[0])) == 0;
     // This will fail on cleanup because we can't import ics anymore...
     //return _isPythonModuleObject_IsInstance(object, "ics.py_neo_device_ex", "PyNeoDeviceEx") == 1;
 }
