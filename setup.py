@@ -59,7 +59,6 @@ source_files = [
     "src/dll.cpp",
     "src/setup_module_auto_defines.cpp",
     "src/main.cpp",
-    "src/object_neo_device.cpp",
     "src/methods.cpp",
     "src/ice/src/ice_library_manager.cpp",
     "src/ice/src/ice_library_name.cpp",
