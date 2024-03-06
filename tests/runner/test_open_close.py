@@ -83,15 +83,18 @@ class TestOpenClose(unittest.TestCase):
         first_devices = []
         for x, device in enumerate(self.devices):
             try:
-                print(device)
                 self.assertEqual(device.NumberOfClients, 0, f"{device}")
-                first_devices.append(ics.open_device())
+                d = ics.open_device()
+                first_devices.append(d)
+                self.assertEqual(device.NumberOfClients, 1, f"{device}")
             except ics.RuntimeError as ex:
                 raise RuntimeError(f"Failed to open {device}... Iteration {len(first_devices)} ({ex})")
         self.assertEqual(len(self.devices), len(first_devices))
         # Close by API
         for device in first_devices:
+            self.assertEqual(device.NumberOfClients, 1, f"{device}")
             ics.close_device(device)
+            self.assertEqual(device.NumberOfClients, 0, f"{device}")
 
     def test_open_close_10_times(self):
         for device in self.devices:
