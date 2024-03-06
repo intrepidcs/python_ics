@@ -29,7 +29,8 @@ src_path = pathlib.Path("./src/")
 gen_path = pathlib.Path("./gen/")
 
 print("Copy python source files over to gen...")
-for dirpath, dirnames, filenames in src_path.walk():
+for dirpath, dirnames, filenames in os.walk(src_path):
+    dirpath = pathlib.Path(dirpath)
     for name in filenames:
         if pathlib.Path(name).suffix == ".py" and not 'icsdebug' in name:
             src = (dirpath / name)
