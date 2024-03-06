@@ -36,10 +36,8 @@ class PyNeoDeviceEx(ics.neo_device_ex.neo_device_ex):
             self.Options == other.Options and \
             self.pAvailWIFINetwork == other.pAvailWIFINetwork and \
             self.isEthernetDevice == other.isEthernetDevice and \
-            self.MACAddress == other.MACAddress and \
             self.hardwareRev == other.hardwareRev and \
             self.revReserved == other.revReserved and \
-            self.tcpIpAddress == other.tcpIpAddress and \
             self.tcpPort == other.tcpPort
 
     @property
