@@ -88,7 +88,7 @@ class PyNeoDeviceEx(ics.neo_device_ex.neo_device_ex):
         else:
             raise ValueError(f"Failed to convert SerialNumber {self.SerialNumber} to a valid serial number.")
 
-    def open(self, *args, **kwargs) -> PyNeoDeviceEx:
+    def open(self, *args, **kwargs):
         """Open the device. Returns a reference to Self on open."""
         return ics.open_device(self, *args, **kwargs)
 
