@@ -25,7 +25,7 @@ class TestOpenClose(unittest.TestCase):
         self.assertEqual(
             len(self.devices),
             self.expected_dev_count,
-            f"Expected {self.expected_dev_count}, found {len(self.devices)}...",
+            f"Expected {self.expected_dev_count}, found {len(self.devices)} ({self.devices})...",
         )
 
     def test_find_fire3(self):
