@@ -22,4 +22,5 @@ jobs:
       - name: Run unit tests
         run: |
           source .venv/bin/activate
+          setcap cap_net_admin,cap_net_raw+ep $(realpath $(which python))
           python -m unittest discover -s tests.runner --verbose
