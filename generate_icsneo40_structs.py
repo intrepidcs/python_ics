@@ -917,19 +917,19 @@ def create_ics_init():
 except Exception as ex:
     print(ex)
 
+
+from ics.structures import *
+from ics.hiddenimports import hidden_imports
+from ics.py_neo_device_ex import PyNeoDeviceEx
+
 try:
     # Release environment
     #print("Release")
     from ics.ics import *
-    from ics.structures import *
-    from ics.hiddenimports import hidden_imports
 except Exception as ex:
     # Build environment
     #print("Debug", ex)
     from ics import *
-    from ics.structures import *
-    from ics.hiddenimports import hidden_imports
-
 """
     init_path = OUTPUT_DIR / "__init__.py"
     print(f"Creating '{init_path}'...")
