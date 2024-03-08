@@ -1,6 +1,6 @@
 import unittest
 import ics
-from ics.ics_neo_device_ex import PyNeoDeviceEx
+from ics.py_neo_device_ex import PyNeoDeviceEx
 
 unittest.TestLoader.sortTestMethodsUsing = None
 
