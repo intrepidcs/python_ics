@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import sys
+
 sys.settrace
 from setuptools import setup, Extension
 
@@ -19,10 +20,10 @@ import shutil
 import pathlib
 
 # force this to happen every single time, fixes sync issues.
-extract_icsneo40_defines.extract()
-generate_icsneo40_structs.generate_all_files()
+# extract_icsneo40_defines.extract()
+# generate_icsneo40_structs.generate_all_files()
 
-create_version_py()
+# create_version_py()
 
 
 src_path = pathlib.Path("./src/")
@@ -32,18 +33,25 @@ print("Copy python source files over to gen...")
 for dirpath, dirnames, filenames in os.walk(src_path):
     dirpath = pathlib.Path(dirpath)
     for name in filenames:
-        if pathlib.Path(name).suffix == ".py" and not 'icsdebug' in name:
-            src = (dirpath / name)
-            dest = (gen_path / dirpath.relative_to(src_path) / name)
+        if pathlib.Path(name).suffix == ".py" and not "icsdebug" in name:
+            src = dirpath / name
+            dest = gen_path / dirpath.relative_to(src_path) / name
             print(f"Copying {src} to {dest}")
             shutil.copy(src, dest)
 
 MAJOR_VERSION = int(get_pkg_version().split(".")[0])
 MINOR_VERSION = int(get_pkg_version().split(".")[1])
 
+import build_libicsneo
+
+build_libicsneo.checkout()
+build_libicsneo.build()
+build_libicsneo.copy()
+
+
 class build(build_module.build):
     def run(self):
-        if platform.system().upper() in ("DARWIN", "LINUX"):
+        if False:  # if platform.system().upper() in ("DARWIN", "LINUX"):
             import build_libicsneo
 
             build_libicsneo.checkout()

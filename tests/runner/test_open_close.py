@@ -86,7 +86,7 @@ class TestOpenClose(unittest.TestCase):
                 self.assertEqual(device.NumberOfClients, 0, f"{device}")
                 d = ics.open_device()
                 first_devices.append(d)
-                self.assertEqual(device.NumberOfClients, 1, f"{device}")
+                self.assertEqual(d.NumberOfClients, 1, f"{device}")
             except ics.RuntimeError as ex:
                 raise RuntimeError(f"Failed to open {device}... Iteration {len(first_devices)} ({ex})")
         self.assertEqual(len(self.devices), len(first_devices))

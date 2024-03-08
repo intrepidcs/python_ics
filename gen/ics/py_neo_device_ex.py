@@ -1,5 +1,6 @@
 import ics
-
+import ctypes
+from typing import Self
 
 class PyNeoDeviceEx(ics.neo_device_ex.neo_device_ex):
     """Wrapper class around ics.neo_device_ex.neo_device_ex to support a more pythonic way of doing things."""
@@ -35,16 +36,16 @@ class PyNeoDeviceEx(ics.neo_device_ex.neo_device_ex):
             self.Options == other.Options and \
             self.pAvailWIFINetwork == other.pAvailWIFINetwork and \
             self.isEthernetDevice == other.isEthernetDevice and \
-            self.MACAddress == other.MACAddress and \
             self.hardwareRev == other.hardwareRev and \
             self.revReserved == other.revReserved and \
-            self.tcpIpAddress == other.tcpIpAddress and \
             self.tcpPort == other.tcpPort
 
     @property
     def _Handle(self):
         """Return the internal device handle from icsneoOpenDevice()"""
-        return self._handle
+        ctypes.pythonapi.PyCapsule_GetPointer.restype = ctypes.c_void_p
+        ctypes.pythonapi.PyCapsule_GetPointer.argtypes = [ctypes.py_object, ctypes.c_char_p]
+        return ctypes.pythonapi.PyCapsule_GetPointer(self._handle, None)
 
     @property
     def Name(self) -> str:
@@ -85,3 +86,12 @@ class PyNeoDeviceEx(ics.neo_device_ex.neo_device_ex):
             return ics.base36enc(self.SerialNumber)
         else:
             raise ValueError(f"Failed to convert SerialNumber {self.SerialNumber} to a valid serial number.")
+
+    def open(self, *args, **kwargs) -> Self:
+        return ics.open_device(self, *args, **kwargs)
+
+    def close(self):
+        return ics.close_device(self)
+
+    def load_default_settings(self):
+        return ics.load_default_settings(self)
