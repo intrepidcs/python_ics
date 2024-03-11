@@ -1,5 +1,7 @@
 import ics
+from ics.ics import SpyMessage
 import ctypes
+from typing import Tuple
 
 class PyNeoDeviceEx(ics.neo_device_ex.neo_device_ex):
     """Wrapper class around ics.neo_device_ex.neo_device_ex to support a more pythonic way of doing things."""
@@ -101,11 +103,11 @@ class PyNeoDeviceEx(ics.neo_device_ex.neo_device_ex):
         return ics.load_default_settings(self)
 
 
-    def transmit_messages(self, *args, **kwargs) -> None:
+    def transmit_messages(self, *args, **kwargs):
         """Transmit messages on the device. Requires the device to be open."""
         return ics.transmit_messages(self, *args, **kwargs)
     
-    def get_messages(self, *args, **kwargs) -> None:
+    def get_messages(self, *args, **kwargs) -> Tuple[SpyMessage, int]:
         """Get messages on the device. Requires the device to be open."""
         return ics.get_messages(self, *args, **kwargs)
 
