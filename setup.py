@@ -13,8 +13,11 @@ from ics_utility import get_pkg_version, create_version_py, create_ics_init
 import pathlib
 from typing import List
 
+# I had this in build_py but there are certain times its not called, for now lets force
+# it to run every single time we call setup. Its quick enough where it shouldn't hurt.
 create_ics_init()
 create_version_py()
+generate_icsneo40_structs.generate_all_files()
 
 # Check for clang stuff here, read the docs doesn't have this so use what is in the repo
 if not os.getenv("READTHEDOCS"):
@@ -24,15 +27,9 @@ if not os.getenv("READTHEDOCS"):
         raise RuntimeError("clang-format is required for building python_ics.")
 
 def get_version():
-    print("DEBUG: GETTING VERSION =================================")
     major = int(get_pkg_version().split(".")[0])
     minor = int(get_pkg_version().split(".")[1])
-    print(f"DEBUG: {major}.{minor} =================================")
     return major, minor
-
-# I had this in build_py but there are certain times its not called, for now lets force
-# it to run every single time we call setup. Its quick enough where it shouldn't hurt.
-
 
 class _build_libicsneo(build_clib):
     def run(self):
@@ -51,11 +48,8 @@ class _build_libicsneo(build_clib):
 
 class _build_ics_py(build_py):
     def run(self):
-        print("Generating python files from icsnVC40.h...")
+        print("Generating python defines from icsnVC40.h...")
         extract_icsneo40_defines.extract()
-        generate_icsneo40_structs.generate_all_files()
-        create_ics_init()
-        create_version_py()
 
         print("Copy python source files over to gen...")
         src_path = pathlib.Path("./src/")
