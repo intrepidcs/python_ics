@@ -2,13 +2,12 @@
 import ctypes
 import enum
 
-from ics.structures.macsec_mpls_outer import *
-from ics.structures.macsec_packet_type import *
-from ics.structures.macsec_vlantag import *
+from ics.structures.macsec_mpls_outer_t import *
+from ics.structures.macsec_vlantag_t import *
 
 
-class mac_sec_rule(ctypes.Structure):
-    _pack_ = 2
+class Nameless1916(ctypes.Structure):
+    _pack_ = 1
     _fields_ = [
         ('index', ctypes.c_uint8),
         ('key_MAC_DA', ctypes.c_uint8 * 6),
@@ -17,19 +16,19 @@ class mac_sec_rule(ctypes.Structure):
         ('mask_MAC_SA', ctypes.c_uint8 * 6),
         ('key_Ethertype', ctypes.c_uint16),
         ('mask_Ethertype', ctypes.c_uint16),
-        ('key_vlantag_outer1', MACSEC_VLANTAG),
-        ('key_MPLS_outer1', MACSEC_MPLS_OUTER),
-        ('mask_vlantag_outer1', MACSEC_VLANTAG),
-        ('mask_MPLS_outer1', MACSEC_MPLS_OUTER),
-        ('key_vlantag_outer2', MACSEC_VLANTAG),
-        ('key_MPLS_outer2', MACSEC_MPLS_OUTER),
-        ('mask_vlantag_outer2', MACSEC_VLANTAG),
-        ('mask_MPLS_outer2', MACSEC_MPLS_OUTER),
+        ('key_vlantag_outer1', MACSEC_VLANTAG_t),
+        ('key_MPLS_outer1', MACSEC_MPLS_OUTER_t),
+        ('mask_vlantag_outer1', MACSEC_VLANTAG_t),
+        ('mask_MPLS_outer1', MACSEC_MPLS_OUTER_t),
+        ('key_vlantag_outer2', MACSEC_VLANTAG_t),
+        ('key_MPLS_outer2', MACSEC_MPLS_OUTER_t),
+        ('mask_vlantag_outer2', MACSEC_VLANTAG_t),
+        ('mask_MPLS_outer2', MACSEC_MPLS_OUTER_t),
         ('key_bonus_data', ctypes.c_uint16),
         ('mask_bonus_data', ctypes.c_uint16),
         ('key_tag_match_bitmap', ctypes.c_uint8),
         ('mask_tag_match_bitmap', ctypes.c_uint8),
-        ('key_packet_type', ctypes.c_int32),
+        ('key_packet_type', ctypes.c_uint8),
         ('mask_packet_type', ctypes.c_uint8),
         ('key_inner_vlan_type', ctypes.c_uint16),
         ('mask_inner_vlan_type', ctypes.c_uint16),
@@ -45,6 +44,17 @@ class mac_sec_rule(ctypes.Structure):
     ]
 
 
-MACSecRule_t = mac_sec_rule
-MACSecRule = mac_sec_rule
+
+class mac_sec_rule_(ctypes.Union):
+    _pack_ = 1
+    _anonymous_  = ('Nameless1916',)
+    _fields_ = [
+        ('Nameless1916', Nameless1916),
+        ('byte', ctypes.c_uint8 * 88),
+    ]
+
+
+_MACSecRule = mac_sec_rule_
+MACSecRule_t = mac_sec_rule_
+MACSecRule_ = mac_sec_rule_
 

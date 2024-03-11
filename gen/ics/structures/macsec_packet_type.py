@@ -19,6 +19,5 @@ class macsec_packet_type(enum.IntEnum):
     MACSEC_PACKET_UNSUPPORTED_TYPE  = 6
 
 
-MACSEC_PACKET_TYPE_t = macsec_packet_type
 MACSEC_PACKET_TYPE = macsec_packet_type
 

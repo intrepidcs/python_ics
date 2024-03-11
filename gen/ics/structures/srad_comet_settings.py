@@ -26,7 +26,7 @@ class flags(ctypes.Structure):
 
 
 
-class Nameless26218(ctypes.Structure):
+class Nameless49459(ctypes.Structure):
     _pack_ = 2
     _fields_ = [
         ('network_enables', ctypes.c_uint16),
@@ -39,10 +39,10 @@ class Nameless26218(ctypes.Structure):
 
 class network_enables(ctypes.Union):
     _pack_ = 2
-    _anonymous_  = ('Nameless26218',)
+    _anonymous_  = ('Nameless49459',)
     _fields_ = [
         ('word', ctypes.c_uint64),
-        ('Nameless26218', Nameless26218),
+        ('Nameless49459', Nameless49459),
     ]
 
 

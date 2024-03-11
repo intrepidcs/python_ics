@@ -4,7 +4,7 @@ import enum
 
 
 
-class Nameless14534(ctypes.Structure):
+class Nameless23244(ctypes.Structure):
     _fields_ = [
         ('', ctypes.c_uint32, 8),
         ('PacketType', ctypes.c_uint32, 8),
@@ -14,16 +14,16 @@ class Nameless14534(ctypes.Structure):
 
 
 
-class Nameless18511(ctypes.Union):
-    _anonymous_  = ('Nameless14534',)
+class Nameless35608(ctypes.Union):
+    _anonymous_  = ('Nameless23244',)
     _fields_ = [
         ('ArbIDOrHeader', ctypes.c_uint32),
-        ('Nameless14534', Nameless14534),
+        ('Nameless23244', Nameless23244),
     ]
 
 
 
-class Nameless40028(ctypes.Structure):
+class Nameless20259(ctypes.Structure):
     _fields_ = [
         ('APICode', ctypes.c_uint32, 8),
         ('', ctypes.c_uint32, 24),
@@ -31,35 +31,35 @@ class Nameless40028(ctypes.Structure):
 
 
 
-class Nameless59525(ctypes.Union):
-    _anonymous_  = ('Nameless40028',)
+class Nameless39357(ctypes.Union):
+    _anonymous_  = ('Nameless20259',)
     _fields_ = [
         ('StatusBitField3', ctypes.c_uint32),
-        ('Nameless40028', Nameless40028),
+        ('Nameless20259', Nameless20259),
     ]
 
 
 
-class Nameless5189(ctypes.Structure):
-    _anonymous_  = ('Nameless59525',)
+class Nameless20257(ctypes.Structure):
+    _anonymous_  = ('Nameless39357',)
     _fields_ = [
-        ('Nameless59525', Nameless59525),
+        ('Nameless39357', Nameless39357),
         ('StatusBitField4', ctypes.c_uint32),
     ]
 
 
 
-class Nameless54558(ctypes.Union):
-    _anonymous_  = ('Nameless5189',)
+class Nameless60883(ctypes.Union):
+    _anonymous_  = ('Nameless20257',)
     _fields_ = [
-        ('Nameless5189', Nameless5189),
+        ('Nameless20257', Nameless20257),
         ('AckBytes', ctypes.c_uint8 * 8),
     ]
 
 
 
 class ics_spy_messagew_bms(ctypes.Structure):
-    _anonymous_  = ('Nameless18511', 'Nameless54558')
+    _anonymous_  = ('Nameless35608', 'Nameless60883')
     _fields_ = [
         ('StatusBitField', ctypes.c_uint32),
         ('StatusBitField2', ctypes.c_uint32),
@@ -78,9 +78,9 @@ class ics_spy_messagew_bms(ctypes.Structure):
         ('NumberBytesData', ctypes.c_uint8),
         ('NetworkID2', ctypes.c_uint8),
         ('DescriptionID', ctypes.c_uint16),
-        ('Nameless18511', Nameless18511),
+        ('Nameless35608', Nameless35608),
         ('Data', ctypes.c_uint8 * 8),
-        ('Nameless54558', Nameless54558),
+        ('Nameless60883', Nameless60883),
         ('ExtraDataPtr', ctypes.c_void_p),
         ('MiscData', ctypes.c_uint8),
         ('Reserved', ctypes.c_uint8 * 3),

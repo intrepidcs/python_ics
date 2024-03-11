@@ -2,23 +2,23 @@
 import ctypes
 import enum
 
-from ics.structures.mac_sec_flags import *
-from ics.structures.mac_sec_map import *
-from ics.structures.mac_sec_rule import *
-from ics.structures.mac_sec_sa import *
-from ics.structures.mac_sec_sc import *
-from ics.structures.mac_sec_sec_y import *
+from ics.structures.mac_sec_flags_ import *
+from ics.structures.mac_sec_map_ import *
+from ics.structures.mac_sec_rule_ import *
+from ics.structures.mac_sec_sa_ import *
+from ics.structures.mac_sec_sc_ import *
+from ics.structures.mac_sec_sec_y_ import *
 
 
 class macsec_config(ctypes.Structure):
-    _pack_ = 2
+    _pack_ = 1
     _fields_ = [
-        ('flags', MACSecFlags),
-        ('rule', MACSecRule * 2),
-        ('map', MACSecMap * 2),
-        ('secy', MACSecSecY * 2),
-        ('sc', MACSecSc * 2),
-        ('sa', MACSecSa * 4),
+        ('flags', MACSecFlags_t),
+        ('rule', MACSecRule_t * 2),
+        ('map', MACSecMap_t * 2),
+        ('secy', MACSecSecY_t * 2),
+        ('sc', MACSecSc_t * 2),
+        ('sa', MACSecSa_t * 4),
     ]
 
 

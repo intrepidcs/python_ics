@@ -4,17 +4,15 @@ import enum
 
 
 
-class macsec_validateframe(enum.IntEnum):
+class epsilon10_gphyfw(enum.IntEnum):
     """A ctypes-compatible IntEnum superclass."""
     @classmethod
     def from_param(cls, obj):
         return int(obj)
 
-    MACSEC_VF_DISABLED  = 0
-    MACSEC_VF_CHECK  = 1
-    MACSEC_VF_STRICT  = 2
-    MACSEC_VF_NA  = 3
+    FLASH_ACCESSORY_EPSILON_10G_PHY_FW_0_3_7_0 = 0
 
 
-MACSEC_VALIDATEFRAME = macsec_validateframe
+_epsilon10GPHYFW = epsilon10_gphyfw
+epsilon10GPHYFW = epsilon10_gphyfw
 

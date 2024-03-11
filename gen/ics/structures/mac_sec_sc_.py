@@ -4,8 +4,8 @@ import enum
 
 
 
-class mac_sec_sc(ctypes.Structure):
-    _pack_ = 2
+class Nameless8462(ctypes.Structure):
+    _pack_ = 1
     _fields_ = [
         ('index', ctypes.c_uint8),
         ('secYIndex', ctypes.c_uint8),
@@ -21,6 +21,17 @@ class mac_sec_sc(ctypes.Structure):
     ]
 
 
-MACSecSc_t = mac_sec_sc
-MACSecSc = mac_sec_sc
+
+class mac_sec_sc_(ctypes.Union):
+    _pack_ = 1
+    _anonymous_  = ('Nameless8462',)
+    _fields_ = [
+        ('Nameless8462', Nameless8462),
+        ('byte', ctypes.c_uint8 * 24),
+    ]
+
+
+_MACSecSc = mac_sec_sc_
+MACSecSc_t = mac_sec_sc_
+MACSecSc_ = mac_sec_sc_
 
