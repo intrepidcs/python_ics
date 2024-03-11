@@ -16,6 +16,5 @@ class macsec_cipher_suite(enum.IntEnum):
     MACSEC_CIPHER_GCM_AES_256_XPN  = 3
 
 
-MACSEC_CIPHER_SUITE_t = macsec_cipher_suite
 MACSEC_CIPHER_SUITE = macsec_cipher_suite
 

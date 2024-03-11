@@ -4,8 +4,8 @@ import enum
 
 
 
-class mac_sec_map(ctypes.Structure):
-    _pack_ = 2
+class Nameless63799(ctypes.Structure):
+    _pack_ = 1
     _fields_ = [
         ('index', ctypes.c_uint8),
         ('sectag_sci', ctypes.c_uint64),
@@ -19,6 +19,17 @@ class mac_sec_map(ctypes.Structure):
     ]
 
 
-MACSecMap_t = mac_sec_map
-MACSecMap = mac_sec_map
+
+class mac_sec_map_(ctypes.Union):
+    _pack_ = 1
+    _anonymous_  = ('Nameless63799',)
+    _fields_ = [
+        ('Nameless63799', Nameless63799),
+        ('byte', ctypes.c_uint8 * 20),
+    ]
+
+
+_MACSecMap = mac_sec_map_
+MACSecMap_t = mac_sec_map_
+MACSecMap_ = mac_sec_map_
 

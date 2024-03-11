@@ -4,7 +4,7 @@ import enum
 
 
 
-class Nameless28192(ctypes.Structure):
+class Nameless5189(ctypes.Structure):
     _fields_ = [
         ('RegAddr', ctypes.c_uint32, 16),
         ('PhyAddr', ctypes.c_uint32, 5),
@@ -14,16 +14,16 @@ class Nameless28192(ctypes.Structure):
 
 
 
-class Nameless18906(ctypes.Union):
-    _anonymous_  = ('Nameless28192',)
+class Nameless54558(ctypes.Union):
+    _anonymous_  = ('Nameless5189',)
     _fields_ = [
         ('ArbIDOrHeader', ctypes.c_uint32),
-        ('Nameless28192', Nameless28192),
+        ('Nameless5189', Nameless5189),
     ]
 
 
 
-class Nameless3555(ctypes.Structure):
+class Nameless36278(ctypes.Structure):
     _fields_ = [
         ('StatusBitField3', ctypes.c_uint32),
         ('StatusBitField4', ctypes.c_uint32),
@@ -31,17 +31,17 @@ class Nameless3555(ctypes.Structure):
 
 
 
-class Nameless45381(ctypes.Union):
-    _anonymous_  = ('Nameless3555',)
+class Nameless5269(ctypes.Union):
+    _anonymous_  = ('Nameless36278',)
     _fields_ = [
-        ('Nameless3555', Nameless3555),
+        ('Nameless36278', Nameless36278),
         ('AckBytes', ctypes.c_uint8 * 8),
     ]
 
 
 
 class ics_spy_message_mdio(ctypes.Structure):
-    _anonymous_  = ('Nameless18906', 'Nameless45381')
+    _anonymous_  = ('Nameless54558', 'Nameless5269')
     _fields_ = [
         ('StatusBitField', ctypes.c_uint32),
         ('StatusBitField2', ctypes.c_uint32),
@@ -60,9 +60,9 @@ class ics_spy_message_mdio(ctypes.Structure):
         ('NumberBytesData', ctypes.c_uint8),
         ('NetworkID2', ctypes.c_uint8),
         ('DescriptionID', ctypes.c_uint16),
-        ('Nameless18906', Nameless18906),
+        ('Nameless54558', Nameless54558),
         ('Data', ctypes.c_uint8 * 8),
-        ('Nameless45381', Nameless45381),
+        ('Nameless5269', Nameless5269),
         ('ExtraDataPtr', ctypes.c_void_p),
         ('MiscData', ctypes.c_uint8),
         ('Reserved', ctypes.c_uint8 * 3),
