@@ -65,14 +65,15 @@ class BaseTests:
             tx_msg.ArbIDOrHeader = 0x01
             tx_msg.NetworkID = self.netid
             tx_msg.Protocol = ics.SPY_PROTOCOL_CANFD
-            tx_msg.StatusBitField = ics.SPY_STATUS_CANFD
+            tx_msg.StatusBitField = ics.SPY_STATUS_CANFD | ics.SPY_STATUS_NETWORK_MESSAGE_TYPE
             tx_msg.StatusBitField3 = ics.SPY_STATUS3_CANFD_BRS | ics.SPY_STATUS3_CANFD_FDF
             tx_msg.ExtraDataPtr = data
-            for device in reversed(self.devices):
-                print(device)
+            for device in self.devices:
                 # Clear any messages in the buffer
                 _, __ = device.get_messages()
                 device.transmit_messages(tx_msg)
+                # CAN ACK timeout in firmware is 200ms, so wait 300ms for ACK
+                time.sleep(0.3)
                 start = time.time()
                 messages, error_count = device.get_messages(False, 1)
                 elapsed = time.time() - start
@@ -94,7 +95,7 @@ class BaseTests:
                     self.assertEqual(
                         tx_msg.StatusBitField | ics.SPY_STATUS_TX_MSG,
                         message.StatusBitField,
-                        f"{str(device)} {hex(tx_msg.StatusBitField)} {hex(message.StatusBitField)}",
+                        f"{str(device)} {hex(tx_msg.StatusBitField| ics.SPY_STATUS_TX_MSG)} {hex(message.StatusBitField)}",
                     )
                     self.assertEqual(
                         tx_msg.StatusBitField3, message.StatusBitField3, f"{str(device)} {hex(message.StatusBitField3)}"
