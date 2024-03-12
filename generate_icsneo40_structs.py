@@ -8,11 +8,9 @@ import random
 from pathlib import Path
 import sys
 import ctypes #used with eval...
+from ics_utility import GEN_ICS_DIR
 
 debug_print = False
-
-
-OUTPUT_DIR = Path("./gen/ics")
 
 __unique_numbers = []
 
@@ -628,7 +626,7 @@ def generate(filename="include/ics/icsnVC40.h"):
     with open(f"{basename}.enums.json", "w+") as f:
         f.write(j)
     # generate the python files
-    output_dir = OUTPUT_DIR / "structures"
+    output_dir = GEN_ICS_DIR / "structures"
     print(f"Removing {output_dir}...")
     try:
         shutil.rmtree(output_dir)
@@ -665,10 +663,10 @@ def generate(filename="include/ics/icsnVC40.h"):
         "crt_float_",
         "crt_double_",
         "ndis_adapter_information",
-        "NeoDevice",
-        "neo_device",
-        "NeoDeviceEx",
-        "neo_device_ex",
+        #"NeoDevice",
+        #"neo_device",
+        #"NeoDeviceEx",
+        #"neo_device_ex",
         "icsSpyMessage",
         "icsSpyMessageJ1850",
         "ics_spy_message",
@@ -724,7 +722,7 @@ def generate(filename="include/ics/icsnVC40.h"):
             f.write('",\n')
         f.write("]\n")
     # write a hidden_import python file for pyinstaller
-    hidden_imports_path = OUTPUT_DIR / "hiddenimports.py"
+    hidden_imports_path = GEN_ICS_DIR / "hiddenimports.py"
     with open(hidden_imports_path, "w+") as f:
         f.write("hidden_imports = [\n")
         for file_name in file_names:
@@ -737,7 +735,7 @@ def generate(filename="include/ics/icsnVC40.h"):
         f.write("]\n\n")
 
     # Verify We can at least import all of the modules - quick check to make sure parser worked.
-    ics_module_path = OUTPUT_DIR.parent.resolve()
+    ics_module_path = GEN_ICS_DIR.parent.resolve()
     # Add the module to the eval sys.path.
     eval("""sys.path.insert(0, f"{ics_module_path}")""")
     for file_name in file_names:
@@ -908,42 +906,13 @@ def generate_pyfile(c_object, path):
         _write_c_object(f, c_object)
     return fname, fname_with_path
 
-def create_ics_init():
-    fdata = \
-"""try:
-    import ics.__version
-    __version__ = ics.__version.__version__
-    __full_version__ = ics.__version.__full_version__
-except Exception as ex:
-    print(ex)
-
-try:
-    # Release environment
-    #print("Release")
-    from ics.ics import *
-    from ics.structures import *
-    from ics.hiddenimports import hidden_imports
-except Exception as ex:
-    # Build environment
-    #print("Debug", ex)
-    from ics import *
-    from ics.structures import *
-    from ics.hiddenimports import hidden_imports
-
-"""
-    init_path = OUTPUT_DIR / "__init__.py"
-    print(f"Creating '{init_path}'...")
-    with open(init_path, "w+") as f:
-        f.write(fdata)
-
 def generate_all_files():
     import sys
     import os
     import pathlib
 
-    print(f"Creating directory '{OUTPUT_DIR}'...")
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    create_ics_init()
+    print(f"Creating directory '{GEN_ICS_DIR}'...")
+    GEN_ICS_DIR.mkdir(parents=True, exist_ok=True)
     filenames = ("icsnVC40.h", "icsnVC40Internal.h")
     for filename in filenames:
         path = pathlib.Path("include/ics/")
