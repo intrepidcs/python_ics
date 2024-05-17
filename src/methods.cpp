@@ -3470,6 +3470,43 @@ PyObject* meth_get_accessory_firmware_version(PyObject* self, PyObject* args)
     }
 }
 
+PyObject* meth_set_safe_boot_mode(PyObject* self, PyObject* args)
+{
+    PyObject* obj = NULL;
+    bool enable = true;
+    if (!PyArg_ParseTuple(args, arg_parse("Ob:", __FUNCTION__), &obj, &enable)) {
+        return NULL;
+    }
+
+    if (!PyNeoDevice_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(),
+                                 "Argument must be of type " MODULE_NAME "." NEO_DEVICE_OBJECT_NAME);
+    }
+    ICS_HANDLE handle = PyNeoDevice_GetHandle(obj);
+
+    try {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        // int _stdcall icsneoSetSafeBootMode(void* hObject, const uint8_t enable)
+        ice::Function<int __stdcall(ICS_HANDLE, const uint8_t)> icsneoSetSafeBootMode(
+            lib, "icsneoSetSafeBootMode");
+
+        unsigned int accessory_version = 0;
+        int function_error = 0;
+        Py_BEGIN_ALLOW_THREADS;
+        if (!icsneoSetSafeBootMode(handle, enable)) {
+            Py_BLOCK_THREADS return set_ics_exception(exception_runtime_error(), "icsneoSetSafeBootMode() Failed");
+        }
+        Py_END_ALLOW_THREADS;
+        Py_RETURN_NONE;
+    } catch (ice::Exception& ex) {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+}
+
 PyObject* meth_override_library_name(PyObject* self, PyObject* args)
 {
     const char* name = NULL;

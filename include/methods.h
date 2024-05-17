@@ -101,6 +101,7 @@ extern "C"
     PyObject* meth_get_all_chip_versions(PyObject* self, PyObject* args); // icsneoGetAllChipVersions
     PyObject* meth_flash_accessory_firmware(PyObject* self, PyObject* args);
     PyObject* meth_get_accessory_firmware_version(PyObject* self, PyObject* args);
+    PyObject* meth_set_safe_boot_mode(PyObject* self, PyObject* args);
 
 #ifdef _cplusplus
 }
@@ -1914,6 +1915,25 @@ extern "C"
                 "\tNone\n"                                                                                             \
                 "\n"
 
+#define _DOC_SET_SAFE_BOOT_MODE                                                                                        \
+    MODULE_NAME ".set_safe_boot_mode(device, enable: bool) -> bool\n"                                                  \
+                "\n"                                                                                                   \
+                "Sets safe boot mode. If not sure, don't use this method.\n"                                           \
+                "FIRE3 will reboot to safe boot mode when called with enable = True.\n"                                \
+                "\n"                                                                                                   \
+                "Args:\n"                                                                                              \
+                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
+                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\n"                                                                                                   \
+                "\tenable (:class:`bool`): :class:`bool`: Tells the device to enter safe boot mode upon restart.\n\n"  \
+                "\n"                                                                                                   \
+                "Raises:\n"                                                                                            \
+                "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
+                "\n"                                                                                                   \
+                "Returns:\n"                                                                                           \
+                "\tNone\n"                                                                                             \
+                "\n"
+
 static PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("find_devices",
                           "icsneoFindNeoDevices",
@@ -2423,6 +2443,12 @@ static PyMethodDef IcsMethods[] = {
                           meth_get_accessory_firmware_version,
                           METH_VARARGS,
                           _DOC_GET_ACCESSORY_FIRMWARE_VERSION),
+    _EZ_ICS_STRUCT_METHOD("set_safe_boot_mode",
+                          "icsneoSetSafeBootMode",
+                          "SetSafeBootMode",
+                          meth_set_safe_boot_mode,
+                          METH_VARARGS,
+                          _DOC_SET_SAFE_BOOT_MODE),
 
     { "override_library_name", (PyCFunction)meth_override_library_name, METH_VARARGS, _DOC_OVERRIDE_LIBRARY_NAME },
     { "get_library_path", (PyCFunction)meth_get_library_path, METH_NOARGS, "" },
