@@ -1,5 +1,11 @@
 name: Run Unit Tests
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      -'arm/**'
+  pull_request:
+    branches:
+      -'arm/**'
 
 jobs:
   test_arm64:
