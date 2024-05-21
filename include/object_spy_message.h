@@ -325,7 +325,7 @@ static int spy_message_object_setattr(PyObject* o, PyObject* name, PyObject* val
                 obj->msg.Data[i] = (unsigned char)PyLong_AsLong(data);
             }
         }
-        obj->msg.NumberBytesData = PyObject_Length(value);
+        obj->msg.NumberBytesData = static_cast<uint8_t>(PyObject_Length(value));
         return 0;
     } else if (PyUnicode_CompareWithASCIIString(name, "AckBytes") == 0) {
         // Make sure we are a tuple and len() == 8
@@ -363,7 +363,7 @@ static int spy_message_object_setattr(PyObject* o, PyObject* name, PyObject* val
             } else {
                 ((spy_message_j1850_object*)obj)->msg.Header[i] = (unsigned char)PyLong_AsLong(data);
             }
-            obj->msg.NumberBytesHeader = PyObject_Length(value);
+            obj->msg.NumberBytesHeader = static_cast<uint8_t>(PyObject_Length(value));
         }
         return 0;
     } else if (PyUnicode_CompareWithASCIIString(name, "Protocol") == 0) {
@@ -387,7 +387,7 @@ static int spy_message_object_setattr(PyObject* o, PyObject* name, PyObject* val
         obj->msg.ExtraDataPtr = new unsigned char[length];
         // Some newer protocols are packing the length into NumberBytesHeader also so lets handle it here...
         if (obj->msg.Protocol == SPY_PROTOCOL_A2B || obj->msg.Protocol == SPY_PROTOCOL_ETHERNET) {
-            obj->msg.NumberBytesHeader = length >> 8;
+            obj->msg.NumberBytesHeader = static_cast<uint8_t>(length >> 8);
         }
         obj->msg.NumberBytesData = length & 0xFF;
         if (obj->msg.Protocol != SPY_PROTOCOL_ETHERNET)
