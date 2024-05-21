@@ -1921,8 +1921,8 @@ extern "C"
                 "FIRE3 will reboot to safe boot mode when called with enable = True.\n"                                \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:`" MODULE_NAME "." NEO_DEVICE_OBJECT_NAME "`): :class:`" MODULE_NAME                 \
-                "." NEO_DEVICE_OBJECT_NAME "`\n\n"                                                                     \
+                "\tdevice (:class:`" MODULE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
+                ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "\tenable (:class:`bool`): :class:`bool`: Tells the device to enter safe boot mode upon restart.\n\n"  \
                 "\n"                                                                                                   \
