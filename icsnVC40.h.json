@@ -1,6 +1,25 @@
 [
     {
         "names": [
+            "__fsid_t",
+            "fsid_t__"
+        ],
+        "data_type": "Struct",
+        "packing": 0,
+        "is_anonymous": false,
+        "members": [
+            {
+                "name": "__val",
+                "data_type": "int",
+                "array_length": 2,
+                "bitfield_size": 0,
+                "is_enum": false,
+                "enum_value": null
+            }
+        ]
+    },
+    {
+        "names": [
             "SExtendedDataFlashHeader",
             "ExtendedDataFlashHeader_t"
         ],

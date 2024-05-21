@@ -24,8 +24,8 @@ classifiers=[
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
     ]
-license = {file = "LICENSE"}
 
 [project.urls]
 Homepage = "https://intrepidcs.com"
@@ -45,7 +45,7 @@ requires = [
 [tool.cibuildwheel]
 build = "{*-win32,*-win_amd64,*-macosx_universal2,*-manylinux_x86_64,*-manylinux_aarch64}"
 skip = "cp36-* pp* *-manylinux_i686 *-musllinux_*"
-environment = {DISTUTILS_DEBUG=1}
+environment = {DISTUTILS_DEBUG=1, MACOSX_DEPLOYMENT_TARGET="10.13"}
 before-build = "python -m pip install wheel"
 manylinux-x86_64-image = "quay.io/pypa/manylinux_2_28_x86_64"
 

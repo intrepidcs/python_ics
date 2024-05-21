@@ -184,8 +184,7 @@
     <ClInclude Include="..\include\ics\icsnVC40Internal.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClInclude>
-    <ClInclude Include="..\include\methods.h" />
-    <ClInclude Include="..\include\object_neo_device.h" />
+    <ClInclude Include="..\include\methods.h" /> 
     <ClInclude Include="..\include\object_spy_message.h" />
     <ClInclude Include="..\include\setup_module_auto_defines.h" />
   </ItemGroup>
@@ -196,7 +195,6 @@
     <ClCompile Include="..\src\ice\ice_library.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\methods.cpp" />
-    <ClCompile Include="..\src\object_neo_device.cpp" />
     <ClCompile Include="..\src\object_spy_message.cpp" />
     <ClCompile Include="..\src\setup_module_auto_defines.cpp" />
   </ItemGroup>
