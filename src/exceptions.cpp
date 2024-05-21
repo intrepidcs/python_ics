@@ -2,8 +2,6 @@
 #include "defines.h"
 #include <sstream>
 
-#include "object_neo_device.h"
-
 static PyObject* IcsArgumentError = NULL;
 static PyObject* IcsRuntimeError = NULL;
 
@@ -66,38 +64,6 @@ PyObject* _set_ics_exception(PyObject* exception, char* msg, const char* func_na
         function.erase(loc, 5);
     }
     ss << "Error: " << function << "(): " << msg;
-    if (!exception) {
-        PyErr_SetString(PyExc_Exception, ss.str().c_str());
-    } else {
-        PyErr_SetString(exception, ss.str().c_str());
-    }
-    return NULL;
-}
-
-PyObject* _set_ics_exception_dev(PyObject* exception, PyObject* obj, char* msg, const char* func_name)
-{
-    std::stringstream ss;
-    std::string function = std::string(func_name);
-    auto loc = function.find("meth_");
-    if (loc != std::string::npos) {
-        function.erase(loc, 5);
-    }
-    ss << "Error: " << function << "(): " << msg;
-    if (obj && PyNeoDevice_CheckExact(obj)) {
-        ss << " (";
-        // Grab the String "name" out of the NeoDeviceObject
-        char* name = PyUniStr_AsStrOrUTF8(PyNeoDevice_GetNeoDevice(obj)->name);
-        if (name) {
-            ss << name << " ";
-        }
-        char* b36sn = pyics_base36enc(PyNeoDevice_GetSerialNumber(obj));
-        ss << PyNeoDevice_GetSerialNumber(obj);
-        if (b36sn != NULL && PyNeoDevice_GetSerialNumber(obj) >= MIN_BASE36_SERIAL /* "0A0000" */) {
-            ss << " - " << b36sn << ")";
-        } else {
-            ss << ")";
-        }
-    }
     if (!exception) {
         PyErr_SetString(PyExc_Exception, ss.str().c_str());
     } else {

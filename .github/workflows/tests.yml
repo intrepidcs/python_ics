@@ -1,0 +1,32 @@
+name: Run Unit Tests
+on:
+  push:
+    branches:
+      -'arm/**'
+  pull_request:
+    branches:
+      -'arm/**'
+
+jobs:
+  test_arm64:
+    if: github.repository == 'intrepidcs/python_ics'
+    name: Linux ARM64 unit tests
+    runs-on: [ self-hosted, Linux, ARM64, Hardware ]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0 # needed for history/tags
+
+      - name: Setup Python
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install .
+      
+      - name: Run unit tests
+        run: |
+          source .venv/bin/activate
+          sudo setcap cap_net_admin,cap_net_raw+ep $(realpath $(which python))
+          python -m unittest discover -s tests.runner --verbose
