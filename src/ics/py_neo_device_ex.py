@@ -477,3 +477,7 @@ class PyNeoDeviceEx(ics.neo_device_ex.neo_device_ex):
     def write_sdcard(self, *args, **kwargs):
         "See ics.write_sdcard for details on arguments."
         return ics.write_sdcard(self, *args, **kwargs)
+
+    def set_safe_boot_mode(self, *args, **kwargs):
+        "See ics.set_safe_boot_mode for details on arguments."
+        return ics.set_safe_boot_mode(self, *args, **kwargs)
