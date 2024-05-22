@@ -1,0 +1,51 @@
+name: Build
+
+on: [push, pull_request]
+
+jobs:
+  build_wheels:
+    name: Build wheels on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-22.04,]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0 # needed for history/tags
+
+      # Used to host cibuildwheel
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12' 
+
+      - name: Get python_ics version
+        uses: mtkennerly/dunamai-action@v1
+        with:
+          env-var: PYTHON_ICS_VERSION
+          args: --format "v{base}-{commit}-{timestamp}"
+      - name: Print python_ics version
+        run: echo $PYTHON_ICS_VERSION
+      
+      - name: Install cibuildwheel
+        run: python setup.py sdist
+
+      - name: Build wheels
+        run: python -m cibuildwheel --output-dir wheelhouse
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: python_ics-sdist-${{ matrix.os }}-${{ env.PYTHON_ICS_VERSION }}
+          path: ./dist/*.tar.gz
+          if-no-files-found: error
+      
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: python_ics-sdist-*
+          merge-multiple: true
+          path: ./dist/
