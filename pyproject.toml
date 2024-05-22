@@ -51,6 +51,7 @@ manylinux-x86_64-image = "quay.io/pypa/manylinux_2_28_x86_64"
 
 [tool.cibuildwheel.linux]
 before-build = "dnf install -y cmake clang clang-tools-extra flex bison"
+archs = "auto aarch64"
 
 [tool.cibuildwheel.macos]
 archs = ["universal2"]
