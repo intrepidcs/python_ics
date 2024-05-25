@@ -1,4 +1,4 @@
-name: Build
+name: SDist
 
 on: [push, pull_request]
 
@@ -30,11 +30,11 @@ jobs:
       - name: Print python_ics version
         run: echo $PYTHON_ICS_VERSION
       
-      - name: Install cibuildwheel
-        run: python setup.py sdist
+      - name: Install requirements for sdist building
+        run: python -m pip install -r requirements.txt
 
-      - name: Build wheels
-        run: python -m cibuildwheel --output-dir wheelhouse
+      - name: Compiling sdist
+        run: python setup.py sdist
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
