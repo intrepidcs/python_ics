@@ -8,13 +8,20 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-22.04, windows-2022, macOS-14]
+        os: [ubuntu-24.04, windows-2022, macOS-14]
 
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
           fetch-depth: 0 # needed for history/tags
+
+      # Enable emulation for aarch64
+      - name: Set up QEMU
+        if: runner.os == 'Linux'
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: all
 
       # Used to host cibuildwheel
       - name: Set up Python 3.12
