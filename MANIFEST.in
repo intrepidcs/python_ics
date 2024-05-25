@@ -1,3 +1,4 @@
 recursive-include include *.h
 include extract_icsneo40_defines.py
 include generate_icsneo40_structs.py
+include ics_utility.py
