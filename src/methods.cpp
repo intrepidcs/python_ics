@@ -1514,7 +1514,7 @@ PyObject* meth_flash_devices(PyObject* self, PyObject* args)
         // Get the NeoDeviceEx from PyNeoDeviceEx
         Py_buffer buffer = {};
         NeoDeviceEx* nde = NULL;
-        if (!PyNeoDeviceEx_GetNeoDeviceEx(device, &buffer, &nde)) {
+        if (!PyNeoDeviceEx_GetNeoDeviceEx(obj, &buffer, &nde)) {
             PyBuffer_Release(&buffer);
             return NULL;
         }
