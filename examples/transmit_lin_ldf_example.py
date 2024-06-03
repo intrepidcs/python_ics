@@ -10,14 +10,6 @@ def parse_ldf():
     return ldfparser.parse_ldf(path)
 
 
-def dev_name(device):
-    # Return a friendly name of the device (ie. neoVI FIRE2 CY1234)
-    if int("0A0000", 36) <= device.SerialNumber <= int("ZZZZZZ", 36):
-        return device.Name + " " + ics.base36enc(device.SerialNumber)
-    else:
-        return device.Name + " " + str(device.SerialNumber)
-
-
 def open_device(index=0):
     device = None
     # ics.open_device() won't open a device if we have handles open already
@@ -25,12 +17,12 @@ def open_device(index=0):
     devices = ics.find_devices()
     print(
         "Opening Device {} (Open Client handles: {})...".format(
-            dev_name(devices[index]), devices[index].NumberOfClients
+            devices[index], devices[index].NumberOfClients
         )
     )
     ics.open_device(devices[index])
     device = devices[index]
-    print("Opened Device %s." % dev_name(device))
+    print("Opened Device %s." % device)
     return device
 
 
