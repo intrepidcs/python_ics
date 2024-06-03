@@ -47,14 +47,6 @@ def get_device_specific_settings(s: s_device_settings) -> object:
     return getattr(s.Settings, setting_map[s.DeviceSettingType])
 
 
-def dev_name(device):
-    # Return a friendly name of the device (ie. neoVI FIRE2 CY1234)
-    if int("0A0000", 36) <= device.SerialNumber <= int("ZZZZZZ", 36):
-        return device.Name + " " + ics.base36enc(device.SerialNumber)
-    else:
-        return device.Name + " " + str(device.SerialNumber)
-
-
 def print_settings(device_specific_settings):
     if hasattr(device_specific_settings, "lin1"):
         print(f"LIN 1 Baudrate: {settings.Settings.fire3.lin1.Baudrate}")
@@ -67,7 +59,7 @@ if __name__ == "__main__":
     try:
         # Open the first device
         device = ics.open_device()
-        print(f"Opened Device {dev_name(device)} (Open Client handles: {device.NumberOfClients})...")
+        print(f"Opened Device {device} (Open Client handles: {device.NumberOfClients})...")
     except ics.RuntimeError as ex:
         print(f"Failed to open first device: {ex}")
         exit(1)

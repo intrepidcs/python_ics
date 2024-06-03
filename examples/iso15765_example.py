@@ -6,12 +6,6 @@ enable_use_server = True
 
 
 # Helper Functions ##########################################################
-def dev_name(device):
-    if int("0A0000", 36) <= device.SerialNumber <= int("ZZZZZZ", 36):
-        return device.Name + " " + ics.base36enc(device.SerialNumber)
-    else:
-        return device.Name + " " + str(device.SerialNumber)
-
 
 def print_message(msg):
     if not enable_print_message:
@@ -43,7 +37,7 @@ def open_device(index=0):
         devices = ics.find_devices()
         print(
             "Opening Device {} (Open Client handles: {})...".format(
-                dev_name(devices[index]), devices[index].NumberOfClients
+                devices[index], devices[index].NumberOfClients
             )
         )
         ics.open_device(devices[index])
@@ -51,7 +45,7 @@ def open_device(index=0):
     else:
         print("Opening Device...")
         device = ics.open_device()
-    print("Opened Device %s." % dev_name(device))
+    print(f"Opened Device {device}.")
     return device
 
 
@@ -84,12 +78,12 @@ def transmit_iso15765_msg(device, netid=ics.NETID_HSCAN, is_canfd=False):
     msg.data = (ctypes.c_ubyte * len(msg.data))(*my_data)
 
     # Transmit the message
-    print("Transmitting iso15765 message on {}...".format(dev_name(device)))
+    print("Transmitting iso15765 message on {}...".format(device))
     ics.iso15765_transmit_message(device, netid, msg, 3000)
     # Wait for the messages to be transmitted, this can be calculated a lot better but works here.
     time.sleep((((number_of_bytes / 8) * msg.fs_timeout) / 1000.0) + 0.5)
     # print_message(msg)
-    print("Transmitted iso15765 message on {}.".format(dev_name(device)))
+    print("Transmitted iso15765 message on {}.".format(device))
 
 
 def setup_rx_iso15765_msg(device, netid=ics.NETID_HSCAN, is_canfd=False):

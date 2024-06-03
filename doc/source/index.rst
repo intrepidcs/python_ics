@@ -1,17 +1,25 @@
 .. include:: header.rst
 .. include:: examples.rst
 
-============================================================
+##############################################################################
+PyNeoDeviceEx
+##############################################################################
+.. autoclass:: ics.PyNeoDeviceEx
+    :members:
+    :show-inheritance:
+    :undoc-members:
+
+##############################################################################
 Module Documentation
-============================================================
+##############################################################################
 .. automodule:: ics.ics
     :members:
     :show-inheritance:
     :undoc-members:
 
-============================================================
+##############################################################################
 Module Functions
-============================================================
+##############################################################################
 
 .. autosummary::
     ics.ISO15765_DisableNetworks
@@ -46,6 +54,7 @@ Module Functions
     ics.generic_api_get_status
     ics.generic_api_read_data
     ics.generic_api_send_command
+    ics.get_accessory_firmware_version
     ics.get_active_vnet_channel
     ics.get_all_chip_versions
     ics.get_backup_power_enabled
@@ -65,7 +74,6 @@ Module Functions
     ics.get_messages
     ics.get_pcb_serial_number
     ics.get_performance_parameters
-    ics.get_accessory_firmware_version
     ics.get_rtc
     ics.get_script_status
     ics.get_serial_number
@@ -91,6 +99,7 @@ Module Functions
     ics.set_led_property
     ics.set_reflash_callback
     ics.set_rtc
+    ics.set_safe_boot_mode
     ics.start_dhcp_server
     ics.stop_dhcp_server
     ics.transmit_messages
@@ -114,6 +123,7 @@ Module Functions
     ics.GenericAPIGetStatus
     ics.GenericAPIReadData
     ics.GenericAPISendCommand
+    ics.GetAccessoryFwVersion
     ics.GetActiveVNETChannel
     ics.GetAllChipVersions
     ics.GetBackupPowerEnabled
@@ -130,7 +140,6 @@ Module Functions
     ics.GetMessages
     ics.GetPCBSerialNumber
     ics.GetPerformanceParameters
-    ics.GetAccessoryFwVersion
     ics.GetRTC
     ics.GetSerialNumber
     ics.GetTimeStampForMsg
@@ -169,6 +178,7 @@ Module Functions
     ics.SetLedProperty
     ics.SetRTC
     ics.SetReflashDisplayCallback
+    ics.SetSafeBootMode
     ics.StartDHCPServer
     ics.StopDHCPServer
     ics.TxMessages
@@ -193,6 +203,7 @@ Module Functions
     ics.icsneoGenericAPIGetStatus
     ics.icsneoGenericAPIReadData
     ics.icsneoGenericAPISendCommand
+    ics.icsneoGetAccessoryFwVersion
     ics.icsneoGetActiveVNETChannel
     ics.icsneoGetAllChipVersions
     ics.icsneoGetBackupPowerEnabled
@@ -209,7 +220,6 @@ Module Functions
     ics.icsneoGetMessages
     ics.icsneoGetPCBSerialNumber
     ics.icsneoGetPerformanceParameters
-    ics.icsneoGetAccessoryFwVersion
     ics.icsneoGetRTC
     ics.icsneoGetSerialNumber
     ics.icsneoGetTimeStampForMsg
@@ -252,6 +262,7 @@ Module Functions
     ics.icsneoSetLedProperty
     ics.icsneoSetRTC
     ics.icsneoSetReflashDisplayCallbacks
+    ics.icsneoSetSafeBootMode
     ics.icsneoStartDHCPServer
     ics.icsneoStopDHCPServer
     ics.icsneoTxMessages
@@ -266,9 +277,9 @@ Module Functions
     ics.icsneowBMSManagerWriteLock
 
 
-============================================================
+##############################################################################
 Module Structures
-============================================================
+##############################################################################
 
     .. autoclass:: ics.structures.a2_b_monitor_settings.a2_b_monitor_settings
             :members:
@@ -279,6 +290,10 @@ Module Structures
             :undoc-members:
 
     .. autoclass:: ics.structures.a2_btdm_mode.a2_btdm_mode
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.accessory_error_type.accessory_error_type
             :members:
             :undoc-members:
 
@@ -338,6 +353,14 @@ Module Structures
             :members:
             :undoc-members:
 
+    .. autoclass:: ics.structures.epsilon10_gphyfw.epsilon10_gphyfw
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.epsilon_10_g_phy_select.epsilon_10_g_phy_select
+            :members:
+            :undoc-members:
+
     .. autoclass:: ics.structures.ethernet10_g_settings.ethernet10_g_settings
             :members:
             :undoc-members:
@@ -379,6 +402,14 @@ Module Structures
             :undoc-members:
 
     .. autoclass:: ics.structures.fire3_linux_settings.fire3_linux_settings
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.flash_accessory_firmware_params.flash_accessory_firmware_params
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.flash_accessory_index.flash_accessory_index
             :members:
             :undoc-members:
 
@@ -526,27 +557,31 @@ Module Structures
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.mac_sec_flags.mac_sec_flags
+    .. autoclass:: ics.structures.mac_sec_flags_t.mac_sec_flags_t
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.mac_sec_map.mac_sec_map
+    .. autoclass:: ics.structures.mac_sec_global_flags_t.mac_sec_global_flags_t
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.mac_sec_rule.mac_sec_rule
+    .. autoclass:: ics.structures.mac_sec_map_t.mac_sec_map_t
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.mac_sec_sa.mac_sec_sa
+    .. autoclass:: ics.structures.mac_sec_rule_t.mac_sec_rule_t
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.mac_sec_sc.mac_sec_sc
+    .. autoclass:: ics.structures.mac_sec_sa_t.mac_sec_sa_t
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.mac_sec_sec_y.mac_sec_sec_y
+    .. autoclass:: ics.structures.mac_sec_sc_t.mac_sec_sc_t
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.mac_sec_sec_y_t.mac_sec_sec_y_t
             :members:
             :undoc-members:
 
@@ -558,7 +593,7 @@ Module Structures
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.macsec_mpls_outer.macsec_mpls_outer
+    .. autoclass:: ics.structures.macsec_mpls_outer_t.macsec_mpls_outer_t
             :members:
             :undoc-members:
 
@@ -578,7 +613,15 @@ Module Structures
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.macsec_vlantag.macsec_vlantag
+    .. autoclass:: ics.structures.macsec_vlantag_t.macsec_vlantag_t
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.neo_device.neo_device
+            :members:
+            :undoc-members:
+
+    .. autoclass:: ics.structures.neo_device_ex.neo_device_ex
             :members:
             :undoc-members:
 
@@ -591,10 +634,6 @@ Module Structures
             :undoc-members:
 
     .. autoclass:: ics.structures.op_eth_settings.op_eth_settings
-            :members:
-            :undoc-members:
-
-    .. autoclass:: ics.structures.phy_error_type.phy_error_type
             :members:
             :undoc-members:
 
@@ -1064,9 +1103,9 @@ Module Structures
 
 
 
-============================================================
+##############################################################################
 Module Variables
-============================================================
+##############################################################################
 
     .. py:data:: A2B_SETTINGS_FLAG_16BIT
             :annotation: = 1
@@ -1144,7 +1183,7 @@ Module Variables
             :annotation: = 6
 
     .. py:data:: BUILD_DATETIME
-            :annotation: = Feb  1 2024 11:29:42
+            :annotation: = Jun  3 2024 15:08:23
 
     .. py:data:: CANFD_BRS_ENABLED
             :annotation: = 2
@@ -1215,6 +1254,18 @@ Module Variables
     .. py:data:: DRIVER_USB3
             :annotation: = 192
 
+    .. py:data:: EPSILON_10G_PHY1
+            :annotation: = 1
+
+    .. py:data:: EPSILON_10G_PHY2
+            :annotation: = 2
+
+    .. py:data:: EPSILON_88Q6113_SWITCH_A
+            :annotation: = 1
+
+    .. py:data:: EPSILON_88Q6113_SWITCH_B
+            :annotation: = 2
+
     .. py:data:: ETHERNET10G_SETTINGS_SIZE
             :annotation: = 24
 
@@ -1237,7 +1288,7 @@ Module Variables
             :annotation: = 2
 
     .. py:data:: ETHERNET_SETTINGS10G_FLAG_COMM_IN_USE
-            :annotation: = -2147483648
+            :annotation: = 2147483648
 
     .. py:data:: ETHERNET_SETTINGS10G_FLAG_CONFIG_NOT_ALLOWED
             :annotation: = 32
@@ -1368,6 +1419,24 @@ Module Variables
     .. py:data:: FIRE3_REPORT_ORIENTATION
             :annotation: = 2048
 
+    .. py:data:: FLASH_ACCESSORY_EPSILON_10G_PHY1
+            :annotation: = 2
+
+    .. py:data:: FLASH_ACCESSORY_EPSILON_10G_PHY1_PHY2
+            :annotation: = 4
+
+    .. py:data:: FLASH_ACCESSORY_EPSILON_10G_PHY2
+            :annotation: = 3
+
+    .. py:data:: FLASH_ACCESSORY_EPSILON_10G_PHY_FW_0_3_7_0
+            :annotation: = 0
+
+    .. py:data:: FLASH_ACCESSORY_EPSILON_SWITCH_A
+            :annotation: = 0
+
+    .. py:data:: FLASH_ACCESSORY_EPSILON_SWITCH_B
+            :annotation: = 1
+
     .. py:data:: GENERIC_API_DATA_BUFFER_SIZE
             :annotation: = 513
 
@@ -1391,6 +1460,9 @@ Module Variables
 
     .. py:data:: GS_VERSION
             :annotation: = 5
+
+    .. py:data:: HADRWARE_TIMESTAMP_ID_FIXED
+            :annotation: = 128
 
     .. py:data:: HARDWARE_TIMESTAMP_ID_AVT_716
             :annotation: = 2
@@ -1573,7 +1645,7 @@ Module Variables
             :annotation: = 24
 
     .. py:data:: MACSEC_SETTINGS_SIZE
-            :annotation: = 1400
+            :annotation: = 2040
 
     .. py:data:: MACSEC_VF_CHECK
             :annotation: = 1
@@ -1717,7 +1789,7 @@ Module Variables
             :annotation: = 1024
 
     .. py:data:: NEODEVICE_OBD2_SIM
-            :annotation: = -2147483648
+            :annotation: = 2147483648
 
     .. py:data:: NEODEVICE_OBD2_SIM_DOIP
             :annotation: = 25
@@ -2169,6 +2241,18 @@ Module Variables
     .. py:data:: NETID_OP_ETHERNET12
             :annotation: = 87
 
+    .. py:data:: NETID_OP_ETHERNET13
+            :annotation: = 553
+
+    .. py:data:: NETID_OP_ETHERNET14
+            :annotation: = 554
+
+    .. py:data:: NETID_OP_ETHERNET15
+            :annotation: = 555
+
+    .. py:data:: NETID_OP_ETHERNET16
+            :annotation: = 556
+
     .. py:data:: NETID_OP_ETHERNET2
             :annotation: = 18
 
@@ -2378,6 +2462,9 @@ Module Variables
 
     .. py:data:: PLUTO_NUM_PRIORITY
             :annotation: = 8
+
+    .. py:data:: PROXIMA_NUM_PORTS
+            :annotation: = 19
 
     .. py:data:: RADEPSILON_MAX_PHY
             :annotation: = 18
@@ -3049,7 +3136,7 @@ Module Variables
             :annotation: = 1073741824
 
     .. py:data:: SPY_STATUS2_ETHERNET_T1S_ETHERNET
-            :annotation: = -2147483648
+            :annotation: = 2147483648
 
     .. py:data:: SPY_STATUS2_ETHERNET_T1S_SYMBOL
             :annotation: = 536870912
@@ -3124,7 +3211,7 @@ Module Variables
             :annotation: = 268435456
 
     .. py:data:: SPY_STATUS2_LIN_NO_SLAVE_DATA
-            :annotation: = -2147483648
+            :annotation: = 2147483648
 
     .. py:data:: SPY_STATUS2_LIN_SLAVE_BYTE_ERROR
             :annotation: = 536870912
@@ -3166,7 +3253,7 @@ Module Variables
             :annotation: = 134217728
 
     .. py:data:: SPY_STATUS2_MOST_CHANGED_PAR
-            :annotation: = -2147483648
+            :annotation: = 2147483648
 
     .. py:data:: SPY_STATUS2_MOST_CONTROL_DATA
             :annotation: = 16777216
@@ -3286,7 +3373,7 @@ Module Variables
             :annotation: = 131072
 
     .. py:data:: SPY_STATUS_EXTENDED
-            :annotation: = -2147483648
+            :annotation: = 2147483648
 
     .. py:data:: SPY_STATUS_FLEXRAY_PDU
             :annotation: = 268435456

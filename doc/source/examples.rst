@@ -1,18 +1,18 @@
-============================================================
+##############################################################################
 Examples
-============================================================
+##############################################################################
 
 Examples can be found at https://github.com/intrepidcs/python_ics/tree/master/examples
 
 For extra information on data structures and underlying functionality, please visit neoVI DLL Documentation under https://intrepidcs.com/support/support-resources/
 
 Opening a device
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==============================================================================
 
 The ``open_device_example.py`` example shows how to successfully open and close an Intrepid device.
 
 Transmitting and Receiving a CAN message
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==============================================================================
 
 The following examples show how to interact with CAN messages on an Intrepid device.
 
@@ -22,7 +22,7 @@ The following examples show how to interact with CAN messages on an Intrepid dev
 
 
 ISO 15765-2 Example
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==============================================================================
 
 The ``iso15765_example.py`` example shows how to setup basic ISO 15765-2 receive filters and transmitting an ISO 15765-2 message.
 
@@ -34,6 +34,6 @@ Similarly transmitting an ISO 15765-2 frame can be accomplished by passing a cus
 
 
 Missing an example?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==============================================================================
 
 Need an example on something that isn't covered here? Please submit an issue on github or feel free to send over a Pull Request of your own.

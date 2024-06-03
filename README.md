@@ -26,6 +26,21 @@ Python wrapper for interfacing to IntrepidCS Hardware.
 - Mac builds use [libicsneo](https://github.com/intrepidcs/libicsneo) and are built using cibuildwheel
 - libicsneolegacy.dylib is bundled with the wheel and python_ics will automatically use it.
 
+# Basic usage
+
+```python
+import ics
+
+devices = ics.find_devices()
+print(f"Found {len(devices)} devices...")
+for device in devices:
+    # Print, open, load default settings, close
+    print(device)
+    device.open()
+    device.load_default_settings()
+    device.close()
+```
+
 # Documentation
 
 http://python-ics.readthedocs.io/
@@ -35,6 +50,7 @@ http://python-ics.readthedocs.io/
 
 - Building from source requires clang and clang-format to be present on the build machine.
 - python_ics has submodules, please be sure to initial all submodules also.
+
 ```powershell
 PS > git clone git@github.com:intrepidcs/python_ics.git
 
