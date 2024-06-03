@@ -91,24 +91,24 @@ class PyNeoDeviceEx(ics.neo_device_ex.neo_device_ex):
             raise ValueError(f"Failed to convert SerialNumber {self.SerialNumber} to a valid serial number.")
 
     def open(self, *args, **kwargs):
-        """Open the device. Returns a reference to Self on open."""
+        """Open the device. Returns a reference to Self on open. See ics.open_device for details on arguments."""
         return ics.open_device(self, *args, **kwargs)
 
     def close(self):
-        """Close the device. Returns the number of errors on close."""
+        """Close the device. Returns the number of errors on close. See ics.close_device for details on arguments."""
         return ics.close_device(self)
 
     def load_default_settings(self):
-        """Loads default settings on the device. Requires the device to be open."""
+        """Loads default settings on the device. Requires the device to be open. See ics.load_default_settings for details on arguments."""
         return ics.load_default_settings(self)
 
 
     def transmit_messages(self, *args, **kwargs):
-        """Transmit messages on the device. Requires the device to be open."""
+        """Transmit messages on the device. Requires the device to be open. See ics.transmit_messages for details on arguments."""
         return ics.transmit_messages(self, *args, **kwargs)
     
     def get_messages(self, *args, **kwargs) -> Tuple[SpyMessage, int]:
-        """Get messages on the device. Requires the device to be open."""
+        """Get messages on the device. Requires the device to be open. See ics.get_messages for details on arguments."""
         return ics.get_messages(self, *args, **kwargs)
 
     def coremini_clear(self, *args, **kwargs):
