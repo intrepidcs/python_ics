@@ -51,6 +51,7 @@ except Exception as ex:
 
 
 from ics.structures import *
+from ics.structures.neo_device import NeoDevice, neo_device
 from ics.hiddenimports import hidden_imports
 try:
     from ics.py_neo_device_ex import PyNeoDeviceEx
