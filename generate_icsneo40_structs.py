@@ -394,20 +394,22 @@ def get_preferred_struct_name(_names):
     r = re.compile(r"^[sS].*")
     r_underscore = re.compile(r"^(?![_]).*")
     r_end_t = re.compile(r"^.*(_[tT])$")
+    # Find any that don't start with _ for _t matching below
+    struct_name_no_underscore = list(filter(r_underscore.match, names))
     # Remove all instances of _t at end unless that is all we have
-    setting_structures_with_t = list(filter(r_end_t.match, names))
-    if len(setting_structures_with_t):
-        if len(setting_structures_with_t) != len(names):
-            for name in setting_structures_with_t:
+    struct_name_with_t = list(filter(r_end_t.match, struct_name_no_underscore))
+    if len(struct_name_with_t):
+        if len(struct_name_with_t) != len(struct_name_no_underscore):
+            for name in struct_name_with_t:
                 names.remove(name)
     # Find any that start with 'S' and prefer that
-    setting_structures = list(filter(r.match, names))
-    if setting_structures:
-        return setting_structures[0]
+    struct_name_with_s = list(filter(r.match, names))
+    if struct_name_with_s:
+        return struct_name_with_s[0]
     # Find any that don't start with _ and prefer that
-    setting_structures = list(filter(r_underscore.match, names))
-    if setting_structures:
-        return setting_structures[0]
+    struct_name_no_underscore = list(filter(r_underscore.match, names))
+    if struct_name_no_underscore:
+        return struct_name_no_underscore[0]
     try:
         return names[0]
     except IndexError as _:
