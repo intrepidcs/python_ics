@@ -1296,6 +1296,7 @@ typedef struct ETHERNET_SETTINGS_t
 #define ETHERNET_SETTINGS2_FLAG2_LINK_MODE 0x01
 #define ETHERNET_SETTINGS2_FLAG2_PHY_MODE 0x02
 #define ETHERNET_SETTINGS2_FLAG2_LINK_MODE_AUTO 0x04
+#define ETHERNET_SETTINGS2_FLAG2_IP_CONFIG_NOT_ALLOWED 0x08
 
 #define ETHERNET_SETTINGS2_FLAG2_SFP_ID_SHIFT 4
 #define ETHERNET_SETTINGS2_FLAG2_SFP_ID_MASK 0xF0
@@ -1333,6 +1334,7 @@ typedef struct ETHERNET_SETTINGS2_t
 	 * bit0: Link mode - 0=master, 1=slave
 	 * bit1: PHY mode - 0=IEEE, 1=legacy
 	 * bit2: auto master/slave
+	 * bit3: IP config not allowed
 	 * bit4: SFP module ID0
 	 * bit5: SFP module ID1
 	 * bit6: SFP module ID2
@@ -1353,6 +1355,10 @@ typedef struct ETHERNET_SETTINGS2_t
 #define ETHERNET_SETTINGS10G_FLAG_LINK_MODE 0x00000080
 #define ETHERNET_SETTINGS10G_FLAG_PHY_MODE 0x00000100
 #define ETHERNET_SETTINGS10G_FLAG_LINK_MODE_AUTO 0x00000200
+#define ETHERNET_SETTINGS10G_FLAG_COMPL_MODE 0x00000400
+#define ETHERNET_SETTINGS10G_FLAG_PKT_CHECK 0x00000800
+#define ETHERNET_SETTINGS10G_FLAG_PKT_GEN 0x00001000
+#define ETHERNET_SETTINGS10G_FLAG_IP_CONFIG_NOT_ALLOWED 0x00002000
 #define ETHERNET_SETTINGS10G_FLAG_COMM_IN_USE 0x80000000
 
 typedef struct ETHERNET10G_SETTINGS_t
@@ -1368,6 +1374,10 @@ typedef struct ETHERNET10G_SETTINGS_t
 	 * bit7: link mode - 0=master, 1=slave
 	 * bit8: PHY mode - 0=IEEE, 1=legacy
 	 * bit9: auto master/slave
+	 * bit10: enable compliance test mode (device specific)
+	 * bit11: enable packet checker
+	 * bit12: enable packet generator
+	 * bit13: IP config not allowed
 	 * bit31: comm in use
 	 */
 	uint32_t flags;
