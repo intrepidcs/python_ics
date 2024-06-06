@@ -1,4 +1,8 @@
-recursive-include include *.h
+recursive-include include *.h *.cpp
+include build_libicsneo.py
 include extract_icsneo40_defines.py
 include generate_icsneo40_structs.py
 include ics_utility.py
+include requirements.txt
+graft .git
+graft src/ice
