@@ -67,7 +67,7 @@ extern "C"
 {
 #endif
 
-    PyMODINIT_FUNC PyInit_ics(void)
+    PyMODINIT_FUNC PyInit_c_mod(void)
     {
         initialize_ics_library();
 

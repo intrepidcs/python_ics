@@ -1,10 +1,10 @@
 import ctypes
 from typing import Tuple
 try:
-    import ics
-except ModuleNotFoundError as ex:
+    from . import c_mod
+except (ModuleNotFoundError, ImportError) as ex:
     import sys
-    print(f"Warning: py_neo_device_ex: ics module is not installed. ics will not be available.", file=sys.stderr, flush=True)
+    print(f"Warning: py_neo_device_ex: c_mod module is not installed. c_mod will not be available.", file=sys.stderr, flush=True)
 try:
     from .structures.neo_device_ex import neo_device_ex
 except ValueError as ex:
@@ -15,7 +15,7 @@ except ValueError as ex:
 
 
 class PyNeoDeviceEx(neo_device_ex):
-    """Wrapper class around ics.neo_device_ex.neo_device_ex to support a more pythonic way of doing things."""
+    """Wrapper class around c_mod.neo_device_ex.neo_device_ex to support a more pythonic way of doing things."""
     # Internal handle from icsneoOpenDevice()
     _handle = None
     # python_ics extension for grabbing the name of the device
@@ -28,13 +28,13 @@ class PyNeoDeviceEx(neo_device_ex):
 
     def __del__(self):
         if self._auto_handle_close is True:
-            ics.close_device(self)
+            c_mod.close_device(self)
 
     def __str__(self):
         return f"{self.Name} {self.serial_number}"
 
     def __repr__(self):
-        return f"<python_ics.{self.__class__.__name__} {self.Name} {self.serial_number}>"
+        return f"<python_c_mod.{self.__class__.__name__} {self.Name} {self.serial_number}>"
 
     def __eq__(self, other) -> bool:
         return \
@@ -94,401 +94,400 @@ class PyNeoDeviceEx(neo_device_ex):
     @property
     def serial_number(self) -> str:
         """Return the serial number as a string."""
-        if self.SerialNumber <= ics.MIN_BASE36_SERIAL:
+        if self.SerialNumber <= c_mod.MIN_BASE36_SERIAL:
             return str(self.SerialNumber)
-        elif self.SerialNumber <= ics.MAX_SERIAL:
-            return ics.base36enc(self.SerialNumber)
+        elif self.SerialNumber <= c_mod.MAX_SERIAL:
+            return c_mod.base36enc(self.SerialNumber)
         else:
             raise ValueError(f"Failed to convert SerialNumber {self.SerialNumber} to a valid serial number.")
 
     def open(self, *args, **kwargs):
-        """Open the device. Returns a reference to Self on open. See ics.open_device for details on arguments."""
-        return ics.open_device(self, *args, **kwargs)
+        """Open the device. Returns a reference to Self on open. See c_mod.open_device for details on arguments."""
+        return c_mod.open_device(self, *args, **kwargs)
 
     def close(self):
-        """Close the device. Returns the number of errors on close. See ics.close_device for details on arguments."""
-        return ics.close_device(self)
+        """Close the device. Returns the number of errors on close. See c_mod.close_device for details on arguments."""
+        return c_mod.close_device(self)
 
     def load_default_settings(self):
-        """Loads default settings on the device. Requires the device to be open. See ics.load_default_settings for details on arguments."""
-        return ics.load_default_settings(self)
-
+        """Loads default settings on the device. Requires the device to be open. See c_mod.load_default_settings for details on arguments."""
+        return c_mod.load_default_settings(self)
 
     def transmit_messages(self, *args, **kwargs):
-        """Transmit messages on the device. Requires the device to be open. See ics.transmit_messages for details on arguments."""
-        return ics.transmit_messages(self, *args, **kwargs)
+        """Transmit messages on the device. Requires the device to be open. See c_mod.transmit_messages for details on arguments."""
+        return c_mod.transmit_messages(self, *args, **kwargs)
     
     def get_messages(self, *args, **kwargs) -> Tuple[object, int]:
-        """Get messages on the device. Requires the device to be open. See ics.get_messages for details on arguments."""
-        return ics.get_messages(self, *args, **kwargs)
+        """Get messages on the device. Requires the device to be open. See c_mod.get_messages for details on arguments."""
+        return c_mod.get_messages(self, *args, **kwargs)
 
     def coremini_clear(self, *args, **kwargs):
-        "See ics.coremini_clear for details on arguments."
-        return ics.coremini_clear(self, *args, **kwargs)
+        "See c_mod.coremini_clear for details on arguments."
+        return c_mod.coremini_clear(self, *args, **kwargs)
 
 
     def coremini_get_fblock_status(self, *args, **kwargs):
-        "See ics.coremini_get_fblock_status for details on arguments."
-        return ics.coremini_get_fblock_status(self, *args, **kwargs)
+        "See c_mod.coremini_get_fblock_status for details on arguments."
+        return c_mod.coremini_get_fblock_status(self, *args, **kwargs)
 
 
     def coremini_get_status(self, *args, **kwargs):
-        "See ics.coremini_get_status for details on arguments."
-        return ics.coremini_get_status(self, *args, **kwargs)
+        "See c_mod.coremini_get_status for details on arguments."
+        return c_mod.coremini_get_status(self, *args, **kwargs)
 
 
     def coremini_load(self, *args, **kwargs):
-        "See ics.coremini_load for details on arguments."
-        return ics.coremini_load(self, *args, **kwargs)
+        "See c_mod.coremini_load for details on arguments."
+        return c_mod.coremini_load(self, *args, **kwargs)
 
 
     def coremini_read_app_signal(self, *args, **kwargs):
-        "See ics.coremini_read_app_signal for details on arguments."
-        return ics.coremini_read_app_signal(self, *args, **kwargs)
+        "See c_mod.coremini_read_app_signal for details on arguments."
+        return c_mod.coremini_read_app_signal(self, *args, **kwargs)
 
 
     def coremini_read_rx_message(self, *args, **kwargs):
-        "See ics.coremini_read_rx_message for details on arguments."
-        return ics.coremini_read_rx_message(self, *args, **kwargs)
+        "See c_mod.coremini_read_rx_message for details on arguments."
+        return c_mod.coremini_read_rx_message(self, *args, **kwargs)
 
 
     def coremini_read_tx_message(self, *args, **kwargs):
-        "See ics.coremini_read_tx_message for details on arguments."
-        return ics.coremini_read_tx_message(self, *args, **kwargs)
+        "See c_mod.coremini_read_tx_message for details on arguments."
+        return c_mod.coremini_read_tx_message(self, *args, **kwargs)
 
 
     def coremini_start(self, *args, **kwargs):
-        "See ics.coremini_start for details on arguments."
-        return ics.coremini_start(self, *args, **kwargs)
+        "See c_mod.coremini_start for details on arguments."
+        return c_mod.coremini_start(self, *args, **kwargs)
 
 
     def coremini_start_fblock(self, *args, **kwargs):
-        "See ics.coremini_start_fblock for details on arguments."
-        return ics.coremini_start_fblock(self, *args, **kwargs)
+        "See c_mod.coremini_start_fblock for details on arguments."
+        return c_mod.coremini_start_fblock(self, *args, **kwargs)
 
 
     def coremini_stop(self, *args, **kwargs):
-        "See ics.coremini_stop for details on arguments."
-        return ics.coremini_stop(self, *args, **kwargs)
+        "See c_mod.coremini_stop for details on arguments."
+        return c_mod.coremini_stop(self, *args, **kwargs)
 
 
     def coremini_stop_fblock(self, *args, **kwargs):
-        "See ics.coremini_stop_fblock for details on arguments."
-        return ics.coremini_stop_fblock(self, *args, **kwargs)
+        "See c_mod.coremini_stop_fblock for details on arguments."
+        return c_mod.coremini_stop_fblock(self, *args, **kwargs)
 
 
     def coremini_write_app_signal(self, *args, **kwargs):
-        "See ics.coremini_write_app_signal for details on arguments."
-        return ics.coremini_write_app_signal(self, *args, **kwargs)
+        "See c_mod.coremini_write_app_signal for details on arguments."
+        return c_mod.coremini_write_app_signal(self, *args, **kwargs)
 
 
     def coremini_write_rx_message(self, *args, **kwargs):
-        "See ics.coremini_write_rx_message for details on arguments."
-        return ics.coremini_write_rx_message(self, *args, **kwargs)
+        "See c_mod.coremini_write_rx_message for details on arguments."
+        return c_mod.coremini_write_rx_message(self, *args, **kwargs)
 
 
     def coremini_write_tx_message(self, *args, **kwargs):
-        "See ics.coremini_write_tx_message for details on arguments."
-        return ics.coremini_write_tx_message(self, *args, **kwargs)
+        "See c_mod.coremini_write_tx_message for details on arguments."
+        return c_mod.coremini_write_tx_message(self, *args, **kwargs)
 
 
     def create_neovi_radio_message(self, *args, **kwargs):
-        "See ics.create_neovi_radio_message for details on arguments."
-        return ics.create_neovi_radio_message(self, *args, **kwargs)
+        "See c_mod.create_neovi_radio_message for details on arguments."
+        return c_mod.create_neovi_radio_message(self, *args, **kwargs)
 
 
     def disk_format(self, *args, **kwargs):
-        "See ics.disk_format for details on arguments."
-        return ics.disk_format(self, *args, **kwargs)
+        "See c_mod.disk_format for details on arguments."
+        return c_mod.disk_format(self, *args, **kwargs)
 
 
     def disk_format_cancel(self, *args, **kwargs):
-        "See ics.disk_format_cancel for details on arguments."
-        return ics.disk_format_cancel(self, *args, **kwargs)
+        "See c_mod.disk_format_cancel for details on arguments."
+        return c_mod.disk_format_cancel(self, *args, **kwargs)
 
 
     def enable_bus_voltage_monitor(self, *args, **kwargs):
-        "See ics.enable_bus_voltage_monitor for details on arguments."
-        return ics.enable_bus_voltage_monitor(self, *args, **kwargs)
+        "See c_mod.enable_bus_voltage_monitor for details on arguments."
+        return c_mod.enable_bus_voltage_monitor(self, *args, **kwargs)
 
 
     def enable_doip_line(self, *args, **kwargs):
-        "See ics.enable_doip_line for details on arguments."
-        return ics.enable_doip_line(self, *args, **kwargs)
+        "See c_mod.enable_doip_line for details on arguments."
+        return c_mod.enable_doip_line(self, *args, **kwargs)
 
 
     def enable_network_com(self, *args, **kwargs):
-        "See ics.enable_network_com for details on arguments."
-        return ics.enable_network_com(self, *args, **kwargs)
+        "See c_mod.enable_network_com for details on arguments."
+        return c_mod.enable_network_com(self, *args, **kwargs)
 
     def firmware_update_required(self, *args, **kwargs):
-        "See ics.firmware_update_required for details on arguments."
-        return ics.firmware_update_required(self, *args, **kwargs)
+        "See c_mod.firmware_update_required for details on arguments."
+        return c_mod.firmware_update_required(self, *args, **kwargs)
 
 
     def flash_accessory_firmware(self, *args, **kwargs):
-        "See ics.flash_accessory_firmware for details on arguments."
-        return ics.flash_accessory_firmware(self, *args, **kwargs)
+        "See c_mod.flash_accessory_firmware for details on arguments."
+        return c_mod.flash_accessory_firmware(self, *args, **kwargs)
 
 
     def force_firmware_update(self, *args, **kwargs):
-        "See ics.force_firmware_update for details on arguments."
-        return ics.force_firmware_update(self, *args, **kwargs)
+        "See c_mod.force_firmware_update for details on arguments."
+        return c_mod.force_firmware_update(self, *args, **kwargs)
 
 
     def generic_api_get_status(self, *args, **kwargs):
-        "See ics.generic_api_get_status for details on arguments."
-        return ics.generic_api_get_status(self, *args, **kwargs)
+        "See c_mod.generic_api_get_status for details on arguments."
+        return c_mod.generic_api_get_status(self, *args, **kwargs)
 
 
     def generic_api_read_data(self, *args, **kwargs):
-        "See ics.generic_api_read_data for details on arguments."
-        return ics.generic_api_read_data(self, *args, **kwargs)
+        "See c_mod.generic_api_read_data for details on arguments."
+        return c_mod.generic_api_read_data(self, *args, **kwargs)
 
 
     def generic_api_send_command(self, *args, **kwargs):
-        "See ics.generic_api_send_command for details on arguments."
-        return ics.generic_api_send_command(self, *args, **kwargs)
+        "See c_mod.generic_api_send_command for details on arguments."
+        return c_mod.generic_api_send_command(self, *args, **kwargs)
 
 
     def get_accessory_firmware_version(self, *args, **kwargs):
-        "See ics.get_accessory_firmware_version for details on arguments."
-        return ics.get_accessory_firmware_version(self, *args, **kwargs)
+        "See c_mod.get_accessory_firmware_version for details on arguments."
+        return c_mod.get_accessory_firmware_version(self, *args, **kwargs)
 
 
     def get_active_vnet_channel(self, *args, **kwargs):
-        "See ics.get_active_vnet_channel for details on arguments."
-        return ics.get_active_vnet_channel(self, *args, **kwargs)
+        "See c_mod.get_active_vnet_channel for details on arguments."
+        return c_mod.get_active_vnet_channel(self, *args, **kwargs)
 
 
     def get_all_chip_versions(self, *args, **kwargs):
-        "See ics.get_all_chip_versions for details on arguments."
-        return ics.get_all_chip_versions(self, *args, **kwargs)
+        "See c_mod.get_all_chip_versions for details on arguments."
+        return c_mod.get_all_chip_versions(self, *args, **kwargs)
 
 
     def get_backup_power_enabled(self, *args, **kwargs):
-        "See ics.get_backup_power_enabled for details on arguments."
-        return ics.get_backup_power_enabled(self, *args, **kwargs)
+        "See c_mod.get_backup_power_enabled for details on arguments."
+        return c_mod.get_backup_power_enabled(self, *args, **kwargs)
 
 
     def get_backup_power_ready(self, *args, **kwargs):
-        "See ics.get_backup_power_ready for details on arguments."
-        return ics.get_backup_power_ready(self, *args, **kwargs)
+        "See c_mod.get_backup_power_ready for details on arguments."
+        return c_mod.get_backup_power_ready(self, *args, **kwargs)
 
 
     def get_bus_voltage(self, *args, **kwargs):
-        "See ics.get_bus_voltage for details on arguments."
-        return ics.get_bus_voltage(self, *args, **kwargs)
+        "See c_mod.get_bus_voltage for details on arguments."
+        return c_mod.get_bus_voltage(self, *args, **kwargs)
 
 
     def get_device_settings(self, *args, **kwargs):
-        "See ics.get_device_settings for details on arguments."
-        return ics.get_device_settings(self, *args, **kwargs)
+        "See c_mod.get_device_settings for details on arguments."
+        return c_mod.get_device_settings(self, *args, **kwargs)
 
 
     def get_device_status(self, *args, **kwargs):
-        "See ics.get_device_status for details on arguments."
-        return ics.get_device_status(self, *args, **kwargs)
+        "See c_mod.get_device_status for details on arguments."
+        return c_mod.get_device_status(self, *args, **kwargs)
 
 
     def get_disk_details(self, *args, **kwargs):
-        "See ics.get_disk_details for details on arguments."
-        return ics.get_disk_details(self, *args, **kwargs)
+        "See c_mod.get_disk_details for details on arguments."
+        return c_mod.get_disk_details(self, *args, **kwargs)
 
 
     def get_disk_format_progress(self, *args, **kwargs):
-        "See ics.get_disk_format_progress for details on arguments."
-        return ics.get_disk_format_progress(self, *args, **kwargs)
+        "See c_mod.get_disk_format_progress for details on arguments."
+        return c_mod.get_disk_format_progress(self, *args, **kwargs)
 
 
     def get_dll_firmware_info(self, *args, **kwargs):
-        "See ics.get_dll_firmware_info for details on arguments."
-        return ics.get_dll_firmware_info(self, *args, **kwargs)
+        "See c_mod.get_dll_firmware_info for details on arguments."
+        return c_mod.get_dll_firmware_info(self, *args, **kwargs)
 
 
     def get_error_messages(self, *args, **kwargs):
-        "See ics.get_error_messages for details on arguments."
-        return ics.get_error_messages(self, *args, **kwargs)
+        "See c_mod.get_error_messages for details on arguments."
+        return c_mod.get_error_messages(self, *args, **kwargs)
 
 
     def get_gptp_status(self, *args, **kwargs):
-        "See ics.get_gptp_status for details on arguments."
-        return ics.get_gptp_status(self, *args, **kwargs)
+        "See c_mod.get_gptp_status for details on arguments."
+        return c_mod.get_gptp_status(self, *args, **kwargs)
 
 
     def get_hw_firmware_info(self, *args, **kwargs):
-        "See ics.get_hw_firmware_info for details on arguments."
-        return ics.get_hw_firmware_info(self, *args, **kwargs)
+        "See c_mod.get_hw_firmware_info for details on arguments."
+        return c_mod.get_hw_firmware_info(self, *args, **kwargs)
 
 
     def get_last_api_error(self, *args, **kwargs):
-        "See ics.get_last_api_error for details on arguments."
-        return ics.get_last_api_error(self, *args, **kwargs)
+        "See c_mod.get_last_api_error for details on arguments."
+        return c_mod.get_last_api_error(self, *args, **kwargs)
 
 
     def get_pcb_serial_number(self, *args, **kwargs):
-        "See ics.get_pcb_serial_number for details on arguments."
-        return ics.get_pcb_serial_number(self, *args, **kwargs)
+        "See c_mod.get_pcb_serial_number for details on arguments."
+        return c_mod.get_pcb_serial_number(self, *args, **kwargs)
 
 
     def get_performance_parameters(self, *args, **kwargs):
-        "See ics.get_performance_parameters for details on arguments."
-        return ics.get_performance_parameters(self, *args, **kwargs)
+        "See c_mod.get_performance_parameters for details on arguments."
+        return c_mod.get_performance_parameters(self, *args, **kwargs)
 
 
     def get_rtc(self, *args, **kwargs):
-        "See ics.get_rtc for details on arguments."
-        return ics.get_rtc(self, *args, **kwargs)
+        "See c_mod.get_rtc for details on arguments."
+        return c_mod.get_rtc(self, *args, **kwargs)
 
 
     def get_script_status(self, *args, **kwargs):
-        "See ics.get_script_status for details on arguments."
-        return ics.get_script_status(self, *args, **kwargs)
+        "See c_mod.get_script_status for details on arguments."
+        return c_mod.get_script_status(self, *args, **kwargs)
 
 
     def get_serial_number(self, *args, **kwargs):
-        "See ics.get_serial_number for details on arguments."
-        return ics.get_serial_number(self, *args, **kwargs)
+        "See c_mod.get_serial_number for details on arguments."
+        return c_mod.get_serial_number(self, *args, **kwargs)
 
 
     def get_timestamp_for_msg(self, *args, **kwargs):
-        "See ics.get_timestamp_for_msg for details on arguments."
-        return ics.get_timestamp_for_msg(self, *args, **kwargs)
+        "See c_mod.get_timestamp_for_msg for details on arguments."
+        return c_mod.get_timestamp_for_msg(self, *args, **kwargs)
 
 
     def is_device_feature_supported(self, *args, **kwargs):
-        "See ics.is_device_feature_supported for details on arguments."
-        return ics.is_device_feature_supported(self, *args, **kwargs)
+        "See c_mod.is_device_feature_supported for details on arguments."
+        return c_mod.is_device_feature_supported(self, *args, **kwargs)
 
 
     def iso15765_disable_networks(self, *args, **kwargs):
-        "See ics.iso15765_disable_networks for details on arguments."
-        return ics.iso15765_disable_networks(self, *args, **kwargs)
+        "See c_mod.iso15765_disable_networks for details on arguments."
+        return c_mod.iso15765_disable_networks(self, *args, **kwargs)
 
 
     def iso15765_enable_networks(self, *args, **kwargs):
-        "See ics.iso15765_enable_networks for details on arguments."
-        return ics.iso15765_enable_networks(self, *args, **kwargs)
+        "See c_mod.iso15765_enable_networks for details on arguments."
+        return c_mod.iso15765_enable_networks(self, *args, **kwargs)
 
 
     def iso15765_receive_message(self, *args, **kwargs):
-        "See ics.iso15765_receive_message for details on arguments."
-        return ics.iso15765_receive_message(self, *args, **kwargs)
+        "See c_mod.iso15765_receive_message for details on arguments."
+        return c_mod.iso15765_receive_message(self, *args, **kwargs)
 
 
     def iso15765_transmit_message(self, *args, **kwargs):
-        "See ics.iso15765_transmit_message for details on arguments."
-        return ics.iso15765_transmit_message(self, *args, **kwargs)
+        "See c_mod.iso15765_transmit_message for details on arguments."
+        return c_mod.iso15765_transmit_message(self, *args, **kwargs)
 
 
     def read_jupiter_firmware(self, *args, **kwargs):
-        "See ics.read_jupiter_firmware for details on arguments."
-        return ics.read_jupiter_firmware(self, *args, **kwargs)
+        "See c_mod.read_jupiter_firmware for details on arguments."
+        return c_mod.read_jupiter_firmware(self, *args, **kwargs)
 
 
     def read_sdcard(self, *args, **kwargs):
-        "See ics.read_sdcard for details on arguments."
-        return ics.read_sdcard(self, *args, **kwargs)
+        "See c_mod.read_sdcard for details on arguments."
+        return c_mod.read_sdcard(self, *args, **kwargs)
 
 
     def request_enter_sleep_mode(self, *args, **kwargs):
-        "See ics.request_enter_sleep_mode for details on arguments."
-        return ics.request_enter_sleep_mode(self, *args, **kwargs)
+        "See c_mod.request_enter_sleep_mode for details on arguments."
+        return c_mod.request_enter_sleep_mode(self, *args, **kwargs)
 
 
     def set_active_vnet_channel(self, *args, **kwargs):
-        "See ics.set_active_vnet_channel for details on arguments."
-        return ics.set_active_vnet_channel(self, *args, **kwargs)
+        "See c_mod.set_active_vnet_channel for details on arguments."
+        return c_mod.set_active_vnet_channel(self, *args, **kwargs)
 
 
     def set_backup_power_enabled(self, *args, **kwargs):
-        "See ics.set_backup_power_enabled for details on arguments."
-        return ics.set_backup_power_enabled(self, *args, **kwargs)
+        "See c_mod.set_backup_power_enabled for details on arguments."
+        return c_mod.set_backup_power_enabled(self, *args, **kwargs)
 
 
     def set_bit_rate(self, *args, **kwargs):
-        "See ics.set_bit_rate for details on arguments."
-        return ics.set_bit_rate(self, *args, **kwargs)
+        "See c_mod.set_bit_rate for details on arguments."
+        return c_mod.set_bit_rate(self, *args, **kwargs)
 
 
     def set_bit_rate_ex(self, *args, **kwargs):
-        "See ics.set_bit_rate_ex for details on arguments."
-        return ics.set_bit_rate_ex(self, *args, **kwargs)
+        "See c_mod.set_bit_rate_ex for details on arguments."
+        return c_mod.set_bit_rate_ex(self, *args, **kwargs)
 
 
     def set_device_settings(self, *args, **kwargs):
-        "See ics.set_device_settings for details on arguments."
-        return ics.set_device_settings(self, *args, **kwargs)
+        "See c_mod.set_device_settings for details on arguments."
+        return c_mod.set_device_settings(self, *args, **kwargs)
 
 
     def set_fd_bit_rate(self, *args, **kwargs):
-        "See ics.set_fd_bit_rate for details on arguments."
-        return ics.set_fd_bit_rate(self, *args, **kwargs)
+        "See c_mod.set_fd_bit_rate for details on arguments."
+        return c_mod.set_fd_bit_rate(self, *args, **kwargs)
 
 
     def set_led_property(self, *args, **kwargs):
-        "See ics.set_led_property for details on arguments."
-        return ics.set_led_property(self, *args, **kwargs)
+        "See c_mod.set_led_property for details on arguments."
+        return c_mod.set_led_property(self, *args, **kwargs)
 
     def set_rtc(self, *args, **kwargs):
-        "See ics.set_rtc for details on arguments."
-        return ics.set_rtc(self, *args, **kwargs)
+        "See c_mod.set_rtc for details on arguments."
+        return c_mod.set_rtc(self, *args, **kwargs)
 
 
     def start_dhcp_server(self, *args, **kwargs):
-        "See ics.start_dhcp_server for details on arguments."
-        return ics.start_dhcp_server(self, *args, **kwargs)
+        "See c_mod.start_dhcp_server for details on arguments."
+        return c_mod.start_dhcp_server(self, *args, **kwargs)
 
 
     def stop_dhcp_server(self, *args, **kwargs):
-        "See ics.stop_dhcp_server for details on arguments."
-        return ics.stop_dhcp_server(self, *args, **kwargs)
+        "See c_mod.stop_dhcp_server for details on arguments."
+        return c_mod.stop_dhcp_server(self, *args, **kwargs)
 
 
     def uart_get_baudrate(self, *args, **kwargs):
-        "See ics.uart_get_baudrate for details on arguments."
-        return ics.uart_get_baudrate(self, *args, **kwargs)
+        "See c_mod.uart_get_baudrate for details on arguments."
+        return c_mod.uart_get_baudrate(self, *args, **kwargs)
 
 
     def uart_read(self, *args, **kwargs):
-        "See ics.uart_read for details on arguments."
-        return ics.uart_read(self, *args, **kwargs)
+        "See c_mod.uart_read for details on arguments."
+        return c_mod.uart_read(self, *args, **kwargs)
 
 
     def uart_set_baudrate(self, *args, **kwargs):
-        "See ics.uart_set_baudrate for details on arguments."
-        return ics.uart_set_baudrate(self, *args, **kwargs)
+        "See c_mod.uart_set_baudrate for details on arguments."
+        return c_mod.uart_set_baudrate(self, *args, **kwargs)
 
 
     def uart_write(self, *args, **kwargs):
-        "See ics.uart_write for details on arguments."
-        return ics.uart_write(self, *args, **kwargs)
+        "See c_mod.uart_write for details on arguments."
+        return c_mod.uart_write(self, *args, **kwargs)
 
 
     def validate_hobject(self, *args, **kwargs):
-        "See ics.validate_hobject for details on arguments."
-        return ics.validate_hobject(self, *args, **kwargs)
+        "See c_mod.validate_hobject for details on arguments."
+        return c_mod.validate_hobject(self, *args, **kwargs)
 
 
     def wbms_manager_reset(self, *args, **kwargs):
-        "See ics.wbms_manager_reset for details on arguments."
-        return ics.wbms_manager_reset(self, *args, **kwargs)
+        "See c_mod.wbms_manager_reset for details on arguments."
+        return c_mod.wbms_manager_reset(self, *args, **kwargs)
 
 
     def wbms_manager_write_lock(self, *args, **kwargs):
-        "See ics.wbms_manager_write_lock for details on arguments."
-        return ics.wbms_manager_write_lock(self, *args, **kwargs)
+        "See c_mod.wbms_manager_write_lock for details on arguments."
+        return c_mod.wbms_manager_write_lock(self, *args, **kwargs)
 
 
     def write_jupiter_firmware(self, *args, **kwargs):
-        "See ics.write_jupiter_firmware for details on arguments."
-        return ics.write_jupiter_firmware(self, *args, **kwargs)
+        "See c_mod.write_jupiter_firmware for details on arguments."
+        return c_mod.write_jupiter_firmware(self, *args, **kwargs)
 
 
     def write_sdcard(self, *args, **kwargs):
-        "See ics.write_sdcard for details on arguments."
-        return ics.write_sdcard(self, *args, **kwargs)
+        "See c_mod.write_sdcard for details on arguments."
+        return c_mod.write_sdcard(self, *args, **kwargs)
 
     def set_safe_boot_mode(self, *args, **kwargs):
-        "See ics.set_safe_boot_mode for details on arguments."
-        return ics.set_safe_boot_mode(self, *args, **kwargs)
+        "See c_mod.set_safe_boot_mode for details on arguments."
+        return c_mod.set_safe_boot_mode(self, *args, **kwargs)

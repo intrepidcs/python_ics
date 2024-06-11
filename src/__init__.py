@@ -15,7 +15,10 @@ except ImportError as ex:
 
 # Bring the c module "ics" into the parent scope
 try:
-    from .ics import *
+    from .c_mod import *
+    from . import c_mod
+    # Backwards compatibility mode for existing code
+    from . import c_mod as ics
 except ImportError as ex:
     # If we are still building this won't work correctly.
     import sys
@@ -33,4 +36,3 @@ except ValueError as ex:
 
 # Bring python files into the parent scope
 from .py_neo_device_ex import PyNeoDeviceEx
-

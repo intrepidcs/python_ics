@@ -14,13 +14,15 @@ from ics_utility import get_pkg_version, create_version_py, GEN_DIR
 import pathlib
 from typing import List
 
+MODULE_NAME = "pyics"
+
 
 # Check for clang stuff here, read the docs doesn't have this so use what is in the repo
 if not os.getenv("READTHEDOCS"):
     if not shutil.which("clang"):
-        raise RuntimeError("clang is required for building python_ics.")
+        raise RuntimeError(f"clang is required for building {MODULE_NAME}.")
     if not shutil.which("clang-format"):
-        raise RuntimeError("clang-format is required for building python_ics.")
+        raise RuntimeError(f"clang-format is required for building {MODULE_NAME}.")
 
 def get_version():
     major = int(get_pkg_version().split(".")[0])
@@ -32,13 +34,16 @@ class _build_libicsneo(build_clib):
         # checkout and build libicsneo
         if platform.system().upper() in ("DARWIN", "LINUX"):
             import build_libicsneo
-            
             print("Checking out libicsneo...")
-            #build_libicsneo.checkout()
+            build_libicsneo.checkout()
             print("Building libicsneo...")
-            #build_libicsneo.build()
+            build_libicsneo.build()
             print("Copying libicsneo...")
             build_libicsneo.copy()
+        elif platform.system().upper() == "WINDOWS":
+            print("Windows uses icsneo40.dll instead of libicsneo.dll, skipping build")
+        else:
+            raise NotImplementedError("Unsupported platform: ", platform.system())
         super().run()
 
 class build_ext_ics(build_ext):
@@ -102,8 +107,8 @@ def get_ics_extension_compiler_arguments() -> List[str]:
         compile_args = []
     return compile_args
 
-ics_extension = Extension(
-    "python_ics.ics",
+c_extension = Extension(
+    f"{MODULE_NAME}.c_mod",
     define_macros=[("MAJOR_VERSION", get_version()[0]), ("MINOR_VERSION", get_version()[1]), ("EXTERNAL_PROJECT", 1)],
     include_dirs=["include", "include/ics", "src/ice/include", "src/ice/include/ice"],
     libraries=[],
@@ -125,25 +130,22 @@ ics_extension = Extension(
 
 package_data = {}
 if "DARWIN" in platform.system().upper():
-    package_data["ics"] = ["*.dylib"]
+    package_data[""] = ["*.dylib"]
 elif "LINUX" in platform.system().upper():
     package_data[""] = ["*.so"]
 
-python_ics_version = get_pkg_version()
-print(f"python_ics version: {python_ics_version}")
-
 setup(
-    name="ics",
-    version=python_ics_version,
+    name=MODULE_NAME,
+    version=get_pkg_version(),
     cmdclass={
         "build_libicsneo": _build_libicsneo,
         "build_py": _build_ics_py,
         "build_ext": build_ext_ics,
     },
     download_url="https://github.com/intrepidcs/python_ics/releases",
-    packages=["ics", "python_ics", "python_ics.structures"],
-    package_dir={"python_ics": "gen", "python_ics.structures": "gen/structures"},
+    packages=[MODULE_NAME, f"{MODULE_NAME}.structures"],
+    package_dir={MODULE_NAME: "gen", f"{MODULE_NAME}.structures": "gen/structures"},
     package_data=package_data,
     include_package_data=True,
-    ext_modules=[ics_extension],
+    ext_modules=[c_extension],
 )
