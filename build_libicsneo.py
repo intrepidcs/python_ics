@@ -4,6 +4,7 @@ import os
 import shutil
 import sys
 from pathlib import Path
+from ics_utility import GEN_DIR
 
 ROOT = Path.cwd()
 CPUS = str(multiprocessing.cpu_count())
@@ -148,9 +149,9 @@ def build():
 
 def copy():
     if sys.platform == "darwin":
-        shutil.copyfile(f"{LIBICSNEO_BUILD}/libicsneolegacy.dylib", "gen/ics/libicsneolegacy.dylib")
+        shutil.copyfile(f"{LIBICSNEO_BUILD}/libicsneolegacy.dylib", GEN_DIR / "libicsneolegacy.dylib")
     elif sys.platform == "linux":
-        shutil.copyfile(f"{LIBICSNEO_BUILD}/libicsneolegacy.so", "gen/ics/libicsneolegacy.so")
+        shutil.copyfile(f"{LIBICSNEO_BUILD}/libicsneolegacy.so", GEN_DIR / "libicsneolegacy.so")
 
 
 def clean():

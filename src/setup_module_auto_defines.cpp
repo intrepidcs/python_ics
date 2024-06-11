@@ -560,6 +560,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS2_FLAG2_LINK_MODE);
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS2_FLAG2_PHY_MODE);
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS2_FLAG2_LINK_MODE_AUTO);
+	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS2_FLAG2_IP_CONFIG_NOT_ALLOWED);
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS2_FLAG2_SFP_ID_SHIFT);
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS2_FLAG2_SFP_ID_MASK);
 	// enum
@@ -583,6 +584,10 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS10G_FLAG_LINK_MODE);
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS10G_FLAG_PHY_MODE);
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS10G_FLAG_LINK_MODE_AUTO);
+	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS10G_FLAG_COMPL_MODE);
+	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS10G_FLAG_PKT_CHECK);
+	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS10G_FLAG_PKT_GEN);
+	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS10G_FLAG_IP_CONFIG_NOT_ALLOWED);
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS10G_FLAG_COMM_IN_USE);
 	result += PyModule_AddIntMacro(module, ETHERNET10G_SETTINGS_SIZE);
 	result += PyModule_AddIntMacro(module, ETHERNET10T1S_SETTINGS_SIZE);

@@ -32,8 +32,8 @@ Documentation = "http://python-ics.readthedocs.io/"
 Repository = "https://github.com/intrepidcs/python_ics/"
 Issues = "https://github.com/intrepidcs/python_ics/issues"
 
-[tool.setuptools.dynamic]
-version = {attr = "ics.__version__"}
+#[tool.setuptools.dynamic]
+#version = {attr = "python_ics.__version__"}
 
 [build-system]
 requires = [

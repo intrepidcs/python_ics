@@ -1,9 +1,13 @@
-import ics
-from ics.ics import SpyMessage
+try:
+    import ics
+except ModuleNotFoundError as ex:
+    import sys
+    print(f"Warning: ics module is not installed. ics will not be available.", file=sys.stderr, flush=True)
+from .structures import neo_device_ex
 import ctypes
 from typing import Tuple
 
-class PyNeoDeviceEx(ics.neo_device_ex.neo_device_ex):
+class PyNeoDeviceEx(neo_device_ex.neo_device_ex):
     """Wrapper class around ics.neo_device_ex.neo_device_ex to support a more pythonic way of doing things."""
     # Internal handle from icsneoOpenDevice()
     _handle = None
@@ -23,7 +27,7 @@ class PyNeoDeviceEx(ics.neo_device_ex.neo_device_ex):
         return f"{self.Name} {self.serial_number}"
 
     def __repr__(self):
-        return f"<ics.{self.__class__.__name__} {self.Name} {self.serial_number}>"
+        return f"<python_ics.{self.__class__.__name__} {self.Name} {self.serial_number}>"
 
     def __eq__(self, other) -> bool:
         return \
@@ -107,7 +111,7 @@ class PyNeoDeviceEx(ics.neo_device_ex.neo_device_ex):
         """Transmit messages on the device. Requires the device to be open. See ics.transmit_messages for details on arguments."""
         return ics.transmit_messages(self, *args, **kwargs)
     
-    def get_messages(self, *args, **kwargs) -> Tuple[SpyMessage, int]:
+    def get_messages(self, *args, **kwargs) -> Tuple[object, int]:
         """Get messages on the device. Requires the device to be open. See ics.get_messages for details on arguments."""
         return ics.get_messages(self, *args, **kwargs)
 

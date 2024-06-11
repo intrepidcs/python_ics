@@ -2,7 +2,7 @@
 #define _DEFINES_H_
 #include <Python.h>
 
-#define MODULE_NAME "ics.ics"
+#define MODULE_NAME "python_ics.ics"
 #define MODULE_DESCRIPTION "Copyright Intrepid Control Systems, Inc."
 
 #define MIN_BASE36_SERIAL (16796160)

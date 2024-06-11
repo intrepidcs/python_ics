@@ -2,6 +2,7 @@
 from setuptools import setup, Extension
 from setuptools.command.build_clib import build_clib
 from setuptools.command.build_py import build_py
+from setuptools.command.build_ext import build_ext
 import os
 import sys
 import platform
@@ -9,15 +10,10 @@ import shutil
 import os.path
 import extract_icsneo40_defines
 import generate_icsneo40_structs
-from ics_utility import get_pkg_version, create_version_py, create_ics_init
+from ics_utility import get_pkg_version, create_version_py, create_ics_init, GEN_DIR
 import pathlib
 from typing import List
 
-# I had this in build_py but there are certain times its not called, for now lets force
-# it to run every single time we call setup. Its quick enough where it shouldn't hurt.
-create_ics_init()
-create_version_py()
-generate_icsneo40_structs.generate_all_files()
 
 # Check for clang stuff here, read the docs doesn't have this so use what is in the repo
 if not os.getenv("READTHEDOCS"):
@@ -38,12 +34,17 @@ class _build_libicsneo(build_clib):
             import build_libicsneo
             
             print("Checking out libicsneo...")
-            build_libicsneo.checkout()
+            #build_libicsneo.checkout()
             print("Building libicsneo...")
-            build_libicsneo.build()
+            #build_libicsneo.build()
             print("Copying libicsneo...")
             build_libicsneo.copy()
         super().run()
+
+class build_ext_ics(build_ext):
+    def run(self):
+        pathlib.Path("./gen/")
+        build_ext.run(self)
 
 
 class _build_ics_py(build_py):
@@ -53,17 +54,28 @@ class _build_ics_py(build_py):
 
         print("Copy python source files over to gen...")
         src_path = pathlib.Path("./src/")
-        gen_path = pathlib.Path("./gen/")
+        gen_path = GEN_DIR
+        struct_path = GEN_DIR / "structures"
+
+        shutil.rmtree(gen_path, ignore_errors=True)
+        struct_path.mkdir(parents=True, exist_ok=True)
         for dirpath, dirnames, filenames in os.walk(src_path):
             dirpath = pathlib.Path(dirpath)
             for name in filenames:
                 if pathlib.Path(name).suffix == ".py" and 'icsdebug' not in name:
                     src = (dirpath / name)
                     dest = (gen_path / dirpath.relative_to(src_path) / name)
+                    dest.parent.mkdir(parents=True, exist_ok=True)
                     print(f"Copying {src} to {dest}")
                     shutil.copy(src, dest)
+        # I had this in build_py but there are certain times its not called, for now lets force
+        # it to run every single time we call setup. Its quick enough where it shouldn't hurt.
+        create_ics_init()
+        create_version_py()
+        generate_icsneo40_structs.generate_all_files()
         self.run_command("build_libicsneo")
         super().run()
+        
 
 
 def get_ics_extension_compiler_arguments() -> List[str]:
@@ -92,7 +104,7 @@ def get_ics_extension_compiler_arguments() -> List[str]:
     return compile_args
 
 ics_extension = Extension(
-    "ics.ics",
+    "python_ics.ics",
     define_macros=[("MAJOR_VERSION", get_version()[0]), ("MINOR_VERSION", get_version()[1]), ("EXTERNAL_PROJECT", 1)],
     include_dirs=["include", "include/ics", "src/ice/include", "src/ice/include/ice"],
     libraries=[],
@@ -118,16 +130,20 @@ if "DARWIN" in platform.system().upper():
 elif "LINUX" in platform.system().upper():
     package_data[""] = ["*.so"]
 
+python_ics_version = get_pkg_version()
+print(f"python_ics version: {python_ics_version}")
+
 setup(
-    name="python_ics",
-    version=get_pkg_version(),
+    name="ics",
+    version=python_ics_version,
     cmdclass={
         "build_libicsneo": _build_libicsneo,
         "build_py": _build_ics_py,
+        "build_ext": build_ext_ics,
     },
     download_url="https://github.com/intrepidcs/python_ics/releases",
-    packages=["ics", "ics.structures"],
-    package_dir={"ics": "gen/ics", "ics.structures": "gen/ics/structures"},
+    packages=["ics", "python_ics", "python_ics.structures"],
+    package_dir={"python_ics": "gen", "python_ics.structures": "gen/structures"},
     package_data=package_data,
     include_package_data=True,
     ext_modules=[ics_extension],

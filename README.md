@@ -70,6 +70,20 @@ clang-format version 11.1.0
 PS > python -m pip install .
 ```
 
+# Installing from source using pip
+
+- Install requirements (linux):
+  - `sudo apt install clang clang-format build-essential bison flex cmake`
+  - See `pyproject.toml` for more details on package requirements for different systems.
+  
+- Remotely:
+  - `pip install git+https://github.com/intrepidcs/python_ics.git`
+- Locally (git clone):
+  - `git clone https://github.com/intrepidcs/python_ics.git`
+  - `cd python_ics`
+  - `git submodule update --init`
+  - `pip install .`
+
 # Debugging on Windows with Visual Studio Code
 
 - Build and install python_ics for debug. When installing python choose the following:
