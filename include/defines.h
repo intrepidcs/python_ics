@@ -2,8 +2,9 @@
 #define _DEFINES_H_
 #include <Python.h>
 
-#define MODULE_NAME "python_ics.ics"
-#define MODULE_DESCRIPTION "Copyright Intrepid Control Systems, Inc."
+#define PACKAGE_NAME "pyics"
+#define MOD_NAME "c_mod"
+#define MODULE_NAME PACKAGE_NAME ## "." ## MOD_NAME
 
 #define MIN_BASE36_SERIAL (16796160)
 #define MAX_SERIAL (2176782335)

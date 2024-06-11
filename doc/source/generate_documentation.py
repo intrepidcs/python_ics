@@ -1,22 +1,22 @@
 import inspect
-import ics
+import pyics
 
 
 def generate_structures():
     # data = '.. autosummary::\n'
     """
-    \t.. automodule:: ics.structures.{name}.{name}\n\t\t:members:\n\t\t:undoc-members:\n\n"
+    \t.. automodule:: pyics.structures.{name}.{name}\n\t\t:members:\n\t\t:undoc-members:\n\n"
     """
     data = ""
-    for name, value in inspect.getmembers(ics.structures, inspect.ismodule):
-        # data += f"\t.. automodule:: ics.structures.{name}\n\t\t:members:\n\t\t:show-inheritance:\n\t\t:undoc-members:\n\n"
-        data += f"\t.. autoclass:: ics.structures.{name}.{name}\n\t\t:members:\n\t\t:undoc-members:\n\n"
+    for name, value in inspect.getmembers(pyics.structures, inspect.ismodule):
+        # data += f"\t.. automodule:: pyics.structures.{name}\n\t\t:members:\n\t\t:show-inheritance:\n\t\t:undoc-members:\n\n"
+        data += f"\t.. autoclass:: pyics.structures.{name}.{name}\n\t\t:members:\n\t\t:undoc-members:\n\n"
     return data
 
 
 def generate_functions():
     data = ""
-    functions = inspect.getmembers(ics, inspect.isroutine)
+    functions = inspect.getmembers(pyics, inspect.isroutine)
     new_style_functions = []
     icsneo_style_functions = []
     inbetween_style_functions = []
@@ -31,14 +31,14 @@ def generate_functions():
     data += ".. autosummary::\n"
     for name in new_style_functions + inbetween_style_functions + icsneo_style_functions:
         if name:
-            data += f"\tics.{name}\n"
+            data += f"\tpyics.{name}\n"
     return data
 
 
 def generate_variables():
     data = ""
-    for variable in [item for item in dir(ics) if not item.startswith("__") and item.isupper()]:
-        data += f"\t.. py:data:: {str(variable)}\n\t\t:annotation: = {str(getattr(ics, variable))}\n\n"
+    for variable in [item for item in dir(pyics) if not item.startswith("__") and item.isupper()]:
+        data += f"\t.. py:data:: {str(variable)}\n\t\t:annotation: = {str(getattr(pyics, variable))}\n\n"
     return data
 
 
@@ -50,7 +50,7 @@ def generate_documentation():
     ##############################################################################
     PyNeoDeviceEx
     ##############################################################################
-    .. autoclass:: ics.PyNeoDeviceEx
+    .. autoclass:: pyics.PyNeoDeviceEx
         :members:
         :show-inheritance:
         :undoc-members:
@@ -58,7 +58,7 @@ def generate_documentation():
     ##############################################################################
     Module Documentation
     ##############################################################################
-    .. automodule:: ics.ics
+    .. automodule:: pyics.c_mod
         :members:
         :show-inheritance:
         :undoc-members:

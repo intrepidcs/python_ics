@@ -515,7 +515,7 @@ PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
             return NULL;
         }
         for (int i = 0; i < count; ++i) {
-            PyObject* obj = _getPythonModuleObject("python_ics.py_neo_device_ex", "PyNeoDeviceEx");
+            PyObject* obj = _getPythonModuleObject(PACKAGE_NAME ".py_neo_device_ex", "PyNeoDeviceEx");
             if (!obj) {
                 return set_ics_exception(exception_runtime_error(), "Failed to allocate PyNeoDeviceEx");
             }
@@ -656,7 +656,7 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
                     // return set_ics_exception(exception_runtime_error(), "Found device, but its already open!");
                 }
                 // We matched a neoDevice, lets allocate it here.
-                device = _getPythonModuleObject("python_ics.py_neo_device_ex", "PyNeoDeviceEx");
+                device = _getPythonModuleObject(PACKAGE_NAME ".py_neo_device_ex", "PyNeoDeviceEx");
                 if (!device) {
                     return NULL;
                 }

@@ -1,5 +1,5 @@
 [project]
-name = "python_ics"
+name = "pyics"
 dynamic = ["version"]
 authors = [
   {name = "David Rebbe", email = "drebbe@intrepidcs.com"},
