@@ -740,17 +740,8 @@ def generate(filename="include/ics/icsnVC40.h"):
     gen_path = GEN_DIR.resolve()
     print("Current directory: ", os.getcwd())
     importlib.import_module(".structures", "gen")
-    for file_name in file_names:
-        if file_name.startswith("__"):
-            continue
-        try:
-            fname = re.sub(r'(\.py)', '', file_name)
-            print(f"Importing / Verifying {output_dir / file_name}...                          ", end="\n")
-            importlib.import_module(f".structures.{fname}", package=".gen")
-        except Exception as ex:
-            print(f"""\nERROR: {ex} fname: '{fname}'""")
-            raise ex
-    print("Done Verifying all imports...                                                                    ")
+    validate_structs = importlib.import_module(".validate_structs", package=".gen")
+    validate_structs.validate_structs()
 
 
 def _write_c_object(f, c_object):

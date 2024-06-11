@@ -39,46 +39,8 @@ def create_version_py(path: pathlib.Path = GEN_VERSION_PY) -> None:
         f.write(f"""__version__ = "{pkg_version}"\n""")
         f.write(f"""__full_version__ = "{full_version}"\n""")
 
-def create_ics_init():
-    fdata = \
-"""# Warning: This file is auto generated. Don't modify if you value your sanity!
-
-
-try:
-    # Bring the auto generated structures into scope
-    from .structures import *
-    from .structures.neo_device import NeoDevice, neo_device
-except ImportError as ex:
-    # If we are still building this won't work correctly.
-    import sys
-    print("Warning: .structures is not installed. .structures will not be available.", file=sys.stderr, flush=True)
-
-# Bring the c module "ics" into the parent scope
-try:
-    from .ics import *
-except ImportError as ex:
-    # If we are still building this won't work correctly.
-    import sys
-    print("Warning: ics module is not installed. ics will not be available.", file=sys.stderr, flush=True)
-
-# Bring the auto generated python files info into the parent scope
-from . import __version
-__version__ = __version.__version__
-__full_version__ = __version.__full_version__
-from .hiddenimports import hidden_imports
-
-# Bring python files into the parent scope
-from .py_neo_device_ex import PyNeoDeviceEx
-
-"""
-    init_path = GEN_DIR / "__init__.py"
-    print(f"Creating '{init_path}'...")
-    init_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(init_path, "w+") as f:
-        f.write(fdata)
 
 
 if __name__ == "__main__":
-    create_ics_init()
     create_version_py()
     print("Version info generated!")

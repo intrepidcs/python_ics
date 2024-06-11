@@ -1,13 +1,20 @@
+import ctypes
+from typing import Tuple
 try:
     import ics
 except ModuleNotFoundError as ex:
     import sys
-    print(f"Warning: ics module is not installed. ics will not be available.", file=sys.stderr, flush=True)
-from .structures import neo_device_ex
-import ctypes
-from typing import Tuple
+    print(f"Warning: py_neo_device_ex: ics module is not installed. ics will not be available.", file=sys.stderr, flush=True)
+try:
+    from .structures.neo_device_ex import neo_device_ex
+except ValueError as ex:
+    # This is only required when building
+    print(ex)
+    class neo_device_ex(ctypes.Structure):
+        pass
 
-class PyNeoDeviceEx(neo_device_ex.neo_device_ex):
+
+class PyNeoDeviceEx(neo_device_ex):
     """Wrapper class around ics.neo_device_ex.neo_device_ex to support a more pythonic way of doing things."""
     # Internal handle from icsneoOpenDevice()
     _handle = None

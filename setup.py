@@ -70,7 +70,6 @@ class _build_ics_py(build_py):
                     shutil.copy(src, dest)
         # I had this in build_py but there are certain times its not called, for now lets force
         # it to run every single time we call setup. Its quick enough where it shouldn't hurt.
-        create_ics_init()
         create_version_py()
         generate_icsneo40_structs.generate_all_files()
         self.run_command("build_libicsneo")
