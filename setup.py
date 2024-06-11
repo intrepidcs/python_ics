@@ -16,6 +16,11 @@ from typing import List
 
 MODULE_NAME = "pyics"
 
+# I had this in build_py but there are certain times its not called, for now lets force
+# it to run every single time we call setup. Its quick enough where it shouldn't hurt.
+create_version_py()
+generate_icsneo40_structs.generate_all_files()
+
 
 # Check for clang stuff here, read the docs doesn't have this so use what is in the repo
 if not os.getenv("READTHEDOCS"):
@@ -73,10 +78,6 @@ class _build_ics_py(build_py):
                     dest.parent.mkdir(parents=True, exist_ok=True)
                     print(f"Copying {src} to {dest}")
                     shutil.copy(src, dest)
-        # I had this in build_py but there are certain times its not called, for now lets force
-        # it to run every single time we call setup. Its quick enough where it shouldn't hurt.
-        create_version_py()
-        generate_icsneo40_structs.generate_all_files()
         self.run_command("build_libicsneo")
         super().run()
         
