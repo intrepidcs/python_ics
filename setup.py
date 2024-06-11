@@ -10,7 +10,7 @@ import shutil
 import os.path
 import extract_icsneo40_defines
 import generate_icsneo40_structs
-from ics_utility import get_pkg_version, create_version_py, create_ics_init, GEN_DIR
+from ics_utility import get_pkg_version, create_version_py, GEN_DIR
 import pathlib
 from typing import List
 
