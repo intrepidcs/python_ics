@@ -280,7 +280,9 @@ static PyObject* spy_message_object_getattr(PyObject* o, PyObject* attr_name)
         unsigned char* ExtraDataPtr = (unsigned char*)obj->msg.ExtraDataPtr;
         bool extra_data_ptr_enabled = obj->msg.ExtraDataPtrEnabled != 0;
         // Ethernet protocol uses the ExtraDataPtrEnabled reversed internally
-        if ((obj->msg.Protocol == SPY_PROTOCOL_ETHERNET || obj->msg.Protocol == SPY_PROTOCOL_SPI || obj->msg.Protocol == SPY_PROTOCOL_WBMS) 
+        if ((obj->msg.Protocol == SPY_PROTOCOL_ETHERNET || 
+             obj->msg.Protocol == SPY_PROTOCOL_SPI || 
+             obj->msg.Protocol == SPY_PROTOCOL_WBMS) 
             && obj->msg.ExtraDataPtr != NULL) {
             extra_data_ptr_enabled = true;
         }
