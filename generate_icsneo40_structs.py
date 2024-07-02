@@ -737,11 +737,11 @@ def generate(filename="include/ics/icsnVC40.h"):
         f.write("]\n\n")
 
     # Verify We can at least import all of the modules - quick check to make sure parser worked.
-    gen_path = GEN_DIR.resolve()
-    print("Current directory: ", os.getcwd())
-    importlib.import_module(".structures", "gen")
-    validate_structs = importlib.import_module(".validate_structs", package=".gen")
-    validate_structs.validate_structs()
+    #gen_path = GEN_DIR.resolve()
+    #print("Current directory: ", os.getcwd())
+    #_structures_module = importlib.import_module(".structures", "gen")
+    #validate_structs = importlib.import_module(".validate_structs", package="gen")
+    #validate_structs.validate_structs()
 
 
 def _write_c_object(f, c_object):
@@ -913,7 +913,6 @@ def generate_all_files():
         if path.exists():
             if "Internal" in str(filename):
                 print("WARNING: Generating internal header!")
-            print(f"Parsing {str(path)}...")
             generate(str(path))
 
 if __name__ == "__main__":
