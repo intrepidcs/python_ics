@@ -4,6 +4,7 @@ include extract_icsneo40_defines.py
 include generate_icsneo40_structs.py
 include ics_utility.py
 include requirements.txt
-include validate_structs.py
+include src/validate_structs.py
+include gen/*.py
 graft .git
 graft src/ice

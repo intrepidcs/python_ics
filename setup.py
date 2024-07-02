@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 from setuptools import setup, Extension
+from setuptools.command.build import build
 from setuptools.command.build_clib import build_clib
-from setuptools.command.build_py import build_py
-from setuptools.command.build_ext import build_ext
+from setuptools.command.egg_info import egg_info
+from setuptools.command.develop import develop
+from setuptools.command.install import install
+
 import os
 import sys
 import platform
@@ -16,12 +19,6 @@ from typing import List
 
 MODULE_NAME = "pyics"
 
-# I had this in build_py but there are certain times its not called, for now lets force
-# it to run every single time we call setup. Its quick enough where it shouldn't hurt.
-create_version_py()
-generate_icsneo40_structs.generate_all_files()
-
-
 # Check for clang stuff here, read the docs doesn't have this so use what is in the repo
 if not os.getenv("READTHEDOCS"):
     if not shutil.which("clang"):
@@ -33,6 +30,29 @@ def get_version():
     major = int(get_pkg_version().split(".")[0])
     minor = int(get_pkg_version().split(".")[1])
     return major, minor
+
+def prepare_python_source_files():
+    print("Copy python source files over to gen...")
+    src_path = pathlib.Path("./src/")
+    gen_path = GEN_DIR
+    struct_path = GEN_DIR / "structures"
+
+    shutil.rmtree(gen_path, ignore_errors=True)
+    struct_path.mkdir(parents=True, exist_ok=True)
+    for dirpath, dirnames, filenames in os.walk(src_path):
+        dirpath = pathlib.Path(dirpath)
+        for name in filenames:
+            if pathlib.Path(name).suffix == ".py" and 'icsdebug' not in name:
+                src = (dirpath / name)
+                dest = (gen_path / dirpath.relative_to(src_path) / name)
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                print(f"Copying {src} to {dest}")
+                shutil.copy(src, dest)
+
+    create_version_py()
+    generate_icsneo40_structs.generate_all_files()
+    print("Generating python defines from icsnVC40.h...")
+    extract_icsneo40_defines.extract()
 
 class _build_libicsneo(build_clib):
     def run(self):
@@ -51,37 +71,82 @@ class _build_libicsneo(build_clib):
             raise NotImplementedError("Unsupported platform: ", platform.system())
         super().run()
 
-class build_ext_ics(build_ext):
+###############################################################################
+# Custom Command class begins here
+#
+#
+# python setup.py build calls in this order (on windows):
+# running build
+# running build_py
+# running egg_info
+# running build_ext
+#
+#
+# python setup.py install calls in this order (on windows):
+# running install
+# running build
+# running build_py
+# running egg_info
+# running build_ext
+# running install_lib
+# running install_egg_info
+# running install_scripts
+#
+# python -m build . calls in this order (on windows):
+# running egg_info
+# running sdist
+# running egg_info
+# running check
+# running egg_info
+# running bdist_wheel
+# running build
+# running build_py
+# running egg_info
+# running build_ext
+# running install
+# running install_lib
+# running install_egg_info
+# running install_scripts
+#
+# C:\python\python313\python -m pip install . -v calls in this order (on windows):
+# running egg_info
+# running dist_info
+# running bdist_wheel
+# running build
+# running build_py
+# running egg_info
+# running build_ext
+# running install
+# running build_libicsneo
+# running install_lib
+# running install_egg_info
+# running install_scripts
+#
+###############################################################################
+
+class _build(build):
     def run(self):
-        pathlib.Path("./gen/")
-        build_ext.run(self)
-
-
-class _build_ics_py(build_py):
-    def run(self):
-        print("Generating python defines from icsnVC40.h...")
-        extract_icsneo40_defines.extract()
-
-        print("Copy python source files over to gen...")
-        src_path = pathlib.Path("./src/")
-        gen_path = GEN_DIR
-        struct_path = GEN_DIR / "structures"
-
-        shutil.rmtree(gen_path, ignore_errors=True)
-        struct_path.mkdir(parents=True, exist_ok=True)
-        for dirpath, dirnames, filenames in os.walk(src_path):
-            dirpath = pathlib.Path(dirpath)
-            for name in filenames:
-                if pathlib.Path(name).suffix == ".py" and 'icsdebug' not in name:
-                    src = (dirpath / name)
-                    dest = (gen_path / dirpath.relative_to(src_path) / name)
-                    dest.parent.mkdir(parents=True, exist_ok=True)
-                    print(f"Copying {src} to {dest}")
-                    shutil.copy(src, dest)
-        self.run_command("build_libicsneo")
+        #print(f"DEBUG: {self.__class__.__name__}")
+        prepare_python_source_files()
         super().run()
         
+class _egg_info(egg_info):
+    def run(self):
+        #print(f"DEBUG: {self.__class__.__name__}")
+        prepare_python_source_files()
+        super().run()
 
+class _develop(develop):
+    def run(self):
+        #print(f"DEBUG: {self.__class__.__name__}")
+        prepare_python_source_files()
+        super().run()
+
+class _install(install):
+    def run(self):
+        #print(f"DEBUG: {self.__class__.__name__}")
+        self.run_command("build_libicsneo")
+        super().run()
 
 def get_ics_extension_compiler_arguments() -> List[str]:
     """Return a list of compiler arguments to append for compiling the ics extension module"""
@@ -139,9 +204,11 @@ setup(
     name=MODULE_NAME,
     version=get_pkg_version(),
     cmdclass={
+        "build": _build,
         "build_libicsneo": _build_libicsneo,
-        "build_py": _build_ics_py,
-        "build_ext": build_ext_ics,
+        "egg_info": _egg_info,
+        "develop": _develop,
+        "install": _install,
     },
     download_url="https://github.com/intrepidcs/python_ics/releases",
     packages=[MODULE_NAME, f"{MODULE_NAME}.structures"],
