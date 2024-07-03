@@ -4,7 +4,7 @@
 
 #define PACKAGE_NAME "pyics"
 #define MOD_NAME "c_mod"
-#define MODULE_NAME PACKAGE_NAME ## "." ## MOD_NAME
+#define MODULE_NAME PACKAGE_NAME "." MOD_NAME
 
 #define MIN_BASE36_SERIAL (16796160)
 #define MAX_SERIAL (2176782335)
