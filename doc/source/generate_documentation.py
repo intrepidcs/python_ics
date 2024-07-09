@@ -1,22 +1,22 @@
 import inspect
-import pyics
+import python_ics
 
 
 def generate_structures():
     # data = '.. autosummary::\n'
     """
-    \t.. automodule:: pyics.structures.{name}.{name}\n\t\t:members:\n\t\t:undoc-members:\n\n"
+    \t.. automodule:: python_ics.structures.{name}.{name}\n\t\t:members:\n\t\t:undoc-members:\n\n"
     """
     data = ""
-    for name, value in inspect.getmembers(pyics.structures, inspect.ismodule):
-        # data += f"\t.. automodule:: pyics.structures.{name}\n\t\t:members:\n\t\t:show-inheritance:\n\t\t:undoc-members:\n\n"
-        data += f"\t.. autoclass:: pyics.structures.{name}.{name}\n\t\t:members:\n\t\t:undoc-members:\n\n"
+    for name, value in inspect.getmembers(python_ics.structures, inspect.ismodule):
+        # data += f"\t.. automodule:: python_ics.structures.{name}\n\t\t:members:\n\t\t:show-inheritance:\n\t\t:undoc-members:\n\n"
+        data += f"\t.. autoclass:: python_ics.structures.{name}.{name}\n\t\t:members:\n\t\t:undoc-members:\n\n"
     return data
 
 
 def generate_functions():
     data = ""
-    functions = inspect.getmembers(pyics, inspect.isroutine)
+    functions = inspect.getmembers(python_ics, inspect.isroutine)
     new_style_functions = []
     icsneo_style_functions = []
     inbetween_style_functions = []
@@ -31,14 +31,14 @@ def generate_functions():
     data += ".. autosummary::\n"
     for name in new_style_functions + inbetween_style_functions + icsneo_style_functions:
         if name:
-            data += f"\tpyics.{name}\n"
+            data += f"\tpython_ics.{name}\n"
     return data
 
 
 def generate_variables():
     data = ""
-    for variable in [item for item in dir(pyics) if not item.startswith("__") and item.isupper()]:
-        data += f"\t.. py:data:: {str(variable)}\n\t\t:annotation: = {str(getattr(pyics, variable))}\n\n"
+    for variable in [item for item in dir(python_ics) if not item.startswith("__") and item.isupper()]:
+        data += f"\t.. py:data:: {str(variable)}\n\t\t:annotation: = {str(getattr(python_ics, variable))}\n\n"
     return data
 
 
@@ -50,7 +50,7 @@ def generate_documentation():
     ##############################################################################
     PyNeoDeviceEx
     ##############################################################################
-    .. autoclass:: pyics.PyNeoDeviceEx
+    .. autoclass:: python_ics.PyNeoDeviceEx
         :members:
         :show-inheritance:
         :undoc-members:
@@ -58,7 +58,7 @@ def generate_documentation():
     ##############################################################################
     Module Documentation
     ##############################################################################
-    .. automodule:: pyics.c_mod
+    .. automodule:: python_ics.c_mod
         :members:
         :show-inheritance:
         :undoc-members:

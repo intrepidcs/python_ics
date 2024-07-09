@@ -1,9 +1,21 @@
 import os
 import dunamai
 import pathlib
+import tomllib
 
 GEN_DIR = pathlib.Path("./gen")
 GEN_VERSION_PY = GEN_DIR / "__version.py"
+
+def get_module_name() -> str:
+    """
+    Get the project name specified from the pyproject.toml file.
+    
+    Returns:
+        str: The project name.
+    """
+    with open("pyproject.toml", "rb") as f:
+        data = tomllib.load(f)
+        return data["project"]["name"]
 
 def get_pkg_version() -> str:
     """
@@ -38,8 +50,6 @@ def create_version_py(path: pathlib.Path = GEN_VERSION_PY) -> None:
     with open(path, "w+") as f:
         f.write(f"""__version__ = "{pkg_version}"\n""")
         f.write(f"""__full_version__ = "{full_version}"\n""")
-
-
 
 if __name__ == "__main__":
     create_version_py()
