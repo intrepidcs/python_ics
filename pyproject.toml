@@ -1,5 +1,5 @@
 [project]
-name = "pyics"
+name = "python_ics"
 dynamic = ["version"]
 authors = [
   {name = "David Rebbe", email = "drebbe@intrepidcs.com"},
@@ -31,9 +31,6 @@ Homepage = "https://intrepidcs.com"
 Documentation = "http://python-ics.readthedocs.io/"
 Repository = "https://github.com/intrepidcs/python_ics/"
 Issues = "https://github.com/intrepidcs/python_ics/issues"
-
-#[tool.setuptools.dynamic]
-#version = {attr = "python_ics.__version__"}
 
 [build-system]
 requires = [

@@ -2,7 +2,7 @@
 #define _DEFINES_H_
 #include <Python.h>
 
-#define PACKAGE_NAME "pyics"
+#define PACKAGE_NAME "python_ics"
 #define MOD_NAME "c_mod"
 #define MODULE_NAME PACKAGE_NAME ## "." ## MOD_NAME
 

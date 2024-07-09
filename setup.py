@@ -13,11 +13,11 @@ import shutil
 import os.path
 import extract_icsneo40_defines
 import generate_icsneo40_structs
-from ics_utility import get_pkg_version, create_version_py, GEN_DIR
+from ics_utility import get_pkg_version, create_version_py, GEN_DIR, get_module_name
 import pathlib
 from typing import List
 
-MODULE_NAME = "pyics"
+MODULE_NAME = get_module_name()
 
 # Check for clang stuff here, read the docs doesn't have this so use what is in the repo
 if not os.getenv("READTHEDOCS"):
@@ -54,22 +54,6 @@ def prepare_python_source_files():
     print("Generating python defines from icsnVC40.h...")
     extract_icsneo40_defines.extract()
 
-class _build_libicsneo(build_clib):
-    def run(self):
-        # checkout and build libicsneo
-        if platform.system().upper() in ("DARWIN", "LINUX"):
-            import build_libicsneo
-            print("Checking out libicsneo...")
-            build_libicsneo.checkout()
-            print("Building libicsneo...")
-            build_libicsneo.build()
-            print("Copying libicsneo...")
-            build_libicsneo.copy()
-        elif platform.system().upper() == "WINDOWS":
-            print("Windows uses icsneo40.dll instead of libicsneo.dll, skipping build")
-        else:
-            raise NotImplementedError("Unsupported platform: ", platform.system())
-        super().run()
 
 ###############################################################################
 # Custom Command class begins here
@@ -123,6 +107,24 @@ class _build_libicsneo(build_clib):
 # running install_scripts
 #
 ###############################################################################
+
+class _build_libicsneo(build_clib):
+    def run(self):
+        # checkout and build libicsneo
+        if platform.system().upper() in ("DARWIN", "LINUX"):
+            import build_libicsneo
+            print("Checking out libicsneo...")
+            build_libicsneo.checkout()
+            print("Building libicsneo...")
+            build_libicsneo.build()
+            print("Copying libicsneo...")
+            build_libicsneo.copy()
+        elif platform.system().upper() == "WINDOWS":
+            print("Windows uses icsneo40.dll instead of libicsneo.dll, skipping build")
+        else:
+            raise NotImplementedError("Unsupported platform: ", platform.system())
+        super().run()
+
 
 class _build(build):
     def run(self):
