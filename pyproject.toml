@@ -37,6 +37,7 @@ requires = [
   "setuptools",
   "wheel",
   "dunamai",
+  "tomlkit",
 ]
 [tool.cibuildwheel]
 build = "{*-win32,*-win_amd64,*-macosx_universal2,*-manylinux_x86_64,*-manylinux_aarch64}"
