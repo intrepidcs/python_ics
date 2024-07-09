@@ -1,6 +1,6 @@
-import ics
-from ics.structures.s_device_settings import s_device_settings
-from ics.structures.e_device_settings_type import e_device_settings_type
+import python_ics
+from python_ics.structures.s_device_settings import s_device_settings
+from python_ics.structures.e_device_settings_type import e_device_settings_type
 
 
 def get_device_specific_settings(s: s_device_settings) -> object:
@@ -58,17 +58,17 @@ def print_settings(device_specific_settings):
 if __name__ == "__main__":
     try:
         # Open the first device
-        device = ics.open_device()
+        device = python_ics.open_device()
         print(f"Opened Device {device} (Open Client handles: {device.NumberOfClients})...")
-    except ics.RuntimeError as ex:
+    except python_ics.RuntimeError as ex:
         print(f"Failed to open first device: {ex}")
         exit(1)
 
     print("Loading default settings...")
-    ics.load_default_settings(device)
+    python_ics.load_default_settings(device)
 
     print("Reading settings...")
-    settings = ics.get_device_settings(device)
+    settings = python_ics.get_device_settings(device)
     device_specific_settings = get_device_specific_settings(settings)
     print_settings(device_specific_settings)
 
@@ -79,10 +79,10 @@ if __name__ == "__main__":
         device_specific_settings.lin1.MasterResistor = 0
     else:
         print("This device doesn't have a lin1 structure to change!")
-    ics.set_device_settings(device, settings)
+    python_ics.set_device_settings(device, settings)
     print_settings(device_specific_settings)
 
     print("Reading settings...")
-    settings = ics.get_device_settings(device)
+    settings = python_ics.get_device_settings(device)
     device_specific_settings = get_device_specific_settings(settings)
     print_settings(device_specific_settings)

@@ -14,7 +14,7 @@ Due to the added complexity underneath when building, PyInstaller ``hidden_impor
 
     # -*- mode: python ; coding: utf-8 -*-
     
-    import ics
+    import python_ics
     
     block_cipher = None
     
@@ -62,7 +62,7 @@ Previous:
 
 .. code-block:: python
 
-    import ics
+    import python_ics
     # Open the first device
     device = ics.open_device()
     # Load default settings
@@ -75,7 +75,7 @@ New:
 
 .. code-block:: python
 
-    import ics
+    import python_ics
     # Open the first device
     device = ics.open_device()
     # Load default settings

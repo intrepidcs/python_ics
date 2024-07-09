@@ -29,7 +29,7 @@ Python wrapper for interfacing to IntrepidCS Hardware.
 # Basic usage
 
 ```python
-import ics
+import python_ics
 
 devices = ics.find_devices()
 print(f"Found {len(devices)} devices...")

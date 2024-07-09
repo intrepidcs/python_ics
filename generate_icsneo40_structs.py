@@ -883,7 +883,7 @@ def generate_pyfile(c_object, path):
 
         import_names = get_c_object_imports(c_object)
         for import_name in import_names:
-            #f.write(f"from ics.structures.{import_name} import *\n")
+            #f.write(f"from python_ics.structures.{import_name} import *\n")
             f.write(f"from .{import_name} import *\n")
         f.write("\n\n")
 

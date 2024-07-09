@@ -141,7 +141,7 @@ extern "C"
                 "\tdevice_type (int): Accepts " MODULE_NAME ".NEODEVICE_* Macros\n\n"                                  \
                 "\t*New in 3.0 (803):*\n\n"                                                                            \
                 "\tdevice_types (List/Tuple): Accepts a Container of " MODULE_NAME ".NEODEVICE_* Macros\n\n"           \
-                "\tnetwork_id (int): OptionsFindNeoEx.CANOptions.iNetworkID. Usually ics.NETID_CAN, if needed\n\n"     \
+                "\tnetwork_id (int): OptionsFindNeoEx.CANOptions.iNetworkID. Usually python_ics.NETID_CAN, if needed\n\n"     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
@@ -150,12 +150,12 @@ extern "C"
                 "\tTuple of :class:`" PACKAGE_NAME ".PyNeoDeviceEx` for use in :func:`" MODULE_NAME        \
                 ".open_device`\n"                                                                                      \
                 "\n"                                                                                                   \
-                "\t>>> for device in ics.find_devices():\n"                                                            \
+                "\t>>> for device in python_ics.find_devices():\n"                                                            \
                 "\t...     print(device.Name, device.SerialNumber)\n"                                                  \
                 "\t...\n"                                                                                              \
                 "\tneoVI FIRE 59886\n"                                                                                 \
                 "\n*New in 3.0 (803):*\n"                                                                              \
-                "\t>>> for device in ics.find_devices([ics.NEODEVICE_FIRE, ics.NEODEVICE_VCAN3]):\n"                   \
+                "\t>>> for device in python_ics.find_devices([python_ics.NEODEVICE_FIRE, python_ics.NEODEVICE_VCAN3]):\n"                   \
                 "\t...     print(device.Name, device.SerialNumber)\n"                                                  \
                 "\t...\n"                                                                                              \
                 "\tneoVI FIRE 59886\n"
@@ -180,7 +180,7 @@ extern "C"
     "\tconfig_read (int): Specifies whether the DLL should read the neoVI's device configuration before enabling the " \
     "device. It is recommended that this value be set to 1.\n\n"                                                       \
     "\toptions (int): DEVICE_OPTION_* defines\n\n"                                                                     \
-    "\tnetwork_id (int): OptionsFindNeoEx.CANOptions.iNetworkID. Usually ics.NETID_CAN, if needed\n\n"                 \
+    "\tnetwork_id (int): OptionsFindNeoEx.CANOptions.iNetworkID. Usually python_ics.NETID_CAN, if needed\n\n"                 \
     "\tuse_server (int): Defaults to False, Setting to True allows opening the same device more than once.\n\n"        \
     "\n"                                                                                                               \
     "Raises:\n"                                                                                                        \
@@ -193,8 +193,8 @@ extern "C"
     "\tIf `device` parameter is omitted, a :class:`" PACKAGE_NAME ".PyNeoDeviceEx"                            \
     "` will be returned with the first availible free device. \n"                                                      \
     "\n"                                                                                                               \
-    "\t>>> for device in ics.find_devices():\n"                                                                        \
-    "\t...     ics.open_device(device)\n"                                                                              \
+    "\t>>> for device in python_ics.find_devices():\n"                                                                        \
+    "\t...     python_ics.open_device(device)\n"                                                                              \
     "\t...\n"                                                                                                          \
     "\n"                                                                                                               \
     ".. note::\n\t:class:`" PACKAGE_NAME ".PyNeoDeviceEx"                                                     \
@@ -215,10 +215,10 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tError Count (int)\n"                                                                                \
                 "\n"                                                                                                   \
-                "\t>>> for device in ics.find_devices():\n"                                                            \
-                "\t...     ics.open_device(device)\n"                                                                  \
+                "\t>>> for device in python_ics.find_devices():\n"                                                            \
+                "\t...     python_ics.open_device(device)\n"                                                                  \
                 "\t...     # Do something with the device...\n"                                                        \
-                "\t...     ics.close_device(device)\n"                                                                 \
+                "\t...     python_ics.close_device(device)\n"                                                                 \
                 "\t...\n"                                                                                              \
                 "\n"                                                                                                   \
                 ".. note::\n\t:class:`" PACKAGE_NAME ".PyNeoDeviceEx"                                         \
@@ -239,8 +239,8 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tTuple: (datetime.datetime object, offset in seconds)\n"                                             \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> ics.get_rtc(device)\n"                                                                          \
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> python_ics.get_rtc(device)\n"                                                                          \
                 "\t(datetime.datetime(2014, 9, 10, 17, 45, 45), 3)\n"
 
 #define _DOC_SET_RTC                                                                                                   \
@@ -259,8 +259,8 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> ics.set_rtc(device)\n"
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> python_ics.set_rtc(device)\n"
 
 #define _DOC_COREMINI_LOAD                                                                                             \
     MODULE_NAME ".coremini_load(device, coremini, location)\n"                                                         \
@@ -280,8 +280,8 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> ics.coremini_load(device, 'cmvspy.vs3cmb', ics.SCRIPT_LOCATION_SDCARD)\n"
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> python_ics.coremini_load(device, 'cmvspy.vs3cmb', python_ics.SCRIPT_LOCATION_SDCARD)\n"
 
 #define _DOC_COREMINI_START                                                                                            \
     MODULE_NAME ".coremini_start(device, location)\n"                                                                  \
@@ -300,8 +300,8 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> ics.coremini_start(device, ics.SCRIPT_LOCATION_SDCARD)\n"
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> python_ics.coremini_start(device, python_ics.SCRIPT_LOCATION_SDCARD)\n"
 
 #define _DOC_COREMINI_STOP                                                                                             \
     MODULE_NAME ".coremini_stop(device)\n"                                                                             \
@@ -318,8 +318,8 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> ics.coremini_stop(device)\n"
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> python_ics.coremini_stop(device)\n"
 
 #define _DOC_COREMINI_CLEAR                                                                                            \
     MODULE_NAME ".coremini_clear(device, location)\n"                                                                  \
@@ -338,8 +338,8 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> ics.coremini_clear(device, ics.SCRIPT_LOCATION_SDCARD)\n"
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> python_ics.coremini_clear(device, python_ics.SCRIPT_LOCATION_SDCARD)\n"
 
 #define _DOC_COREMINI_GET_STATUS                                                                                       \
     MODULE_NAME ".coremini_get_status(device)\n"                                                                       \
@@ -356,8 +356,8 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tTrue if running, otherwise False.\n"                                                                \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> ics.coremini_get_status(device)\n"                                                              \
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> python_ics.coremini_get_status(device)\n"                                                              \
                 "\t>>>\n"
 
 #define _DOC_TRANSMIT_MESSAGES                                                                                         \
@@ -378,12 +378,12 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> msg = ics.SpyMessage()\n"                                                                       \
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> msg = python_ics.SpyMessage()\n"                                                                       \
                 "\t>>> msg.ArbIDOrHeader = 0xFF\n"                                                                     \
-                "\t>>> msg.NetworkID = ics.NETID_HSCAN\n"                                                              \
+                "\t>>> msg.NetworkID = python_ics.NETID_HSCAN\n"                                                              \
                 "\t>>> msg.Data = (0,1,2,3,4,5,6,7)\n"                                                                 \
-                "\t>>> ics.transmit_messages(device, msg)\n"                                                           \
+                "\t>>> python_ics.transmit_messages(device, msg)\n"                                                           \
                 "\t>>>\n"
 
 #define _DOC_GET_MESSAGES                                                                                              \
@@ -405,8 +405,8 @@ extern "C"
                 "\t:class:`tuple` of two items. First item is a :class:`tuple` of :class:`" MODULE_NAME                \
                 "." SPY_MESSAGE_OBJECT_NAME "` and second is the error count.\n"                                       \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> messages, errors = ics.get_messages(device)\n"                                                  \
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> messages, errors = python_ics.get_messages(device)\n"                                                  \
                 "\t>>> len(messages)\n"                                                                                \
                 "\t14\n"                                                                                               \
                 "\t>>> hex(messages[0].ArbIDOrHeader)\n"                                                               \
@@ -433,8 +433,8 @@ extern "C"
                 "\t:class:`list` of :class:`tuple`s. :class:`tuple` contents: (error_number, description_short, "      \
                 "description_long, severity, restart_needed)\n"                                                        \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> errors = ics.get_error_messages(device)\n"
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> errors = python_ics.get_error_messages(device)\n"
 
 //_DOC_SET_REFLASH_DISPLAY_CALLBACKS), "icsneoSetReflashCallback(), pass a python function func(msg, progress)"
 #define _DOC_SET_REFLASH_CALLBACK                                                                                      \
@@ -455,7 +455,7 @@ extern "C"
     "\t>>> def callback(msg, progress):\n"                                                                             \
     "\t...     print(msg, progress)\n"                                                                                 \
     "\t...\n"                                                                                                          \
-    "\t>>> ics.set_reflash_callback(callback)\n"                                                                       \
+    "\t>>> python_ics.set_reflash_callback(callback)\n"                                                                       \
     "\t>>> \n"
 
 #define _DOC_GET_DEVICE_SETTINGS                                                                                       \
@@ -479,21 +479,21 @@ extern "C"
     "device_settings"                                                                                                  \
     "`\n"                                                                                                              \
     "\n"                                                                                                               \
-    "\t>>> d = ics.open_device()\n"                                                                                    \
+    "\t>>> d = python_ics.open_device()\n"                                                                                    \
     "\t>>> d.Name\n"                                                                                                   \
     "\t'neoVI ION'\n"                                                                                                  \
     "\t>>> d.SerialNumber\n"                                                                                           \
     "\t404444\n"                                                                                                       \
-    "\t>>> s = ics.get_device_settings(d)\n"                                                                           \
+    "\t>>> s = python_ics.get_device_settings(d)\n"                                                                           \
     "\t>>> s.DeviceSettingType\n"                                                                                      \
     "\t2\n"                                                                                                            \
     "\t>>> s.cyan\n"                                                                                                   \
-    "\t<ics.CyanSettings object at 0x01E61B40>\n"                                                                      \
+    "\t<python_ics.CyanSettings object at 0x01E61B40>\n"                                                                      \
     "\t>>> s.cyan.canfd1.FDMode\n"                                                                                     \
     "\t4\n"                                                                                                            \
     "\t>>> s2.cyan\n"                                                                                                  \
-    "\t<ics.CyanSettings object at 0x02B113C8>\n"                                                                      \
-    "\t>>> s2 = ics.get_device_settings(d, -1, ics.PlasmaIonVnetChannelA)\n"                                           \
+    "\t<python_ics.CyanSettings object at 0x02B113C8>\n"                                                                      \
+    "\t>>> s2 = python_ics.get_device_settings(d, -1, python_ics.PlasmaIonVnetChannelA)\n"                                           \
     "\t>>> s2.DeviceSettingType\n"                                                                                     \
     "\t2\n"                                                                                                            \
     "\t>>> s2.cyan.canfd1.FDMode\n"                                                                                    \
@@ -519,19 +519,19 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> d = ics.open_device()\n"                                                                        \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
                 "\t>>> d.Name\n"                                                                                       \
                 "\t'neoVI ION'\n"                                                                                      \
                 "\t>>> d.SerialNumber\n"                                                                               \
                 "\t404444\n"                                                                                           \
-                "\t>>> s = ics.get_device_settings(d, ics.PlasmaIonVnetChannelA) # Get Slave settings, channel "       \
+                "\t>>> s = python_ics.get_device_settings(d, python_ics.PlasmaIonVnetChannelA) # Get Slave settings, channel "       \
                 "selection not needed if not a Plasma/Ion\n"                                                           \
                 "\t>>> s.DeviceSettingType\n"                                                                          \
                 "\t2\n"                                                                                                \
                 "\t>>> s.cyan.can_switch_mode\n"                                                                       \
                 "\t1\n"                                                                                                \
                 "\t>>> s.cyan.can_switch_mode = 2\n"                                                                   \
-                "\t>>> ics.set_device_settings(d, s, True, ics.PlasmaIonVnetChannelA)\n"                               \
+                "\t>>> python_ics.set_device_settings(d, s, True, python_ics.PlasmaIonVnetChannelA)\n"                               \
                 "\t>>> \n"
 
 //"Accepts a  PyNeoDeviceEx" ", exception on error."
@@ -550,8 +550,8 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> ics.load_default_settings(device)\n"                                                            \
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> python_ics.load_default_settings(device)\n"                                                            \
                 "\t>>> \n"
 
 #define _DOC_CREATE_NEOVI_RADIO_MESSAGE                                                                                \
@@ -579,8 +579,8 @@ extern "C"
     "Raises:\n"                                                                                                        \
     "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                                        \
     "\n"                                                                                                               \
-    "\t>>> msg = ics.SpyMessage()\n"                                                                                   \
-    "\t>>> msg.Data = ics.create_neovi_radio_message(Relay1=True, Relay4=False, LED6=True, MSB_report_rate=10)\n"      \
+    "\t>>> msg = python_ics.SpyMessage()\n"                                                                                   \
+    "\t>>> msg.Data = python_ics.create_neovi_radio_message(Relay1=True, Relay4=False, LED6=True, MSB_report_rate=10)\n"      \
     "\t>>> msg.Data\n"                                                                                                 \
     "\t(65, 10, 0, 0, 0)\n"
 
@@ -600,8 +600,8 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone on Success.\n"                                                                                 \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> ics.coremini_start_fblock(device, 1)\n"
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> python_ics.coremini_start_fblock(device, 1)\n"
 
 #define _DOC_COREMINI_STOP_FBLOCK                                                                                      \
     MODULE_NAME ".coremini_stop_fblock(device, index)\n"                                                               \
@@ -619,8 +619,8 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone on Success.\n"                                                                                 \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> ics.coremini_stop_fblock(device, 1)\n"
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> python_ics.coremini_stop_fblock(device, 1)\n"
 
 #define _DOC_COREMINI_GET_FBLOCK_STATUS                                                                                \
     MODULE_NAME ".coremini_get_fblock_status(device, index)\n"                                                         \
@@ -638,8 +638,8 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone on Success.\n"                                                                                 \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> ics.coremini_get_fblock_status(device, 1)\n"                                                    \
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> python_ics.coremini_get_fblock_status(device, 1)\n"                                                    \
                 "\tTrue\n"
 
 #define _DOC_COREMINI_READ_APP_SIGNAL                                                                                  \
@@ -658,8 +658,8 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tfloat on Success.\n"                                                                                \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> ics.coremini_read_app_signal(device, 1)\n"                                                      \
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> python_ics.coremini_read_app_signal(device, 1)\n"                                                      \
                 "\t52\n"
 
 #define _DOC_COREMINI_WRITE_APP_SIGNAL                                                                                 \
@@ -679,8 +679,8 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone on Success.\n"                                                                                 \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> ics.coremini_write_app_signal(device, 1, 52)\n"                                                 \
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> python_ics.coremini_write_app_signal(device, 1, 52)\n"                                                 \
                 "\t>>>\n"
 
 #define _DOC_COREMINI_READ_TX_MESSAGE                                                                                  \
@@ -700,8 +700,8 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\t:class:`" MODULE_NAME "." SPY_MESSAGE_OBJECT_NAME "` Success.\n"                                    \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> msg = ics.coremini_read_tx_message(device, 0)\n"
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> msg = python_ics.coremini_read_tx_message(device, 0)\n"
 
 #define _DOC_COREMINI_READ_RX_MESSAGE                                                                                  \
     MODULE_NAME ".coremini_read_rx_message(device, index, j1850=False)\n"                                              \
@@ -720,8 +720,8 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\t:class:`" MODULE_NAME "." SPY_MESSAGE_OBJECT_NAME "` Success.\n"                                    \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> msg = ics.coremini_read_tx_message(device, 0)\n"
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> msg = python_ics.coremini_read_tx_message(device, 0)\n"
 
 #define _DOC_COREMINI_WRITE_TX_MESSAGE                                                                                 \
     MODULE_NAME ".coremini_write_tx_message(device, index, msg)\n"                                                     \
@@ -747,8 +747,8 @@ extern "C"
                 "\tTuple on Success: (buffer count, buffer max, overflow count, reserved, reserved, reserved, "        \
                 "reserved, reserved)\n"                                                                                \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> ics.get_performance_parameters(device)\n"                                                       \
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> python_ics.get_performance_parameters(device)\n"                                                       \
                 "\t(0, 24576, 0, 0, 0, 0, 0, 0)\n"
 
 #define _DOC_VALIDATE_HOBJECT                                                                                          \
@@ -768,10 +768,10 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tBoolean: True if valid, false otherwise.\n"                                                         \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> ics.validate_hobject(device)\n"                                                                 \
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> python_ics.validate_hobject(device)\n"                                                                 \
                 "\t1\n"                                                                                                \
-                "\t>>> ics.validate_hobject(device._Handle)\n"                                                         \
+                "\t>>> python_ics.validate_hobject(device._Handle)\n"                                                         \
                 "\t1\n"
 
 #define _DOC_GET_LAST_API_ERROR                                                                                        \
@@ -789,12 +789,12 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tTuple: (error, description short, description long, severity, restart needed)\n"                    \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
                 "\t>>> try:\n"                                                                                         \
-                "\t...     msg = ics.coremini_read_tx_message(device, 0)\n"                                            \
-                "\t... except ics.RuntimeError as ex:\n"                                                               \
+                "\t...     msg = python_ics.coremini_read_tx_message(device, 0)\n"                                            \
+                "\t... except python_ics.RuntimeError as ex:\n"                                                               \
                 "\t...     print(ex)\n"                                                                                \
-                "\t...     print(ics.get_last_api_error(device))\n"                                                    \
+                "\t...     print(python_ics.get_last_api_error(device))\n"                                                    \
                 "\t...\n"                                                                                              \
                 "\tError: coremini_read_tx_message(): icsneoScriptReadTxMessage() Failed\n"                            \
                 "\t(224, 'Invalid Message Index for script.', 'Invalid Message Index for script.', 16, 0)\n"
@@ -813,7 +813,7 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tInt: DLL Version\n"                                                                                 \
                 "\n"                                                                                                   \
-                "\t>>> ics.get_dll_version()\n"                                                                        \
+                "\t>>> python_ics.get_dll_version()\n"                                                                        \
                 "\t700\n"
 
 #define _DOC_BASE36ENC                                                                                                 \
@@ -830,7 +830,7 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tStr: Serial Number\n"                                                                               \
                 "\n"                                                                                                   \
-                "\t>>> ics.base36enc(device.SerialNumber)\n"                                                           \
+                "\t>>> python_ics.base36enc(device.SerialNumber)\n"                                                           \
                 "\tCY0024\n"
 
 #define _DOC_GET_SERIAL_NUMBER                                                                                         \
@@ -848,7 +848,7 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tInt: Serial Number Version\n"                                                                       \
                 "\n"                                                                                                   \
-                "\t>>> ics.get_serial_number(device)\n"                                                                \
+                "\t>>> python_ics.get_serial_number(device)\n"                                                                \
                 "\t53123\n"
 
 #define _DOC_REQUEST_ENTER_SLEEP_MODE                                                                                  \
@@ -884,7 +884,7 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tBoolean: True on success, False on failure.\n"                                                      \
                 "\n"                                                                                                   \
-                "\t>>> ics.request_enter_sleep_mode(device, 1, 0)\n"                                                   \
+                "\t>>> python_ics.request_enter_sleep_mode(device, 1, 0)\n"                                                   \
                 "\tTrue\n"
 
 #define _DOC_SET_CONTEXT                                                                                               \
@@ -908,7 +908,7 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tBoolean: True on success, False on failure.\n"                                                      \
                 "\n"                                                                                                   \
-                "\t>>> ics.set_context(device)\n"                                                                      \
+                "\t>>> python_ics.set_context(device)\n"                                                                      \
                 "\tTrue\n"
 
 #define _DOC_FORCE_FIRMWARE_UPDATE                                                                                     \
@@ -926,7 +926,7 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tBoolean: True on success, False on failure.\n"                                                      \
                 "\n"                                                                                                   \
-                "\t>>> ics.force_firmware_update(device)\n"                                                            \
+                "\t>>> python_ics.force_firmware_update(device)\n"                                                            \
                 "\tTrue\n"
 
 #define _DOC_FIRMWARE_UPDATE_REQUIRED                                                                                  \
@@ -944,7 +944,7 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tBoolean: True on success, False on failure.\n"                                                      \
                 "\n"                                                                                                   \
-                "\t>>> ics.force_firmware_update(device)\n"                                                            \
+                "\t>>> python_ics.force_firmware_update(device)\n"                                                            \
                 "\tTrue\n"
 
 #define _DOC_GET_DLL_FIRMWARE_INFO                                                                                     \
@@ -964,8 +964,8 @@ extern "C"
                 "st_api_firmware_info"                                                                                 \
                 "`)\n"                                                                                                 \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> info = ics.get_dll_firmware_info(device)\n"                                                     \
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> info = python_ics.get_dll_firmware_info(device)\n"                                                     \
                 "\t>>> info.iAppMajor\n"                                                                               \
                 "\t7\n"                                                                                                \
                 "\t>>> info.iAppMinor\n"                                                                               \
@@ -989,8 +989,8 @@ extern "C"
                 "st_api_firmware_info"                                                                                 \
                 "`)\n"                                                                                                 \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> info = ics.get_hw_firmware_info(device)\n"                                                      \
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> info = python_ics.get_hw_firmware_info(device)\n"                                                      \
                 "\t>>> info.iAppMajor\n"                                                                               \
                 "\t7\n"                                                                                                \
                 "\t>>> info.iAppMinor\n"                                                                               \
@@ -1172,14 +1172,14 @@ extern "C"
     "Returns:\n"                                                                                                       \
     "\tNone\n"                                                                                                         \
     "\n"                                                                                                               \
-    "\t>>> import ics\n"                                                                                               \
-    "\t>>> ics.find_devices()\n"                                                                                       \
+    "\t>>> import python_ics\n"                                                                                               \
+    "\t>>> python_ics.find_devices()\n"                                                                                       \
     "\tTraceback (most recent call last):\n"                                                                           \
     "\t  File \"<stdin>\", line 1, in <module>\n"                                                                      \
     "\tics.RuntimeError: Error: find_devices(): Failed to open library: 'icsneo40.dll' with error code: #126\n"        \
-    "\t>>> ics.override_library_name(r\"C:\\Windows\\SysWOW64\\icsneo40-different.dll\")\n"                            \
-    "\t>>> ics.find_devices()\n"                                                                                       \
-    "\t(<ics.NeoDevice object at 0x00284C50>, <ics.NeoDevice object at 0x007C9A10>)\n"
+    "\t>>> python_ics.override_library_name(r\"C:\\Windows\\SysWOW64\\icsneo40-different.dll\")\n"                            \
+    "\t>>> python_ics.find_devices()\n"                                                                                       \
+    "\t(<python_ics.NeoDevice object at 0x00284C50>, <python_ics.NeoDevice object at 0x007C9A10>)\n"
 
 #define _DOC_SET_BIT_RATE                                                                                              \
     MODULE_NAME                                                                                                        \
@@ -1256,10 +1256,10 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tFloat: Timestamp for the message.\n"                                                                \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> msgs, error_count = ics.get_messages(d)\n"                                                      \
-                "\t>>> ics.get_timestamp_for_msg(d, msgs[0])\n"                                                        \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> msgs, error_count = python_ics.get_messages(d)\n"                                                      \
+                "\t>>> python_ics.get_timestamp_for_msg(d, msgs[0])\n"                                                        \
                 "\t354577568.9145524\n"
 
 #define _DOC_GET_DEVICE_STATUS                                                                                         \
@@ -1279,9 +1279,9 @@ extern "C"
                 "ics_device_status"                                                                                    \
                 "`).\n"                                                                                                \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> status = ics.get_device_status(d)\n"                                                            \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> status = python_ics.get_device_status(d)\n"                                                            \
                 "\t>>> status.fire2Status.ethernetActivationLineEnabled\n"                                             \
                 "\t0\n"
 
@@ -1304,9 +1304,9 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> status = ics.enable_network_com(d, True)\n"                                                     \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> status = python_ics.enable_network_com(d, True)\n"                                                     \
                 "\t>>> \n"
 
 #define _DOC_ENABLE_BUS_VOLTAGE_MONITOR                                                                                \
@@ -1328,9 +1328,9 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> status = ics.enable_bus_voltage_monitor(d, 1)\n"                                                \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> status = python_ics.enable_bus_voltage_monitor(d, 1)\n"                                                \
                 "\t>>> \n"
 
 #define _DOC_GET_BUS_VOLTAGE                                                                                           \
@@ -1350,10 +1350,10 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tInt: value returned is in mV.\n"                                                                    \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> status = ics.enable_bus_voltage_monitor(d, 1)\n"                                                \
-                "\t>>> ics.get_bus_voltage(d)\n"                                                                       \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> status = python_ics.enable_bus_voltage_monitor(d, 1)\n"                                                \
+                "\t>>> python_ics.get_bus_voltage(d)\n"                                                                       \
                 "\t12000\n"                                                                                            \
                 "\t>>> \n"
 
@@ -1414,9 +1414,9 @@ extern "C"
                 "srad_gigalog_disk_details"                                                                            \
                 "`).\n"                                                                                                \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> details = ics.get_disk_details(d)\n"                                                            \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> details = python_ics.get_disk_details(d)\n"                                                            \
                 "\t>>> details.structure.options\n"                                                                    \
                 "\t>>> \n"
 
@@ -1435,11 +1435,11 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> details = ics.get_disk_details(d)\n"                                                            \
-                "\t>>> details. = ics.get_disk_details(d)\n"                                                           \
-                "\t>>> ics.disk_format(d, details)\n"                                                                  \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> details = python_ics.get_disk_details(d)\n"                                                            \
+                "\t>>> details. = python_ics.get_disk_details(d)\n"                                                           \
+                "\t>>> python_ics.disk_format(d, details)\n"                                                                  \
                 "\t>>> \n"
 
 #define _DOC_DISK_FORMAT_CANCEL                                                                                        \
@@ -1457,10 +1457,10 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> ics.disk_format(d, details)\n"                                                                  \
-                "\t>>> ics.disk_format_cancel(d)\n"                                                                    \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> python_ics.disk_format(d, details)\n"                                                                  \
+                "\t>>> python_ics.disk_format_cancel(d)\n"                                                                    \
                 "\t>>> \n"
 
 #define _DOC_DISK_FORMAT_PROGRESS                                                                                      \
@@ -1480,10 +1480,10 @@ extern "C"
                 "srad_gigalog_disk_format_progress"                                                                    \
                 "`).\n"                                                                                                \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> d = ics.disk_format(d, details)\n"                                                              \
-                "\t>>> progress = ics.get_disk_format_progress(d)\n"                                                   \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> d = python_ics.disk_format(d, details)\n"                                                              \
+                "\t>>> progress = python_ics.get_disk_format_progress(d)\n"                                                   \
                 "\t>>> progress.sectorsRemaining\n"                                                                    \
                 "\t>>> \n"
 
@@ -1504,9 +1504,9 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> status = ics.enable_doip_line(d, True)\n"                                                       \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> status = python_ics.enable_doip_line(d, True)\n"                                                       \
                 "\t>>> \n"
 
 #define _DOC_IS_DEVICE_FEATURE_SUPPORTED                                                                               \
@@ -1527,10 +1527,10 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> from ics.structures.device_feature import DeviceFeature\n"                                      \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> supported = ics.is_device_feature_supported(d, DeviceFeature.networkTerminationDWCAN01)\n"      \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> from python_ics.structures.device_feature import DeviceFeature\n"                                      \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> supported = python_ics.is_device_feature_supported(d, DeviceFeature.networkTerminationDWCAN01)\n"      \
                 "\t>>> \n"
 
 #define _DOC_GET_PCB_SERIAL_NUMBER                                                                                     \
@@ -1548,9 +1548,9 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\t(:class:`str`): PCB Serial Number\n"                                                                \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> pcb_sn = ics.get_pcb_serial_number(d)\n"                                                        \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> pcb_sn = python_ics.get_pcb_serial_number(d)\n"                                                        \
                 "\t>>> \n"
 
 #define _DOC_SET_LED_PROPERTY                                                                                          \
@@ -1571,9 +1571,9 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> ics.set_led_property(d, TODO, TODO, TODO)\n"                                                    \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> python_ics.set_led_property(d, TODO, TODO, TODO)\n"                                                    \
                 "\t>>> \n"
 
 #define _DOC_START_DHCP_SERVER                                                                                         \
@@ -1601,9 +1601,9 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> ics.start_dhcp_server(d, TODO)\n"                                                               \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> python_ics.start_dhcp_server(d, TODO)\n"                                                               \
                 "\t>>> \n"
 
 #define _DOC_STOP_DHCP_SERVER                                                                                          \
@@ -1622,9 +1622,9 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> ics.stop_dhcp_server(d, TODO)\n"                                                                \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> python_ics.stop_dhcp_server(d, TODO)\n"                                                                \
                 "\t>>> \n"
 
 #define _DOC_WBMS_MANAGER_WRITE_LOCK                                                                                   \
@@ -1648,11 +1648,11 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> from ics.structures.ew_bms_manager_port_t import ew_bms_manager_port_t\n"                       \
-                "\t>>> from ics.structures.ew_bms_manager_lock_state_t import ew_bms_manager_lock_state_t\n"           \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> ics.wbms_manager_write_lock(d, ew_bms_manager_port_t.eManagerPortA.value, "                     \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> from python_ics.structures.ew_bms_manager_port_t import ew_bms_manager_port_t\n"                       \
+                "\t>>> from python_ics.structures.ew_bms_manager_lock_state_t import ew_bms_manager_lock_state_t\n"           \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> python_ics.wbms_manager_write_lock(d, ew_bms_manager_port_t.eManagerPortA.value, "                     \
                 "ew_bms_manager_lock_state_t.eLockManager.value)\n"                                                    \
                 "\t>>> \n"
 
@@ -1674,10 +1674,10 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> from ics.structures.ew_bms_manager_port_t import ew_bms_manager_port_t\n"                       \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> ics.wbms_manager_reset(d, ew_bms_manager_port_t.eManagerPortA.value)\n"                         \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> from python_ics.structures.ew_bms_manager_port_t import ew_bms_manager_port_t\n"                       \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> python_ics.wbms_manager_reset(d, ew_bms_manager_port_t.eManagerPortA.value)\n"                         \
                 "\t>>> \n"
 
 #define _DOC_UART_WRITE                                                                                                \
@@ -1698,10 +1698,10 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> from ics.structures.e_uart_port_t import e_uart_port_t\n"                                       \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> ics.uart_write(d, e_uart_port_t.eUART0, b'my uart data goes here')\n"                           \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> from python_ics.structures.e_uart_port_t import e_uart_port_t\n"                                       \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> python_ics.uart_write(d, e_uart_port_t.eUART0, b'my uart data goes here')\n"                           \
                 "\t>>> \n"
 
 #define _DOC_UART_READ                                                                                                 \
@@ -1723,10 +1723,10 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> from ics.structures.e_uart_port_t import e_uart_port_t\n"                                       \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> data = ics.uart_read(d, e_uart_port_t.eUART0)\n"                                                \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> from python_ics.structures.e_uart_port_t import e_uart_port_t\n"                                       \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> data = python_ics.uart_read(d, e_uart_port_t.eUART0)\n"                                                \
                 "\t>>> print(f\"Read {len(data)} bytes: {data}\")\n"                                                   \
                 "\t>>> \n"
 
@@ -1748,10 +1748,10 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> from ics.structures.e_uart_port_t import e_uart_port_t\n"                                       \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> ics.uart_set_baudrate(d, e_uart_port_t.eUART0, 115200)\n"                                       \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> from python_ics.structures.e_uart_port_t import e_uart_port_t\n"                                       \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> python_ics.uart_set_baudrate(d, e_uart_port_t.eUART0, 115200)\n"                                       \
                 "\t>>> print(f\"Read {len(data)} bytes: {data}\")\n"                                                   \
                 "\t>>> \n"
 
@@ -1772,10 +1772,10 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> from ics.structures.e_uart_port_t import e_uart_port_t\n"                                       \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> baudrate = ics.uart_set_baudrate(d, e_uart_port_t.eUART0)\n"                                    \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> from python_ics.structures.e_uart_port_t import e_uart_port_t\n"                                       \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> baudrate = python_ics.uart_set_baudrate(d, e_uart_port_t.eUART0)\n"                                    \
                 "\t>>> \n"
 
 #define _DOC_GENERIC_API_SEND_COMMAND                                                                                  \
@@ -1852,7 +1852,7 @@ extern "C"
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
                 "\n"                                                                                                   \
                 "Returns:\n"                                                                                           \
-                "\tics.structures.gptp_status.gptp_status (:class:`ics.structures.gptp_status.gptp_status`)\n\n"       \
+                "\tics.structures.gptp_status.gptp_status (:class:`python_ics.structures.gptp_status.gptp_status`)\n\n"       \
                 "\n"
 
 #define _DOC_GET_ALL_CHIP_VERSIONS                                                                                     \
@@ -1869,7 +1869,7 @@ extern "C"
                 "\n"                                                                                                   \
                 "Returns:\n"                                                                                           \
                 "\tics.structures.st_chip_versions.st_chip_versions "                                                  \
-                "(:class:`ics.structures.st_chip_versions.st_chip_versions`)\n\n"                                      \
+                "(:class:`python_ics.structures.st_chip_versions.st_chip_versions`)\n\n"                                      \
                 "\n"
 
 #define _DOC_FLASH_ACCESSORY_FIRMWARE                                                                                        \

@@ -277,8 +277,8 @@ bool PyNeoDeviceEx_CheckExact(PyObject* object)
     }
 
     return strncmp(type_obj->tp_name, CLASS_NAME, sizeof(CLASS_NAME) / sizeof(CLASS_NAME[0])) == 0;
-    // This will fail on cleanup because we can't import ics anymore...
-    //return _isPythonModuleObject_IsInstance(object, "ics.py_neo_device_ex", "PyNeoDeviceEx") == 1;
+    // This will fail on cleanup because we can't import python_ics anymore...
+    //return _isPythonModuleObject_IsInstance(object, "python_ics.py_neo_device_ex", "PyNeoDeviceEx") == 1;
 }
 
 
@@ -618,8 +618,8 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
         // If the user passed in a NeoDevice device we need to increment
         // the reference counter when we return it since device is a borrowed
         // reference.
-        // devs = ics.find_devices()
-        // device = ics.open_device(devs[0])
+        // devs = python_ics.find_devices()
+        // device = python_ics.open_device(devs[0])
         // del device # This will decrement the reference and crash interp
         device_need_ref_inc = true;
     }
@@ -1609,7 +1609,7 @@ PyObject* meth_get_device_settings(PyObject* self, PyObject* args)
     }
 
     // Before we do anything, we need to grab the python s_device_settings ctype.Structure.
-    PyObject* settings = _getPythonModuleObject("ics.structures.s_device_settings", "s_device_settings");
+    PyObject* settings = _getPythonModuleObject("python_ics.structures.s_device_settings", "s_device_settings");
     if (!settings) {
         return NULL;
     }
@@ -2567,7 +2567,7 @@ PyObject* meth_get_hw_firmware_info(PyObject* self, PyObject* args)
         }
         ice::Function<int __stdcall(void*, stAPIFirmwareInfo*)> icsneoGetHWFirmwareInfo(lib,
                                                                                              "icsneoGetHWFirmwareInfo");
-        PyObject* info = _getPythonModuleObject("ics.structures.st_api_firmware_info", "st_api_firmware_info");
+        PyObject* info = _getPythonModuleObject("python_ics.structures.st_api_firmware_info", "st_api_firmware_info");
         if (!info) {
             return NULL;
         }
@@ -2769,7 +2769,7 @@ PyObject* meth_get_dll_firmware_info(PyObject* self, PyObject* args)
         }
         ice::Function<int __stdcall(void*, stAPIFirmwareInfo*)> icsneoGetDLLFirmwareInfo(
             lib, "icsneoGetDLLFirmwareInfo");
-        PyObject* info = _getPythonModuleObject("ics.structures.st_api_firmware_info", "st_api_firmware_info");
+        PyObject* info = _getPythonModuleObject("python_ics.structures.st_api_firmware_info", "st_api_firmware_info");
         if (!info) {
             return NULL;
         }
@@ -2997,7 +2997,7 @@ PyObject* meth_iso15765_transmit_message(PyObject* self, PyObject* args)
                                  "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     if (_isPythonModuleObject_IsInstance(
-            obj_tx_msg, "ics.structures.st_cm_iso157652_tx_message", "st_cm_iso157652_tx_message") != 1) {
+            obj_tx_msg, "python_ics.structures.st_cm_iso157652_tx_message", "st_cm_iso157652_tx_message") != 1) {
         return NULL;
     }
     Py_buffer obj_tx_msg_buffer = {};
@@ -3045,7 +3045,7 @@ PyObject* meth_iso15765_receive_message(PyObject* self, PyObject* args)
                                  "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     if (_isPythonModuleObject_IsInstance(
-            obj_rx_msg, "ics.structures.st_cm_iso157652_rx_message", "st_cm_iso157652_rx_message") != 1) {
+            obj_rx_msg, "python_ics.structures.st_cm_iso157652_rx_message", "st_cm_iso157652_rx_message") != 1) {
         return NULL;
     }
     Py_buffer obj_rx_msg_buffer = {};
@@ -3396,7 +3396,7 @@ PyObject* meth_get_device_status(PyObject* self, PyObject* args)
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
-        PyObject* device_status = _getPythonModuleObject("ics.structures.ics_device_status", "ics_device_status");
+        PyObject* device_status = _getPythonModuleObject("python_ics.structures.ics_device_status", "ics_device_status");
         if (!device_status) {
             return NULL;
         }
@@ -3973,7 +3973,7 @@ PyObject* meth_get_disk_details(PyObject* self, PyObject* args)
         ice::Function<int __stdcall(void*, SDiskDetails*)> icsneoRequestDiskDetails(lib,
                                                                                          "icsneoRequestDiskDetails");
 
-        PyObject* details = _getPythonModuleObject("ics.structures.s_disk_details", "s_disk_details");
+        PyObject* details = _getPythonModuleObject("python_ics.structures.s_disk_details", "s_disk_details");
         if (!details) {
             return NULL;
         }
@@ -4094,7 +4094,7 @@ PyObject* meth_get_disk_format_progress(PyObject* self, PyObject* args)
         ice::Function<int __stdcall(void*, SDiskFormatProgress*)> icsneoRequestDiskFormatProgress(
             lib, "icsneoRequestDiskFormatProgress");
 
-        PyObject* progress = _getPythonModuleObject("ics.structures.s_disk_format_progress", "s_disk_format_progress");
+        PyObject* progress = _getPythonModuleObject("python_ics.structures.s_disk_format_progress", "s_disk_format_progress");
         if (!progress) {
             return NULL;
         }
@@ -4814,7 +4814,7 @@ PyObject* meth_get_gptp_status(PyObject* self, PyObject* args)
         return NULL;
     }
     // Before we do anything, we need to grab the python gptp_status ctype.Structure.
-    PyObject* status = _getPythonModuleObject("ics.structures.gptp_status", "gptp_status");
+    PyObject* status = _getPythonModuleObject("python_ics.structures.gptp_status", "gptp_status");
     if (!status) {
         return NULL;
     }
@@ -4868,7 +4868,7 @@ PyObject* meth_get_all_chip_versions(PyObject* self, PyObject* args)
         return NULL;
     }
     // Before we do anything, we need to grab the python ctype.Structure.
-    PyObject* py_struct = _getPythonModuleObject("ics.structures.st_chip_versions", "st_chip_versions");
+    PyObject* py_struct = _getPythonModuleObject("python_ics.structures.st_chip_versions", "st_chip_versions");
     if (!py_struct) {
         return NULL;
     }

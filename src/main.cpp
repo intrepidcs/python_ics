@@ -15,7 +15,7 @@
     "are suppose to be lowercase with underscores instead of mixedCase like the icsneo API.\n"                         \
     "\n"                                                                                                               \
     "C API can be mimiced almost identically by doing the following:\n"                                                \
-    "\t>>> import ics as icsneo\n"                                                                                     \
+    "\t>>> import python_ics as icsneo\n"                                                                                     \
     "\t>>> devices = icsneo.FindNeoDevices()\n"                                                                        \
     "\t>>> for device in devices:\n"                                                                                   \
     "\t...     print(device)\n"                                                                                        \
@@ -23,8 +23,8 @@
     "\tneoVI FIRE 59886\n"                                                                                             \
     "\n"                                                                                                               \
     "Recommended `Python` way by doing the following:\n"                                                               \
-    "\t>>> import ics\n"                                                                                               \
-    "\t>>> devices = ics.find_devices()\n"                                                                             \
+    "\t>>> import python_ics\n"                                                                                               \
+    "\t>>> devices = python_ics.find_devices()\n"                                                                             \
     "\t>>> for device in devices:\n"                                                                                   \
     "\t...     print(device)\n"                                                                                        \
     "\t...\n"                                                                                                          \
