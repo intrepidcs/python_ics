@@ -1,3 +1,4 @@
 setuptools >= 69
 dunamai >= 1.19.2
 wheel >= 0.42.0
+tomlkit >= 0.12.5

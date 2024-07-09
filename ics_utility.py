@@ -1,7 +1,7 @@
 import os
 import dunamai
 import pathlib
-import tomllib
+import tomlkit
 
 GEN_DIR = pathlib.Path("./gen")
 GEN_VERSION_PY = GEN_DIR / "__version.py"
@@ -14,7 +14,7 @@ def get_module_name() -> str:
         str: The project name.
     """
     with open("pyproject.toml", "rb") as f:
-        data = tomllib.load(f)
+        data = tomlkit.load(f)
         return data["project"]["name"]
 
 def get_pkg_version() -> str:
