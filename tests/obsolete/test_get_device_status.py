@@ -1,4 +1,4 @@
-import ics
+import python_ics
 import time
 
 
@@ -13,7 +13,7 @@ def print_device_status(s):
             print()
 
 
-d = ics.open_device()
+d = python_ics.open_device()
 time.sleep(0.250)  # Give the device time to send the frame
-s = ics.get_device_status(d)
+s = python_ics.get_device_status(d)
 print_device_status(s)

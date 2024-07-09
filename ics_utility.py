@@ -1,9 +1,21 @@
 import os
 import dunamai
 import pathlib
+import tomlkit
 
 GEN_DIR = pathlib.Path("./gen")
-GEN_ICS_DIR = GEN_DIR / "ics"
+GEN_VERSION_PY = GEN_DIR / "__version.py"
+
+def get_module_name() -> str:
+    """
+    Get the project name specified from the pyproject.toml file.
+    
+    Returns:
+        str: The project name.
+    """
+    with open("pyproject.toml", "rb") as f:
+        data = tomlkit.load(f)
+        return data["project"]["name"]
 
 def get_pkg_version() -> str:
     """
@@ -20,12 +32,12 @@ def get_pkg_version() -> str:
         pkg_version = version.serialize(format="{base}", style=dunamai.Style.Pep440)
     return pkg_version
 
-def create_version_py(path: pathlib.Path = pathlib.Path("gen/ics/__version.py")) -> None:
+def create_version_py(path: pathlib.Path = GEN_VERSION_PY) -> None:
     """
     Create a version.py file with the package version and full version.
 
     Args:
-        path (pathlib.Path, optional): The path to the version.py file. Defaults to pathlib.Path("gen/ics/__version.py").
+        path (pathlib.Path, optional): The path to the version.py file. Defaults to GEN_VERSION_PY.
 
     Returns:
         None
@@ -39,42 +51,6 @@ def create_version_py(path: pathlib.Path = pathlib.Path("gen/ics/__version.py"))
         f.write(f"""__version__ = "{pkg_version}"\n""")
         f.write(f"""__full_version__ = "{full_version}"\n""")
 
-def create_ics_init():
-    fdata = \
-"""# Warning: This file is auto generated. Don't modify if you value your sanity!
-try:
-    import ics.__version
-    __version__ = ics.__version.__version__
-    __full_version__ = ics.__version.__full_version__
-except Exception as ex:
-    print(ex)
-
-
-from ics.structures import *
-from ics.structures.neo_device import NeoDevice, neo_device
-from ics.hiddenimports import hidden_imports
-try:
-    from ics.py_neo_device_ex import PyNeoDeviceEx
-except ModuleNotFoundError as ex:
-    print(f"Warning: {ex}")
-
-try:
-    # Release environment
-    #print("Release")
-    from ics.ics import *
-except Exception as ex:
-    # Build environment
-    #print("Debug", ex)
-    from ics import *
-"""
-    init_path = GEN_ICS_DIR / "__init__.py"
-    print(f"Creating '{init_path}'...")
-    init_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(init_path, "w+") as f:
-        f.write(fdata)
-
-
 if __name__ == "__main__":
-    create_ics_init()
     create_version_py()
     print("Version info generated!")

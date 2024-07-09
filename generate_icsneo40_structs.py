@@ -8,7 +8,8 @@ import random
 from pathlib import Path
 import sys
 import ctypes #used with eval...
-from ics_utility import GEN_ICS_DIR
+from ics_utility import GEN_DIR
+import importlib
 
 debug_print = False
 
@@ -628,12 +629,11 @@ def generate(filename="include/ics/icsnVC40.h"):
     with open(f"{basename}.enums.json", "w+") as f:
         f.write(j)
     # generate the python files
-    output_dir = GEN_ICS_DIR / "structures"
-    print(f"Removing {output_dir}...")
-    try:
-        shutil.rmtree(output_dir)
-    except FileNotFoundError:
-        pass
+    output_dir = GEN_DIR / "structures"
+    print(f"Cleaning up {output_dir}...")
+    shutil.rmtree(output_dir, ignore_errors=True)
+    print(f"Creating structures directory {output_dir}...")
+    output_dir.mkdir(parents=True, exist_ok=True)
     ignore_names = [
         "fsid_t__",
         "__fsid_t",
@@ -724,7 +724,7 @@ def generate(filename="include/ics/icsnVC40.h"):
             f.write('",\n')
         f.write("]\n")
     # write a hidden_import python file for pyinstaller
-    hidden_imports_path = GEN_ICS_DIR / "hiddenimports.py"
+    hidden_imports_path = GEN_DIR / "hiddenimports.py"
     with open(hidden_imports_path, "w+") as f:
         f.write("hidden_imports = [\n")
         for file_name in file_names:
@@ -733,25 +733,15 @@ def generate(filename="include/ics/icsnVC40.h"):
             if list(filter(r.match, ignore_names)):
                 # print("IGNORING:", fname)
                 continue
-            f.write(f'    "ics.structures.{fname}",\n')
+            f.write(f'    ".structures.{fname}",\n')
         f.write("]\n\n")
 
     # Verify We can at least import all of the modules - quick check to make sure parser worked.
-    ics_module_path = GEN_ICS_DIR.parent.resolve()
-    # Add the module to the eval sys.path.
-    eval("""sys.path.insert(0, f"{ics_module_path}")""")
-    for file_name in file_names:
-        if file_name.startswith("__"):
-            continue
-        import_line = "from ics.structures import {}".format(
-            re.sub(r'(\.py)', '', file_name))
-        try:
-            print(f"Importing / Verifying {output_dir / file_name}...")
-            exec(import_line)
-        except Exception as ex:
-            print(f"""ERROR: {ex} IMPORT LINE: '{import_line}'""")
-            raise ex
-    print("Done.")
+    #gen_path = GEN_DIR.resolve()
+    #print("Current directory: ", os.getcwd())
+    #_structures_module = importlib.import_module(".structures", "gen")
+    #validate_structs = importlib.import_module(".validate_structs", package="gen")
+    #validate_structs.validate_structs()
 
 
 def _write_c_object(f, c_object):
@@ -893,7 +883,8 @@ def generate_pyfile(c_object, path):
 
         import_names = get_c_object_imports(c_object)
         for import_name in import_names:
-            f.write(f"from ics.structures.{import_name} import *\n")
+            #f.write(f"from python_ics.structures.{import_name} import *\n")
+            f.write(f"from .{import_name} import *\n")
         f.write("\n\n")
 
         def _generate_inner_objects(f, c_object):
@@ -913,8 +904,8 @@ def generate_all_files():
     import os
     import pathlib
 
-    print(f"Creating directory '{GEN_ICS_DIR}'...")
-    GEN_ICS_DIR.mkdir(parents=True, exist_ok=True)
+    print(f"Creating directory '{GEN_DIR}'...")
+    GEN_DIR.mkdir(parents=True, exist_ok=True)
     filenames = ("icsnVC40.h", "icsnVC40Internal.h")
     for filename in filenames:
         path = pathlib.Path("include/ics/")
@@ -922,7 +913,6 @@ def generate_all_files():
         if path.exists():
             if "Internal" in str(filename):
                 print("WARNING: Generating internal header!")
-            print(f"Parsing {str(path)}...")
             generate(str(path))
 
 if __name__ == "__main__":

@@ -202,7 +202,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    ("index", "ics.tex", "python\\_ics Documentation", "David Rebbe", "manual"),
+    ("index", "python_ics.tex", "python\\_ics Documentation", "David Rebbe", "manual"),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of

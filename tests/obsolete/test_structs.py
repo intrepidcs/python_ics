@@ -6,9 +6,9 @@ import os
 print(os.path.abspath("../"))
 sys.path.append("../")
 
-from ics.structures.inner_structure import *
-from ics.structures.test_structure import *
-from ics.structures.test import *
+from python_ics.structures.inner_structure import *
+from python_ics.structures.test_structure import *
+from python_ics.structures.test import *
 
 
 class TestTestEnum(unittest.TestCase):

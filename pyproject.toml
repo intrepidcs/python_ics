@@ -32,14 +32,12 @@ Documentation = "http://python-ics.readthedocs.io/"
 Repository = "https://github.com/intrepidcs/python_ics/"
 Issues = "https://github.com/intrepidcs/python_ics/issues"
 
-[tool.setuptools.dynamic]
-version = {attr = "ics.__version__"}
-
 [build-system]
 requires = [
   "setuptools",
   "wheel",
   "dunamai",
+  "tomlkit",
 ]
 [tool.cibuildwheel]
 build = "{*-win32,*-win_amd64,*-macosx_universal2,*-manylinux_x86_64,*-manylinux_aarch64}"

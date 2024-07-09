@@ -1,4 +1,4 @@
-import ics
+import python_ics
 import random
 import time
 import os
@@ -12,30 +12,30 @@ def parse_ldf():
 
 def open_device(index=0):
     device = None
-    # ics.open_device() won't open a device if we have handles open already
+    # python_ics.open_device() won't open a device if we have handles open already
     # so we need to find them and specify which ones to connect to.
-    devices = ics.find_devices()
+    devices = python_ics.find_devices()
     print(
         "Opening Device {} (Open Client handles: {})...".format(
             devices[index], devices[index].NumberOfClients
         )
     )
-    ics.open_device(devices[index])
+    python_ics.open_device(devices[index])
     device = devices[index]
     print("Opened Device %s." % device)
     return device
 
 
 def receive_lin(device):
-    msgs, error_count = ics.get_messages(device)
+    msgs, error_count = python_ics.get_messages(device)
     print("Received {} messages with {} errors.".format(len(msgs), error_count))
-    netids = {ics.NETID_LIN: "LIN 1"}  # , ics.NETID_LIN2: "LIN 2" }
+    netids = {python_ics.NETID_LIN: "LIN 1"}  # , python_ics.NETID_LIN2: "LIN 2" }
     for i, m in enumerate(msgs):
         netid = netids.get(m.NetworkID)
         if netid is not None:
             # print('\nMessage #{}: '.format(i+1), end='')
             print("{}".format(netid), end="")
-            if m.StatusBitField & ics.SPY_STATUS_INIT_MESSAGE:
+            if m.StatusBitField & python_ics.SPY_STATUS_INIT_MESSAGE:
                 print(" | Init")
             data_list = []
             for x in m.Header[1:]:
@@ -59,10 +59,10 @@ def receive_lin(device):
 
 def send_frame(self, baudrate: int, frame_id: int, data: bytearray, netid: int, is_commander: bool):
     # set baudrate with device settings?
-    msg = ics.SpyMessageJ1850()
+    msg = python_ics.SpyMessageJ1850()
     if is_commander:
-        msg.StatusBitField = ics.SPY_STATUS_INIT_MESSAGE
-    msg.Protocol = ics.SPY_PROTOCOL_LIN
+        msg.StatusBitField = python_ics.SPY_STATUS_INIT_MESSAGE
+    msg.Protocol = python_ics.SPY_PROTOCOL_LIN
     msg.NetworkID = netid
     header_bytes = [frame_id]
     frame_bytes = []
@@ -87,8 +87,8 @@ def send_frame(self, baudrate: int, frame_id: int, data: bytearray, netid: int, 
     msg.NumberBytesHeader = len(msg.Header)
     msg.NumberBytesData = len(msg.Data)
     try:
-        ics.transmit_messages(self.device, msg)
-    except ics.RuntimeError as ex:
+        python_ics.transmit_messages(self.device, msg)
+    except python_ics.RuntimeError as ex:
         print(ex)
         return False
     return True
@@ -100,7 +100,7 @@ class LINCommander:
         self.frames = {}
 
     def send_commander_frame(self, baudrate: int, frame_id: int, data: bytearray):
-        send_frame(self, baudrate, frame_id, data, ics.NETID_LIN, True)
+        send_frame(self, baudrate, frame_id, data, python_ics.NETID_LIN, True)
 
 
 class LINResponder:
@@ -109,7 +109,7 @@ class LINResponder:
         self.frames = {}
 
     def send_responder_frame(self, baudrate: int, frame_id: int, data: bytearray):
-        send_frame(self, baudrate, frame_id, data, ics.NETID_LIN2, False)
+        send_frame(self, baudrate, frame_id, data, python_ics.NETID_LIN2, False)
 
 
 if __name__ == "__main__":
@@ -117,7 +117,7 @@ if __name__ == "__main__":
 
     ldf = parse_ldf()
     # Lets figure out how many are connected to the PC and display it
-    connected_count = len(ics.find_devices())
+    connected_count = len(python_ics.find_devices())
     print("Found {} connected device(s)...".format(connected_count))
     device = open_device(0)
     responder_nodes = ldf.get_slaves()

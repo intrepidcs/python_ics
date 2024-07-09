@@ -1,7 +1,7 @@
 import unittest
-import ics
-from ics.py_neo_device_ex import PyNeoDeviceEx
-from ics.structures.e_device_settings_type import e_device_settings_type
+import python_ics
+from python_ics.py_neo_device_ex import PyNeoDeviceEx
+from python_ics.structures.e_device_settings_type import e_device_settings_type
 
 unittest.TestLoader.sortTestMethodsUsing = None
 
@@ -16,7 +16,7 @@ class BaseTests:
             cls.device_settings_type = None
 
         def _get_device(self) -> PyNeoDeviceEx:
-            devices = ics.find_devices([self.device_type])
+            devices = python_ics.find_devices([self.device_type])
             self.assertEqual(
                 len(devices),
                 1,
@@ -28,7 +28,7 @@ class BaseTests:
             device = self._get_device()
             device.open()
             try:
-                ics.load_default_settings(device)
+                python_ics.load_default_settings(device)
             finally:
                 device.close()
 
@@ -36,11 +36,11 @@ class BaseTests:
             device = self._get_device()
             device.open()
             try:
-                ics.load_default_settings(device)
-                settings = ics.get_device_settings(device)
+                python_ics.load_default_settings(device)
+                settings = python_ics.get_device_settings(device)
                 self.assertEqual(settings.DeviceSettingType, self.device_settings_type)
-                ics.set_device_settings(device, settings)
-                _ = ics.get_device_settings(device)
+                python_ics.set_device_settings(device, settings)
+                _ = python_ics.get_device_settings(device)
                 # TODO: compare both settings
             finally:
                 device.close()
@@ -49,21 +49,21 @@ class BaseTests:
 class TestFire3Settings(BaseTests.TestSettings):
     @classmethod
     def setUpClass(cls):
-        cls.device_type = ics.NEODEVICE_FIRE3
+        cls.device_type = python_ics.NEODEVICE_FIRE3
         cls.device_settings_type = e_device_settings_type.DeviceFire3SettingsType
 
 
 class TestFire2Settings(BaseTests.TestSettings):
     @classmethod
     def setUpClass(cls):
-        cls.device_type = ics.NEODEVICE_FIRE2
+        cls.device_type = python_ics.NEODEVICE_FIRE2
         cls.device_settings_type = e_device_settings_type.DeviceFire2SettingsType
 
 
 class TestValueCAN42Settings(BaseTests.TestSettings):
     @classmethod
     def setUpClass(cls):
-        cls.device_type = ics.NEODEVICE_VCAN42
+        cls.device_type = python_ics.NEODEVICE_VCAN42
         cls.device_settings_type = e_device_settings_type.DeviceVCAN412SettingsType
 
 

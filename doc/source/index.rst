@@ -4,7 +4,7 @@
 ##############################################################################
 PyNeoDeviceEx
 ##############################################################################
-.. autoclass:: ics.PyNeoDeviceEx
+.. autoclass:: python_ics.PyNeoDeviceEx
     :members:
     :show-inheritance:
     :undoc-members:
@@ -12,7 +12,7 @@ PyNeoDeviceEx
 ##############################################################################
 Module Documentation
 ##############################################################################
-.. automodule:: ics.ics
+.. automodule:: python_ics.c_mod
     :members:
     :show-inheritance:
     :undoc-members:
@@ -22,1082 +22,1082 @@ Module Functions
 ##############################################################################
 
 .. autosummary::
-    ics.ISO15765_DisableNetworks
-    ics.ISO15765_EnableNetworks
-    ics.ISO15765_ReceiveMessage
-    ics.ISO15765_TransmitMessage
-    ics.close_device
-    ics.coremini_clear
-    ics.coremini_get_fblock_status
-    ics.coremini_get_status
-    ics.coremini_load
-    ics.coremini_read_app_signal
-    ics.coremini_read_rx_message
-    ics.coremini_read_tx_message
-    ics.coremini_start
-    ics.coremini_start_fblock
-    ics.coremini_stop
-    ics.coremini_stop_fblock
-    ics.coremini_write_app_signal
-    ics.coremini_write_rx_message
-    ics.coremini_write_tx_message
-    ics.create_neovi_radio_message
-    ics.disk_format
-    ics.disk_format_cancel
-    ics.enable_bus_voltage_monitor
-    ics.enable_doip_line
-    ics.enable_network_com
-    ics.find_devices
-    ics.firmware_update_required
-    ics.flash_accessory_firmware
-    ics.force_firmware_update
-    ics.generic_api_get_status
-    ics.generic_api_read_data
-    ics.generic_api_send_command
-    ics.get_accessory_firmware_version
-    ics.get_active_vnet_channel
-    ics.get_all_chip_versions
-    ics.get_backup_power_enabled
-    ics.get_backup_power_ready
-    ics.get_bus_voltage
-    ics.get_device_settings
-    ics.get_device_status
-    ics.get_disk_details
-    ics.get_disk_format_progress
-    ics.get_dll_firmware_info
-    ics.get_dll_version
-    ics.get_error_messages
-    ics.get_gptp_status
-    ics.get_hw_firmware_info
-    ics.get_last_api_error
-    ics.get_library_path
-    ics.get_messages
-    ics.get_pcb_serial_number
-    ics.get_performance_parameters
-    ics.get_rtc
-    ics.get_script_status
-    ics.get_serial_number
-    ics.get_timestamp_for_msg
-    ics.is_device_feature_supported
-    ics.iso15765_disable_networks
-    ics.iso15765_enable_networks
-    ics.iso15765_receive_message
-    ics.iso15765_transmit_message
-    ics.load_default_settings
-    ics.open_device
-    ics.override_library_name
-    ics.read_jupiter_firmware
-    ics.read_sdcard
-    ics.request_enter_sleep_mode
-    ics.set_active_vnet_channel
-    ics.set_backup_power_enabled
-    ics.set_bit_rate
-    ics.set_bit_rate_ex
-    ics.set_context
-    ics.set_device_settings
-    ics.set_fd_bit_rate
-    ics.set_led_property
-    ics.set_reflash_callback
-    ics.set_rtc
-    ics.set_safe_boot_mode
-    ics.start_dhcp_server
-    ics.stop_dhcp_server
-    ics.transmit_messages
-    ics.uart_get_baudrate
-    ics.uart_read
-    ics.uart_set_baudrate
-    ics.uart_write
-    ics.validate_hobject
-    ics.wbms_manager_reset
-    ics.wbms_manager_write_lock
-    ics.write_jupiter_firmware
-    ics.write_sdcard
-    ics.ClosePort
-    ics.EnableBusVoltageMonitor
-    ics.EnableDOIPLine
-    ics.EnableNetworkCom
-    ics.FindNeoDevices
-    ics.FirmwareUpdateRequired
-    ics.FlashAccessoryFirmware
-    ics.ForceFirmwareUpdate
-    ics.GenericAPIGetStatus
-    ics.GenericAPIReadData
-    ics.GenericAPISendCommand
-    ics.GetAccessoryFwVersion
-    ics.GetActiveVNETChannel
-    ics.GetAllChipVersions
-    ics.GetBackupPowerEnabled
-    ics.GetBackupPowerReady
-    ics.GetBusVoltage
-    ics.GetDLLFirmwareInfo
-    ics.GetDLLVersion
-    ics.GetDeviceSettings
-    ics.GetDeviceStatus
-    ics.GetErrorMessages
-    ics.GetGPTPStatus
-    ics.GetHWFirmwareInfo
-    ics.GetLastAPIError
-    ics.GetMessages
-    ics.GetPCBSerialNumber
-    ics.GetPerformanceParameters
-    ics.GetRTC
-    ics.GetSerialNumber
-    ics.GetTimeStampForMsg
-    ics.IsDeviceFeatureSupported
-    ics.LoadDefaultSettings
-    ics.OpenNeoDevice
-    ics.ReadJupiterFirmware
-    ics.ReadSDCard
-    ics.RequestDiskDetails
-    ics.RequestDiskFormat
-    ics.RequestDiskFormatCancel
-    ics.RequestDiskFormatProgress
-    ics.RequestEnterSleepMode
-    ics.ScriptClear
-    ics.ScriptGetFBlockStatus
-    ics.ScriptGetScriptStatus
-    ics.ScriptGetScriptStatusEx
-    ics.ScriptLoad
-    ics.ScriptReadAppSignal
-    ics.ScriptReadRxMessage
-    ics.ScriptReadTxMessage
-    ics.ScriptStart
-    ics.ScriptStartFBlock
-    ics.ScriptStop
-    ics.ScriptStopFBlock
-    ics.ScriptWriteAppSignal
-    ics.ScriptWriteRxMessage
-    ics.ScriptWriteTxMessage
-    ics.SetActiveVNETChannel
-    ics.SetBackupPowerEnabled
-    ics.SetBitRate
-    ics.SetBitRateEx
-    ics.SetContext
-    ics.SetDeviceSettings
-    ics.SetFDBitRate
-    ics.SetLedProperty
-    ics.SetRTC
-    ics.SetReflashDisplayCallback
-    ics.SetSafeBootMode
-    ics.StartDHCPServer
-    ics.StopDHCPServer
-    ics.TxMessages
-    ics.UartGetBaudrate
-    ics.UartRead
-    ics.UartSetBaudrate
-    ics.UartWrite
-    ics.ValidateHObject
-    ics.WriteJupiterFirmware
-    ics.WriteSDCard
-    ics.base36enc
-    ics.wBMSManagerReset
-    ics.wBMSManagerWriteLock
-    ics.icsneoClosePort
-    ics.icsneoEnableBusVoltageMonitor
-    ics.icsneoEnableDOIPLine
-    ics.icsneoEnableNetworkCom
-    ics.icsneoFindNeoDevices
-    ics.icsneoFirmwareUpdateRequired
-    ics.icsneoFlashAccessoryFirmware
-    ics.icsneoForceFirmwareUpdate
-    ics.icsneoGenericAPIGetStatus
-    ics.icsneoGenericAPIReadData
-    ics.icsneoGenericAPISendCommand
-    ics.icsneoGetAccessoryFwVersion
-    ics.icsneoGetActiveVNETChannel
-    ics.icsneoGetAllChipVersions
-    ics.icsneoGetBackupPowerEnabled
-    ics.icsneoGetBackupPowerReady
-    ics.icsneoGetBusVoltage
-    ics.icsneoGetDLLFirmwareInfo
-    ics.icsneoGetDLLVersion
-    ics.icsneoGetDeviceSettings
-    ics.icsneoGetDeviceStatus
-    ics.icsneoGetErrorMessages
-    ics.icsneoGetGPTPStatus
-    ics.icsneoGetHWFirmwareInfo
-    ics.icsneoGetLastAPIError
-    ics.icsneoGetMessages
-    ics.icsneoGetPCBSerialNumber
-    ics.icsneoGetPerformanceParameters
-    ics.icsneoGetRTC
-    ics.icsneoGetSerialNumber
-    ics.icsneoGetTimeStampForMsg
-    ics.icsneoISO15765_DisableNetworks
-    ics.icsneoISO15765_EnableNetworks
-    ics.icsneoISO15765_ReceiveMessage
-    ics.icsneoISO15765_TransmitMessage
-    ics.icsneoIsDeviceFeatureSupported
-    ics.icsneoLoadDefaultSettings
-    ics.icsneoOpenNeoDevice
-    ics.icsneoReadJupiterFirmware
-    ics.icsneoReadSDCard
-    ics.icsneoRequestDiskDetails
-    ics.icsneoRequestDiskFormat
-    ics.icsneoRequestDiskFormatCancel
-    ics.icsneoRequestDiskFormatProgress
-    ics.icsneoRequestEnterSleepMode
-    ics.icsneoScriptClear
-    ics.icsneoScriptGetFBlockStatus
-    ics.icsneoScriptGetScriptStatus
-    ics.icsneoScriptGetScriptStatusEx
-    ics.icsneoScriptLoad
-    ics.icsneoScriptReadAppSignal
-    ics.icsneoScriptReadRxMessage
-    ics.icsneoScriptReadTxMessage
-    ics.icsneoScriptStart
-    ics.icsneoScriptStartFBlock
-    ics.icsneoScriptStop
-    ics.icsneoScriptStopFBlock
-    ics.icsneoScriptWriteAppSignal
-    ics.icsneoScriptWriteRxMessage
-    ics.icsneoScriptWriteTxMessage
-    ics.icsneoSetActiveVNETChannel
-    ics.icsneoSetBackupPowerEnabled
-    ics.icsneoSetBitRate
-    ics.icsneoSetBitRateEx
-    ics.icsneoSetContext
-    ics.icsneoSetDeviceSettings
-    ics.icsneoSetFDBitRate
-    ics.icsneoSetLedProperty
-    ics.icsneoSetRTC
-    ics.icsneoSetReflashDisplayCallbacks
-    ics.icsneoSetSafeBootMode
-    ics.icsneoStartDHCPServer
-    ics.icsneoStopDHCPServer
-    ics.icsneoTxMessages
-    ics.icsneoUartGetBaudrate
-    ics.icsneoUartRead
-    ics.icsneoUartSetBaudrate
-    ics.icsneoUartWrite
-    ics.icsneoValidateHObject
-    ics.icsneoWriteJupiterFirmware
-    ics.icsneoWriteSDCard
-    ics.icsneowBMSManagerReset
-    ics.icsneowBMSManagerWriteLock
+    python_ics.ISO15765_DisableNetworks
+    python_ics.ISO15765_EnableNetworks
+    python_ics.ISO15765_ReceiveMessage
+    python_ics.ISO15765_TransmitMessage
+    python_ics.close_device
+    python_ics.coremini_clear
+    python_ics.coremini_get_fblock_status
+    python_ics.coremini_get_status
+    python_ics.coremini_load
+    python_ics.coremini_read_app_signal
+    python_ics.coremini_read_rx_message
+    python_ics.coremini_read_tx_message
+    python_ics.coremini_start
+    python_ics.coremini_start_fblock
+    python_ics.coremini_stop
+    python_ics.coremini_stop_fblock
+    python_ics.coremini_write_app_signal
+    python_ics.coremini_write_rx_message
+    python_ics.coremini_write_tx_message
+    python_ics.create_neovi_radio_message
+    python_ics.disk_format
+    python_ics.disk_format_cancel
+    python_ics.enable_bus_voltage_monitor
+    python_ics.enable_doip_line
+    python_ics.enable_network_com
+    python_ics.find_devices
+    python_ics.firmware_update_required
+    python_ics.flash_accessory_firmware
+    python_ics.force_firmware_update
+    python_ics.generic_api_get_status
+    python_ics.generic_api_read_data
+    python_ics.generic_api_send_command
+    python_ics.get_accessory_firmware_version
+    python_ics.get_active_vnet_channel
+    python_ics.get_all_chip_versions
+    python_ics.get_backup_power_enabled
+    python_ics.get_backup_power_ready
+    python_ics.get_bus_voltage
+    python_ics.get_device_settings
+    python_ics.get_device_status
+    python_ics.get_disk_details
+    python_ics.get_disk_format_progress
+    python_ics.get_dll_firmware_info
+    python_ics.get_dll_version
+    python_ics.get_error_messages
+    python_ics.get_gptp_status
+    python_ics.get_hw_firmware_info
+    python_ics.get_last_api_error
+    python_ics.get_library_path
+    python_ics.get_messages
+    python_ics.get_pcb_serial_number
+    python_ics.get_performance_parameters
+    python_ics.get_rtc
+    python_ics.get_script_status
+    python_ics.get_serial_number
+    python_ics.get_timestamp_for_msg
+    python_ics.is_device_feature_supported
+    python_ics.iso15765_disable_networks
+    python_ics.iso15765_enable_networks
+    python_ics.iso15765_receive_message
+    python_ics.iso15765_transmit_message
+    python_ics.load_default_settings
+    python_ics.open_device
+    python_ics.override_library_name
+    python_ics.read_jupiter_firmware
+    python_ics.read_sdcard
+    python_ics.request_enter_sleep_mode
+    python_ics.set_active_vnet_channel
+    python_ics.set_backup_power_enabled
+    python_ics.set_bit_rate
+    python_ics.set_bit_rate_ex
+    python_ics.set_context
+    python_ics.set_device_settings
+    python_ics.set_fd_bit_rate
+    python_ics.set_led_property
+    python_ics.set_reflash_callback
+    python_ics.set_rtc
+    python_ics.set_safe_boot_mode
+    python_ics.start_dhcp_server
+    python_ics.stop_dhcp_server
+    python_ics.transmit_messages
+    python_ics.uart_get_baudrate
+    python_ics.uart_read
+    python_ics.uart_set_baudrate
+    python_ics.uart_write
+    python_ics.validate_hobject
+    python_ics.wbms_manager_reset
+    python_ics.wbms_manager_write_lock
+    python_ics.write_jupiter_firmware
+    python_ics.write_sdcard
+    python_ics.ClosePort
+    python_ics.EnableBusVoltageMonitor
+    python_ics.EnableDOIPLine
+    python_ics.EnableNetworkCom
+    python_ics.FindNeoDevices
+    python_ics.FirmwareUpdateRequired
+    python_ics.FlashAccessoryFirmware
+    python_ics.ForceFirmwareUpdate
+    python_ics.GenericAPIGetStatus
+    python_ics.GenericAPIReadData
+    python_ics.GenericAPISendCommand
+    python_ics.GetAccessoryFwVersion
+    python_ics.GetActiveVNETChannel
+    python_ics.GetAllChipVersions
+    python_ics.GetBackupPowerEnabled
+    python_ics.GetBackupPowerReady
+    python_ics.GetBusVoltage
+    python_ics.GetDLLFirmwareInfo
+    python_ics.GetDLLVersion
+    python_ics.GetDeviceSettings
+    python_ics.GetDeviceStatus
+    python_ics.GetErrorMessages
+    python_ics.GetGPTPStatus
+    python_ics.GetHWFirmwareInfo
+    python_ics.GetLastAPIError
+    python_ics.GetMessages
+    python_ics.GetPCBSerialNumber
+    python_ics.GetPerformanceParameters
+    python_ics.GetRTC
+    python_ics.GetSerialNumber
+    python_ics.GetTimeStampForMsg
+    python_ics.IsDeviceFeatureSupported
+    python_ics.LoadDefaultSettings
+    python_ics.OpenNeoDevice
+    python_ics.ReadJupiterFirmware
+    python_ics.ReadSDCard
+    python_ics.RequestDiskDetails
+    python_ics.RequestDiskFormat
+    python_ics.RequestDiskFormatCancel
+    python_ics.RequestDiskFormatProgress
+    python_ics.RequestEnterSleepMode
+    python_ics.ScriptClear
+    python_ics.ScriptGetFBlockStatus
+    python_ics.ScriptGetScriptStatus
+    python_ics.ScriptGetScriptStatusEx
+    python_ics.ScriptLoad
+    python_ics.ScriptReadAppSignal
+    python_ics.ScriptReadRxMessage
+    python_ics.ScriptReadTxMessage
+    python_ics.ScriptStart
+    python_ics.ScriptStartFBlock
+    python_ics.ScriptStop
+    python_ics.ScriptStopFBlock
+    python_ics.ScriptWriteAppSignal
+    python_ics.ScriptWriteRxMessage
+    python_ics.ScriptWriteTxMessage
+    python_ics.SetActiveVNETChannel
+    python_ics.SetBackupPowerEnabled
+    python_ics.SetBitRate
+    python_ics.SetBitRateEx
+    python_ics.SetContext
+    python_ics.SetDeviceSettings
+    python_ics.SetFDBitRate
+    python_ics.SetLedProperty
+    python_ics.SetRTC
+    python_ics.SetReflashDisplayCallback
+    python_ics.SetSafeBootMode
+    python_ics.StartDHCPServer
+    python_ics.StopDHCPServer
+    python_ics.TxMessages
+    python_ics.UartGetBaudrate
+    python_ics.UartRead
+    python_ics.UartSetBaudrate
+    python_ics.UartWrite
+    python_ics.ValidateHObject
+    python_ics.WriteJupiterFirmware
+    python_ics.WriteSDCard
+    python_ics.base36enc
+    python_ics.wBMSManagerReset
+    python_ics.wBMSManagerWriteLock
+    python_ics.icsneoClosePort
+    python_ics.icsneoEnableBusVoltageMonitor
+    python_ics.icsneoEnableDOIPLine
+    python_ics.icsneoEnableNetworkCom
+    python_ics.icsneoFindNeoDevices
+    python_ics.icsneoFirmwareUpdateRequired
+    python_ics.icsneoFlashAccessoryFirmware
+    python_ics.icsneoForceFirmwareUpdate
+    python_ics.icsneoGenericAPIGetStatus
+    python_ics.icsneoGenericAPIReadData
+    python_ics.icsneoGenericAPISendCommand
+    python_ics.icsneoGetAccessoryFwVersion
+    python_ics.icsneoGetActiveVNETChannel
+    python_ics.icsneoGetAllChipVersions
+    python_ics.icsneoGetBackupPowerEnabled
+    python_ics.icsneoGetBackupPowerReady
+    python_ics.icsneoGetBusVoltage
+    python_ics.icsneoGetDLLFirmwareInfo
+    python_ics.icsneoGetDLLVersion
+    python_ics.icsneoGetDeviceSettings
+    python_ics.icsneoGetDeviceStatus
+    python_ics.icsneoGetErrorMessages
+    python_ics.icsneoGetGPTPStatus
+    python_ics.icsneoGetHWFirmwareInfo
+    python_ics.icsneoGetLastAPIError
+    python_ics.icsneoGetMessages
+    python_ics.icsneoGetPCBSerialNumber
+    python_ics.icsneoGetPerformanceParameters
+    python_ics.icsneoGetRTC
+    python_ics.icsneoGetSerialNumber
+    python_ics.icsneoGetTimeStampForMsg
+    python_ics.icsneoISO15765_DisableNetworks
+    python_ics.icsneoISO15765_EnableNetworks
+    python_ics.icsneoISO15765_ReceiveMessage
+    python_ics.icsneoISO15765_TransmitMessage
+    python_ics.icsneoIsDeviceFeatureSupported
+    python_ics.icsneoLoadDefaultSettings
+    python_ics.icsneoOpenNeoDevice
+    python_ics.icsneoReadJupiterFirmware
+    python_ics.icsneoReadSDCard
+    python_ics.icsneoRequestDiskDetails
+    python_ics.icsneoRequestDiskFormat
+    python_ics.icsneoRequestDiskFormatCancel
+    python_ics.icsneoRequestDiskFormatProgress
+    python_ics.icsneoRequestEnterSleepMode
+    python_ics.icsneoScriptClear
+    python_ics.icsneoScriptGetFBlockStatus
+    python_ics.icsneoScriptGetScriptStatus
+    python_ics.icsneoScriptGetScriptStatusEx
+    python_ics.icsneoScriptLoad
+    python_ics.icsneoScriptReadAppSignal
+    python_ics.icsneoScriptReadRxMessage
+    python_ics.icsneoScriptReadTxMessage
+    python_ics.icsneoScriptStart
+    python_ics.icsneoScriptStartFBlock
+    python_ics.icsneoScriptStop
+    python_ics.icsneoScriptStopFBlock
+    python_ics.icsneoScriptWriteAppSignal
+    python_ics.icsneoScriptWriteRxMessage
+    python_ics.icsneoScriptWriteTxMessage
+    python_ics.icsneoSetActiveVNETChannel
+    python_ics.icsneoSetBackupPowerEnabled
+    python_ics.icsneoSetBitRate
+    python_ics.icsneoSetBitRateEx
+    python_ics.icsneoSetContext
+    python_ics.icsneoSetDeviceSettings
+    python_ics.icsneoSetFDBitRate
+    python_ics.icsneoSetLedProperty
+    python_ics.icsneoSetRTC
+    python_ics.icsneoSetReflashDisplayCallbacks
+    python_ics.icsneoSetSafeBootMode
+    python_ics.icsneoStartDHCPServer
+    python_ics.icsneoStopDHCPServer
+    python_ics.icsneoTxMessages
+    python_ics.icsneoUartGetBaudrate
+    python_ics.icsneoUartRead
+    python_ics.icsneoUartSetBaudrate
+    python_ics.icsneoUartWrite
+    python_ics.icsneoValidateHObject
+    python_ics.icsneoWriteJupiterFirmware
+    python_ics.icsneoWriteSDCard
+    python_ics.icsneowBMSManagerReset
+    python_ics.icsneowBMSManagerWriteLock
 
 
 ##############################################################################
 Module Structures
 ##############################################################################
 
-    .. autoclass:: ics.structures.a2_b_monitor_settings.a2_b_monitor_settings
+    .. autoclass:: python_ics.structures.a2_b_monitor_settings.a2_b_monitor_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.a2_b_node_type.a2_b_node_type
+    .. autoclass:: python_ics.structures.a2_b_node_type.a2_b_node_type
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.a2_btdm_mode.a2_btdm_mode
+    .. autoclass:: python_ics.structures.a2_btdm_mode.a2_btdm_mode
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.accessory_error_type.accessory_error_type
+    .. autoclass:: python_ics.structures.accessory_error_type.accessory_error_type
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.can_settings.can_settings
+    .. autoclass:: python_ics.structures.can_settings.can_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.canfd_settings.canfd_settings
+    .. autoclass:: python_ics.structures.canfd_settings.canfd_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.canterm_settings.canterm_settings
+    .. autoclass:: python_ics.structures.canterm_settings.canterm_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.clock_quality_.clock_quality_
+    .. autoclass:: python_ics.structures.clock_quality_.clock_quality_
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.device_feature.device_feature
+    .. autoclass:: python_ics.structures.device_feature.device_feature
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.disk_settings.disk_settings
+    .. autoclass:: python_ics.structures.disk_settings.disk_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.e_device_settings_type.e_device_settings_type
+    .. autoclass:: python_ics.structures.e_device_settings_type.e_device_settings_type
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.e_disk_format.e_disk_format
+    .. autoclass:: python_ics.structures.e_disk_format.e_disk_format
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.e_disk_layout.e_disk_layout
+    .. autoclass:: python_ics.structures.e_disk_layout.e_disk_layout
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.e_generic_api_options.e_generic_api_options
+    .. autoclass:: python_ics.structures.e_generic_api_options.e_generic_api_options
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.e_gptp_port.e_gptp_port
+    .. autoclass:: python_ics.structures.e_gptp_port.e_gptp_port
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.e_gptp_role.e_gptp_role
+    .. autoclass:: python_ics.structures.e_gptp_role.e_gptp_role
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.e_plasma_ion_vnet_channel_t.e_plasma_ion_vnet_channel_t
+    .. autoclass:: python_ics.structures.e_plasma_ion_vnet_channel_t.e_plasma_ion_vnet_channel_t
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.e_uart_port_t.e_uart_port_t
+    .. autoclass:: python_ics.structures.e_uart_port_t.e_uart_port_t
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.epsilon10_gphyfw.epsilon10_gphyfw
+    .. autoclass:: python_ics.structures.epsilon10_gphyfw.epsilon10_gphyfw
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.epsilon_10_g_phy_select.epsilon_10_g_phy_select
+    .. autoclass:: python_ics.structures.epsilon_10_g_phy_select.epsilon_10_g_phy_select
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.ethernet10_g_settings.ethernet10_g_settings
+    .. autoclass:: python_ics.structures.ethernet10_g_settings.ethernet10_g_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.ethernet10_t1_s_settings.ethernet10_t1_s_settings
+    .. autoclass:: python_ics.structures.ethernet10_t1_s_settings.ethernet10_t1_s_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.ethernet_network_status_t.ethernet_network_status_t
+    .. autoclass:: python_ics.structures.ethernet_network_status_t.ethernet_network_status_t
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.ethernet_settings.ethernet_settings
+    .. autoclass:: python_ics.structures.ethernet_settings.ethernet_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.ethernet_settings2.ethernet_settings2
+    .. autoclass:: python_ics.structures.ethernet_settings2.ethernet_settings2
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.ew_bms_instance_t.ew_bms_instance_t
+    .. autoclass:: python_ics.structures.ew_bms_instance_t.ew_bms_instance_t
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.ew_bms_manager_lock_state_t.ew_bms_manager_lock_state_t
+    .. autoclass:: python_ics.structures.ew_bms_manager_lock_state_t.ew_bms_manager_lock_state_t
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.ew_bms_manager_port_t.ew_bms_manager_port_t
+    .. autoclass:: python_ics.structures.ew_bms_manager_port_t.ew_bms_manager_port_t
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.extended_response_code.extended_response_code
+    .. autoclass:: python_ics.structures.extended_response_code.extended_response_code
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.extended_response_generic.extended_response_generic
+    .. autoclass:: python_ics.structures.extended_response_generic.extended_response_generic
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.fire3_linux_settings.fire3_linux_settings
+    .. autoclass:: python_ics.structures.fire3_linux_settings.fire3_linux_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.flash_accessory_firmware_params.flash_accessory_firmware_params
+    .. autoclass:: python_ics.structures.flash_accessory_firmware_params.flash_accessory_firmware_params
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.flash_accessory_index.flash_accessory_index
+    .. autoclass:: python_ics.structures.flash_accessory_index.flash_accessory_index
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.flex_vnet_mode.flex_vnet_mode
+    .. autoclass:: python_ics.structures.flex_vnet_mode.flex_vnet_mode
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.generic_api_data.generic_api_data
+    .. autoclass:: python_ics.structures.generic_api_data.generic_api_data
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.generic_api_data_old.generic_api_data_old
+    .. autoclass:: python_ics.structures.generic_api_data_old.generic_api_data_old
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.generic_api_selector.generic_api_selector
+    .. autoclass:: python_ics.structures.generic_api_selector.generic_api_selector
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.generic_api_status.generic_api_status
+    .. autoclass:: python_ics.structures.generic_api_status.generic_api_status
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.generic_binary_status.generic_binary_status
+    .. autoclass:: python_ics.structures.generic_binary_status.generic_binary_status
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.get_component_versions.get_component_versions
+    .. autoclass:: python_ics.structures.get_component_versions.get_component_versions
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.get_component_versions_response.get_component_versions_response
+    .. autoclass:: python_ics.structures.get_component_versions_response.get_component_versions_response
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.get_supported_features_response.get_supported_features_response
+    .. autoclass:: python_ics.structures.get_supported_features_response.get_supported_features_response
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.global_settings.global_settings
+    .. autoclass:: python_ics.structures.global_settings.global_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.gptp_status.gptp_status
+    .. autoclass:: python_ics.structures.gptp_status.gptp_status
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.hw_eth_settings.hw_eth_settings
+    .. autoclass:: python_ics.structures.hw_eth_settings.hw_eth_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.ics_device_status.ics_device_status
+    .. autoclass:: python_ics.structures.ics_device_status.ics_device_status
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.ics_fire2_device_status.ics_fire2_device_status
+    .. autoclass:: python_ics.structures.ics_fire2_device_status.ics_fire2_device_status
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.ics_fire2_vnet_device_status.ics_fire2_vnet_device_status
+    .. autoclass:: python_ics.structures.ics_fire2_vnet_device_status.ics_fire2_vnet_device_status
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.ics_fire3_device_status.ics_fire3_device_status
+    .. autoclass:: python_ics.structures.ics_fire3_device_status.ics_fire3_device_status
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.ics_flex_vnetz_device_status.ics_flex_vnetz_device_status
+    .. autoclass:: python_ics.structures.ics_flex_vnetz_device_status.ics_flex_vnetz_device_status
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.ics_obd2_pro_device_status.ics_obd2_pro_device_status
+    .. autoclass:: python_ics.structures.ics_obd2_pro_device_status.ics_obd2_pro_device_status
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.ics_rad_bms_device_status.ics_rad_bms_device_status
+    .. autoclass:: python_ics.structures.ics_rad_bms_device_status.ics_rad_bms_device_status
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.ics_rad_epsilon_device_status.ics_rad_epsilon_device_status
+    .. autoclass:: python_ics.structures.ics_rad_epsilon_device_status.ics_rad_epsilon_device_status
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.ics_rad_jupiter_device_status.ics_rad_jupiter_device_status
+    .. autoclass:: python_ics.structures.ics_rad_jupiter_device_status.ics_rad_jupiter_device_status
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.ics_rad_moon_duo_device_status.ics_rad_moon_duo_device_status
+    .. autoclass:: python_ics.structures.ics_rad_moon_duo_device_status.ics_rad_moon_duo_device_status
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.ics_rad_pluto_device_status.ics_rad_pluto_device_status
+    .. autoclass:: python_ics.structures.ics_rad_pluto_device_status.ics_rad_pluto_device_status
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.ics_spy_message_flex_ray.ics_spy_message_flex_ray
+    .. autoclass:: python_ics.structures.ics_spy_message_flex_ray.ics_spy_message_flex_ray
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.ics_spy_message_long.ics_spy_message_long
+    .. autoclass:: python_ics.structures.ics_spy_message_long.ics_spy_message_long
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.ics_spy_message_mdio.ics_spy_message_mdio
+    .. autoclass:: python_ics.structures.ics_spy_message_mdio.ics_spy_message_mdio
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.ics_spy_message_vsb.ics_spy_message_vsb
+    .. autoclass:: python_ics.structures.ics_spy_message_vsb.ics_spy_message_vsb
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.ics_spy_messagew_bms.ics_spy_messagew_bms
+    .. autoclass:: python_ics.structures.ics_spy_messagew_bms.ics_spy_messagew_bms
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.ics_vcan4_device_status.ics_vcan4_device_status
+    .. autoclass:: python_ics.structures.ics_vcan4_device_status.ics_vcan4_device_status
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.ics_vcan4_industrial_device_status.ics_vcan4_industrial_device_status
+    .. autoclass:: python_ics.structures.ics_vcan4_industrial_device_status.ics_vcan4_industrial_device_status
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.iso15765_2015_tx_message.iso15765_2015_tx_message
+    .. autoclass:: python_ics.structures.iso15765_2015_tx_message.iso15765_2015_tx_message
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.iso9141_keyword2000_init_step.iso9141_keyword2000_init_step
+    .. autoclass:: python_ics.structures.iso9141_keyword2000_init_step.iso9141_keyword2000_init_step
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.iso9141_keyword2000_settings.iso9141_keyword2000_settings
+    .. autoclass:: python_ics.structures.iso9141_keyword2000_settings.iso9141_keyword2000_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.j1708_settings.j1708_settings
+    .. autoclass:: python_ics.structures.j1708_settings.j1708_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.lin_settings.lin_settings
+    .. autoclass:: python_ics.structures.lin_settings.lin_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.logger_settings.logger_settings
+    .. autoclass:: python_ics.structures.logger_settings.logger_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.mac_sec_flags_t.mac_sec_flags_t
+    .. autoclass:: python_ics.structures.mac_sec_flags_t.mac_sec_flags_t
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.mac_sec_global_flags_t.mac_sec_global_flags_t
+    .. autoclass:: python_ics.structures.mac_sec_global_flags_t.mac_sec_global_flags_t
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.mac_sec_map_t.mac_sec_map_t
+    .. autoclass:: python_ics.structures.mac_sec_map_t.mac_sec_map_t
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.mac_sec_rule_t.mac_sec_rule_t
+    .. autoclass:: python_ics.structures.mac_sec_rule_t.mac_sec_rule_t
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.mac_sec_sa_t.mac_sec_sa_t
+    .. autoclass:: python_ics.structures.mac_sec_sa_t.mac_sec_sa_t
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.mac_sec_sc_t.mac_sec_sc_t
+    .. autoclass:: python_ics.structures.mac_sec_sc_t.mac_sec_sc_t
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.mac_sec_sec_y_t.mac_sec_sec_y_t
+    .. autoclass:: python_ics.structures.mac_sec_sec_y_t.mac_sec_sec_y_t
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.macsec_cipher_suite.macsec_cipher_suite
+    .. autoclass:: python_ics.structures.macsec_cipher_suite.macsec_cipher_suite
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.macsec_config.macsec_config
+    .. autoclass:: python_ics.structures.macsec_config.macsec_config
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.macsec_mpls_outer_t.macsec_mpls_outer_t
+    .. autoclass:: python_ics.structures.macsec_mpls_outer_t.macsec_mpls_outer_t
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.macsec_packet_type.macsec_packet_type
+    .. autoclass:: python_ics.structures.macsec_packet_type.macsec_packet_type
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.macsec_settings.macsec_settings
+    .. autoclass:: python_ics.structures.macsec_settings.macsec_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.macsec_strip_sectag_icv.macsec_strip_sectag_icv
+    .. autoclass:: python_ics.structures.macsec_strip_sectag_icv.macsec_strip_sectag_icv
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.macsec_validateframe.macsec_validateframe
+    .. autoclass:: python_ics.structures.macsec_validateframe.macsec_validateframe
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.macsec_vlantag_t.macsec_vlantag_t
+    .. autoclass:: python_ics.structures.macsec_vlantag_t.macsec_vlantag_t
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.neo_device.neo_device
+    .. autoclass:: python_ics.structures.neo_device.neo_device
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.neo_device_ex.neo_device_ex
+    .. autoclass:: python_ics.structures.neo_device_ex.neo_device_ex
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.op_eth_general_settings.op_eth_general_settings
+    .. autoclass:: python_ics.structures.op_eth_general_settings.op_eth_general_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.op_eth_link_mode.op_eth_link_mode
+    .. autoclass:: python_ics.structures.op_eth_link_mode.op_eth_link_mode
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.op_eth_settings.op_eth_settings
+    .. autoclass:: python_ics.structures.op_eth_settings.op_eth_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.port_identity.port_identity
+    .. autoclass:: python_ics.structures.port_identity.port_identity
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.priority_vector.priority_vector
+    .. autoclass:: python_ics.structures.priority_vector.priority_vector
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.rad_moon_duo_converter_settings.rad_moon_duo_converter_settings
+    .. autoclass:: python_ics.structures.rad_moon_duo_converter_settings.rad_moon_duo_converter_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.rad_reporting_settings.rad_reporting_settings
+    .. autoclass:: python_ics.structures.rad_reporting_settings.rad_reporting_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_cm_probe_settings.s_cm_probe_settings
+    .. autoclass:: python_ics.structures.s_cm_probe_settings.s_cm_probe_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_cyan_settings.s_cyan_settings
+    .. autoclass:: python_ics.structures.s_cyan_settings.s_cyan_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_device_settings.s_device_settings
+    .. autoclass:: python_ics.structures.s_device_settings.s_device_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_disk_details.s_disk_details
+    .. autoclass:: python_ics.structures.s_disk_details.s_disk_details
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_disk_format_progress.s_disk_format_progress
+    .. autoclass:: python_ics.structures.s_disk_format_progress.s_disk_format_progress
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_disk_status.s_disk_status
+    .. autoclass:: python_ics.structures.s_disk_status.s_disk_status
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_disk_structure.s_disk_structure
+    .. autoclass:: python_ics.structures.s_disk_structure.s_disk_structure
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_ether_badge_settings.s_ether_badge_settings
+    .. autoclass:: python_ics.structures.s_ether_badge_settings.s_ether_badge_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_ext_sub_cmd_hdr.s_ext_sub_cmd_hdr
+    .. autoclass:: python_ics.structures.s_ext_sub_cmd_hdr.s_ext_sub_cmd_hdr
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_extended_data_flash_header.s_extended_data_flash_header
+    .. autoclass:: python_ics.structures.s_extended_data_flash_header.s_extended_data_flash_header
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_fire3_flexray_settings.s_fire3_flexray_settings
+    .. autoclass:: python_ics.structures.s_fire3_flexray_settings.s_fire3_flexray_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_fire3_settings.s_fire3_settings
+    .. autoclass:: python_ics.structures.s_fire3_settings.s_fire3_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_fire_settings.s_fire_settings
+    .. autoclass:: python_ics.structures.s_fire_settings.s_fire_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_fire_vnet_settings.s_fire_vnet_settings
+    .. autoclass:: python_ics.structures.s_fire_vnet_settings.s_fire_vnet_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_flex_vnetz_settings.s_flex_vnetz_settings
+    .. autoclass:: python_ics.structures.s_flex_vnetz_settings.s_flex_vnetz_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_jupiter_ptp_params_s.s_jupiter_ptp_params_s
+    .. autoclass:: python_ics.structures.s_jupiter_ptp_params_s.s_jupiter_ptp_params_s
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_neo_ecu12_settings.s_neo_ecu12_settings
+    .. autoclass:: python_ics.structures.s_neo_ecu12_settings.s_neo_ecu12_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_neo_most_gateway_settings.s_neo_most_gateway_settings
+    .. autoclass:: python_ics.structures.s_neo_most_gateway_settings.s_neo_most_gateway_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_pendant_settings.s_pendant_settings
+    .. autoclass:: python_ics.structures.s_pendant_settings.s_pendant_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_phy_reg_pkt.s_phy_reg_pkt
+    .. autoclass:: python_ics.structures.s_phy_reg_pkt.s_phy_reg_pkt
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_phy_reg_pkt_clause22_mess.s_phy_reg_pkt_clause22_mess
+    .. autoclass:: python_ics.structures.s_phy_reg_pkt_clause22_mess.s_phy_reg_pkt_clause22_mess
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_phy_reg_pkt_clause45_mess.s_phy_reg_pkt_clause45_mess
+    .. autoclass:: python_ics.structures.s_phy_reg_pkt_clause45_mess.s_phy_reg_pkt_clause45_mess
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_phy_reg_pkt_hdr.s_phy_reg_pkt_hdr
+    .. autoclass:: python_ics.structures.s_phy_reg_pkt_hdr.s_phy_reg_pkt_hdr
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_phy_reg_pkt_rw.s_phy_reg_pkt_rw
+    .. autoclass:: python_ics.structures.s_phy_reg_pkt_rw.s_phy_reg_pkt_rw
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_phy_reg_pkt_status.s_phy_reg_pkt_status
+    .. autoclass:: python_ics.structures.s_phy_reg_pkt_status.s_phy_reg_pkt_status
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_pluto_avb_params_s.s_pluto_avb_params_s
+    .. autoclass:: python_ics.structures.s_pluto_avb_params_s.s_pluto_avb_params_s
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_pluto_clock_sync_params_s.s_pluto_clock_sync_params_s
+    .. autoclass:: python_ics.structures.s_pluto_clock_sync_params_s.s_pluto_clock_sync_params_s
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_pluto_custom_params_s.s_pluto_custom_params_s
+    .. autoclass:: python_ics.structures.s_pluto_custom_params_s.s_pluto_custom_params_s
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_pluto_general_params_s.s_pluto_general_params_s
+    .. autoclass:: python_ics.structures.s_pluto_general_params_s.s_pluto_general_params_s
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_pluto_l2_address_lookup_entry_s.s_pluto_l2_address_lookup_entry_s
+    .. autoclass:: python_ics.structures.s_pluto_l2_address_lookup_entry_s.s_pluto_l2_address_lookup_entry_s
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_pluto_l2_address_lookup_params_s.s_pluto_l2_address_lookup_params_s
+    .. autoclass:: python_ics.structures.s_pluto_l2_address_lookup_params_s.s_pluto_l2_address_lookup_params_s
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_pluto_l2_forwarding_entry_s.s_pluto_l2_forwarding_entry_s
+    .. autoclass:: python_ics.structures.s_pluto_l2_forwarding_entry_s.s_pluto_l2_forwarding_entry_s
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_pluto_l2_forwarding_params_s.s_pluto_l2_forwarding_params_s
+    .. autoclass:: python_ics.structures.s_pluto_l2_forwarding_params_s.s_pluto_l2_forwarding_params_s
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_pluto_l2_policing_s.s_pluto_l2_policing_s
+    .. autoclass:: python_ics.structures.s_pluto_l2_policing_s.s_pluto_l2_policing_s
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_pluto_mac_config_s.s_pluto_mac_config_s
+    .. autoclass:: python_ics.structures.s_pluto_mac_config_s.s_pluto_mac_config_s
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_pluto_ptp_params_s.s_pluto_ptp_params_s
+    .. autoclass:: python_ics.structures.s_pluto_ptp_params_s.s_pluto_ptp_params_s
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_pluto_retagging_entry_s.s_pluto_retagging_entry_s
+    .. autoclass:: python_ics.structures.s_pluto_retagging_entry_s.s_pluto_retagging_entry_s
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_pluto_switch_settings_s.s_pluto_switch_settings_s
+    .. autoclass:: python_ics.structures.s_pluto_switch_settings_s.s_pluto_switch_settings_s
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_pluto_vl_forwarding_entry_s.s_pluto_vl_forwarding_entry_s
+    .. autoclass:: python_ics.structures.s_pluto_vl_forwarding_entry_s.s_pluto_vl_forwarding_entry_s
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_pluto_vl_forwarding_params_s.s_pluto_vl_forwarding_params_s
+    .. autoclass:: python_ics.structures.s_pluto_vl_forwarding_params_s.s_pluto_vl_forwarding_params_s
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_pluto_vl_lookup_entry_s.s_pluto_vl_lookup_entry_s
+    .. autoclass:: python_ics.structures.s_pluto_vl_lookup_entry_s.s_pluto_vl_lookup_entry_s
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_pluto_vl_policing_entry_s.s_pluto_vl_policing_entry_s
+    .. autoclass:: python_ics.structures.s_pluto_vl_policing_entry_s.s_pluto_vl_policing_entry_s
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_pluto_vlan_lookup_s.s_pluto_vlan_lookup_s
+    .. autoclass:: python_ics.structures.s_pluto_vlan_lookup_s.s_pluto_vlan_lookup_s
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_rad_moon_duo_settings.s_rad_moon_duo_settings
+    .. autoclass:: python_ics.structures.s_rad_moon_duo_settings.s_rad_moon_duo_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_red2_settings.s_red2_settings
+    .. autoclass:: python_ics.structures.s_red2_settings.s_red2_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_red_settings.s_red_settings
+    .. autoclass:: python_ics.structures.s_red_settings.s_red_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_spi_port_setting.s_spi_port_setting
+    .. autoclass:: python_ics.structures.s_spi_port_setting.s_spi_port_setting
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_spi_port_settings.s_spi_port_settings
+    .. autoclass:: python_ics.structures.s_spi_port_settings.s_spi_port_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_text_api_settings.s_text_api_settings
+    .. autoclass:: python_ics.structures.s_text_api_settings.s_text_api_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_vivid_can_settings.s_vivid_can_settings
+    .. autoclass:: python_ics.structures.s_vivid_can_settings.s_vivid_can_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_wil_bridge_config.s_wil_bridge_config
+    .. autoclass:: python_ics.structures.s_wil_bridge_config.s_wil_bridge_config
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_wil_connection_settings.s_wil_connection_settings
+    .. autoclass:: python_ics.structures.s_wil_connection_settings.s_wil_connection_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_wil_fault_servicing_settings.s_wil_fault_servicing_settings
+    .. autoclass:: python_ics.structures.s_wil_fault_servicing_settings.s_wil_fault_servicing_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.s_wil_network_data_capture_settings.s_wil_network_data_capture_settings
+    .. autoclass:: python_ics.structures.s_wil_network_data_capture_settings.s_wil_network_data_capture_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.scan_hub_settings.scan_hub_settings
+    .. autoclass:: python_ics.structures.scan_hub_settings.scan_hub_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.scan_sleep_id.scan_sleep_id
+    .. autoclass:: python_ics.structures.scan_sleep_id.scan_sleep_id
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.secu_avb_settings.secu_avb_settings
+    .. autoclass:: python_ics.structures.secu_avb_settings.secu_avb_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.secu_settings.secu_settings
+    .. autoclass:: python_ics.structures.secu_settings.secu_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.seevb_settings.seevb_settings
+    .. autoclass:: python_ics.structures.seevb_settings.seevb_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.serdescam_settings.serdescam_settings
+    .. autoclass:: python_ics.structures.serdescam_settings.serdescam_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.serdesgen_settings.serdesgen_settings
+    .. autoclass:: python_ics.structures.serdesgen_settings.serdesgen_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.serdespoc_settings.serdespoc_settings
+    .. autoclass:: python_ics.structures.serdespoc_settings.serdespoc_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.sfp_id.sfp_id
+    .. autoclass:: python_ics.structures.sfp_id.sfp_id
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.sievb_settings.sievb_settings
+    .. autoclass:: python_ics.structures.sievb_settings.sievb_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.sobd2_lc_settings.sobd2_lc_settings
+    .. autoclass:: python_ics.structures.sobd2_lc_settings.sobd2_lc_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.sobd2_pro_settings.sobd2_pro_settings
+    .. autoclass:: python_ics.structures.sobd2_pro_settings.sobd2_pro_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.sobd2_sim_settings.sobd2_sim_settings
+    .. autoclass:: python_ics.structures.sobd2_sim_settings.sobd2_sim_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.software_update_command.software_update_command
+    .. autoclass:: python_ics.structures.software_update_command.software_update_command
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.spy_filter_long.spy_filter_long
+    .. autoclass:: python_ics.structures.spy_filter_long.spy_filter_long
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.srad_comet_settings.srad_comet_settings
+    .. autoclass:: python_ics.structures.srad_comet_settings.srad_comet_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.srad_epsilon_settings.srad_epsilon_settings
+    .. autoclass:: python_ics.structures.srad_epsilon_settings.srad_epsilon_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.srad_epsilon_switch_settings.srad_epsilon_switch_settings
+    .. autoclass:: python_ics.structures.srad_epsilon_switch_settings.srad_epsilon_switch_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.srad_galaxy_settings.srad_galaxy_settings
+    .. autoclass:: python_ics.structures.srad_galaxy_settings.srad_galaxy_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.srad_gigalog_settings.srad_gigalog_settings
+    .. autoclass:: python_ics.structures.srad_gigalog_settings.srad_gigalog_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.srad_gigastar_settings.srad_gigastar_settings
+    .. autoclass:: python_ics.structures.srad_gigastar_settings.srad_gigastar_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.srad_gptp_and_tap_settings_s.srad_gptp_and_tap_settings_s
+    .. autoclass:: python_ics.structures.srad_gptp_and_tap_settings_s.srad_gptp_and_tap_settings_s
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.srad_gptp_settings_s.srad_gptp_settings_s
+    .. autoclass:: python_ics.structures.srad_gptp_settings_s.srad_gptp_settings_s
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.srad_jupiter_settings.srad_jupiter_settings
+    .. autoclass:: python_ics.structures.srad_jupiter_settings.srad_jupiter_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.srad_jupiter_switch_settings.srad_jupiter_switch_settings
+    .. autoclass:: python_ics.structures.srad_jupiter_switch_settings.srad_jupiter_switch_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.srad_moon2_settings.srad_moon2_settings
+    .. autoclass:: python_ics.structures.srad_moon2_settings.srad_moon2_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.srad_moon3_settings.srad_moon3_settings
+    .. autoclass:: python_ics.structures.srad_moon3_settings.srad_moon3_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.srad_pluto_settings.srad_pluto_settings
+    .. autoclass:: python_ics.structures.srad_pluto_settings.srad_pluto_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.srad_star2_settings.srad_star2_settings
+    .. autoclass:: python_ics.structures.srad_star2_settings.srad_star2_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.srad_super_moon_settings.srad_super_moon_settings
+    .. autoclass:: python_ics.structures.srad_super_moon_settings.srad_super_moon_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.srada2_b_settings.srada2_b_settings
+    .. autoclass:: python_ics.structures.srada2_b_settings.srada2_b_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.sradbms_settings.sradbms_settings
+    .. autoclass:: python_ics.structures.sradbms_settings.sradbms_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.st_api_firmware_info.st_api_firmware_info
+    .. autoclass:: python_ics.structures.st_api_firmware_info.st_api_firmware_info
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.st_chip_versions.st_chip_versions
+    .. autoclass:: python_ics.structures.st_chip_versions.st_chip_versions
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.st_cm_iso157652_rx_message.st_cm_iso157652_rx_message
+    .. autoclass:: python_ics.structures.st_cm_iso157652_rx_message.st_cm_iso157652_rx_message
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.st_cm_iso157652_tx_message.st_cm_iso157652_tx_message
+    .. autoclass:: python_ics.structures.st_cm_iso157652_tx_message.st_cm_iso157652_tx_message
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.start_dhcp_server_command.start_dhcp_server_command
+    .. autoclass:: python_ics.structures.start_dhcp_server_command.start_dhcp_server_command
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.stop_dhcp_server_command.stop_dhcp_server_command
+    .. autoclass:: python_ics.structures.stop_dhcp_server_command.stop_dhcp_server_command
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.svcan3_settings.svcan3_settings
+    .. autoclass:: python_ics.structures.svcan3_settings.svcan3_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.svcan412_settings.svcan412_settings
+    .. autoclass:: python_ics.structures.svcan412_settings.svcan412_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.svcan4_ind_settings.svcan4_ind_settings
+    .. autoclass:: python_ics.structures.svcan4_ind_settings.svcan4_ind_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.svcan4_settings.svcan4_settings
+    .. autoclass:: python_ics.structures.svcan4_settings.svcan4_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.svcanrf_settings.svcanrf_settings
+    .. autoclass:: python_ics.structures.svcanrf_settings.svcanrf_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.swcan_settings.swcan_settings
+    .. autoclass:: python_ics.structures.swcan_settings.swcan_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.system_identity.system_identity
+    .. autoclass:: python_ics.structures.system_identity.system_identity
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.tag_options_find_neo_ex.tag_options_find_neo_ex
+    .. autoclass:: python_ics.structures.tag_options_find_neo_ex.tag_options_find_neo_ex
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.tag_options_open_neo_ex.tag_options_open_neo_ex
+    .. autoclass:: python_ics.structures.tag_options_open_neo_ex.tag_options_open_neo_ex
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.tagicsneo_vi_command.tagicsneo_vi_command
+    .. autoclass:: python_ics.structures.tagicsneo_vi_command.tagicsneo_vi_command
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.timestamp_.timestamp_
+    .. autoclass:: python_ics.structures.timestamp_.timestamp_
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.timesync_icshardware_settings.timesync_icshardware_settings
+    .. autoclass:: python_ics.structures.timesync_icshardware_settings.timesync_icshardware_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.uart_port_config.uart_port_config
+    .. autoclass:: python_ics.structures.uart_port_config.uart_port_config
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.uart_port_data.uart_port_data
+    .. autoclass:: python_ics.structures.uart_port_data.uart_port_data
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.uart_port_port_bytes.uart_port_port_bytes
+    .. autoclass:: python_ics.structures.uart_port_port_bytes.uart_port_port_bytes
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.uart_settings.uart_settings
+    .. autoclass:: python_ics.structures.uart_settings.uart_settings
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.version_report.version_report
+    .. autoclass:: python_ics.structures.version_report.version_report
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.w_bms_manager_reset.w_bms_manager_reset
+    .. autoclass:: python_ics.structures.w_bms_manager_reset.w_bms_manager_reset
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.w_bms_manager_set_lock.w_bms_manager_set_lock
+    .. autoclass:: python_ics.structures.w_bms_manager_set_lock.w_bms_manager_set_lock
             :members:
             :undoc-members:
 
-    .. autoclass:: ics.structures.wbms_gateway_settings.wbms_gateway_settings
+    .. autoclass:: python_ics.structures.wbms_gateway_settings.wbms_gateway_settings
             :members:
             :undoc-members:
 
@@ -1183,7 +1183,7 @@ Module Variables
             :annotation: = 6
 
     .. py:data:: BUILD_DATETIME
-            :annotation: = Jun  3 2024 15:08:23
+            :annotation: = Jul  9 2024 07:48:56
 
     .. py:data:: CANFD_BRS_ENABLED
             :annotation: = 2
@@ -1288,7 +1288,10 @@ Module Variables
             :annotation: = 2
 
     .. py:data:: ETHERNET_SETTINGS10G_FLAG_COMM_IN_USE
-            :annotation: = 2147483648
+            :annotation: = -2147483648
+
+    .. py:data:: ETHERNET_SETTINGS10G_FLAG_COMPL_MODE
+            :annotation: = 1024
 
     .. py:data:: ETHERNET_SETTINGS10G_FLAG_CONFIG_NOT_ALLOWED
             :annotation: = 32
@@ -1302,6 +1305,9 @@ Module Variables
     .. py:data:: ETHERNET_SETTINGS10G_FLAG_ICS_SFP
             :annotation: = 64
 
+    .. py:data:: ETHERNET_SETTINGS10G_FLAG_IP_CONFIG_NOT_ALLOWED
+            :annotation: = 8192
+
     .. py:data:: ETHERNET_SETTINGS10G_FLAG_LINK_MODE
             :annotation: = 128
 
@@ -1311,11 +1317,20 @@ Module Variables
     .. py:data:: ETHERNET_SETTINGS10G_FLAG_PHY_MODE
             :annotation: = 256
 
+    .. py:data:: ETHERNET_SETTINGS10G_FLAG_PKT_CHECK
+            :annotation: = 2048
+
+    .. py:data:: ETHERNET_SETTINGS10G_FLAG_PKT_GEN
+            :annotation: = 4096
+
     .. py:data:: ETHERNET_SETTINGS10G_FLAG_RTSP_ENABLE
             :annotation: = 8
 
     .. py:data:: ETHERNET_SETTINGS10G_FLAG_TCPIP_ENABLE
             :annotation: = 4
+
+    .. py:data:: ETHERNET_SETTINGS2_FLAG2_IP_CONFIG_NOT_ALLOWED
+            :annotation: = 8
 
     .. py:data:: ETHERNET_SETTINGS2_FLAG2_LINK_MODE
             :annotation: = 1
@@ -1789,7 +1804,7 @@ Module Variables
             :annotation: = 1024
 
     .. py:data:: NEODEVICE_OBD2_SIM
-            :annotation: = 2147483648
+            :annotation: = -2147483648
 
     .. py:data:: NEODEVICE_OBD2_SIM_DOIP
             :annotation: = 25
@@ -3136,7 +3151,7 @@ Module Variables
             :annotation: = 1073741824
 
     .. py:data:: SPY_STATUS2_ETHERNET_T1S_ETHERNET
-            :annotation: = 2147483648
+            :annotation: = -2147483648
 
     .. py:data:: SPY_STATUS2_ETHERNET_T1S_SYMBOL
             :annotation: = 536870912
@@ -3211,7 +3226,7 @@ Module Variables
             :annotation: = 268435456
 
     .. py:data:: SPY_STATUS2_LIN_NO_SLAVE_DATA
-            :annotation: = 2147483648
+            :annotation: = -2147483648
 
     .. py:data:: SPY_STATUS2_LIN_SLAVE_BYTE_ERROR
             :annotation: = 536870912
@@ -3253,7 +3268,7 @@ Module Variables
             :annotation: = 134217728
 
     .. py:data:: SPY_STATUS2_MOST_CHANGED_PAR
-            :annotation: = 2147483648
+            :annotation: = -2147483648
 
     .. py:data:: SPY_STATUS2_MOST_CONTROL_DATA
             :annotation: = 16777216
@@ -3373,7 +3388,7 @@ Module Variables
             :annotation: = 131072
 
     .. py:data:: SPY_STATUS_EXTENDED
-            :annotation: = 2147483648
+            :annotation: = -2147483648
 
     .. py:data:: SPY_STATUS_FLEXRAY_PDU
             :annotation: = 268435456

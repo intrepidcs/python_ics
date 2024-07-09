@@ -134,28 +134,28 @@ extern "C"
 #define _DOC_FIND_DEVICES                                                                                              \
     MODULE_NAME ".find_devices(device_type=" MODULE_NAME ".NEODEVICE_ALL)\n"                                           \
                 "\n"                                                                                                   \
-                "Finds all connected devices and returns a tuple of :class:` PyNeoDeviceEx"   \
+                "Finds all connected devices and returns a tuple of :class:`" PACKAGE_NAME ".PyNeoDeviceEx"   \
                 "` for use in :func:`" MODULE_NAME ".open_device`\n"                                                   \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
                 "\tdevice_type (int): Accepts " MODULE_NAME ".NEODEVICE_* Macros\n\n"                                  \
                 "\t*New in 3.0 (803):*\n\n"                                                                            \
                 "\tdevice_types (List/Tuple): Accepts a Container of " MODULE_NAME ".NEODEVICE_* Macros\n\n"           \
-                "\tnetwork_id (int): OptionsFindNeoEx.CANOptions.iNetworkID. Usually ics.NETID_CAN, if needed\n\n"     \
+                "\tnetwork_id (int): OptionsFindNeoEx.CANOptions.iNetworkID. Usually python_ics.NETID_CAN, if needed\n\n"     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
                 "\n"                                                                                                   \
                 "Returns:\n"                                                                                           \
-                "\tTuple of :class:` PyNeoDeviceEx" "` for use in :func:`" MODULE_NAME        \
+                "\tTuple of :class:`" PACKAGE_NAME ".PyNeoDeviceEx` for use in :func:`" MODULE_NAME        \
                 ".open_device`\n"                                                                                      \
                 "\n"                                                                                                   \
-                "\t>>> for device in ics.find_devices():\n"                                                            \
+                "\t>>> for device in python_ics.find_devices():\n"                                                            \
                 "\t...     print(device.Name, device.SerialNumber)\n"                                                  \
                 "\t...\n"                                                                                              \
                 "\tneoVI FIRE 59886\n"                                                                                 \
                 "\n*New in 3.0 (803):*\n"                                                                              \
-                "\t>>> for device in ics.find_devices([ics.NEODEVICE_FIRE, ics.NEODEVICE_VCAN3]):\n"                   \
+                "\t>>> for device in python_ics.find_devices([python_ics.NEODEVICE_FIRE, python_ics.NEODEVICE_VCAN3]):\n"                   \
                 "\t...     print(device.Name, device.SerialNumber)\n"                                                  \
                 "\t...\n"                                                                                              \
                 "\tneoVI FIRE 59886\n"
@@ -164,13 +164,13 @@ extern "C"
     MODULE_NAME                                                                                                        \
     ".open_device(device)\n"                                                                                           \
     "\n"                                                                                                               \
-    "Opens the device. `device` can be omitted to return a :class:` PyNeoDeviceEx"            \
+    "Opens the device. `device` can be omitted to return a :class:`" PACKAGE_NAME ".PyNeoDeviceEx"            \
     "` of the\n"                                                                                                       \
-    "first free availible device, a :class:` PyNeoDeviceEx"                                   \
+    "first free availible device, a :class:`" PACKAGE_NAME ".PyNeoDeviceEx"                                   \
     "`, or a serial number of the device.\n"                                                                           \
     "\n"                                                                                                               \
     "Args:\n"                                                                                                          \
-    "\tdevice (:class:` PyNeoDeviceEx" "`): :class:` PyNeoDeviceEx"  \
+    "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" PACKAGE_NAME ".PyNeoDeviceEx"  \
     "`\n\n"                                                                                                            \
     "\tdevice (int): Serial Number of the device\n\n"                                                                  \
     "\tnetwork_ids (List/Tuple): This is an array of number IDs which specify the NetworkID parameter of each "        \
@@ -180,24 +180,24 @@ extern "C"
     "\tconfig_read (int): Specifies whether the DLL should read the neoVI's device configuration before enabling the " \
     "device. It is recommended that this value be set to 1.\n\n"                                                       \
     "\toptions (int): DEVICE_OPTION_* defines\n\n"                                                                     \
-    "\tnetwork_id (int): OptionsFindNeoEx.CANOptions.iNetworkID. Usually ics.NETID_CAN, if needed\n\n"                 \
+    "\tnetwork_id (int): OptionsFindNeoEx.CANOptions.iNetworkID. Usually python_ics.NETID_CAN, if needed\n\n"                 \
     "\tuse_server (int): Defaults to False, Setting to True allows opening the same device more than once.\n\n"        \
     "\n"                                                                                                               \
     "Raises:\n"                                                                                                        \
     "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                                        \
     "\n"                                                                                                               \
     "Returns:\n"                                                                                                       \
-    "\tIf :class:` PyNeoDeviceEx" "` is passed as a parameter, None. \n"                      \
-    "\tIf serial number is passed as a parameter, a :class:` PyNeoDeviceEx"                   \
+    "\tIf :class:`" PACKAGE_NAME ".PyNeoDeviceEx` is passed as a parameter, None. \n"                      \
+    "\tIf serial number is passed as a parameter, a :class:`" PACKAGE_NAME ".PyNeoDeviceEx"                   \
     "` will be returned. \n"                                                                                           \
-    "\tIf `device` parameter is omitted, a :class:` PyNeoDeviceEx"                            \
+    "\tIf `device` parameter is omitted, a :class:`" PACKAGE_NAME ".PyNeoDeviceEx"                            \
     "` will be returned with the first availible free device. \n"                                                      \
     "\n"                                                                                                               \
-    "\t>>> for device in ics.find_devices():\n"                                                                        \
-    "\t...     ics.open_device(device)\n"                                                                              \
+    "\t>>> for device in python_ics.find_devices():\n"                                                                        \
+    "\t...     python_ics.open_device(device)\n"                                                                              \
     "\t...\n"                                                                                                          \
     "\n"                                                                                                               \
-    ".. note::\n\t:class:` PyNeoDeviceEx"                                                     \
+    ".. note::\n\t:class:`" PACKAGE_NAME ".PyNeoDeviceEx"                                                     \
     "` will automatically close the device when it goes out of scope.\n\n"
 
 #define _DOC_CLOSE_DEVICES                                                                                             \
@@ -206,7 +206,7 @@ extern "C"
                 "Closes the device.\n"                                                                                 \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
@@ -215,13 +215,13 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tError Count (int)\n"                                                                                \
                 "\n"                                                                                                   \
-                "\t>>> for device in ics.find_devices():\n"                                                            \
-                "\t...     ics.open_device(device)\n"                                                                  \
+                "\t>>> for device in python_ics.find_devices():\n"                                                            \
+                "\t...     python_ics.open_device(device)\n"                                                                  \
                 "\t...     # Do something with the device...\n"                                                        \
-                "\t...     ics.close_device(device)\n"                                                                 \
+                "\t...     python_ics.close_device(device)\n"                                                                 \
                 "\t...\n"                                                                                              \
                 "\n"                                                                                                   \
-                ".. note::\n\t:class:` PyNeoDeviceEx"                                         \
+                ".. note::\n\t:class:`" PACKAGE_NAME ".PyNeoDeviceEx"                                         \
                 "` will automatically close the device when it goes out of scope.\n\n"
 
 #define _DOC_GET_RTC                                                                                                   \
@@ -230,7 +230,7 @@ extern "C"
                 "Gets the Real-Time Clock of the device.\n"                                                            \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
@@ -239,8 +239,8 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tTuple: (datetime.datetime object, offset in seconds)\n"                                             \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> ics.get_rtc(device)\n"                                                                          \
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> python_ics.get_rtc(device)\n"                                                                          \
                 "\t(datetime.datetime(2014, 9, 10, 17, 45, 45), 3)\n"
 
 #define _DOC_SET_RTC                                                                                                   \
@@ -249,7 +249,7 @@ extern "C"
                 "Sets the Real-Time Clock of the device.\n"                                                            \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\ttime (:class:`datetime.datetime`): Optional. Sets to current time, if omitted.\n\n"                 \
                 "\n"                                                                                                   \
@@ -259,8 +259,8 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> ics.set_rtc(device)\n"
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> python_ics.set_rtc(device)\n"
 
 #define _DOC_COREMINI_LOAD                                                                                             \
     MODULE_NAME ".coremini_load(device, coremini, location)\n"                                                         \
@@ -268,7 +268,7 @@ extern "C"
                 "Loads the CoreMini into the device.\n"                                                                \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tcoremini (str/tuple): Use string to load from file, Use Tuple if file data.\n\n"                    \
                 "\tlocation (int): Accepts :class:`" MODULE_NAME ".SCRIPT_LOCATION_FLASH_MEM`, :class:`" MODULE_NAME   \
@@ -280,8 +280,8 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> ics.coremini_load(device, 'cmvspy.vs3cmb', ics.SCRIPT_LOCATION_SDCARD)\n"
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> python_ics.coremini_load(device, 'cmvspy.vs3cmb', python_ics.SCRIPT_LOCATION_SDCARD)\n"
 
 #define _DOC_COREMINI_START                                                                                            \
     MODULE_NAME ".coremini_start(device, location)\n"                                                                  \
@@ -289,7 +289,7 @@ extern "C"
                 "Starts the CoreMini into the device.\n"                                                               \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tlocation (int): Accepts :class:`" MODULE_NAME ".SCRIPT_LOCATION_FLASH_MEM`, :class:`" MODULE_NAME   \
                 ".SCRIPT_LOCATION_SDCARD`, or :class:`" MODULE_NAME ".SCRIPT_LOCATION_VCAN3_MEM`\n\n"                  \
@@ -300,8 +300,8 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> ics.coremini_start(device, ics.SCRIPT_LOCATION_SDCARD)\n"
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> python_ics.coremini_start(device, python_ics.SCRIPT_LOCATION_SDCARD)\n"
 
 #define _DOC_COREMINI_STOP                                                                                             \
     MODULE_NAME ".coremini_stop(device)\n"                                                                             \
@@ -309,7 +309,7 @@ extern "C"
                 "Stops the CoreMini into the device.\n"                                                                \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
@@ -318,8 +318,8 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> ics.coremini_stop(device)\n"
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> python_ics.coremini_stop(device)\n"
 
 #define _DOC_COREMINI_CLEAR                                                                                            \
     MODULE_NAME ".coremini_clear(device, location)\n"                                                                  \
@@ -327,7 +327,7 @@ extern "C"
                 "Clears the CoreMini into the device.\n"                                                               \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tlocation (int): Accepts :class:`" MODULE_NAME ".SCRIPT_LOCATION_FLASH_MEM`, :class:`" MODULE_NAME   \
                 ".SCRIPT_LOCATION_SDCARD`, or :class:`" MODULE_NAME ".SCRIPT_LOCATION_VCAN3_MEM`\n\n"                  \
@@ -338,8 +338,8 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> ics.coremini_clear(device, ics.SCRIPT_LOCATION_SDCARD)\n"
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> python_ics.coremini_clear(device, python_ics.SCRIPT_LOCATION_SDCARD)\n"
 
 #define _DOC_COREMINI_GET_STATUS                                                                                       \
     MODULE_NAME ".coremini_get_status(device)\n"                                                                       \
@@ -347,7 +347,7 @@ extern "C"
                 "Gets the status of the CoreMini in the device.\n"                                                     \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
@@ -356,8 +356,8 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tTrue if running, otherwise False.\n"                                                                \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> ics.coremini_get_status(device)\n"                                                              \
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> python_ics.coremini_get_status(device)\n"                                                              \
                 "\t>>>\n"
 
 #define _DOC_TRANSMIT_MESSAGES                                                                                         \
@@ -367,7 +367,7 @@ extern "C"
                 "." SPY_MESSAGE_OBJECT_NAME "`\n"                                                                      \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tmessages (:class:`" MODULE_NAME "." SPY_MESSAGE_OBJECT_NAME "`): :class:`" MODULE_NAME              \
                 "." SPY_MESSAGE_OBJECT_NAME "`\n\n"                                                                    \
@@ -378,12 +378,12 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> msg = ics.SpyMessage()\n"                                                                       \
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> msg = python_ics.SpyMessage()\n"                                                                       \
                 "\t>>> msg.ArbIDOrHeader = 0xFF\n"                                                                     \
-                "\t>>> msg.NetworkID = ics.NETID_HSCAN\n"                                                              \
+                "\t>>> msg.NetworkID = python_ics.NETID_HSCAN\n"                                                              \
                 "\t>>> msg.Data = (0,1,2,3,4,5,6,7)\n"                                                                 \
-                "\t>>> ics.transmit_messages(device, msg)\n"                                                           \
+                "\t>>> python_ics.transmit_messages(device, msg)\n"                                                           \
                 "\t>>>\n"
 
 #define _DOC_GET_MESSAGES                                                                                              \
@@ -392,7 +392,7 @@ extern "C"
                 "Gets the message(s) on the device.\n"                                                                 \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tj1850 (:class:`bool`): Return :class:`" MODULE_NAME "." SPY_MESSAGE_J1850_OBJECT_NAME               \
                 "` instead.\n\n"                                                                                       \
@@ -405,8 +405,8 @@ extern "C"
                 "\t:class:`tuple` of two items. First item is a :class:`tuple` of :class:`" MODULE_NAME                \
                 "." SPY_MESSAGE_OBJECT_NAME "` and second is the error count.\n"                                       \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> messages, errors = ics.get_messages(device)\n"                                                  \
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> messages, errors = python_ics.get_messages(device)\n"                                                  \
                 "\t>>> len(messages)\n"                                                                                \
                 "\t14\n"                                                                                               \
                 "\t>>> hex(messages[0].ArbIDOrHeader)\n"                                                               \
@@ -423,7 +423,7 @@ extern "C"
                 "Gets the error message(s) on the device.\n"                                                           \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
@@ -433,8 +433,8 @@ extern "C"
                 "\t:class:`list` of :class:`tuple`s. :class:`tuple` contents: (error_number, description_short, "      \
                 "description_long, severity, restart_needed)\n"                                                        \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> errors = ics.get_error_messages(device)\n"
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> errors = python_ics.get_error_messages(device)\n"
 
 //_DOC_SET_REFLASH_DISPLAY_CALLBACKS), "icsneoSetReflashCallback(), pass a python function func(msg, progress)"
 #define _DOC_SET_REFLASH_CALLBACK                                                                                      \
@@ -455,7 +455,7 @@ extern "C"
     "\t>>> def callback(msg, progress):\n"                                                                             \
     "\t...     print(msg, progress)\n"                                                                                 \
     "\t...\n"                                                                                                          \
-    "\t>>> ics.set_reflash_callback(callback)\n"                                                                       \
+    "\t>>> python_ics.set_reflash_callback(callback)\n"                                                                       \
     "\t>>> \n"
 
 #define _DOC_GET_DEVICE_SETTINGS                                                                                       \
@@ -465,7 +465,7 @@ extern "C"
     "Gets the settings in the device. vnet_slot defaults to " MODULE_NAME ".PlasmaIonVnetChannelMain\n"                \
     "\n"                                                                                                               \
     "Args:\n"                                                                                                          \
-    "\tdevice (:class:` PyNeoDeviceEx" "`): :class:` PyNeoDeviceEx"  \
+    "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" PACKAGE_NAME ".PyNeoDeviceEx"  \
     "`\n\n"                                                                                                            \
     "\tdevice_type (EDeviceSettingsType): Optional: Overrides default device setings type. Defaults to '-1'\n\n"       \
     "\tvnet_slot (PlasmaIonVnetChannelMain): Optional: Defaults to PlasmaIonVnetChannelMain, Used only for "           \
@@ -479,21 +479,21 @@ extern "C"
     "device_settings"                                                                                                  \
     "`\n"                                                                                                              \
     "\n"                                                                                                               \
-    "\t>>> d = ics.open_device()\n"                                                                                    \
+    "\t>>> d = python_ics.open_device()\n"                                                                                    \
     "\t>>> d.Name\n"                                                                                                   \
     "\t'neoVI ION'\n"                                                                                                  \
     "\t>>> d.SerialNumber\n"                                                                                           \
     "\t404444\n"                                                                                                       \
-    "\t>>> s = ics.get_device_settings(d)\n"                                                                           \
+    "\t>>> s = python_ics.get_device_settings(d)\n"                                                                           \
     "\t>>> s.DeviceSettingType\n"                                                                                      \
     "\t2\n"                                                                                                            \
     "\t>>> s.cyan\n"                                                                                                   \
-    "\t<ics.CyanSettings object at 0x01E61B40>\n"                                                                      \
+    "\t<python_ics.CyanSettings object at 0x01E61B40>\n"                                                                      \
     "\t>>> s.cyan.canfd1.FDMode\n"                                                                                     \
     "\t4\n"                                                                                                            \
     "\t>>> s2.cyan\n"                                                                                                  \
-    "\t<ics.CyanSettings object at 0x02B113C8>\n"                                                                      \
-    "\t>>> s2 = ics.get_device_settings(d, -1, ics.PlasmaIonVnetChannelA)\n"                                           \
+    "\t<python_ics.CyanSettings object at 0x02B113C8>\n"                                                                      \
+    "\t>>> s2 = python_ics.get_device_settings(d, -1, python_ics.PlasmaIonVnetChannelA)\n"                                           \
     "\t>>> s2.DeviceSettingType\n"                                                                                     \
     "\t2\n"                                                                                                            \
     "\t>>> s2.cyan.canfd1.FDMode\n"                                                                                    \
@@ -505,7 +505,7 @@ extern "C"
                 "Sets the settings in the device. vnet_slot defaults to " MODULE_NAME ".PlasmaIonVnetChannelMain\n"    \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tsettings (:class:`" MODULE_NAME "."                                                                 \
                 "device_settings"                                                                                      \
@@ -519,19 +519,19 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> d = ics.open_device()\n"                                                                        \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
                 "\t>>> d.Name\n"                                                                                       \
                 "\t'neoVI ION'\n"                                                                                      \
                 "\t>>> d.SerialNumber\n"                                                                               \
                 "\t404444\n"                                                                                           \
-                "\t>>> s = ics.get_device_settings(d, ics.PlasmaIonVnetChannelA) # Get Slave settings, channel "       \
+                "\t>>> s = python_ics.get_device_settings(d, python_ics.PlasmaIonVnetChannelA) # Get Slave settings, channel "       \
                 "selection not needed if not a Plasma/Ion\n"                                                           \
                 "\t>>> s.DeviceSettingType\n"                                                                          \
                 "\t2\n"                                                                                                \
                 "\t>>> s.cyan.can_switch_mode\n"                                                                       \
                 "\t1\n"                                                                                                \
                 "\t>>> s.cyan.can_switch_mode = 2\n"                                                                   \
-                "\t>>> ics.set_device_settings(d, s, True, ics.PlasmaIonVnetChannelA)\n"                               \
+                "\t>>> python_ics.set_device_settings(d, s, True, python_ics.PlasmaIonVnetChannelA)\n"                               \
                 "\t>>> \n"
 
 //"Accepts a  PyNeoDeviceEx" ", exception on error."
@@ -541,7 +541,7 @@ extern "C"
                 "Load the default settings in the device.\n"                                                           \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
@@ -550,8 +550,8 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> ics.load_default_settings(device)\n"                                                            \
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> python_ics.load_default_settings(device)\n"                                                            \
                 "\t>>> \n"
 
 #define _DOC_CREATE_NEOVI_RADIO_MESSAGE                                                                                \
@@ -579,8 +579,8 @@ extern "C"
     "Raises:\n"                                                                                                        \
     "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                                        \
     "\n"                                                                                                               \
-    "\t>>> msg = ics.SpyMessage()\n"                                                                                   \
-    "\t>>> msg.Data = ics.create_neovi_radio_message(Relay1=True, Relay4=False, LED6=True, MSB_report_rate=10)\n"      \
+    "\t>>> msg = python_ics.SpyMessage()\n"                                                                                   \
+    "\t>>> msg.Data = python_ics.create_neovi_radio_message(Relay1=True, Relay4=False, LED6=True, MSB_report_rate=10)\n"      \
     "\t>>> msg.Data\n"                                                                                                 \
     "\t(65, 10, 0, 0, 0)\n"
 
@@ -590,7 +590,7 @@ extern "C"
                 "Starts a Coremini Function Block at `index` on `device`.\n"                                           \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tindex (int): Index of the function block.\n\n"                                                      \
                 "\n"                                                                                                   \
@@ -600,8 +600,8 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone on Success.\n"                                                                                 \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> ics.coremini_start_fblock(device, 1)\n"
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> python_ics.coremini_start_fblock(device, 1)\n"
 
 #define _DOC_COREMINI_STOP_FBLOCK                                                                                      \
     MODULE_NAME ".coremini_stop_fblock(device, index)\n"                                                               \
@@ -609,7 +609,7 @@ extern "C"
                 "Stops a Coremini Function Block at `index` on `device`.\n"                                            \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tindex (int): Index of the function block.\n\n"                                                      \
                 "\n"                                                                                                   \
@@ -619,8 +619,8 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone on Success.\n"                                                                                 \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> ics.coremini_stop_fblock(device, 1)\n"
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> python_ics.coremini_stop_fblock(device, 1)\n"
 
 #define _DOC_COREMINI_GET_FBLOCK_STATUS                                                                                \
     MODULE_NAME ".coremini_get_fblock_status(device, index)\n"                                                         \
@@ -628,7 +628,7 @@ extern "C"
                 "Gets the status of a Coremini Function Block at `index` on `device`.\n"                               \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tindex (int): Index of the function block.\n\n"                                                      \
                 "\n"                                                                                                   \
@@ -638,8 +638,8 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone on Success.\n"                                                                                 \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> ics.coremini_get_fblock_status(device, 1)\n"                                                    \
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> python_ics.coremini_get_fblock_status(device, 1)\n"                                                    \
                 "\tTrue\n"
 
 #define _DOC_COREMINI_READ_APP_SIGNAL                                                                                  \
@@ -648,7 +648,7 @@ extern "C"
                 "Gets the value of a Coremini application signal at `index` on `device`.\n"                            \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tindex (int): Index of the application signal.\n\n"                                                  \
                 "\n"                                                                                                   \
@@ -658,8 +658,8 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tfloat on Success.\n"                                                                                \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> ics.coremini_read_app_signal(device, 1)\n"                                                      \
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> python_ics.coremini_read_app_signal(device, 1)\n"                                                      \
                 "\t52\n"
 
 #define _DOC_COREMINI_WRITE_APP_SIGNAL                                                                                 \
@@ -668,7 +668,7 @@ extern "C"
                 "Sets the value of a Coremini application signal at `index` on `device`.\n"                            \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tindex (int): Index of the application signal.\n\n"                                                  \
                 "\tvalue (float): New value of the application signal.\n\n"                                            \
@@ -679,8 +679,8 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone on Success.\n"                                                                                 \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> ics.coremini_write_app_signal(device, 1, 52)\n"                                                 \
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> python_ics.coremini_write_app_signal(device, 1, 52)\n"                                                 \
                 "\t>>>\n"
 
 #define _DOC_COREMINI_READ_TX_MESSAGE                                                                                  \
@@ -689,7 +689,7 @@ extern "C"
                 "Gets the value of a Coremini Message at `index` on `device`.\n"                                       \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tindex (int): Index of the application signal.\n\n"                                                  \
                 "\tj1850 (bool): Use :class:`" MODULE_NAME "." SPY_MESSAGE_J1850_OBJECT_NAME "` instead.\n\n"          \
@@ -700,8 +700,8 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\t:class:`" MODULE_NAME "." SPY_MESSAGE_OBJECT_NAME "` Success.\n"                                    \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> msg = ics.coremini_read_tx_message(device, 0)\n"
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> msg = python_ics.coremini_read_tx_message(device, 0)\n"
 
 #define _DOC_COREMINI_READ_RX_MESSAGE                                                                                  \
     MODULE_NAME ".coremini_read_rx_message(device, index, j1850=False)\n"                                              \
@@ -709,7 +709,7 @@ extern "C"
                 "Gets the value of a Coremini Message at `index` on `device`.\n"                                       \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tindex (int): Index of the application signal.\n\n"                                                  \
                 "\tj1850 (bool): Use :class:`" MODULE_NAME "." SPY_MESSAGE_J1850_OBJECT_NAME "` instead.\n\n"          \
@@ -720,8 +720,8 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\t:class:`" MODULE_NAME "." SPY_MESSAGE_OBJECT_NAME "` Success.\n"                                    \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> msg = ics.coremini_read_tx_message(device, 0)\n"
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> msg = python_ics.coremini_read_tx_message(device, 0)\n"
 
 #define _DOC_COREMINI_WRITE_TX_MESSAGE                                                                                 \
     MODULE_NAME ".coremini_write_tx_message(device, index, msg)\n"                                                     \
@@ -737,7 +737,7 @@ extern "C"
                 "Gets the Performance Parameters on `device`.\n"                                                       \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
@@ -747,8 +747,8 @@ extern "C"
                 "\tTuple on Success: (buffer count, buffer max, overflow count, reserved, reserved, reserved, "        \
                 "reserved, reserved)\n"                                                                                \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> ics.get_performance_parameters(device)\n"                                                       \
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> python_ics.get_performance_parameters(device)\n"                                                       \
                 "\t(0, 24576, 0, 0, 0, 0, 0, 0)\n"
 
 #define _DOC_VALIDATE_HOBJECT                                                                                          \
@@ -757,7 +757,7 @@ extern "C"
                 "Validates the handle is valid for a `device`. Handles are only valid when the device is open.\n"      \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tor:\n\n"                                                                                            \
                 "\tdevice (int): c style integer handle to the device.\n\n"                                            \
@@ -768,10 +768,10 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tBoolean: True if valid, false otherwise.\n"                                                         \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> ics.validate_hobject(device)\n"                                                                 \
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> python_ics.validate_hobject(device)\n"                                                                 \
                 "\t1\n"                                                                                                \
-                "\t>>> ics.validate_hobject(device._Handle)\n"                                                         \
+                "\t>>> python_ics.validate_hobject(device._Handle)\n"                                                         \
                 "\t1\n"
 
 #define _DOC_GET_LAST_API_ERROR                                                                                        \
@@ -780,7 +780,7 @@ extern "C"
                 "Gets the error message from the last API call.\n"                                                     \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
@@ -789,12 +789,12 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tTuple: (error, description short, description long, severity, restart needed)\n"                    \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
                 "\t>>> try:\n"                                                                                         \
-                "\t...     msg = ics.coremini_read_tx_message(device, 0)\n"                                            \
-                "\t... except ics.RuntimeError as ex:\n"                                                               \
+                "\t...     msg = python_ics.coremini_read_tx_message(device, 0)\n"                                            \
+                "\t... except python_ics.RuntimeError as ex:\n"                                                               \
                 "\t...     print(ex)\n"                                                                                \
-                "\t...     print(ics.get_last_api_error(device))\n"                                                    \
+                "\t...     print(python_ics.get_last_api_error(device))\n"                                                    \
                 "\t...\n"                                                                                              \
                 "\tError: coremini_read_tx_message(): icsneoScriptReadTxMessage() Failed\n"                            \
                 "\t(224, 'Invalid Message Index for script.', 'Invalid Message Index for script.', 16, 0)\n"
@@ -813,7 +813,7 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tInt: DLL Version\n"                                                                                 \
                 "\n"                                                                                                   \
-                "\t>>> ics.get_dll_version()\n"                                                                        \
+                "\t>>> python_ics.get_dll_version()\n"                                                                        \
                 "\t700\n"
 
 #define _DOC_BASE36ENC                                                                                                 \
@@ -830,7 +830,7 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tStr: Serial Number\n"                                                                               \
                 "\n"                                                                                                   \
-                "\t>>> ics.base36enc(device.SerialNumber)\n"                                                           \
+                "\t>>> python_ics.base36enc(device.SerialNumber)\n"                                                           \
                 "\tCY0024\n"
 
 #define _DOC_GET_SERIAL_NUMBER                                                                                         \
@@ -839,7 +839,7 @@ extern "C"
                 "Gets the serial number out of the device.\n"                                                          \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
@@ -848,7 +848,7 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tInt: Serial Number Version\n"                                                                       \
                 "\n"                                                                                                   \
-                "\t>>> ics.get_serial_number(device)\n"                                                                \
+                "\t>>> python_ics.get_serial_number(device)\n"                                                                \
                 "\t53123\n"
 
 #define _DOC_REQUEST_ENTER_SLEEP_MODE                                                                                  \
@@ -860,7 +860,7 @@ extern "C"
                 "This API allows Android/Linux applications to invoke power management.\n"                             \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "\ttimeout_ms (int): 16bit word for how long to wait on idle bus before going to sleep. "              \
@@ -884,7 +884,7 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tBoolean: True on success, False on failure.\n"                                                      \
                 "\n"                                                                                                   \
-                "\t>>> ics.request_enter_sleep_mode(device, 1, 0)\n"                                                   \
+                "\t>>> python_ics.request_enter_sleep_mode(device, 1, 0)\n"                                                   \
                 "\tTrue\n"
 
 #define _DOC_SET_CONTEXT                                                                                               \
@@ -899,7 +899,7 @@ extern "C"
                 "create logical connections to found CAN Nodes.\n"                                                     \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
@@ -908,7 +908,7 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tBoolean: True on success, False on failure.\n"                                                      \
                 "\n"                                                                                                   \
-                "\t>>> ics.set_context(device)\n"                                                                      \
+                "\t>>> python_ics.set_context(device)\n"                                                                      \
                 "\tTrue\n"
 
 #define _DOC_FORCE_FIRMWARE_UPDATE                                                                                     \
@@ -917,7 +917,7 @@ extern "C"
                 "Forces the device to flash firmware.\n"                                                               \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
@@ -926,7 +926,7 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tBoolean: True on success, False on failure.\n"                                                      \
                 "\n"                                                                                                   \
-                "\t>>> ics.force_firmware_update(device)\n"                                                            \
+                "\t>>> python_ics.force_firmware_update(device)\n"                                                            \
                 "\tTrue\n"
 
 #define _DOC_FIRMWARE_UPDATE_REQUIRED                                                                                  \
@@ -935,7 +935,7 @@ extern "C"
                 "Determines if the device firmware needs flashing.\n"                                                  \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
@@ -944,7 +944,7 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tBoolean: True on success, False on failure.\n"                                                      \
                 "\n"                                                                                                   \
-                "\t>>> ics.force_firmware_update(device)\n"                                                            \
+                "\t>>> python_ics.force_firmware_update(device)\n"                                                            \
                 "\tTrue\n"
 
 #define _DOC_GET_DLL_FIRMWARE_INFO                                                                                     \
@@ -953,7 +953,7 @@ extern "C"
                 "Returns the DLL firmware info for the device.\n"                                                      \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
@@ -964,8 +964,8 @@ extern "C"
                 "st_api_firmware_info"                                                                                 \
                 "`)\n"                                                                                                 \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> info = ics.get_dll_firmware_info(device)\n"                                                     \
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> info = python_ics.get_dll_firmware_info(device)\n"                                                     \
                 "\t>>> info.iAppMajor\n"                                                                               \
                 "\t7\n"                                                                                                \
                 "\t>>> info.iAppMinor\n"                                                                               \
@@ -978,7 +978,7 @@ extern "C"
                 "Returns the device firmware info for the device.\n"                                                   \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
@@ -989,8 +989,8 @@ extern "C"
                 "st_api_firmware_info"                                                                                 \
                 "`)\n"                                                                                                 \
                 "\n"                                                                                                   \
-                "\t>>> device = ics.open_device()\n"                                                                   \
-                "\t>>> info = ics.get_hw_firmware_info(device)\n"                                                      \
+                "\t>>> device = python_ics.open_device()\n"                                                                   \
+                "\t>>> info = python_ics.get_hw_firmware_info(device)\n"                                                      \
                 "\t>>> info.iAppMajor\n"                                                                               \
                 "\t7\n"                                                                                                \
                 "\t>>> info.iAppMinor\n"                                                                               \
@@ -1003,7 +1003,7 @@ extern "C"
                 "Returns the device backup power enabled for the device.\n"                                            \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
@@ -1019,7 +1019,7 @@ extern "C"
                 "Sets the device backup power enabled for the device.\n"                                               \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
@@ -1035,7 +1035,7 @@ extern "C"
                 "Returns the device backup power is ready for the device.\n"                                           \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
@@ -1054,7 +1054,7 @@ extern "C"
                 "Transmits an ISO15765 Message.\n"                                                                     \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "\tpMsg (:class:`" MODULE_NAME "."                                                                     \
@@ -1077,7 +1077,7 @@ extern "C"
                 "Setup rx ISO15765 Message.\n"                                                                         \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "\tprx_msg (:class:`" MODULE_NAME "."                                                                  \
@@ -1099,7 +1099,7 @@ extern "C"
                 "Enables ISO15765 networks.\n"                                                                         \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
@@ -1115,7 +1115,7 @@ extern "C"
                 "Disables ISO15765 networks.\n"                                                                        \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
@@ -1131,7 +1131,7 @@ extern "C"
                 "Gets active vnet channel for the device.\n"                                                           \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
@@ -1147,7 +1147,7 @@ extern "C"
                 "Sets active vnet channel for the device.\n"                                                           \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
@@ -1172,14 +1172,14 @@ extern "C"
     "Returns:\n"                                                                                                       \
     "\tNone\n"                                                                                                         \
     "\n"                                                                                                               \
-    "\t>>> import ics\n"                                                                                               \
-    "\t>>> ics.find_devices()\n"                                                                                       \
+    "\t>>> import python_ics\n"                                                                                               \
+    "\t>>> python_ics.find_devices()\n"                                                                                       \
     "\tTraceback (most recent call last):\n"                                                                           \
     "\t  File \"<stdin>\", line 1, in <module>\n"                                                                      \
     "\tics.RuntimeError: Error: find_devices(): Failed to open library: 'icsneo40.dll' with error code: #126\n"        \
-    "\t>>> ics.override_library_name(r\"C:\\Windows\\SysWOW64\\icsneo40-different.dll\")\n"                            \
-    "\t>>> ics.find_devices()\n"                                                                                       \
-    "\t(<ics.NeoDevice object at 0x00284C50>, <ics.NeoDevice object at 0x007C9A10>)\n"
+    "\t>>> python_ics.override_library_name(r\"C:\\Windows\\SysWOW64\\icsneo40-different.dll\")\n"                            \
+    "\t>>> python_ics.find_devices()\n"                                                                                       \
+    "\t(<python_ics.NeoDevice object at 0x00284C50>, <python_ics.NeoDevice object at 0x007C9A10>)\n"
 
 #define _DOC_SET_BIT_RATE                                                                                              \
     MODULE_NAME                                                                                                        \
@@ -1196,7 +1196,7 @@ extern "C"
     "For the network NETID_FIRE_CGI valid bit rates are 625000 and 115200\n"                                           \
     "\n"                                                                                                               \
     "Args:\n"                                                                                                          \
-    "\tdevice (:class:` PyNeoDeviceEx" "`): :class:` PyNeoDeviceEx"  \
+    "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" PACKAGE_NAME ".PyNeoDeviceEx"  \
     "`\n\n"                                                                                                            \
     "\n"                                                                                                               \
     "Raises:\n"                                                                                                        \
@@ -1212,7 +1212,7 @@ extern "C"
                 "Sets the FD bitrate for a given Network ID on the device..\n"                                         \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
@@ -1228,7 +1228,7 @@ extern "C"
                 "Sets the bitrate for a given Network ID on the device with extended options.\n"                       \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
@@ -1244,7 +1244,7 @@ extern "C"
                 "Calculates the timestamp for a message.\n"                                                            \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "\tmsg (:class:`" MODULE_NAME "." SPY_MESSAGE_OBJECT_NAME "`): :class:`" MODULE_NAME                   \
@@ -1256,10 +1256,10 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tFloat: Timestamp for the message.\n"                                                                \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> msgs, error_count = ics.get_messages(d)\n"                                                      \
-                "\t>>> ics.get_timestamp_for_msg(d, msgs[0])\n"                                                        \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> msgs, error_count = python_ics.get_messages(d)\n"                                                      \
+                "\t>>> python_ics.get_timestamp_for_msg(d, msgs[0])\n"                                                        \
                 "\t354577568.9145524\n"
 
 #define _DOC_GET_DEVICE_STATUS                                                                                         \
@@ -1268,7 +1268,7 @@ extern "C"
                 "Returns the device status.\n"                                                                         \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
@@ -1279,9 +1279,9 @@ extern "C"
                 "ics_device_status"                                                                                    \
                 "`).\n"                                                                                                \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> status = ics.get_device_status(d)\n"                                                            \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> status = python_ics.get_device_status(d)\n"                                                            \
                 "\t>>> status.fire2Status.ethernetActivationLineEnabled\n"                                             \
                 "\t0\n"
 
@@ -1291,7 +1291,7 @@ extern "C"
                 "Enable or disable network communication.\n"                                                           \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "\tenable (:class:`bool`): :class:`bool`\n\n"                                                          \
@@ -1304,9 +1304,9 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> status = ics.enable_network_com(d, True)\n"                                                     \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> status = python_ics.enable_network_com(d, True)\n"                                                     \
                 "\t>>> \n"
 
 #define _DOC_ENABLE_BUS_VOLTAGE_MONITOR                                                                                \
@@ -1315,7 +1315,7 @@ extern "C"
                 "Enable or disable bus voltage monitoring.\n"                                                          \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "\tenable (:class:`bool`): :class:`int`\n\n"                                                           \
@@ -1328,9 +1328,9 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> status = ics.enable_bus_voltage_monitor(d, 1)\n"                                                \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> status = python_ics.enable_bus_voltage_monitor(d, 1)\n"                                                \
                 "\t>>> \n"
 
 #define _DOC_GET_BUS_VOLTAGE                                                                                           \
@@ -1339,7 +1339,7 @@ extern "C"
                 "Reads bus voltage. (:class:`" MODULE_NAME ".enable_bus_voltage_monitor`) needs to be called first.\n" \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "\treserved (:class:`int`): :class:`int`: Optional. Should be set to zero. Don't set, if unsure.\n\n"  \
@@ -1350,10 +1350,10 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tInt: value returned is in mV.\n"                                                                    \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> status = ics.enable_bus_voltage_monitor(d, 1)\n"                                                \
-                "\t>>> ics.get_bus_voltage(d)\n"                                                                       \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> status = python_ics.enable_bus_voltage_monitor(d, 1)\n"                                                \
+                "\t>>> python_ics.get_bus_voltage(d)\n"                                                                       \
                 "\t12000\n"                                                                                            \
                 "\t>>> \n"
 
@@ -1363,7 +1363,7 @@ extern "C"
                 "Reads firmware binary from a RAD-Jupiter. If not sure, don't use this method\n"                       \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "\tsize (:class:`int`): :class:`int`: size of the bytes to read of the firmware binary.\n\n"           \
@@ -1383,7 +1383,7 @@ extern "C"
                 "Writes firmware binary to a RAD-Jupiter. If not sure, don't use this method\n"                        \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "\tbytes (:class:`bytes`): :class:`bytes`: bytes of the firmware binary.\n\n"                          \
@@ -1403,7 +1403,7 @@ extern "C"
                 "Returns the device disk details.\n"                                                                   \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
@@ -1414,9 +1414,9 @@ extern "C"
                 "srad_gigalog_disk_details"                                                                            \
                 "`).\n"                                                                                                \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> details = ics.get_disk_details(d)\n"                                                            \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> details = python_ics.get_disk_details(d)\n"                                                            \
                 "\t>>> details.structure.options\n"                                                                    \
                 "\t>>> \n"
 
@@ -1426,7 +1426,7 @@ extern "C"
                 "Starts disk formatting on the device.\n"                                                              \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
@@ -1435,11 +1435,11 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> details = ics.get_disk_details(d)\n"                                                            \
-                "\t>>> details. = ics.get_disk_details(d)\n"                                                           \
-                "\t>>> ics.disk_format(d, details)\n"                                                                  \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> details = python_ics.get_disk_details(d)\n"                                                            \
+                "\t>>> details. = python_ics.get_disk_details(d)\n"                                                           \
+                "\t>>> python_ics.disk_format(d, details)\n"                                                                  \
                 "\t>>> \n"
 
 #define _DOC_DISK_FORMAT_CANCEL                                                                                        \
@@ -1448,7 +1448,7 @@ extern "C"
                 "Cancel in progress disk formatting on the device.\n"                                                  \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
@@ -1457,10 +1457,10 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> ics.disk_format(d, details)\n"                                                                  \
-                "\t>>> ics.disk_format_cancel(d)\n"                                                                    \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> python_ics.disk_format(d, details)\n"                                                                  \
+                "\t>>> python_ics.disk_format_cancel(d)\n"                                                                    \
                 "\t>>> \n"
 
 #define _DOC_DISK_FORMAT_PROGRESS                                                                                      \
@@ -1469,7 +1469,7 @@ extern "C"
                 "Returns the device disk formatting progress.\n"                                                       \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
@@ -1480,10 +1480,10 @@ extern "C"
                 "srad_gigalog_disk_format_progress"                                                                    \
                 "`).\n"                                                                                                \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> d = ics.disk_format(d, details)\n"                                                              \
-                "\t>>> progress = ics.get_disk_format_progress(d)\n"                                                   \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> d = python_ics.disk_format(d, details)\n"                                                              \
+                "\t>>> progress = python_ics.get_disk_format_progress(d)\n"                                                   \
                 "\t>>> progress.sectorsRemaining\n"                                                                    \
                 "\t>>> \n"
 
@@ -1493,7 +1493,7 @@ extern "C"
                 "Activate or De-activate DOIP Line.\n"                                                                 \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "\tenable (:class:`bool`): :class:`bool`\n\n"                                                          \
@@ -1504,9 +1504,9 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> status = ics.enable_doip_line(d, True)\n"                                                       \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> status = python_ics.enable_doip_line(d, True)\n"                                                       \
                 "\t>>> \n"
 
 #define _DOC_IS_DEVICE_FEATURE_SUPPORTED                                                                               \
@@ -1516,7 +1516,7 @@ extern "C"
                 "ValueCAN4-4 and ValueCAN4-Industrial are supported.\n"                                                \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "\tenable (:class:`DeviceFeature`): :class:`DeviceFeature`\n\n"                                        \
@@ -1527,10 +1527,10 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> from ics.structures.device_feature import DeviceFeature\n"                                      \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> supported = ics.is_device_feature_supported(d, DeviceFeature.networkTerminationDWCAN01)\n"      \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> from python_ics.structures.device_feature import DeviceFeature\n"                                      \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> supported = python_ics.is_device_feature_supported(d, DeviceFeature.networkTerminationDWCAN01)\n"      \
                 "\t>>> \n"
 
 #define _DOC_GET_PCB_SERIAL_NUMBER                                                                                     \
@@ -1539,7 +1539,7 @@ extern "C"
                 "Gets the unique PCB serial number of the device.\n"                                                   \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
@@ -1548,9 +1548,9 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\t(:class:`str`): PCB Serial Number\n"                                                                \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> pcb_sn = ics.get_pcb_serial_number(d)\n"                                                        \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> pcb_sn = python_ics.get_pcb_serial_number(d)\n"                                                        \
                 "\t>>> \n"
 
 #define _DOC_SET_LED_PROPERTY                                                                                          \
@@ -1559,7 +1559,7 @@ extern "C"
                 "Sets the LED property on the device.\n"                                                               \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tled (:class:`int`): Index or position of the LED\n\n"                                               \
                 "\tprop (:class:`int`): Property of the LED\n\n"                                                       \
@@ -1571,9 +1571,9 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> ics.set_led_property(d, TODO, TODO, TODO)\n"                                                    \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> python_ics.set_led_property(d, TODO, TODO, TODO)\n"                                                    \
                 "\t>>> \n"
 
 #define _DOC_START_DHCP_SERVER                                                                                         \
@@ -1583,7 +1583,7 @@ extern "C"
                 "Starts a DHCP Server.\n"                                                                              \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tnetwork_id (:class:`int`): NetworkID\n\n"                                                           \
                 "\tdevice_ip_address (:class:`str`): Device IP Address\n\n"                                            \
@@ -1601,9 +1601,9 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> ics.start_dhcp_server(d, TODO)\n"                                                               \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> python_ics.start_dhcp_server(d, TODO)\n"                                                               \
                 "\t>>> \n"
 
 #define _DOC_STOP_DHCP_SERVER                                                                                          \
@@ -1612,7 +1612,7 @@ extern "C"
                 "Stops the DHCP Server\n"                                                                              \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tnetwork_id (:class:`int`): NetworkID\n\n"                                                           \
                 "\n"                                                                                                   \
@@ -1622,9 +1622,9 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> ics.stop_dhcp_server(d, TODO)\n"                                                                \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> python_ics.stop_dhcp_server(d, TODO)\n"                                                                \
                 "\t>>> \n"
 
 #define _DOC_WBMS_MANAGER_WRITE_LOCK                                                                                   \
@@ -1633,7 +1633,7 @@ extern "C"
                 "Sets the lock state on the manager\n"                                                                 \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tmanager (:class:`" MODULE_NAME                                                                      \
                 ".structures.ew_bms_manager_port_t.ew_bms_manager_port_t`): :class:`" MODULE_NAME                      \
@@ -1648,11 +1648,11 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> from ics.structures.ew_bms_manager_port_t import ew_bms_manager_port_t\n"                       \
-                "\t>>> from ics.structures.ew_bms_manager_lock_state_t import ew_bms_manager_lock_state_t\n"           \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> ics.wbms_manager_write_lock(d, ew_bms_manager_port_t.eManagerPortA.value, "                     \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> from python_ics.structures.ew_bms_manager_port_t import ew_bms_manager_port_t\n"                       \
+                "\t>>> from python_ics.structures.ew_bms_manager_lock_state_t import ew_bms_manager_lock_state_t\n"           \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> python_ics.wbms_manager_write_lock(d, ew_bms_manager_port_t.eManagerPortA.value, "                     \
                 "ew_bms_manager_lock_state_t.eLockManager.value)\n"                                                    \
                 "\t>>> \n"
 
@@ -1662,7 +1662,7 @@ extern "C"
                 "Resets the manager\n"                                                                                 \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tmanager (:class:`" MODULE_NAME                                                                      \
                 ".structures.ew_bms_manager_port_t.ew_bms_manager_port_t`): :class:`" MODULE_NAME                      \
@@ -1674,10 +1674,10 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> from ics.structures.ew_bms_manager_port_t import ew_bms_manager_port_t\n"                       \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> ics.wbms_manager_reset(d, ew_bms_manager_port_t.eManagerPortA.value)\n"                         \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> from python_ics.structures.ew_bms_manager_port_t import ew_bms_manager_port_t\n"                       \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> python_ics.wbms_manager_reset(d, ew_bms_manager_port_t.eManagerPortA.value)\n"                         \
                 "\t>>> \n"
 
 #define _DOC_UART_WRITE                                                                                                \
@@ -1686,7 +1686,7 @@ extern "C"
                 "Writes UART on the given port\n"                                                                      \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tport (:class:`" MODULE_NAME ".structures.e_uart_port_t.e_uart_port_t`): :class:`" MODULE_NAME       \
                 ".structures.e_uart_port_t.e_uart_port_t`\n\n"                                                         \
@@ -1698,10 +1698,10 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> from ics.structures.e_uart_port_t import e_uart_port_t\n"                                       \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> ics.uart_write(d, e_uart_port_t.eUART0, b'my uart data goes here')\n"                           \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> from python_ics.structures.e_uart_port_t import e_uart_port_t\n"                                       \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> python_ics.uart_write(d, e_uart_port_t.eUART0, b'my uart data goes here')\n"                           \
                 "\t>>> \n"
 
 #define _DOC_UART_READ                                                                                                 \
@@ -1710,7 +1710,7 @@ extern "C"
                 "Reads UART on the given port. \n"                                                                     \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tport (:class:`" MODULE_NAME ".structures.e_uart_port_t.e_uart_port_t`): :class:`" MODULE_NAME       \
                 ".structures.e_uart_port_t.e_uart_port_t`\n\n"                                                         \
@@ -1723,10 +1723,10 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> from ics.structures.e_uart_port_t import e_uart_port_t\n"                                       \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> data = ics.uart_read(d, e_uart_port_t.eUART0)\n"                                                \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> from python_ics.structures.e_uart_port_t import e_uart_port_t\n"                                       \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> data = python_ics.uart_read(d, e_uart_port_t.eUART0)\n"                                                \
                 "\t>>> print(f\"Read {len(data)} bytes: {data}\")\n"                                                   \
                 "\t>>> \n"
 
@@ -1736,7 +1736,7 @@ extern "C"
                 "Sets the UART baudrate on the given port. \n"                                                         \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tport (:class:`" MODULE_NAME ".structures.e_uart_port_t.e_uart_port_t`): :class:`" MODULE_NAME       \
                 ".structures.e_uart_port_t.e_uart_port_t`\n\n"                                                         \
@@ -1748,10 +1748,10 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> from ics.structures.e_uart_port_t import e_uart_port_t\n"                                       \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> ics.uart_set_baudrate(d, e_uart_port_t.eUART0, 115200)\n"                                       \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> from python_ics.structures.e_uart_port_t import e_uart_port_t\n"                                       \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> python_ics.uart_set_baudrate(d, e_uart_port_t.eUART0, 115200)\n"                                       \
                 "\t>>> print(f\"Read {len(data)} bytes: {data}\")\n"                                                   \
                 "\t>>> \n"
 
@@ -1761,7 +1761,7 @@ extern "C"
                 "Gets the UART baudrate on the given port. \n"                                                         \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tport (:class:`" MODULE_NAME ".structures.e_uart_port_t.e_uart_port_t`): :class:`" MODULE_NAME       \
                 ".structures.e_uart_port_t.e_uart_port_t`\n\n"                                                         \
@@ -1772,10 +1772,10 @@ extern "C"
                 "Returns:\n"                                                                                           \
                 "\tNone.\n"                                                                                            \
                 "\n"                                                                                                   \
-                "\t>>> import ics\n"                                                                                   \
-                "\t>>> from ics.structures.e_uart_port_t import e_uart_port_t\n"                                       \
-                "\t>>> d = ics.open_device()\n"                                                                        \
-                "\t>>> baudrate = ics.uart_set_baudrate(d, e_uart_port_t.eUART0)\n"                                    \
+                "\t>>> import python_ics\n"                                                                                   \
+                "\t>>> from python_ics.structures.e_uart_port_t import e_uart_port_t\n"                                       \
+                "\t>>> d = python_ics.open_device()\n"                                                                        \
+                "\t>>> baudrate = python_ics.uart_set_baudrate(d, e_uart_port_t.eUART0)\n"                                    \
                 "\t>>> \n"
 
 #define _DOC_GENERIC_API_SEND_COMMAND                                                                                  \
@@ -1784,7 +1784,7 @@ extern "C"
                 "Sends a command in a generic way.\n"                                                                  \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tapi_index (:class:`int`): api_index.\n\n"                                                           \
                 "\tinstance_index (:class:`int`): instance_index.\n\n"                                                 \
@@ -1806,7 +1806,7 @@ extern "C"
     "Reads data in a generic way.\n"                                                                                   \
     "\n"                                                                                                               \
     "Args:\n"                                                                                                          \
-    "\tdevice (:class:` PyNeoDeviceEx" "`): :class:` PyNeoDeviceEx"  \
+    "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" PACKAGE_NAME ".PyNeoDeviceEx"  \
     "`\n\n"                                                                                                            \
     "\tapi_index (:class:`int`): api_index.\n\n"                                                                       \
     "\tinstance_index (:class:`int`): instance_index.\n\n"                                                             \
@@ -1827,7 +1827,7 @@ extern "C"
                 "Reads data in a generic way.\n"                                                                       \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\tapi_index (:class:`int`): api_index.\n\n"                                                           \
                 "\tinstance_index (:class:`int`): instance_index.\n\n"                                                 \
@@ -1845,14 +1845,14 @@ extern "C"
                 "Gets the gPTP Status from the device.\n"                                                              \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
                 "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
                 "\n"                                                                                                   \
                 "Returns:\n"                                                                                           \
-                "\tics.structures.gptp_status.gptp_status (:class:`ics.structures.gptp_status.gptp_status`)\n\n"       \
+                "\tics.structures.gptp_status.gptp_status (:class:`python_ics.structures.gptp_status.gptp_status`)\n\n"       \
                 "\n"
 
 #define _DOC_GET_ALL_CHIP_VERSIONS                                                                                     \
@@ -1861,7 +1861,7 @@ extern "C"
                 "Get all the chip (firmware) versions of the device.\n"                                                \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "Raises:\n"                                                                                            \
@@ -1869,7 +1869,7 @@ extern "C"
                 "\n"                                                                                                   \
                 "Returns:\n"                                                                                           \
                 "\tics.structures.st_chip_versions.st_chip_versions "                                                  \
-                "(:class:`ics.structures.st_chip_versions.st_chip_versions`)\n\n"                                      \
+                "(:class:`python_ics.structures.st_chip_versions.st_chip_versions`)\n\n"                                      \
                 "\n"
 
 #define _DOC_FLASH_ACCESSORY_FIRMWARE                                                                                        \
@@ -1878,7 +1878,7 @@ extern "C"
                 "Flashes Accessory Firmware. If not sure, don't use this method\n"                                           \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "\tdata (:class:`bytes`): :class:`bytes`: data of the firmware binary.\n\n"                            \
@@ -1900,7 +1900,7 @@ extern "C"
                 "Gets Accessory Firmware version. If not sure, don't use this method\n"                                      \
                 "\n"                                                                                                   \
                 "Args:\n"                                                                                              \
-                "\tdevice (:class:` PyNeoDeviceEx" "`): :class:`" MODULE_NAME                 \
+                "\tdevice (:class:`" PACKAGE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME                 \
                 ".PyNeoDeviceEx`\n\n"                                                                     \
                 "\n"                                                                                                   \
                 "\tindex (:class:`int`): :class:`int`: Index enum.\n\n"                                        \

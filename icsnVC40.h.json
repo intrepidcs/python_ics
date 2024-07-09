@@ -1,25 +1,6 @@
 [
     {
         "names": [
-            "__fsid_t",
-            "fsid_t__"
-        ],
-        "data_type": "Struct",
-        "packing": 0,
-        "is_anonymous": false,
-        "members": [
-            {
-                "name": "__val",
-                "data_type": "int",
-                "array_length": 2,
-                "bitfield_size": 0,
-                "is_enum": false,
-                "enum_value": null
-            }
-        ]
-    },
-    {
-        "names": [
             "SExtendedDataFlashHeader",
             "ExtendedDataFlashHeader_t"
         ],
@@ -3377,8 +3358,7 @@
     {
         "names": [
             "_MACSecRule",
-            "MACSecRule_t",
-            "MACSecRule_"
+            "MACSecRule_t"
         ],
         "data_type": "Union",
         "packing": 1,
@@ -3661,8 +3641,7 @@
     {
         "names": [
             "_MACSecMap",
-            "MACSecMap_t",
-            "MACSecMap_"
+            "MACSecMap_t"
         ],
         "data_type": "Union",
         "packing": 1,
@@ -3761,8 +3740,7 @@
     {
         "names": [
             "_MACSecSecY",
-            "MACSecSecY_t",
-            "MACSecSecY_"
+            "MACSecSecY_t"
         ],
         "data_type": "Union",
         "packing": 1,
@@ -3909,8 +3887,7 @@
     {
         "names": [
             "_MACSecSc",
-            "MACSecSc_t",
-            "MACSecSc_"
+            "MACSecSc_t"
         ],
         "data_type": "Union",
         "packing": 1,
@@ -4025,8 +4002,7 @@
     {
         "names": [
             "_MACSecSa",
-            "MACSecSa_t",
-            "MACSecSa_"
+            "MACSecSa_t"
         ],
         "data_type": "Union",
         "packing": 1,
@@ -4125,8 +4101,7 @@
     {
         "names": [
             "_MACSecFlags",
-            "MACSecFlags_t",
-            "MACSecFlags_"
+            "MACSecFlags_t"
         ],
         "data_type": "Union",
         "packing": 1,
@@ -4228,8 +4203,7 @@
     {
         "names": [
             "_MACSecGlobalFlags",
-            "MACSecGlobalFlags_t",
-            "MACSecGlobalFlags_"
+            "MACSecGlobalFlags_t"
         ],
         "data_type": "Union",
         "packing": 1,
