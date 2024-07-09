@@ -29,12 +29,12 @@ jobs:
         with:
           python-version: '3.12' 
 
-      - name: Get pyics version
+      - name: Get python_ics version
         uses: mtkennerly/dunamai-action@v1
         with:
           env-var: PYICS_VERSION
           args: --format "v{base}-{commit}-{timestamp}"
-      - name: Print pyics version
+      - name: Print python_ics version
         run: echo $PYICS_VERSION
       
       - name: Install cibuildwheel
@@ -46,13 +46,13 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: pyics-${{ matrix.os }}-${{ env.PYICS_VERSION }}
+          name: python_ics-${{ matrix.os }}-${{ env.PYICS_VERSION }}
           path: ./wheelhouse/*.whl
           if-no-files-found: error
       
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
-          pattern: pyics-*
+          pattern: python_ics-*
           merge-multiple: true
           path: ./wheelhouse/
