@@ -51,7 +51,7 @@ jobs:
       - name: Install python_ics
         run: |
           python -m pip install ./dist/python_ics-*.tar.gz
-          python -c "import python_ics; print(python_ics.__version__, python_ics.__full_version__, python_ics.__file__)"
+          python -m unittest tests.runner.nohw.test_module
 
       - name: Download artifacts
         uses: actions/download-artifact@v4
