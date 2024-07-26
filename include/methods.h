@@ -25,6 +25,7 @@ extern "C"
     PyObject* meth_get_error_messages(PyObject* self, PyObject* args);
 #ifdef _USE_INTERNAL_HEADER_
     PyObject* meth_flash_devices(PyObject* self, PyObject* args);
+    PyObject* meth_CAN_flash_devices(PyObject* self, PyObject* args);
 #endif // _USE_INTERNAL_HEADER_
     PyObject* meth_set_reflash_callback(PyObject* self, PyObject* args);
     PyObject* meth_get_device_settings(PyObject* self, PyObject* args);
@@ -2016,6 +2017,14 @@ static PyMethodDef IcsMethods[] = {
                           meth_flash_devices,
                           METH_VARARGS,
                           "int _stdcall FlashDevice2()"),
+#endif
+#ifdef _USE_INTERNAL_HEADER_
+    _EZ_ICS_STRUCT_METHOD("CAN_flash_devices",
+                          "CANFlashDevice",
+                          "CANFlashDevice",
+                          meth_CAN_flash_devices,
+                          METH_VARARGS,
+                          "int _stdcall CANFlashDevice()"),
 #endif
     _EZ_ICS_STRUCT_METHOD("set_reflash_callback",
                           "icsneoSetReflashDisplayCallbacks",
