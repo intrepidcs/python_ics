@@ -363,11 +363,10 @@ bool PyNeoDeviceEx_GetHandle(PyObject* object, void** handle)
         return false;
     }
     *handle = NULL;
-
-    //if (object == Py_None) {
-    //    *handle = 0;
-    //    return true;
-    //}
+    if (object == NULL || object == Py_None || object == Py_False || (PyLong_CheckExact(object) && PyLong_AsLong(object) == 0)) {
+        *handle = NULL;
+        return true;
+    }
     if (!PyNeoDeviceEx_CheckExact(object)) {
         return set_ics_exception(exception_runtime_error(), "Object is not of type PyNeoDeviceEx");
     }
@@ -2764,36 +2763,26 @@ PyObject* meth_request_enter_sleep_mode(PyObject* self, PyObject* args)
 PyObject* meth_set_context(PyObject* self, PyObject* args)
 {
     PyObject* obj = NULL;
-    if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
+    if (!PyArg_ParseTuple(args, arg_parse("|O:", __FUNCTION__), &obj)) {
         return NULL;
     }
     void* handle = NULL;
-    //if (obj = Py_None) {
-    //    if (PyNeoDevice_CheckExact(obj))
-    //    handle = PyNeoDevice_GetHandle(obj);
-    //}
-    //else
-    //{
-    if (!PyNeoDeviceEx_CheckExact(obj) && !PyLong_CheckExact(obj)) {
+    if (!PyNeoDeviceEx_CheckExact(obj) && obj != Py_None && obj == Py_False && obj == 0) {
         return set_ics_exception(exception_runtime_error(),
-             "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx or an integer");
+             "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx, integer, False, 0, or NULL");
         }
-        printf("did we get here-1");
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
         return NULL;
         }
-    printf("did we get here0");
     try {
         ice::Library* lib = dll_get_library();
         if (!lib) {
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
-        printf("did we get here1");
         ice::Function<int __stdcall(void*)> icsneoSetContext(lib, "icsneoSetContext");
         Py_BEGIN_ALLOW_THREADS;
         if (!icsneoSetContext(handle)) {
-            printf("did we fail here after !icsneoSetContext(handle)");
             Py_BLOCK_THREADS;
             return set_ics_exception(exception_runtime_error(), "icsneoSetContext() Failed");
         }
@@ -2802,7 +2791,6 @@ PyObject* meth_set_context(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    printf("did we get here10");
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 

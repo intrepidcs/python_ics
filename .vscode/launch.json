@@ -48,7 +48,7 @@
             "name": "Debugger Attach",
             "type": "cppvsdbg",
             "request": "attach",
-            "pid": "${command:pickProcess}",
+            //"pid": "${command:pickProcess}",
         },
         /*
         {
