@@ -11,6 +11,7 @@
 #endif
 #include <datetime.h>
 #include "object_spy_message.h"
+//#include "object_neo_device.h"
 #include "setup_module_auto_defines.h"
 
 #include <memory>
@@ -354,6 +355,10 @@ bool PyNeoDeviceEx_GetHandle(PyObject* object, void** handle)
         return false;
     }
     *handle = NULL;
+    if (object == NULL || object == Py_None || object == Py_False || (PyLong_CheckExact(object) && PyLong_AsLong(object) == 0)) {
+        *handle = NULL;
+        return true;
+    }
     if (!PyNeoDeviceEx_CheckExact(object)) {
         return set_ics_exception(exception_runtime_error(), "Object is not of type PyNeoDeviceEx");
     }
@@ -1542,7 +1547,110 @@ PyObject* meth_flash_devices(PyObject* self, PyObject* args)
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 #endif // _USE_INTERNAL_HEADER_
+#ifdef _USE_INTERNAL_HEADER_
+PyObject* meth_CAN_flash_devices(PyObject* self, PyObject* args)
+{
+    PyObject* obj = NULL;
+    PyObject* objCAN = NULL;
+    PyObject* callback = NULL;
+    PyObject* dict;
+    char* path = NULL;
+    if (!PyArg_ParseTuple(args, arg_parse("OOO|O:", __FUNCTION__), &obj, &objCAN, &dict, &callback)) {
+        return NULL;
+    }
+    if (obj && !PyNeoDeviceEx_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(),
+                                 "First argument must be of PyNeoDeviceEx type");
+    }
+    if (objCAN && !PyNeoDeviceEx_CheckExact(objCAN)) {
+        return set_ics_exception(exception_runtime_error(),
+                                 "Seccond argument must be of PyNeoDeviceEx type");
+    }
+    //neo_device_object* neo_device = (neo_device_object*)obj;
+   //neo_device_object* neo_device1 = (neo_device_object*)objCAN;
+    
+    //NeoDeviceEx neo_device_ex = {};
+   //neo_device_ex.neoDevice = PyNeoDevice_GetNeoDevice(obj)->dev;
+    //NeoDeviceEx CANneo_device_ex = {};
+    //neo_device_ex.neoDevice = PyNeoDevice_GetNeoDevice(objCAN)->dev;
 
+    Py_buffer buffer = {};
+    NeoDeviceEx* nde = NULL;
+    if (!PyNeoDeviceEx_GetNeoDeviceEx(obj, &buffer, &nde)) {
+        PyBuffer_Release(&buffer);
+        return NULL;
+    }
+    if (!PyNeoDeviceEx_GetNeoDeviceEx(objCAN, &buffer, &nde)) {
+        PyBuffer_Release(&buffer);
+        return NULL;
+    }
+    if (PyCallable_Check(callback) || PyObject_HasAttrString(callback, "message_callback")) {
+        msg_callback = callback;
+    } else {
+        msg_callback = NULL;
+    }
+    if (dict && !PyDict_CheckExact(dict)) {
+        return set_ics_exception(exception_runtime_error(),  "Seccond argument must be of dictionary type");
+    }
+    void* handle = NULL;
+//    if (PyNeoDevice_CheckExact(objCAN))
+//        handle = PyNeoDevice_GetHandle(objCAN);
+    if (!PyNeoDeviceEx_GetHandle(objCAN, &handle)) {
+        return NULL;
+    }
+    // Populate rc array from the python dictionary
+    SReflashChip_t rc[16] = { 0 };
+    unsigned long reflash_count = 0;
+    Py_ssize_t pos = 0;
+    PyObject *key, *value;
+    std::string filePath;
+    while (PyDict_Next(dict, &pos, &key, &value)) {
+        unsigned long id = PyLong_AsUnsignedLong(key);
+        char* path = PyUniStr_AsStrOrUTF8(value);
+        if (!path) {
+            return NULL;
+        }
+        // Make sure the file exists
+        FILE* file;
+        if (!(file = fopen(path, "r"))) {
+            return set_ics_exception(exception_runtime_error(), "IEF file path is not valid");
+        } else {
+            fclose(file);
+        }
+        rc[reflash_count].chipId = id;
+        strcpy(rc[reflash_count].path, path);
+        reflash_count++;
+        filePath = path;
+        printf("File path: %s\n", path);
+    }
+    try {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        ice::Function<int __stdcall(unsigned long,
+                                    NeoDeviceEx*,
+                                    const SReflashChip_t*,
+                                    unsigned long,
+                                    void*,
+                                    unsigned long,
+                                    unsigned long,
+                                    void (*MessageCallback)(const char* message, bool success))>
+            CANFlashDevice(lib, "CANFlashDevice");
+        Py_BEGIN_ALLOW_THREADS;
+        if (!CANFlashDevice(0x3835C256, nde, rc, reflash_count, handle, 0, 0, &message_callback)) {
+            Py_BLOCK_THREADS;
+            return set_ics_exception(exception_runtime_error(), "CANFlashDevice() Failed");
+        }
+        Py_END_ALLOW_THREADS;
+        Py_RETURN_NONE;
+    } catch (ice::Exception& ex) {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+}
+#endif // _USE_INTERNAL_HEADER_
 PyObject* msg_reflash_callback = NULL;
 static void message_reflash_callback(const wchar_t* message, unsigned long progress)
 {
@@ -2650,15 +2758,14 @@ PyObject* meth_set_context(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
         return NULL;
     }
-    if (!PyNeoDeviceEx_CheckExact(obj) && !PyLong_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
-    }
-    
     void* handle = NULL;
+       if (!PyNeoDeviceEx_CheckExact(obj) && obj != Py_None && obj == Py_False && obj == 0) {
+        return set_ics_exception(exception_runtime_error(),
+             "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx, integer, False, 0, or NULL");
+        }
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
         return NULL;
-    }
+        }
     try {
         ice::Library* lib = dll_get_library();
         if (!lib) {
@@ -2668,6 +2775,7 @@ PyObject* meth_set_context(PyObject* self, PyObject* args)
         ice::Function<int __stdcall(void*)> icsneoSetContext(lib, "icsneoSetContext");
         Py_BEGIN_ALLOW_THREADS;
         if (!icsneoSetContext(handle)) {
+            printf("did we fail here after !icsneoSetContext(handle)");
             Py_BLOCK_THREADS;
             return set_ics_exception(exception_runtime_error(), "icsneoSetContext() Failed");
         }
