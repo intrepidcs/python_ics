@@ -9,7 +9,7 @@ on:
 
 jobs:
   test_arm64:
-    if: github.repository == 'intrepidcs/python_ics'
+    if: github.repository == 'Jonas-Harrison-ICS/python_ics'
     name: Linux ARM64 unit tests
     runs-on: [ self-hosted, Linux, ARM64, Hardware ]
     steps:
