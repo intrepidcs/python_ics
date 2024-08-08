@@ -16,8 +16,10 @@ jobs:
     runs-on: [ self-hosted, Linux, ARM64, Hardware ]
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
+        # with:
+        #   submodules: recursive
+        run: |
+          git submodule update --init --recursive        
           fetch-depth: 0 # needed for history/tags
 
       - name: Setup Python
