@@ -15,7 +15,7 @@ jobs:
     name: Linux ARM64 unit tests
     runs-on: [ self-hosted, Linux, ARM64, Hardware ]
     steps:
-      - uses: actions/checkout@v4
+      - name: actions/checkout@v4
         # with:
         #   submodules: recursive
         run: |
