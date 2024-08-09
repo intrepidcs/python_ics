@@ -29,10 +29,10 @@ jobs:
           echo "----------------------------------------------"
           pip install -r requirements.txt
           pwd
-      #     pip install .
+          pip install .
       
-      # - name: Run unit tests
-      #   run: |
-      #     source .venv/bin/activate
-      #     sudo setcap cap_net_admin,cap_net_raw+ep $(realpath $(which python3))
-      #     python3 -m unittest discover -s tests.runner --verbose
+      - name: Run unit tests
+        run: |
+          source .venv/bin/activate
+          sudo setcap cap_net_admin,cap_net_raw+ep $(realpath $(which python3))
+          python3 -m unittest discover -s tests.runner --verbose
