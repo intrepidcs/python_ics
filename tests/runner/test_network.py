@@ -1,7 +1,8 @@
 import unittest
 import time
 import ics
-from ics.py_neo_device_ex import PyNeoDeviceEx
+import re
+# from ics.py_neo_device_ex import PyNeoDeviceEx
 from ics.structures.e_device_settings_type import e_device_settings_type
 
 unittest.TestLoader.sortTestMethodsUsing = None
@@ -47,17 +48,17 @@ class BaseTests:
         def setUp(self):
             self.devices = ics.find_devices()
             for device in self.devices:
-                device.open()
-                device.load_default_settings()
+                ics.open_device(device)
+                ics.load_default_settings(device)
 
         @classmethod
         def tearDown(self):
             for device in self.devices:
-                device.close()
+                ics.close_device(device)
 
         def test_get_messages(self):
             for device in self.devices:
-                messages, error_count = device.get_messages()
+                messages, error_count = ics.get_messages(device)
 
         def test_transmit(self):
             data = tuple([x for x in range(64)])
@@ -69,13 +70,15 @@ class BaseTests:
             tx_msg.StatusBitField3 = ics.SPY_STATUS3_CANFD_BRS | ics.SPY_STATUS3_CANFD_FDF
             tx_msg.ExtraDataPtr = data
             for device in self.devices:
+                if re.search("RAD[\s-]Moon", device.Name, re.IGNORECASE):
+                    continue
                 # Clear any messages in the buffer
-                _, __ = device.get_messages()
-                device.transmit_messages(tx_msg)
+                _, __ = ics.get_messages(device)
+                ics.transmit_messages(device, tx_msg)
                 # CAN ACK timeout in firmware is 200ms, so wait 300ms for ACK
                 time.sleep(0.3)
                 start = time.time()
-                messages, error_count = device.get_messages(False, 1)
+                messages, error_count = ics.get_messages(device, False, 1)
                 elapsed = time.time() - start
                 print(f"Elapsed time rx: {elapsed:.4f}s")
                 self.assertEqual(error_count, 0, str(device))

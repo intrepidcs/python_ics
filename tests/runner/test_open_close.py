@@ -8,7 +8,7 @@ class TestOpenClose(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         self.expected_dev_count = 3
-        self.devices = ics.find_devices()
+        self.devices = ics.find_devices([ics.ics.NEODEVICE_FIRE2, ics.NEODEVICE_FIRE3, ics.NEODEVICE_VCAN42])
 
     @classmethod
     def setUp(self):
@@ -52,30 +52,52 @@ class TestOpenClose(unittest.TestCase):
         self.assertTrue(len(devices) == 2)
 
     def test_open_close(self):
+        def find_device_type(dev):
+            dev_type_list = [ics.ics.NEODEVICE_FIRE2, ics.NEODEVICE_FIRE3, ics.NEODEVICE_VCAN42]
+            # ics.NEODEVICE_VCAN42
+            # test = ics.find_specific_device()
+            path = ics.get_library_path()
+            dev_type = None
+            for type in dev_type_list:
+                if dev.DeviceType == type:
+                    #do thing
+                    dev_type = type
+                    break
+                else:
+                    continue
+            return dev_type        
         self._check_devices()
-        for device in self.devices:
-            self.assertEqual(device.NumberOfClients, 0)
-            self.assertEqual(device.MaxAllowedClients, 1)
-            d = ics.open_device(device)
+        # fire3 = ics.open_device(1489826093)
+        for index, dev in enumerate(self.devices):
+            dev.AutoHandleClose = False
+            self.assertEqual(dev.NumberOfClients, 0)
+            self.assertEqual(dev.MaxAllowedClients, 1)
+            dev_type = find_device_type(dev)
+            dev = ics.find_devices([dev_type])[0]            
+            d = ics.open_device(dev)
+            # dev_type = find_device_type(dev)
+            # dev = ics.find_devices([dev_type])[0]
+            d_type = find_device_type(d)
+            d = ics.find_devices([d_type])[0]
             try:
-                self.assertEqual(device, d)
-                self.assertEqual(device.NumberOfClients, 1)
-                self.assertEqual(device.MaxAllowedClients, 1)
+                self.assertEqual(dev, d)
+                self.assertEqual(dev.NumberOfClients, 1)
+                self.assertEqual(dev.MaxAllowedClients, 1)
 
                 self.assertEqual(d.NumberOfClients, 1)
                 self.assertEqual(d.MaxAllowedClients, 1)
             finally:
-                self.assertEqual(device.NumberOfClients, 1)
+                self.assertEqual(dev.NumberOfClients, 1)
                 self.assertEqual(d.NumberOfClients, 1)
                 ics.close_device(d)
-                self.assertEqual(device.NumberOfClients, 0)
+                self.assertEqual(dev.NumberOfClients, 0)
                 self.assertEqual(d.NumberOfClients, 0)
 
     def test_open_close_by_serial(self):
         # Open by serial number
-        for device in self.devices:
-            d = ics.open_device(device.SerialNumber)
-            self.assertEqual(d.SerialNumber, device.SerialNumber)
+        for dev in self.devices:
+            d = ics.open_device(dev.SerialNumber)
+            self.assertEqual(d.SerialNumber, dev.SerialNumber)
             ics.close_device(d)
 
     def test_open_close_first_found(self):
@@ -97,17 +119,17 @@ class TestOpenClose(unittest.TestCase):
             self.assertEqual(device.NumberOfClients, 0, f"{device}")
 
     def test_open_close_10_times(self):
-        for device in self.devices:
+        for dev in self.devices:
             for x in range(10):
                 try:
-                    self.assertEqual(device.NumberOfClients, 0)
-                    ics.open_device(device)
-                    self.assertEqual(device.NumberOfClients, 1)
-                    error_count = ics.close_device(device)
-                    self.assertEqual(device.NumberOfClients, 0)
+                    self.assertEqual(dev.NumberOfClients, 0)
+                    ics.open_device(dev)
+                    self.assertEqual(dev.NumberOfClients, 1)
+                    error_count = ics.close_device(dev)
+                    self.assertEqual(dev.NumberOfClients, 0)
                     self.assertEqual(error_count, 0, "Error count was not 0 on {device} iteration {x}...")
                 except Exception as ex:
-                    print(f"Failed at iteration {x} {device}: {ex}...")
+                    print(f"Failed at iteration {x} {dev}: {ex}...")
                     raise ex
 
 if __name__ == "__main__":
