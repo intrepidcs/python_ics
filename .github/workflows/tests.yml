@@ -28,7 +28,7 @@ jobs:
           source .venv/bin/activate
           python3 -m pip install --upgrade pip
           pwd
-          pip install .
+      #     pip install .
       
       - name: Run unit tests
         run: |
