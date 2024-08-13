@@ -15,15 +15,7 @@
 #include "setup_module_auto_defines.h"
 
 #include <memory>
-//typedef struct
-//{
-//    PyObject_HEAD NeoDevice dev;
-//    PyObject* name;
-//    bool auto_cleanup;
-//    ICS_HANDLE handle;
-//    PyObject* dict;
-//} neo_device_object;
-//extern PyTypeObject neo_device_object_type;
+
 extern PyTypeObject spy_message_object_type;
 // __func__, __FUNCTION__ and __PRETTY_FUNCTION__ are not preprocessor macros.
 // but MSVC doesn't follow c standard and treats __FUNCTION__ as a string literal macro...
@@ -1481,7 +1473,8 @@ PyObject* meth_flash_devices(PyObject* self, PyObject* args)
     PyObject* obj = NULL;
     PyObject* callback = NULL;
     PyObject* dict;
-    if (!PyArg_ParseTuple(args, arg_parse("OO|O:", __FUNCTION__), &obj, &dict, &callback)) {
+    int network_id = -1;
+    if (!PyArg_ParseTuple(args, arg_parse("OO|Oi:", __FUNCTION__), &obj, &dict, &callback, &network_id)) {
         return NULL;
     }
     if (obj && !PyNeoDeviceEx_CheckExact(obj)) {
@@ -1518,6 +1511,13 @@ PyObject* meth_flash_devices(PyObject* self, PyObject* args)
         strcpy(rc[reflash_count].path, path);
         reflash_count++;
     }
+    //handle network_id if provided, otherwise 0
+    OptionsFindNeoEx opts = { 0 };
+    opts.CANOptions.iNetworkID = static_cast<unsigned long>(network_id);
+    POptionsFindNeoEx popts = NULL;
+    if (network_id != -1)
+        popts = &opts;
+
     try {
         ice::Library* lib = dll_get_library();
         if (!lib) {
@@ -1541,7 +1541,7 @@ PyObject* meth_flash_devices(PyObject* self, PyObject* args)
                                     void (*MessageCallback)(const char* message, bool success))>
             FlashDevice2(lib, "FlashDevice2");
         Py_BEGIN_ALLOW_THREADS;
-        if (!FlashDevice2(0x3835C256, &nde->neoDevice, rc, reflash_count, 0, 0, 0, &message_callback)) {
+        if (!FlashDevice2(0x3835C256, &nde->neoDevice, rc, reflash_count, network_id, 0, 0, &message_callback)) {
             Py_BLOCK_THREADS;
             PyBuffer_Release(&buffer);
             return set_ics_exception(exception_runtime_error(), "FlashDevice2() Failed");
@@ -1658,7 +1658,7 @@ PyObject* meth_CAN_flash_devices(PyObject* self, PyObject* args)
     }
     return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
-#endif // _USE_INTERNAL_HEADER_
+#endif // _USE_INTERNAL_HEADER_ 
 PyObject* msg_reflash_callback = NULL;
 static void message_reflash_callback(const wchar_t* message, unsigned long progress)
 {
@@ -2763,11 +2763,11 @@ PyObject* meth_request_enter_sleep_mode(PyObject* self, PyObject* args)
 PyObject* meth_set_context(PyObject* self, PyObject* args)
 {
     PyObject* obj = NULL;
-    if (!PyArg_ParseTuple(args, arg_parse("|O:", __FUNCTION__), &obj)) {
+    if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
         return NULL;
     }
     void* handle = NULL;
-    if (!PyNeoDeviceEx_CheckExact(obj) && obj != Py_None && obj == Py_False && obj == 0) {
+       if (!PyNeoDeviceEx_CheckExact(obj) && obj != Py_None && obj == Py_False && obj == 0) {
         return set_ics_exception(exception_runtime_error(),
              "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx, integer, False, 0, or NULL");
         }
