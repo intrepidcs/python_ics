@@ -64,8 +64,8 @@ def _build_libusb():
         "--disable-udev"
     ], cwd=LIBUSB_BUILD, env=env)
 
-    subprocess.check_output(["make", "-j" + CPUS], cwd=LIBUSB_BUILD)
-    subprocess.check_output(["make", "install"], cwd=LIBUSB_BUILD)
+    subprocess.check_output(["gmake", "-j" + CPUS], cwd=LIBUSB_BUILD)
+    subprocess.check_output(["gmake", "install"], cwd=LIBUSB_BUILD)
 
 def _build_libpcap():
     os.makedirs(LIBPCAP_BUILD, exist_ok=True)
