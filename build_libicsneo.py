@@ -60,6 +60,7 @@ def _build_libusb():
         f"{LIBUSB_SOURCE}/configure",
         "--disable-shared",
         "--enable-static",
+        "--disable-dependency-tracking",
         f"--prefix={LIBUSB_INSTALL}",
         "--disable-udev"
     ], cwd=LIBUSB_BUILD, env=env)
