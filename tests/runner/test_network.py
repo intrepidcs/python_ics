@@ -96,7 +96,7 @@ class BaseTests:
                     self.assertEqual(tx_msg.ExtraDataPtr, message.ExtraDataPtr, str(device))
                     self.assertFalse(are_errors_present(message), f"{str(device)} {hex(message.StatusBitField)}")
                     self.assertEqual(
-                        tx_msg.StatusBitField or ics.SPY_STATUS_TX_MSG,
+                        ics.SPY_STATUS_TX_MSG or tx_msg.StatusBitField,
                         message.StatusBitField,
                         f"{str(device)} {hex(tx_msg.StatusBitField or ics.SPY_STATUS_TX_MSG)} {hex(message.StatusBitField)}",
                     )
