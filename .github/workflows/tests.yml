@@ -23,15 +23,15 @@ jobs:
 
       - name: Setup Python
         run: |
-          sudo python3 -m venv .venv
+          python3 -m venv .venv
           source .venv/bin/activate
-          sudo python3 -m pip install --upgrade pip
+          python3 -m pip install --upgrade pip
           echo "----------------------------------------------"
           pip install -r requirements.txt
           pwd
           echo "----------------------------------------------"
-          sudo python setup.py build -g
-          sudo python setup.py install --force
+          python setup.py build -g
+          python setup.py install --force
     #      pip install .
       
       - name: Run unit tests
