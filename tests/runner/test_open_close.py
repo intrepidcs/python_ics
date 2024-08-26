@@ -53,33 +53,33 @@ class TestOpenClose(unittest.TestCase):
         self.assertTrue(len(devices) == 2)
 
     def test_open_close(self):
-        def find_device_type(dev):
-            dev_type_list = [ics.ics.NEODEVICE_FIRE2, ics.NEODEVICE_FIRE3, ics.NEODEVICE_VCAN42]
-            # ics.NEODEVICE_VCAN42
-            # test = ics.find_specific_device()
-            path = ics.get_library_path()
-            dev_type = None
-            for type in dev_type_list:
-                if dev.DeviceType == type:
-                    #do thing
-                    dev_type = type
-                    break
-                else:
-                    continue
-            return dev_type        
+        # def find_device_type(dev):
+        #     dev_type_list = [ics.ics.NEODEVICE_FIRE2, ics.NEODEVICE_FIRE3, ics.NEODEVICE_VCAN42]
+        #     # ics.NEODEVICE_VCAN42
+        #     # test = ics.find_specific_device()
+        #     path = ics.get_library_path()
+        #     dev_type = None
+        #     for type in dev_type_list:
+        #         if dev.DeviceType == type:
+        #             #do thing
+        #             dev_type = type
+        #             break
+        #         else:
+        #             continue
+        #     return dev_type        
         self._check_devices()
         # fire3 = ics.open_device(1489826093)
         for index, dev in enumerate(self.devices):
             dev.AutoHandleClose = False
             self.assertEqual(dev.NumberOfClients, 0)
             self.assertEqual(dev.MaxAllowedClients, 1)
-            dev_type = find_device_type(dev)
-            dev = ics.find_devices([dev_type])[0]            
+            # dev_type = find_device_type(dev)
+            # dev = ics.find_devices([dev_type])[0]            
             d = ics.open_device(dev)
             # dev_type = find_device_type(dev)
             # dev = ics.find_devices([dev_type])[0]
-            d_type = find_device_type(d)
-            d = ics.find_devices([d_type])[0]
+            # d_type = find_device_type(d)
+            # d = ics.find_devices([d_type])[0]
             try:
                 self.assertEqual(dev, d)
                 self.assertEqual(dev.NumberOfClients, 1)
