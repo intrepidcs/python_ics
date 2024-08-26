@@ -1,3 +1,4 @@
+import time
 import unittest
 import ics
 
@@ -90,6 +91,7 @@ class TestOpenClose(unittest.TestCase):
                 self.assertEqual(dev.NumberOfClients, 1)
                 self.assertEqual(d.NumberOfClients, 1)
                 ics.close_device(d)
+                time.sleep(6)
                 self.assertEqual(dev.NumberOfClients, 0)
                 self.assertEqual(d.NumberOfClients, 0)
 
