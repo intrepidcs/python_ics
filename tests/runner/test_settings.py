@@ -67,5 +67,12 @@ class TestValueCAN42Settings(BaseTests.TestSettings):
         cls.device_settings_type = e_device_settings_type.DeviceVCAN412SettingsType
 
 
+class TestRADMoon2Settings(BaseTests.TestSettings):
+    @classmethod
+    def setUpClass(cls):
+        cls.device_type = ics.NEODEVICE_RADMOON2
+        cls.device_settings_type = e_device_settings_type.DeviceRADMoon2SettingsType
+
+
 if __name__ == "__main__":
     unittest.main()
