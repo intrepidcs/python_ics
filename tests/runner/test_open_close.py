@@ -8,7 +8,7 @@ unittest.TestLoader.sortTestMethodsUsing = None
 class TestOpenClose(unittest.TestCase):
     @classmethod
     def setUpClass(self):
-        self.expected_dev_count = 3
+        self.expected_dev_count = 5
         self.devices = ics.find_devices([ics.ics.NEODEVICE_FIRE2, ics.NEODEVICE_FIRE3, ics.NEODEVICE_VCAN42])
 
     @classmethod
@@ -28,6 +28,12 @@ class TestOpenClose(unittest.TestCase):
             self.expected_dev_count,
             f"Expected {self.expected_dev_count}, found {len(self.devices)} ({self.devices})...",
         )
+
+    def test_find_moon2s(self):
+        self._check_devices()
+        devices = ics.find_devices([ics.NEODEVICE_RADMOON2])
+        self.assertTrue(len(devices) == 2)
+        self.assertEqual(devices[0].DeviceType, ics.NEODEVICE_RADMOON2)
 
     def test_find_fire3(self):
         self._check_devices()
