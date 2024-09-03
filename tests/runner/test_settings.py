@@ -68,10 +68,6 @@ class BaseTests:
             # Finally lets map the actual structure to the device_settings
             return getattr(settings.Settings, self.setting_map[settings.DeviceSettingType])
         
-        def set_device_settings(self, new_settings):
-            """Stolen and defiled from Aws' device.py class"""
-            ics.set_device_settings(self.neo_device(), new_settings, True)
-        
         def test_load_defaults(self):
             device = self._get_device()
             ics.open_device(device)
@@ -85,20 +81,33 @@ class BaseTests:
             device = self._get_device()
             ics.open_device(device)
             try:
+                # load default settings and verify type
                 ics.load_default_settings(device)
-                settings_1 = self._get_device_settings(device)
-                settings_1 = ics.get_device_settings(device)
-                self.assertEqual(settings_1.DeviceSettingType, self.device_settings_type)
-                ics.set_device_settings(device, settings_1)
-                settings_2 = ics.get_device_settings(device)
-                settings_comp_1 = getattr(settings_1.Settings, self.device_settings_id)
-                settings_comp_2 = getattr(settings_2.Settings, self.device_settings_id)
-                self.assertEqual(settings_comp_1, settings_comp_2)
+                default_settings = self._get_device_settings(device)
+                self.assertEqual(default_settings.DeviceSettingType, self.device_settings_type)
+                # change CAN1 term setting and verify
+                device_settings = self._get_device_settings(device)
+                device_settings.termination_enables = 0x1
+                device_settings.termination_enables_1 = 0x1
+                device_settings.canfd1.FDBaudrate = ics.BPS1000
+                ics.set_device_settings(device, device_settings)
+                
+                verify_settings = self._get_device_settings(device)
+                self.assertEqual(verify_settings.termination_enables, 0x1)
+                self.assertEqual(verify_settings.termination_enables_1, 0x1)
+                self.assertEqual(verify_settings.canfd1.FDBaudrate, ics.BPS1000)
+                # verify setting default
+                ics.load_default_settings(device)
+                verify_default_settings = self._get_device_settings(device)
+                self.assertEqual(verify_default_settings.termination_enables, default_settings.termination_enables)
+                self.assertEqual(verify_default_settings.termination_enables_1, default_settings.termination_enables_1)
+                self.assertEqual(verify_default_settings.canfd1.FDBaudrate, default_settings.canfd1.FDBaudrate)
+                self.assertEqual(verify_default_settings, default_settings)
                 
             finally:
                 ics.close_device(device)
 
-    
+
 
 # class TestFire3Settings(BaseTests.TestSettings):
 #     @classmethod
