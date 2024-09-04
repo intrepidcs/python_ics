@@ -24,46 +24,87 @@ class BaseTests:
             )
             return devices[0]
         
-        def test_coremini_load_clear(self):
-            # ics.coremini_clear(device, location)  # location = ics.ics.SCRIPT_LOCATION_FLASH_MEM, ics.ics.SCRIPT_LOCATION_SDCARD, or ics.ics.SCRIPT_LOCATION_VCAN3_MEM
-            # ics.coremini_get_fblock_status(device, index)  # index (int): Index of the function block
-            # ics.coremini_get_status(device)  # True if running, otherwise False
-            # ics.coremini_load(device, coremini, location)  # coremini (str/tuple): Use string to load from file, Use Tuple if file data.
+        def test_coremini_load_start_clear(self):
+            device = self._get_device()
+            device.open()
+            ics.coremini_clear(device, self.coremini_location)
+            time.sleep(self.coremini_wait)
+            self.assertFalse(ics.coremini_get_status(device))
+            
+            ics.coremini_load(device, self.coremini_path, self.coremini_location)
+            ics.coremini_start(device, self.coremini_location)
+            self.assertTrue(ics.coremini_get_status(device))
+            
+            ics.coremini_stop(device)
+            time.sleep(self.coremini_wait)
+            self.assertFalse(ics.coremini_get_status(device))
+            
+            ics.coremini_start(device, self.coremini_location)
+            self.assertTrue(ics.coremini_get_status(device))
+            time.sleep(2)
+            
+            ics.coremini_clear(device, self.coremini_location)
+            time.sleep(self.coremini_wait)
+            self.assertFalse(ics.coremini_get_status(device))
+            
+            for error in ics.get_error_messages(device):
+                print("Coremini error: " + error)
+            
+            device.close()
+            
+        def test_coremini_fblock(self):
+            device = self._get_device()
+            device.open()
+            ics.coremini_load(device, self.coremini_path, self.coremini_location)
+            ics.coremini_start(device, self.coremini_location)
+            self.assertTrue(ics.coremini_get_fblock_status(device, 0))  # coremini must be started otherwise fails
+            self.assertTrue(ics.coremini_get_fblock_status(device, 1))
+            
+            ics.coremini_stop_fblock(device, 0)
+            self.assertFalse(ics.coremini_get_fblock_status(device, 0))
+            ics.coremini_start_fblock(device, 0)
+            self.assertTrue(ics.coremini_get_fblock_status(device, 0))
+            ics.coremini_stop_fblock(device, 1)
+            self.assertFalse(ics.coremini_get_fblock_status(device, 1))
+            ics.coremini_start_fblock(device, 1)
+            self.assertTrue(ics.coremini_get_fblock_status(device, 1))
+            
+            ics.coremini_clear(device, self.coremini_location)
+            time.sleep(self.coremini_wait)
+            failed = None
+            try:
+                ics.coremini_get_fblock_status(device, 0)
+                failed = False
+            except:
+                failed = True
+            self.assertTrue(failed)
+            
+            device.close()
+            
+        def test_coremini_signals(self):
+            
             # ics.coremini_read_app_signal(device, index)  # index (int): Index of the application signal. Returns: float on Success
             # ics.coremini_read_rx_message(device, index, j1850=False)
             # ics.coremini_read_tx_message(device, index, j1850=False)
-            # ics.coremini_start(device, location)
-            # ics.coremini_start_fblock(device, index)
-            # ics.coremini_stop(device)
-            # ics.coremini_stop_fblock(device, index)
             # ics.coremini_write_app_signal(device, index, value)
             # ics.coremini_write_rx_message(device, index, TODO)  # TODO???
             # ics.coremini_write_tx_message(device, index, msg)  # TODO???
             
-            # ics.get_script_status()  # Documentation needs updating to include "device" parameter
             # ics.get_timestamp_for_msg(device, msg)
             pass
-        
-        def test_coremini_execute(self):
-            pass
-        
-        def test_coremini_start_stop(self):
-            pass
 
-class TestRADMoon2Settings(BaseTests.TestSettings):
-    @classmethod
-    def setUpClass(cls):
-        cls.device_type = ics.NEODEVICE_RADMOON2
-        cls.device_settings_type = e_device_settings_type.DeviceRADMoon2SettingsType
-        cls.num_devices = 2
-        print("DEBUG: Testing MOON2s...")
+# class TestRADMoon2Settings(BaseTests.TestSettings):
+#     @classmethod
+#     def setUpClass(cls):
+#         cls.device_type = ics.NEODEVICE_RADMOON2
+#         cls.num_devices = 2
+#         print("DEBUG: Testing MOON2s...")
 
 # HAVING ISSUES SETTING SETTINGS WITH THIS UNIT!
 # class TestFire3Settings(BaseTests.TestSettings):
 #     @classmethod
 #     def setUpClass(cls):
 #         cls.device_type = ics.NEODEVICE_FIRE3
-#         cls.device_settings_type = e_device_settings_type.DeviceFire3SettingsType
 #         cls.num_devices = 1
 #         print("DEBUG: Testing FIRE3...")
 
@@ -72,7 +113,6 @@ class TestRADMoon2Settings(BaseTests.TestSettings):
 #     @classmethod
 #     def setUpClass(cls):
 #         cls.device_type = ics.NEODEVICE_FIRE2
-#         cls.device_settings_type = e_device_settings_type.DeviceFire2SettingsType
 #         cls.num_devices = 1
 #         print("DEBUG: Testing FIRE2...")
 
@@ -81,8 +121,10 @@ class TestValueCAN42Settings(BaseTests.TestSettings):
     @classmethod
     def setUpClass(cls):
         cls.device_type = ics.NEODEVICE_VCAN42
-        cls.device_settings_type = e_device_settings_type.DeviceVCAN412SettingsType
         cls.num_devices = 1
+        cls.coremini_location = ics.SCRIPT_LOCATION_FLASH_MEM
+        cls.coremini_path = r"E:\Users\NCejka\Downloads\leds_white_v4_90.vs3cmb"
+        cls.coremini_wait = 0.1  # sec to wait after stop/clear
         print("DEBUG: Testing VCAN42...")
 
 

@@ -36,6 +36,7 @@ class BaseTests:
             pass
         
         def test_generic_api(self):
+            device = self._get_device()
             # ics.generic_api_get_status(device, api_index, instance_index)
             # ics.generic_api_read_data(device, api_index, instance_index[, length])
             # ics.generic_api_send_command(device, api_index, instance_index, function_index, data)
@@ -49,8 +50,9 @@ class BaseTests:
             # ics.get_backup_power_enabled(device)
             # ics.get_backup_power_ready(device)
             # ics.get_bus_voltage(device, reserved)
-            # ics.get_device_status(device)
-            pass
+            
+            # ics.get_device_status(device)  # Doesnt seem to work?? Script needs to be running first??
+            ics.get_script_status(device)  # Documentation needs updating to include "device" parameter
         
         def test_firmware_info(self):
             device = self._get_device()
