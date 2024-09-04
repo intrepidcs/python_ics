@@ -4,27 +4,81 @@ import ics
 unittest.TestLoader.sortTestMethodsUsing = None
 
 
+def message_callback(msg, success):
+    try:
+        # print("message_callback:", msg, success)
+        complete_msg = msg + ": " + str(success)
+        print(complete_msg)
+        # self.testUpdated.emit(self.current_test_name, str(self.parameters.sn_info.classic.tester), complete_msg)
+    except Exception as ex:
+        print(ex)
+
+
+def reflash_callback(msg, progress):
+    try:
+        # print("reflash_callback:", msg, progress)
+        complete_msg = msg + " " + str(progress) + "%"
+        print(complete_msg)
+        print(msg, progress)
+    except Exception as ex:
+        print(ex)
+
+
 class BaseTests:
     """Base classes. These are isolated and won't be run/discovered. Used for inheritance"""
 
     class TestSettings(unittest.TestCase):
-        @classmethod
-        def setUpClass(cls):
-            pass
-        
-        @classmethod
-        def setUp(self):
+        def _get_device(self):
             devices = ics.find_devices([self.device_type])
-            self.device = ics.open_device(devices[0])
-            ics.load_default_settings(self.device)
-        
-        @classmethod
-        def tearDown(self):
-            ics.close_device(self.device)
+            self.assertEqual(
+                len(devices),
+                self.num_devices,
+                f"Failed to find correct number of devices of type {self.device_type}! Expected {self.num_devices}, got {len(devices)}.",
+            )
+            return devices[0]
         
         def test_update_firmware(self):
-            # First flash old firmware, check it says update needed, then flash new w/ force firmware update, check again that it says no now
-            ics.firmware_update_required(self.device)
+            device = self._get_device()
+            device.open()
+            # get firmware version
+            print(device.Name, device.SerialNumber)
+            info = ics.get_hw_firmware_info(device)  # must be open! Gives iefs ver, pcb rev, bootloader rev, manuf date
+            print(f"MCHIP IEF v{info.iAppMajor}.{info.iAppMinor}")
+            print(f"MCHIP BL v{info.iBootLoaderVersionMajor}.{info.iBootLoaderVersionMinor}")
+            print(f"PCB Rev v{info.iBoardRevMajor}.{info.iBoardRevMinor}")
+            print(f"Made {info.iManufactureMonth}/{info.iManufactureDay}/{info.iManufactureYear}")
+            device.close()
+            
+            # first flash old firmware
+            old_firmware_path = r"E:\Users\NCejka\Downloads\vcan42_mchip_v1_23.ief"
+            iefs = {ics.VCAN42_MCHIP_ID: old_firmware_path}
+            ics.set_reflash_callback(reflash_callback)
+            ics.flash_devices(device, iefs, message_callback)  # device must be closed?!?!
+            
+            # check IEF version and that update is needed
+            device.open()
+            # info = ics.get_hw_firmware_info(device)
+            # print(f"Flashed MCHIP IEF v{info.iAppMajor}.{info.iAppMinor}")
+            # print("Firmware update needed: " + str(bool(ics.firmware_update_required(device))))
+            self.assertEqual(1, ics.firmware_update_required(device))
+            
+            # then force firmware update
+            ics.force_firmware_update(device)  # device needs to be open and will stay open!
+            
+            # check it again
+            self.assertEqual(0, ics.firmware_update_required(device))
+            device.close()
+            
+            # update with new iefs
+            new_firmware_path = r"E:\Users\NCejka\Downloads\vcan42_mchip_v4_90.ief"
+            iefs = {ics.VCAN42_MCHIP_ID: new_firmware_path}
+            ics.flash_devices(device, iefs, message_callback)
+            
+            # check one last time
+            device.open()
+            self.assertEqual(0, ics.firmware_update_required(device))
+            device.close()
+            
             # ics.flash_accessory_firmware(device, data, index[, check_success])
             # ics.force_firmware_update(device)
             # ics.generic_api_get_status(device, api_index, instance_index)
@@ -53,12 +107,12 @@ class BaseTests:
             # ics.get_timestamp_for_msg(device, msg)
 
 
-class TestRADMoon2Settings(BaseTests.TestSettings):
-    @classmethod
-    def setUpClass(cls):
-        cls.device_type = ics.NEODEVICE_RADMOON2
-        cls.num_devices = 2
-        print("DEBUG: Testing MOON2s...")
+# class TestRADMoon2Settings(BaseTests.TestSettings):
+#     @classmethod
+#     def setUpClass(cls):
+#         cls.device_type = ics.NEODEVICE_RADMOON2
+#         cls.num_devices = 2
+#         print("DEBUG: Testing MOON2s...")
 
 # HAVING ISSUES SETTING SETTINGS WITH THIS UNIT!
 # class TestFire3Settings(BaseTests.TestSettings):

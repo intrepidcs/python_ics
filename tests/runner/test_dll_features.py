@@ -15,9 +15,24 @@ class BaseTests:
         def setUpClass(cls):
             pass
         
+        def _get_device(self):
+            devices = ics.find_devices([self.device_type])
+            self.assertEqual(
+                len(devices),
+                self.num_devices,
+                f"Failed to find correct number of devices of type {self.device_type}! Expected {self.num_devices}, got {len(devices)}.",
+            )
+            return devices[0]
+        
         def test_dll_features(self):
             ics.get_library_path()
+            ics.get_dll_version()  # Documentation for this needs to be updated -- does not take any device arg
             
+            device = self._get_device()
+            device.open()
+            info = ics.get_dll_firmware_info(device)  # must be open! Only gives ief ver that dll has
+            print(f"DLL MCHIP IEF v{info.iAppMajor}.{info.iAppMinor}")
+            device.close()
             
             # ics.firmware_update_required(device)
             # ics.flash_accessory_firmware(device, data, index[, check_success])
