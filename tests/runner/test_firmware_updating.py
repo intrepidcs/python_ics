@@ -41,17 +41,30 @@ class BaseTests:
             device = self._get_device()
             device.open()
             # get firmware version
-            print(device.Name, device.SerialNumber)
+            self.assertEqual(device.SerialNumber, ics.get_serial_number(device))
+            self.assertEqual(device.get_serial_number(), ics.get_serial_number(device))
             info = ics.get_hw_firmware_info(device)  # must be open! Gives iefs ver, pcb rev, bootloader rev, manuf date
-            print(f"MCHIP IEF v{info.iAppMajor}.{info.iAppMinor}")
-            print(f"MCHIP BL v{info.iBootLoaderVersionMajor}.{info.iBootLoaderVersionMinor}")
-            print(f"PCB Rev v{info.iBoardRevMajor}.{info.iBoardRevMinor}")
-            print(f"Made {info.iManufactureMonth}/{info.iManufactureDay}/{info.iManufactureYear}")
+            # print(device.Name, device.serial_number)
+            # print(f"MCHIP IEF v{info.iAppMajor}.{info.iAppMinor}")
+            # print(f"MCHIP BL v{info.iBootLoaderVersionMajor}.{info.iBootLoaderVersionMinor}")
+            # print(f"Made {info.iManufactureMonth}/{info.iManufactureDay}/{info.iManufactureYear}")
+            self.assertEqual(device.FirmwareMajor, info.iAppMajor)
+            self.assertEqual(device.FirmwareMinor, info.iAppMinor)
+            pcbsn = ics.get_pcb_serial_number(device)
+            self.assertEqual(int(pcbsn[5]), info.iBoardRevMajor)
+            self.assertEqual(int(pcbsn[6], 36), info.iBoardRevMinor)
+            self.assertEqual(pcbsn, device.get_pcb_serial_number())
+            
+            # Mass check ics vs device func attributes
+            info_comp = device.get_hw_firmware_info()
+            for attr in dir(info_comp):
+                if attr[0] == "_": continue
+                self.assertEqual(getattr(info_comp, attr), getattr(info, attr))
+            
             device.close()
             
             # first flash old firmware
-            old_firmware_path = r"E:\Users\NCejka\Downloads\vcan42_mchip_v1_23.ief"
-            iefs = {ics.VCAN42_MCHIP_ID: old_firmware_path}
+            iefs = {ics.VCAN42_MCHIP_ID: self.old_firmware_path}
             ics.set_reflash_callback(reflash_callback)
             ics.flash_devices(device, iefs, message_callback)  # device must be closed?!?!
             
@@ -70,8 +83,7 @@ class BaseTests:
             device.close()
             
             # update with new iefs
-            new_firmware_path = r"E:\Users\NCejka\Downloads\vcan42_mchip_v4_90.ief"
-            iefs = {ics.VCAN42_MCHIP_ID: new_firmware_path}
+            iefs = {ics.VCAN42_MCHIP_ID: self.new_firmware_path}
             ics.flash_devices(device, iefs, message_callback)
             
             # check one last time
@@ -80,57 +92,22 @@ class BaseTests:
             device.close()
             
             # ics.flash_accessory_firmware(device, data, index[, check_success])
-            # ics.force_firmware_update(device)
-            # ics.generic_api_get_status(device, api_index, instance_index)
-            # ics.generic_api_read_data(device, api_index, instance_index[, length])
-            # ics.generic_api_send_command(device, api_index, instance_index, function_index, data)
             # ics.get_accessory_firmware_version()
-            # ics.get_active_vnet_channel(device)
+            
             # ics.get_all_chip_versions(device, api_index, instance_index)
             # ics.get_backup_power_enabled(device)
             # ics.get_backup_power_ready(device)
             # ics.get_bus_voltage(device, reserved)
             # ics.get_device_status(device)
-            # ics.get_disk_details(device)
-            # ics.get_disk_format_progress(device)
-            # ics.get_dll_firmware_info(device)
-            # ics.get_dll_version(device)
-            # ics.get_gptp_status(device)
-            # ics.get_hw_firmware_info(device)
+            
+            
+            
             # ics.get_last_api_error(device)
-            # ics.get_library_path()
-            # ics.get_pcb_serial_number(device)
+            
             # ics.get_performance_parameters(device)
             # ics.get_rtc(device)
             # ics.get_script_status()  # Documentation needs updating to include "device" parameter
-            # ics.get_serial_number(device)
             # ics.get_timestamp_for_msg(device, msg)
-
-
-# class TestRADMoon2Settings(BaseTests.TestSettings):
-#     @classmethod
-#     def setUpClass(cls):
-#         cls.device_type = ics.NEODEVICE_RADMOON2
-#         cls.num_devices = 2
-#         print("DEBUG: Testing MOON2s...")
-
-# HAVING ISSUES SETTING SETTINGS WITH THIS UNIT!
-# class TestFire3Settings(BaseTests.TestSettings):
-#     @classmethod
-#     def setUpClass(cls):
-#         cls.device_type = ics.NEODEVICE_FIRE3
-#         cls.device_settings_type = e_device_settings_type.DeviceFire3SettingsType
-#         cls.num_devices = 1
-#         print("DEBUG: Testing FIRE3...")
-
-# ISSUES CONNECTING TO THIS DEVICE AT ALL!!!
-# class TestFire2Settings(BaseTests.TestSettings):
-#     @classmethod
-#     def setUpClass(cls):
-#         cls.device_type = ics.NEODEVICE_FIRE2
-#         cls.device_settings_type = e_device_settings_type.DeviceFire2SettingsType
-#         cls.num_devices = 1
-#         print("DEBUG: Testing FIRE2...")
 
 
 class TestValueCAN42Settings(BaseTests.TestSettings):
@@ -138,6 +115,8 @@ class TestValueCAN42Settings(BaseTests.TestSettings):
     def setUpClass(cls):
         cls.device_type = ics.NEODEVICE_VCAN42
         cls.num_devices = 1
+        cls.old_firmware_path = r"E:\Users\NCejka\Downloads\vcan42_mchip_v1_23.ief"
+        cls.new_firmware_path = r"E:\Users\NCejka\Downloads\vcan42_mchip_v4_90.ief"
         print("DEBUG: Testing VCAN42...")
 
 
