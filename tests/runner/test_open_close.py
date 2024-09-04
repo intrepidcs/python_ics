@@ -9,7 +9,7 @@ class TestOpenClose(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         self.expected_dev_count = 5
-        self.devices = ics.find_devices([ics.ics.NEODEVICE_FIRE2, ics.NEODEVICE_FIRE3, ics.NEODEVICE_VCAN42])
+        self.devices = ics.find_devices([ics.ics.NEODEVICE_FIRE2, ics.NEODEVICE_FIRE3, ics.NEODEVICE_VCAN42, ics.NEODEVICE_RADMOON2])
 
     @classmethod
     def setUp(self):
@@ -59,33 +59,12 @@ class TestOpenClose(unittest.TestCase):
         self.assertTrue(len(devices) == 2)
 
     def test_open_close(self):
-        # def find_device_type(dev):
-        #     dev_type_list = [ics.ics.NEODEVICE_FIRE2, ics.NEODEVICE_FIRE3, ics.NEODEVICE_VCAN42]
-        #     # ics.NEODEVICE_VCAN42
-        #     # test = ics.find_specific_device()
-        #     path = ics.get_library_path()
-        #     dev_type = None
-        #     for type in dev_type_list:
-        #         if dev.DeviceType == type:
-        #             #do thing
-        #             dev_type = type
-        #             break
-        #         else:
-        #             continue
-        #     return dev_type        
         self._check_devices()
-        # fire3 = ics.open_device(1489826093)
         for index, dev in enumerate(self.devices):
             dev.AutoHandleClose = False
             self.assertEqual(dev.NumberOfClients, 0)
-            self.assertEqual(dev.MaxAllowedClients, 1)
-            # dev_type = find_device_type(dev)
-            # dev = ics.find_devices([dev_type])[0]            
+            self.assertEqual(dev.MaxAllowedClients, 1)        
             d = ics.open_device(dev)
-            # dev_type = find_device_type(dev)
-            # dev = ics.find_devices([dev_type])[0]
-            # d_type = find_device_type(d)
-            # d = ics.find_devices([d_type])[0]
             try:
                 self.assertEqual(dev, d)
                 self.assertEqual(dev.NumberOfClients, 1)
@@ -132,13 +111,22 @@ class TestOpenClose(unittest.TestCase):
                 try:
                     self.assertEqual(dev.NumberOfClients, 0)
                     ics.open_device(dev)
-                    self.assertEqual(dev.NumberOfClients, 1)
+                    self.assertEqual(dev.NumberOfClients, 1)  # TODO figure out why VCAN42 is failing to go to 1
                     error_count = ics.close_device(dev)
                     self.assertEqual(dev.NumberOfClients, 0)
-                    self.assertEqual(error_count, 0, "Error count was not 0 on {device} iteration {x}...")
+                    self.assertEqual(error_count, 0, f"Error count was not 0 on {dev} iteration {x}...")
                 except Exception as ex:
                     print(f"Failed at iteration {x} {dev}: {ex}...")
                     raise ex
+    
+    def test_auto_close(self):
+        devices = ics.find_devices()
+        for dev in devices:
+            ics.open_device(dev)
+        del devices
+        devices = ics.find_devices()
+        for dev in devices:
+            ics.open_device(dev)
 
 if __name__ == "__main__":
     unittest.main()
