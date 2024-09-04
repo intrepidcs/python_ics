@@ -70,9 +70,6 @@ class BaseTests:
             
             # check IEF version and that update is needed
             device.open()
-            # info = ics.get_hw_firmware_info(device)
-            # print(f"Flashed MCHIP IEF v{info.iAppMajor}.{info.iAppMinor}")
-            # print("Firmware update needed: " + str(bool(ics.firmware_update_required(device))))
             self.assertEqual(1, ics.firmware_update_required(device))
             
             # then force firmware update

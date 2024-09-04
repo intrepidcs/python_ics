@@ -20,8 +20,8 @@ Hardware setup:
 PC -> USB -> NIC -> ETH -> Fire3 -> CAN/LIN/ETH network v v
           -> Fire2 -> CAN/LIN/ETH network             v | ^
           -> VCAN42 -> (2x)CAN network                ^ ^
-          -> NIC -> ETH -> Moon2 -> Moon2 network v
-                        -> Moon2 -> Moon2 network ^
+          -> NIC -> ETH -> Moon2 -> 100/1000BASE-T1 network v
+                        -> Moon2 -> 100/1000BASE-T1 network ^
 
 Hardware / software testing:
 - Run all python ics functions on all hardware
