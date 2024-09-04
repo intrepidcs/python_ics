@@ -38,7 +38,7 @@ class BaseTests:
             device.close()
             
             # ics.get_device_status(device)
-            # ics.get_last_api_error(device)
+            ics.get_last_api_error(device)  # TODO figure out best way to replicate api error to read
 
 
 class TestValueCAN42Settings(BaseTests.TestSettings):

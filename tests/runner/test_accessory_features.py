@@ -53,6 +53,10 @@ class BaseTests:
             
             # ics.get_device_status(device)  # Doesnt seem to work?? Script needs to be running first??
             ics.get_script_status(device)  # Documentation needs updating to include "device" parameter
+            
+            msg = ics.SpyMessage()
+            tmstmp = ics.get_timestamp_for_msg(device, msg)
+            self.assertEqual(tmstmp, 0.0)  # TODO verify this actually works
         
         def test_firmware_info(self):
             device = self._get_device()
@@ -67,10 +71,6 @@ class BaseTests:
             
             # ics.get_performance_parameters(device)
             # ics.get_rtc(device)
-            # ics.get_script_status()  # Documentation needs updating to include "device" parameter
-            
-            # ics.get_timestamp_for_msg(device, msg)
-            pass
 
 
 class TestRADMoon2Settings(BaseTests.TestSettings):

@@ -51,7 +51,7 @@ class BaseTests:
                 print("Coremini error: " + error)
             
             device.close()
-            
+        
         def test_coremini_fblock(self):
             device = self._get_device()
             device.open()
@@ -79,19 +79,72 @@ class BaseTests:
                 failed = True
             self.assertTrue(failed)
             
+            for error in ics.get_error_messages(device):
+                print("Coremini error: " + error)
+            
             device.close()
-            
+        
         def test_coremini_signals(self):
+            device = self._get_device()
+            device.open()
+            # using all white RGB LEDs coremini script to read signals
+            ics.coremini_load(device, self.coremini_path, self.coremini_location)
+            ics.coremini_start(device, self.coremini_location)
             
-            # ics.coremini_read_app_signal(device, index)  # index (int): Index of the application signal. Returns: float on Success
-            # ics.coremini_read_rx_message(device, index, j1850=False)
-            # ics.coremini_read_tx_message(device, index, j1850=False)
-            # ics.coremini_write_app_signal(device, index, value)
-            # ics.coremini_write_rx_message(device, index, TODO)  # TODO???
-            # ics.coremini_write_tx_message(device, index, msg)  # TODO???
+            self.assertEqual(ics.coremini_read_app_signal(device, 0), 255.0)
+            self.assertEqual(ics.coremini_read_app_signal(device, 1), 255.0)
+            self.assertEqual(ics.coremini_read_app_signal(device, 2), 255.0)
+            failed = None
+            try:
+                ics.coremini_read_app_signal(device, 3)
+                failed = False
+            except:
+                failed = True
+            self.assertTrue(failed)
             
-            # ics.get_timestamp_for_msg(device, msg)
-            pass
+            ics.coremini_clear(device, self.coremini_location)
+            time.sleep(self.coremini_wait)
+            failed = None
+            try:
+                ics.coremini_read_app_signal(device, 0)
+                failed = False
+            except:
+                failed = True
+            self.assertTrue(failed)
+            
+            # using all black RGB LEDs coremini script -- TODO GENERATE VS3CMB!!
+            # ics.coremini_load(device, self.coremini_path_off, self.coremini_location)
+            # ics.coremini_start(device, self.coremini_location)
+            
+            # self.assertEqual(ics.coremini_read_app_signal(device, 0), 0.0)
+            # self.assertEqual(ics.coremini_read_app_signal(device, 1), 0.0)
+            # self.assertEqual(ics.coremini_read_app_signal(device, 2), 0.0)
+            # failed = None
+            # try:
+            #     ics.coremini_read_app_signal(device, 3)
+            #     failed = False
+            # except:
+            #     failed = True
+            # self.assertTrue(failed)
+            
+            # write and read signals
+            ics.coremini_load(device, self.coremini_path, self.coremini_location)
+            ics.coremini_start(device, self.coremini_location)
+            ics.coremini_write_app_signal(device, 0, 100.0)
+            self.assertEqual(ics.coremini_read_app_signal(device, 0), 100.0)
+            ics.coremini_write_app_signal(device, 1, 0.0)
+            self.assertEqual(ics.coremini_read_app_signal(device, 1), 0.0)
+            
+            # write and read rx/tx messages
+            # ics.coremini_write_rx_message(device, index, TODO)  # does this work?
+            # ics.coremini_write_tx_message(device, index, msg)  # ?
+            
+            # ics.coremini_read_rx_message(device, index, j1850=False)  # ?
+            # ics.coremini_read_tx_message(device, index, j1850=False)  # ?
+            
+            ics.coremini_clear(device, self.coremini_location)
+            device.close()
+
 
 # class TestRADMoon2Settings(BaseTests.TestSettings):
 #     @classmethod
@@ -124,6 +177,7 @@ class TestValueCAN42Settings(BaseTests.TestSettings):
         cls.num_devices = 1
         cls.coremini_location = ics.SCRIPT_LOCATION_FLASH_MEM
         cls.coremini_path = r"E:\Users\NCejka\Downloads\leds_white_v4_90.vs3cmb"
+        cls.coremini_path_off = r"E:\Users\NCejka\Downloads\leds_off_v4_90.vs3cmb"
         cls.coremini_wait = 0.1  # sec to wait after stop/clear
         print("DEBUG: Testing VCAN42...")
 
