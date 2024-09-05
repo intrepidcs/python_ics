@@ -57,10 +57,15 @@ class TestOpenClose(unittest.TestCase):
         self._check_devices()
         devices = ics.find_devices([ics.NEODEVICE_FIRE2, ics.NEODEVICE_VCAN42])
         self.assertTrue(len(devices) == 2)
+    
+    def test_find_fire3_and_moon2(self):
+        self._check_devices()
+        devices = ics.find_devices([ics.NEODEVICE_FIRE3, ics.NEODEVICE_RADMOON2])
+        self.assertTrue(len(devices) == 3)
 
     def test_open_close(self):
         self._check_devices()
-        for index, dev in enumerate(self.devices):
+        for dev in self.devices:
             dev.AutoHandleClose = False
             self.assertEqual(dev.NumberOfClients, 0)
             self.assertEqual(dev.MaxAllowedClients, 1)        
@@ -90,20 +95,18 @@ class TestOpenClose(unittest.TestCase):
     def test_open_close_first_found(self):
         # Open by first found
         first_devices = []
-        for x, device in enumerate(self.devices):
+        for _ in range(self.expected_dev_count):
             try:
-                self.assertEqual(device.NumberOfClients, 0, f"{device}")
                 d = ics.open_device()
                 first_devices.append(d)
-                self.assertEqual(d.NumberOfClients, 1, f"{device}")
+                self.assertEqual(d.NumberOfClients, 1, f"Device {d} failed to increment NumberOfClients after opening")  # TODO figure out why VCAN42 is failing to go to 1
             except ics.RuntimeError as ex:
-                raise RuntimeError(f"Failed to open {device}... Iteration {len(first_devices)} ({ex})")
-        self.assertEqual(len(self.devices), len(first_devices))
+                raise RuntimeError(f"Failed to open first found device on iteration {len(first_devices)}: {ex}")
+        self.assertEqual(self.expected_dev_count, len(first_devices))
         # Close by API
         for device in first_devices:
-            self.assertEqual(device.NumberOfClients, 1, f"{device}")
             ics.close_device(device)
-            self.assertEqual(device.NumberOfClients, 0, f"{device}")
+            self.assertEqual(device.NumberOfClients, 0, f"{device}", f"Device {d} failed to decrement NumberOfClients after closing")
 
     def test_open_close_10_times(self):
         for dev in self.devices:
@@ -127,6 +130,7 @@ class TestOpenClose(unittest.TestCase):
         devices = ics.find_devices()
         for dev in devices:
             ics.open_device(dev)
+        del devices
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,8 +1,6 @@
 import time
 import unittest
 import ics
-# from ics.py_neo_device_ex import PyNeoDeviceEx
-from ics.structures.e_device_settings_type import e_device_settings_type
 
 unittest.TestLoader.sortTestMethodsUsing = None
 
