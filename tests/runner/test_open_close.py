@@ -26,7 +26,7 @@ class TestOpenClose(unittest.TestCase):
         self.assertEqual(
             len(self.devices),
             self.expected_dev_count,
-            f"Expected {self.expected_dev_count}, found {len(self.devices)} ({self.devices})...",
+            f"Device check expected {self.expected_dev_count} devices, found {len(self.devices)}: {self.devices}...",
         )
 
     def test_find_moon2s(self):
@@ -34,6 +34,7 @@ class TestOpenClose(unittest.TestCase):
         devices = ics.find_devices([ics.NEODEVICE_RADMOON2])
         self.assertTrue(len(devices) == 2)
         self.assertEqual(devices[0].DeviceType, ics.NEODEVICE_RADMOON2)
+        self.assertEqual(devices[1].DeviceType, ics.NEODEVICE_RADMOON2)
 
     def test_find_fire3(self):
         self._check_devices()
@@ -62,6 +63,10 @@ class TestOpenClose(unittest.TestCase):
         self._check_devices()
         devices = ics.find_devices([ics.NEODEVICE_FIRE3, ics.NEODEVICE_RADMOON2])
         self.assertTrue(len(devices) == 3)
+    
+    def test_find_fire3_by_network(self):
+        pass
+        devices = ics.find_devices()  # network_id (int): OptionsFindNeoEx.CANOptions.iNetworkID. Usually ics.NETID_CAN, if needed
 
     def test_open_close(self):
         self._check_devices()
@@ -86,14 +91,14 @@ class TestOpenClose(unittest.TestCase):
                 self.assertEqual(d.NumberOfClients, 0)
 
     def test_open_close_by_serial(self):
-        # Open by serial number
+        self._check_devices()
         for dev in self.devices:
             d = ics.open_device(dev.SerialNumber)
             self.assertEqual(d.SerialNumber, dev.SerialNumber)
             ics.close_device(d)
 
     def test_open_close_first_found(self):
-        # Open by first found
+        self._check_devices()
         first_devices = []
         for _ in range(self.expected_dev_count):
             try:
@@ -109,20 +114,22 @@ class TestOpenClose(unittest.TestCase):
             self.assertEqual(device.NumberOfClients, 0, f"{device}", f"Device {d} failed to decrement NumberOfClients after closing")
 
     def test_open_close_10_times(self):
+        self._check_devices()
         for dev in self.devices:
             for x in range(10):
                 try:
-                    self.assertEqual(dev.NumberOfClients, 0)
+                    self.assertEqual(dev.NumberOfClients, 0, f"Device {dev} not at 0 NumberOfClients before opening")
                     ics.open_device(dev)
-                    self.assertEqual(dev.NumberOfClients, 1)  # TODO figure out why VCAN42 is failing to go to 1
+                    self.assertEqual(dev.NumberOfClients, 1, f"Device {dev} failed to increment NumberOfClients after opening")  # TODO figure out why VCAN42 is failing to go to 1
                     error_count = ics.close_device(dev)
-                    self.assertEqual(dev.NumberOfClients, 0)
+                    self.assertEqual(dev.NumberOfClients, 0, f"Device {dev} failed to decrement NumberOfClients after opening")
                     self.assertEqual(error_count, 0, f"Error count was not 0 on {dev} iteration {x}...")
                 except Exception as ex:
                     print(f"Failed at iteration {x} {dev}: {ex}...")
                     raise ex
     
     def test_auto_close(self):
+        self._check_devices()
         devices = ics.find_devices()
         for dev in devices:
             ics.open_device(dev)
