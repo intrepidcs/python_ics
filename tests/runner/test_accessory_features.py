@@ -76,6 +76,10 @@ class BaseTests:
             
             # ics.iso15765_disable_networks(device)
             # ics.iso15765_enable_networks(device, networks)
+        
+        def test_set_led(self):
+            # ics.set_led_property(device, led, prop, value)
+            pass
 
 
 class TestRADMoon2Settings(BaseTests.TestSettings):

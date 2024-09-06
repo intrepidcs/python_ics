@@ -1,5 +1,4 @@
 # ruff: noqa: E501
-import time
 import unittest
 import ics
 
@@ -64,10 +63,6 @@ class TestOpenClose(unittest.TestCase):
         self._check_devices()
         devices = ics.find_devices([ics.NEODEVICE_FIRE3, ics.NEODEVICE_RADMOON2])
         self.assertTrue(len(devices) == 3)
-    
-    def test_find_fire3_by_network(self):
-        pass
-        devices = ics.find_devices()  # network_id (int): OptionsFindNeoEx.CANOptions.iNetworkID. Usually ics.NETID_CAN, if needed
 
     def test_open_close(self):
         self._check_devices()
@@ -89,6 +84,14 @@ class TestOpenClose(unittest.TestCase):
                 ics.close_device(d)
                 self.assertEqual(ics.find_devices([dev.DeviceType])[0].NumberOfClients, 0, f"Device {dev} failed to decrement NumberOfClients after opening")
                 self.assertEqual(ics.find_devices([d.DeviceType])[0].NumberOfClients, 0, f"Device {d} failed to decrement NumberOfClients after opening")
+            
+            # Now try with NeoDevice functions
+            try:
+                dev.open()
+                self.assertEqual(ics.find_devices([dev.DeviceType])[0].NumberOfClients, 1, f"Device {dev} failed to increment NumberOfClients after opening")
+            finally:
+                dev.close()
+                self.assertEqual(ics.find_devices([dev.DeviceType])[0].NumberOfClients, 0, f"Device {dev} failed to decrement NumberOfClients after opening")
 
     def test_open_close_by_serial(self):
         self._check_devices()
@@ -122,6 +125,15 @@ class TestOpenClose(unittest.TestCase):
                 except Exception as ex:
                     print(f"Failed at iteration {x} {dev}: {ex}...")
                     raise ex
+                
+                # Now try with NeoDevice functions
+                try:
+                    dev.open()
+                    error_count = dev.close()
+                    self.assertEqual(error_count, 0, f"Error count was not 0 on {dev} iteration {x}...")
+                except Exception as ex:
+                    print(f"Failed at iteration {x} {dev}: {ex}...")
+                    raise ex
     
     def test_auto_close(self):
         self._check_devices()
@@ -135,9 +147,24 @@ class TestOpenClose(unittest.TestCase):
             ics.close_device(dev)
         del devices
     
-    def test_context_opening(self):
-        # ics.set_context(device)  # Sets the “context” of how icsneoFindNeoDevices(Ex) and icsneoOpenNeoDevice(Ex) function. If the context is 0 (null) than icsneoFindNeoDevices(Ex) will be system wide, searching USB and other supported computer interfaces. icsneoFindNeoDevices can then be used to connect to devices found in this manner. If the context is a handle to connected CAN tool than icsneoFindNeoDevices(Ex) will search a specific CAN bus for supported IntrepidCS CAN Nodes. Again icsneoOpenNeoDevice(Ex) would be used create logical connections to found CAN Nodes.
-        pass
+    def test_can_only_open_once(self):
+        self._check_devices()
+        for dev in self.devices:
+            failed = False
+            ics.open_device(dev)
+            try:
+                ics.open_device(dev)
+            except:
+                failed = True
+            self.assertTrue(failed)
+            failed = False
+            try:
+                dev.open()
+            except:
+                failed = True
+            self.assertTrue(failed)
+            ics.close_device(dev)
+        
 
 
 
