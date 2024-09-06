@@ -1,3 +1,4 @@
+# ruff: noqa: E501
 import time
 import unittest
 import ics
@@ -69,10 +70,9 @@ class BaseTests:
             
             ics.coremini_clear(device, self.coremini_location)
             time.sleep(self.coremini_wait)
-            failed = None
+            failed = False
             try:
                 ics.coremini_get_fblock_status(device, 0)
-                failed = False
             except:
                 failed = True
             self.assertTrue(failed)
@@ -85,45 +85,42 @@ class BaseTests:
         def test_coremini_signals(self):
             device = self._get_device()
             device.open()
-            # using all white RGB LEDs coremini script to read signals
+            # using all on RGB LEDs coremini script to read signals
             ics.coremini_load(device, self.coremini_path, self.coremini_location)
             ics.coremini_start(device, self.coremini_location)
             
             self.assertEqual(ics.coremini_read_app_signal(device, 0), 255.0)
             self.assertEqual(ics.coremini_read_app_signal(device, 1), 255.0)
             self.assertEqual(ics.coremini_read_app_signal(device, 2), 255.0)
-            failed = None
+            failed = False
             try:
                 ics.coremini_read_app_signal(device, 3)
-                failed = False
             except:
                 failed = True
             self.assertTrue(failed)
             
             ics.coremini_clear(device, self.coremini_location)
             time.sleep(self.coremini_wait)
-            failed = None
+            failed = False
             try:
                 ics.coremini_read_app_signal(device, 0)
-                failed = False
             except:
                 failed = True
             self.assertTrue(failed)
             
-            # using all black RGB LEDs coremini script -- TODO GENERATE VS3CMB!!
-            # ics.coremini_load(device, self.coremini_path_off, self.coremini_location)
-            # ics.coremini_start(device, self.coremini_location)
+            # using all off RGB LEDs coremini script
+            ics.coremini_load(device, self.coremini_path_off, self.coremini_location)
+            ics.coremini_start(device, self.coremini_location)
             
-            # self.assertEqual(ics.coremini_read_app_signal(device, 0), 0.0)
-            # self.assertEqual(ics.coremini_read_app_signal(device, 1), 0.0)
-            # self.assertEqual(ics.coremini_read_app_signal(device, 2), 0.0)
-            # failed = None
-            # try:
-            #     ics.coremini_read_app_signal(device, 3)
-            #     failed = False
-            # except:
-            #     failed = True
-            # self.assertTrue(failed)
+            self.assertEqual(ics.coremini_read_app_signal(device, 0), 0.0)
+            self.assertEqual(ics.coremini_read_app_signal(device, 1), 0.0)
+            self.assertEqual(ics.coremini_read_app_signal(device, 2), 0.0)
+            failed = False
+            try:
+                ics.coremini_read_app_signal(device, 3)
+            except:
+                failed = True
+            self.assertTrue(failed)
             
             # write and read signals
             ics.coremini_load(device, self.coremini_path, self.coremini_location)
@@ -132,13 +129,6 @@ class BaseTests:
             self.assertEqual(ics.coremini_read_app_signal(device, 0), 100.0)
             ics.coremini_write_app_signal(device, 1, 0.0)
             self.assertEqual(ics.coremini_read_app_signal(device, 1), 0.0)
-            
-            # write and read rx/tx messages
-            # ics.coremini_write_rx_message(device, index, TODO)  # does this work?
-            # ics.coremini_write_tx_message(device, index, msg)  # ?
-            
-            # ics.coremini_read_rx_message(device, index, j1850=False)  # ?
-            # ics.coremini_read_tx_message(device, index, j1850=False)  # ?
             
             ics.coremini_clear(device, self.coremini_location)
             device.close()
@@ -151,7 +141,6 @@ class BaseTests:
 #         cls.num_devices = 2
 #         print("DEBUG: Testing MOON2s...")
 
-# HAVING ISSUES SETTING SETTINGS WITH THIS UNIT!
 # class TestFire3Settings(BaseTests.TestSettings):
 #     @classmethod
 #     def setUpClass(cls):
@@ -159,7 +148,6 @@ class BaseTests:
 #         cls.num_devices = 1
 #         print("DEBUG: Testing FIRE3...")
 
-# ISSUES CONNECTING TO THIS DEVICE AT ALL!!!
 # class TestFire2Settings(BaseTests.TestSettings):
 #     @classmethod
 #     def setUpClass(cls):
