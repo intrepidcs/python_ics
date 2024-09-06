@@ -1,4 +1,4 @@
-import time
+# ruff: noqa: E501
 import unittest
 import ics
 # from ics.py_neo_device_ex import PyNeoDeviceEx
@@ -25,6 +25,8 @@ class BaseTests:
             
             # ics.get_disk_details(device)
             # ics.get_disk_format_progress(device)
+            
+            # ics.read_sdcard()  # icsneoReadSDCard(), Accepts a PyNeoDeviceEx and sector index. Returns a bytearray of 512 bytes max. Exception on error.
             pass
         
         def test_radio_message(self):
@@ -71,6 +73,9 @@ class BaseTests:
             
             # ics.get_performance_parameters(device)
             # ics.get_rtc(device)
+            
+            # ics.iso15765_disable_networks(device)
+            # ics.iso15765_enable_networks(device, networks)
 
 
 class TestRADMoon2Settings(BaseTests.TestSettings):
