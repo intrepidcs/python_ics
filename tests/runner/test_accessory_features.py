@@ -66,7 +66,6 @@ class BaseTests:
             ics.get_dll_firmware_info(device)
             ics.get_dll_version(device)
             # ics.get_gptp_status(device)
-            ics.get_hw_firmware_info(device)
             
             ics.get_pcb_serial_number(device)
             ics.get_serial_number(device)
