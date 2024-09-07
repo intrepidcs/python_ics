@@ -65,7 +65,7 @@ class BaseTests:
                 _ = ics.get_error_messages(device)  # Documentation is wrong -- says it can take 3 args but only takes 1
                 # may need more clearing of errors here
         
-        def test_vcan42_transmit(self):
+        def _tx_rx_devices(self, tx_device, rx_devices: list):
             self._prepare_devices()
             tx_msg = ics.SpyMessage()
             tx_msg.ArbIDOrHeader = 0x01
@@ -74,13 +74,13 @@ class BaseTests:
             tx_msg.StatusBitField = ics.SPY_STATUS_CANFD
             tx_msg.StatusBitField3 = ics.SPY_STATUS3_CANFD_BRS
             tx_msg.ExtraDataPtr = tuple([x for x in range(64)])
-            # tx on vcan42
-            ics.transmit_messages(self.vcan42, tx_msg)
+            # tx HSCAN msg
+            ics.transmit_messages(tx_device, tx_msg)
             # CAN ACK timeout in firmware is 200ms, so wait 300ms for ACK
             time.sleep(0.3)
             
-            # rx on fire2/3
-            for device in self.devices[1:]:
+            # rx HSCAN msg
+            for device in rx_devices:
                 rx_messages, error_count = ics.get_messages(device, False, 1)
                 self.assertEqual(error_count, 0, str(device))
                 self.assertEqual(len(rx_messages), 1, f"Device {str(device)} didnt find 1 msg but {len(rx_messages)} msgs")
@@ -89,56 +89,15 @@ class BaseTests:
                         if rx_msg.ArbIDOrHeader == tx_msg.ArbIDOrHeader:
                             self.assertEqual(rx_msg.ExtraDataPtr, tx_msg.ExtraDataPtr)
                             self.assertFalse(are_errors_present(rx_msg), f"Device {str(device)} rx msg error: {hex(rx_msg.StatusBitField)}")
+        
+        def test_vcan42_transmit(self):
+            self._tx_rx_devices(self.vcan42, self.devices[1:])  # rx on fire2 and fire3
         
         def test_fire2_transmit(self):
-            self._prepare_devices()
-            tx_msg = ics.SpyMessage()
-            tx_msg.ArbIDOrHeader = 0x01
-            tx_msg.NetworkID = self.netid
-            tx_msg.Protocol = ics.SPY_PROTOCOL_CANFD
-            tx_msg.StatusBitField = ics.SPY_STATUS_CANFD
-            tx_msg.StatusBitField3 = ics.SPY_STATUS3_CANFD_BRS
-            tx_msg.ExtraDataPtr = tuple([x for x in range(64)])
-            # tx on fire2
-            ics.transmit_messages(self.fire2, tx_msg)
-            # CAN ACK timeout in firmware is 200ms, so wait 300ms for ACK
-            time.sleep(0.3)
-            
-            # rx on vcan42 and fire3
-            for device in [self.devices[0], self.devices[-1]]:
-                rx_messages, error_count = ics.get_messages(device, False, 1)
-                self.assertEqual(error_count, 0, str(device))
-                self.assertEqual(len(rx_messages), 1, f"Device {str(device)} didnt find 1 msg but {len(rx_messages)} msgs")
-                for rx_msg in rx_messages:
-                    if rx_msg.NetworkID == tx_msg.NetworkID:
-                        if rx_msg.ArbIDOrHeader == tx_msg.ArbIDOrHeader:
-                            self.assertEqual(rx_msg.ExtraDataPtr, tx_msg.ExtraDataPtr)
-                            self.assertFalse(are_errors_present(rx_msg), f"Device {str(device)} rx msg error: {hex(rx_msg.StatusBitField)}")
+            self._tx_rx_devices(self.fire2, [self.devices[0], self.devices[-1]])  # rx on vcan42 and fire3
         
         def test_fire3_transmit(self):
-            self._prepare_devices()
-            tx_msg = ics.SpyMessage()
-            tx_msg.ArbIDOrHeader = 0x01
-            tx_msg.NetworkID = self.netid
-            tx_msg.Protocol = ics.SPY_PROTOCOL_CANFD
-            tx_msg.StatusBitField = ics.SPY_STATUS_CANFD
-            tx_msg.StatusBitField3 = ics.SPY_STATUS3_CANFD_BRS
-            tx_msg.ExtraDataPtr = tuple([x for x in range(64)])
-            # tx on fire3
-            ics.transmit_messages(self.fire3, tx_msg)
-            # CAN ACK timeout in firmware is 200ms, so wait 300ms for ACK
-            time.sleep(0.3)
-            
-            # rx on vcan42 and fire2
-            for device in self.devices[:-1]:
-                rx_messages, error_count = ics.get_messages(device, False, 1)
-                self.assertEqual(error_count, 0, str(device))
-                self.assertEqual(len(rx_messages), 1, f"Device {str(device)} didnt find 1 msg but {len(rx_messages)} msgs")
-                for rx_msg in rx_messages:
-                    if rx_msg.NetworkID == tx_msg.NetworkID:
-                        if rx_msg.ArbIDOrHeader == tx_msg.ArbIDOrHeader:
-                            self.assertEqual(rx_msg.ExtraDataPtr, tx_msg.ExtraDataPtr)
-                            self.assertFalse(are_errors_present(rx_msg), f"Device {str(device)} rx msg error: {hex(rx_msg.StatusBitField)}")
+            self._tx_rx_devices(self.fire3, self.devices[:-1])  # rx on vcan42 and fire2
 
 
 class TestHSCAN1(BaseTests.TestCAN):
@@ -151,7 +110,6 @@ class TestHSCAN2(BaseTests.TestCAN):
     @classmethod
     def setUpClass(cls):
         cls.netid = ics.NETID_HSCAN2
-
 
 if __name__ == "__main__":
     unittest.main()
