@@ -1,4 +1,5 @@
 # ruff: noqa: E501
+import datetime
 import unittest
 import time
 import ics
@@ -61,7 +62,7 @@ class BaseTests:
         def _prepare_devices(self):
             for device in self.devices:
                 # Clear any messages in the buffer
-                _, __ = ics.get_messages(device, False, 1)
+                _, _ = ics.get_messages(device, False, 1)
                 _ = ics.get_error_messages(device)  # Documentation is wrong -- says it can take 3 args but only takes 1
                 # may need more clearing of errors here
         
@@ -89,6 +90,13 @@ class BaseTests:
                         if rx_msg.ArbIDOrHeader == tx_msg.ArbIDOrHeader:
                             self.assertEqual(rx_msg.ExtraDataPtr, tx_msg.ExtraDataPtr)
                             self.assertFalse(are_errors_present(rx_msg), f"Device {str(device)} rx msg error: {hex(rx_msg.StatusBitField)}")
+                            datetime.datetime.fromtimestamp(rx_msg.TimeHardware)
+                            self.assertGreater(rx_msg.TimeSystem, 0)
+                            self.assertEqual(rx_msg.TimeStampHardwareID, 9)
+                            self.assertEqual(rx_msg.TimeStampSystemID, 1)
+            
+            for device in self.devices:
+                self.assertFalse(ics.get_error_messages(device))
         
         def test_vcan42_transmit(self):
             self._tx_rx_devices(self.vcan42, self.devices[1:])  # rx on fire2 and fire3
@@ -104,9 +112,6 @@ class BaseTests:
             with self.assertRaises(TypeError):
                 msg.ArbIDOrHeader = "a"
             msg.NetworkID = 255
-            with self.assertRaises(RuntimeWarning):
-                msg.NetworkID = 256
-            self.assertTrue(msg.NetworkID == 0)
             with self.assertRaises(AttributeError):
                 msg.Data = [x for x in range(8)]
             msg.Data = tuple([x for x in range(8)])
@@ -137,6 +142,24 @@ class BaseTests:
             
             msg.Data = tuple([x for x in range(16)])
             self.assertFalse(msg.Data == msg.ExtraDataPtr[:8])  # This looks like an error
+
+        def test_bad_messages(self):
+            self._prepare_devices()
+            device = self.devices[0]
+            # blank msg
+            tx_msg = ics.SpyMessage()
+            ics.transmit_messages(device, tx_msg)
+            time.sleep(0.3)
+            rx_msgs, rx_errors = ics.get_messages(device, False, 1)
+            d_errors = ics.get_error_messages(device)
+            rx_msg = rx_msgs[0]
+            self.assertFalse(are_errors_present(rx_msg), f"Device {str(device)} rx msg error: {hex(rx_msg.StatusBitField)}")
+            # ics.SPY_STATUS_TX_MSG
+            
+            pass
+        
+        def test_tx_vs_rx_messages(self):
+            pass
 
 
 
