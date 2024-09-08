@@ -79,6 +79,12 @@ class BaseTests:
         def test_set_led(self):
             # ics.set_led_property(device, led, prop, value)
             pass
+        
+        def test_get_set_rtc(self):
+            device = self._get_device()
+            errors = ics.get_error_messages(device)
+            rtc_time = ics.get_rtc(device)
+            ics.set_rtc(device)
 
 
 class TestRADMoon2Settings(BaseTests.TestSettings):
@@ -89,7 +95,6 @@ class TestRADMoon2Settings(BaseTests.TestSettings):
         cls.num_devices = 2
         print("DEBUG: Testing MOON2s...")
 
-# HAVING ISSUES SETTING SETTINGS WITH THIS UNIT!
 # class TestFire3Settings(BaseTests.TestSettings):
 #     @classmethod
 #     def setUpClass(cls):
@@ -98,7 +103,6 @@ class TestRADMoon2Settings(BaseTests.TestSettings):
 #         cls.num_devices = 1
 #         print("DEBUG: Testing FIRE3...")
 
-# ISSUES CONNECTING TO THIS DEVICE AT ALL!!!
 # class TestFire2Settings(BaseTests.TestSettings):
 #     @classmethod
 #     def setUpClass(cls):

@@ -98,6 +98,46 @@ class BaseTests:
         
         def test_fire3_transmit(self):
             self._tx_rx_devices(self.fire3, self.devices[:-1])  # rx on vcan42 and fire2
+        
+        def test_spy_message(self):
+            msg = ics.SpyMessage()
+            with self.assertRaises(TypeError):
+                msg.ArbIDOrHeader = "a"
+            msg.NetworkID = 255
+            with self.assertRaises(RuntimeWarning):
+                msg.NetworkID = 256
+            self.assertTrue(msg.NetworkID == 0)
+            with self.assertRaises(AttributeError):
+                msg.Data = [x for x in range(8)]
+            msg.Data = tuple([x for x in range(8)])
+            self.assertTrue(msg.NumberBytesData == 8)
+            msg.Data = tuple([x for x in range(16)])
+            # Data gets truncated and overflow goes into ExtraDataPtr but is it correct???
+            self.assertTrue(msg.NumberBytesData == 16)
+            self.assertTrue(msg.Data == tuple([x for x in range(8)]))
+            msg.ExtraDataPtr = tuple([x for x in range(255)])
+            self.assertTrue(len(msg.ExtraDataPtr) == 255)
+            msg.ExtraDataPtr = tuple([x for x in range(256)])
+            self.assertIsNone(msg.ExtraDataPtr)
+            
+            msg.Data = ()
+            msg.ExtraDataPtr = tuple([x for x in range(8)])
+            self.assertTrue(msg.Data == msg.ExtraDataPtr)
+            self.assertTrue(msg.NumberBytesData == 8)
+            msg.Data = ()
+            self.assertIsNone(msg.ExtraDataPtr)
+            
+            msg.ExtraDataPtr = tuple([x for x in range(16)])
+            self.assertTrue(msg.Data == tuple([x for x in range(8)]))
+            self.assertTrue(msg.Data == msg.ExtraDataPtr[:8])
+            self.assertTrue(msg.NumberBytesData == 16)
+            
+            msg.ExtraDataPtr = ()
+            self.assertTrue(msg.Data == ())
+            
+            msg.Data = tuple([x for x in range(16)])
+            self.assertFalse(msg.Data == msg.ExtraDataPtr[:8])  # This looks like an error
+
 
 
 class TestHSCAN1(BaseTests.TestCAN):

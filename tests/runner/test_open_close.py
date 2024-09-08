@@ -69,7 +69,6 @@ class TestOpenClose(unittest.TestCase):
         for dev in self.devices:
             if dev.serial_number != ics.find_devices([dev.DeviceType])[0].serial_number:
                 continue  # skip 2nd moon2
-            dev.AutoHandleClose = False
             self.assertEqual(ics.find_devices([dev.DeviceType])[0].NumberOfClients, 0, f"Device {dev} not at 0 NumberOfClients before opening")
             self.assertEqual(dev.MaxAllowedClients, 1)
             d = ics.open_device(dev)
@@ -150,19 +149,11 @@ class TestOpenClose(unittest.TestCase):
     def test_can_only_open_once(self):
         self._check_devices()
         for dev in self.devices:
-            failed = False
             ics.open_device(dev)
-            try:
+            with self.assertRaises(SystemError):
                 ics.open_device(dev)
-            except:
-                failed = True
-            self.assertTrue(failed)
-            failed = False
-            try:
+            with self.assertRaises(SystemError):
                 dev.open()
-            except:
-                failed = True
-            self.assertTrue(failed)
             ics.close_device(dev)
         
 
