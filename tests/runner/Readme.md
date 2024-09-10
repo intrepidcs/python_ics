@@ -17,12 +17,16 @@ Runner platforms:
 - Linux ARM (Raspberry PI)
 
 Hardware setup:
-PC -> USB -> NIC -> ETH -> Fire3 -> CAN/LIN/ETH network v v
-          -> Fire2 -> CAN/LIN/ETH network             v | ^
-          -> VCAN42 -> (2x)CAN network                ^ ^
+PC -> USB -> NIC -> ETH -> Fire3 -> CAN1/2 network v v
+                                 -> LIN network    | | V
+                                 -> ETH network    | | | V
+          -> Fire2 -> CAN1/2 network             v | ^ | |
+                   -> LIN network                | |   ^ |
+                   -> ETH network                | |     ^
+          -> VCAN42 -> CAN1/2 network            ^ ^
           -> NIC -> ETH -> Moon2 -> 100/1000BASE-T1 network v
-                        -> Moon2 -> 100/1000BASE-T1 network ^
+          -> NIC -> ETH -> Moon2 -> 100/1000BASE-T1 network ^
 
 Hardware / software testing:
 - Run all python ics functions on all hardware
-- Verify all USB, ETH, CAN, LIN networks
+- Verify all networks, transmit, recieve, message functions
