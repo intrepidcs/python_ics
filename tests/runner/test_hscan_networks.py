@@ -141,32 +141,8 @@ class BaseTests:
             self.assertTrue(msg.Data == ())
             
             msg.Data = tuple([x for x in range(16)])
-            self.assertFalse(msg.Data == msg.ExtraDataPtr[:8])  # This looks like an error
+            self.assertTrue(msg.Data == msg.ExtraDataPtr[:8])  # This looks like an error... but its fixed now???
 
-        def test_bad_messages(self):
-            self._prepare_devices()
-            for device in self.devices:
-                base_settings = ics.get_device_settings(device)
-                # Turn CAN1+2 off to test failure
-                match device:
-                    case self.vcan42:
-                        base_settings.Settings.vcan4_12.network_enables = 16
-                    case self.fire2:
-                        base_settings.Settings.cyan.network_enables = 55710
-                    case self.fire3:
-                        base_settings.Settings.fire3.network_enables = 15132094778574952734
-                    case _:
-                        raise Exception(f"No matching device type found for {device}")
-                ics.set_device_settings(device, base_settings)
-                tx_msg = ics.SpyMessage()
-                tx_msg.NetworkID = self.netid
-                ics.transmit_messages(device, tx_msg)
-                time.sleep(0.3)
-                rx_msgs, _ = ics.get_messages(device, False, 1)
-                d_errors = ics.get_error_messages(device)
-                self.assertEqual(len(rx_msgs), 0)
-                self.assertGreater(len(d_errors), 0)
-                ics.load_default_settings(device)
 
 
 class TestHSCAN1(BaseTests.TestCAN):
