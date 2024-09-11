@@ -20,7 +20,9 @@ error_flags = {
     ics.SPY_STATUS_BUS_SHORTED_PLUS: "SPY_STATUS_BUS_SHORTED_PLUS",
     ics.SPY_STATUS_BUS_SHORTED_GND: "SPY_STATUS_BUS_SHORTED_GND",
     ics.SPY_STATUS_CHECKSUM_ERROR: "SPY_STATUS_CHECKSUM_ERROR",
-    ics.SPY_STATUS_BAD_MESSAGE_BIT_TIME_ERROR: ("SPY_STATUS_BAD_MESSAGE_BIT_TIME_ERROR"),
+    ics.SPY_STATUS_BAD_MESSAGE_BIT_TIME_ERROR: (
+        "SPY_STATUS_BAD_MESSAGE_BIT_TIME_ERROR"
+    ),
     ics.SPY_STATUS_TX_NOMATCH: "SPY_STATUS_TX_NOMATCH",
     ics.SPY_STATUS_COMM_IN_OVERFLOW: "SPY_STATUS_COMM_IN_OVERFLOW",
     ics.SPY_STATUS_EXPECTED_LEN_MISMATCH: "SPY_STATUS_EXPECTED_LEN_MISMATCH",
@@ -29,7 +31,6 @@ error_flags = {
     ics.SPY_STATUS_AVSI_REC_OVERFLOW: "SPY_STATUS_AVSI_REC_OVERFLOW",
     ics.SPY_STATUS_BREAK: "SPY_STATUS_AVSI_REC_OVERFLOW",
 }
-
 
 
 class BaseTests:
@@ -64,10 +65,14 @@ class BaseTests:
             msgs, _ = ics.get_messages(device, False, 1)
             for msg in msgs:
                 if msg.NetworkID == ics.NETID_DEVICE and msg.ArbIDOrHeader == 0x162:
-                    if msg.Data[0] == 1 and msg.Data[3] == netid_lower and msg.Data[4] == netid_upper:
+                    if (
+                        msg.Data[0] == 1
+                        and msg.Data[3] == netid_lower
+                        and msg.Data[4] == netid_upper
+                    ):
                         return True
             return False
-        
+
         def _test_tx_rx(self, tx_dev, rx_dev, tx_msg, rx_netid):
             # clear buffers
             _, _ = ics.get_messages(tx_dev, False, 1)
@@ -91,23 +96,29 @@ class BaseTests:
                             if tx_msg.ExtraDataPtr == rx_msg.ExtraDataPtr[:-4]:
                                 # We found the message, lets make sure there are no errors present.
                                 if rx_msg.StatusBitField in error_flags.keys():
-                                    raise Exception(f"{rx_dev} rx msg error: {error_flags[rx_msg.StatusBitField]}")
+                                    raise Exception(
+                                        f"{rx_dev} rx msg error: {error_flags[rx_msg.StatusBitField]}"
+                                    )
                                 else:
                                     found = True
                                     break
-                                    
+
             if not found:
                 raise Exception(f"Failed to find tx msg on {rx_dev}")
-        
+
         def test_ethernet_fire2(self):
             start_time = time.time()
             toggle_com = True
-            while not self._check_ethernet_link(toggle_com, self.fire2, self.fire2_netid):
+            while not self._check_ethernet_link(
+                toggle_com, self.fire2, self.fire2_netid
+            ):
                 toggle_com = False
                 if time.time() - start_time > 10.0:
-                    raise TimeoutError(f"Failed to establish link in 10sec on {self.fire2}")
+                    raise TimeoutError(
+                        f"Failed to establish link in 10sec on {self.fire2}"
+                    )
             time.sleep(1)
-            
+
             # Create SpyMessage for transmission
             ics_mac_address = (0x00, 0xFC, 0x70, 0xFF, 0xDE, 0xAD)
             ether_type = (0xFF, 0xFF)
@@ -116,19 +127,29 @@ class BaseTests:
             tx_msg.NetworkID = self.fire2_netid & 0xFF
             tx_msg.NetworkID2 = (self.fire2_netid >> 8) & 0xFF
             tx_msg.Protocol = ics.SPY_PROTOCOL_ETHERNET
-            tx_msg.ExtraDataPtr = (self.fire2_netid,) + ics_mac_address + ics_mac_address + ether_type + tuple([x & 0xFF for x in range(payload_size)])
+            tx_msg.ExtraDataPtr = (
+                (self.fire2_netid,)
+                + ics_mac_address
+                + ics_mac_address
+                + ether_type
+                + tuple([x & 0xFF for x in range(payload_size)])
+            )
 
             self._test_tx_rx(self.fire2, self.fire3, tx_msg, self.fire3_netid)
-        
+
         def test_ethernet_fire3(self):
             start_time = time.time()
             toggle_com = True
-            while not self._check_ethernet_link(toggle_com, self.fire3, self.fire3_netid):
+            while not self._check_ethernet_link(
+                toggle_com, self.fire3, self.fire3_netid
+            ):
                 toggle_com = False
                 if time.time() - start_time > 10.0:
-                    raise TimeoutError(f"Failed to establish link in 10sec on {self.fire3}")
+                    raise TimeoutError(
+                        f"Failed to establish link in 10sec on {self.fire3}"
+                    )
             time.sleep(1)
-            
+
             # Create SpyMessage for transmission
             ics_mac_address = (0x00, 0xFC, 0x70, 0xFF, 0xDE, 0xAD)
             ether_type = (0xFF, 0xFF)
@@ -137,10 +158,15 @@ class BaseTests:
             tx_msg.NetworkID = self.fire3_netid & 0xFF
             tx_msg.NetworkID2 = (self.fire3_netid >> 8) & 0xFF
             tx_msg.Protocol = ics.SPY_PROTOCOL_ETHERNET
-            tx_msg.ExtraDataPtr = (self.fire3_netid,) + ics_mac_address + ics_mac_address + ether_type + tuple([x & 0xFF for x in range(payload_size)])
+            tx_msg.ExtraDataPtr = (
+                (self.fire3_netid,)
+                + ics_mac_address
+                + ics_mac_address
+                + ether_type
+                + tuple([x & 0xFF for x in range(payload_size)])
+            )
 
             self._test_tx_rx(self.fire3, self.fire2, tx_msg, self.fire2_netid)
-
 
 
 class TestEthernet(BaseTests.TestCAN):

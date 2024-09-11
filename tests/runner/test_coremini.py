@@ -13,7 +13,7 @@ class BaseTests:
         @classmethod
         def setUpClass(cls):
             pass
-        
+
         def _get_device(self):
             devices = ics.find_devices([self.device_type])
             self.assertEqual(
@@ -22,43 +22,45 @@ class BaseTests:
                 f"Failed to find correct number of devices of type {self.device_type}! Expected {self.num_devices}, got {len(devices)}.",
             )
             return devices[0]
-        
+
         def test_coremini_load_start_clear(self):
             device = self._get_device()
             device.open()
             ics.coremini_clear(device, self.coremini_location)
             time.sleep(self.coremini_wait)
             self.assertFalse(ics.coremini_get_status(device))
-            
+
             ics.coremini_load(device, self.coremini_path, self.coremini_location)
             ics.coremini_start(device, self.coremini_location)
             self.assertTrue(ics.coremini_get_status(device))
-            
+
             ics.coremini_stop(device)
             time.sleep(self.coremini_wait)
             self.assertFalse(ics.coremini_get_status(device))
-            
+
             ics.coremini_start(device, self.coremini_location)
             self.assertTrue(ics.coremini_get_status(device))
             time.sleep(2)
-            
+
             ics.coremini_clear(device, self.coremini_location)
             time.sleep(self.coremini_wait)
             self.assertFalse(ics.coremini_get_status(device))
-            
+
             for error in ics.get_error_messages(device):
                 print("Coremini error: " + error)
-            
+
             device.close()
-        
+
         def test_coremini_fblock(self):
             device = self._get_device()
             device.open()
             ics.coremini_load(device, self.coremini_path, self.coremini_location)
             ics.coremini_start(device, self.coremini_location)
-            self.assertTrue(ics.coremini_get_fblock_status(device, 0))  # coremini must be started otherwise fails
+            self.assertTrue(
+                ics.coremini_get_fblock_status(device, 0)
+            )  # coremini must be started otherwise fails
             self.assertTrue(ics.coremini_get_fblock_status(device, 1))
-            
+
             ics.coremini_stop_fblock(device, 0)
             self.assertFalse(ics.coremini_get_fblock_status(device, 0))
             ics.coremini_start_fblock(device, 0)
@@ -67,7 +69,7 @@ class BaseTests:
             self.assertFalse(ics.coremini_get_fblock_status(device, 1))
             ics.coremini_start_fblock(device, 1)
             self.assertTrue(ics.coremini_get_fblock_status(device, 1))
-            
+
             ics.coremini_clear(device, self.coremini_location)
             time.sleep(self.coremini_wait)
             failed = False
@@ -76,19 +78,19 @@ class BaseTests:
             except:
                 failed = True
             self.assertTrue(failed)
-            
+
             for error in ics.get_error_messages(device):
                 print("Coremini error: " + error)
-            
+
             device.close()
-        
+
         def test_coremini_signals(self):
             device = self._get_device()
             device.open()
             # using all on RGB LEDs coremini script to read signals
             ics.coremini_load(device, self.coremini_path, self.coremini_location)
             ics.coremini_start(device, self.coremini_location)
-            
+
             self.assertEqual(ics.coremini_read_app_signal(device, 0), 255.0)
             self.assertEqual(ics.coremini_read_app_signal(device, 1), 255.0)
             self.assertEqual(ics.coremini_read_app_signal(device, 2), 255.0)
@@ -98,7 +100,7 @@ class BaseTests:
             except:
                 failed = True
             self.assertTrue(failed)
-            
+
             ics.coremini_clear(device, self.coremini_location)
             time.sleep(self.coremini_wait)
             failed = False
@@ -107,11 +109,11 @@ class BaseTests:
             except:
                 failed = True
             self.assertTrue(failed)
-            
+
             # using all off RGB LEDs coremini script
             ics.coremini_load(device, self.coremini_path_off, self.coremini_location)
             ics.coremini_start(device, self.coremini_location)
-            
+
             self.assertEqual(ics.coremini_read_app_signal(device, 0), 0.0)
             self.assertEqual(ics.coremini_read_app_signal(device, 1), 0.0)
             self.assertEqual(ics.coremini_read_app_signal(device, 2), 0.0)
@@ -121,7 +123,7 @@ class BaseTests:
             except:
                 failed = True
             self.assertTrue(failed)
-            
+
             # write and read signals
             ics.coremini_load(device, self.coremini_path, self.coremini_location)
             ics.coremini_start(device, self.coremini_location)
@@ -129,7 +131,7 @@ class BaseTests:
             self.assertEqual(ics.coremini_read_app_signal(device, 0), 100.0)
             ics.coremini_write_app_signal(device, 1, 0.0)
             self.assertEqual(ics.coremini_read_app_signal(device, 1), 0.0)
-            
+
             ics.coremini_clear(device, self.coremini_location)
             device.close()
 

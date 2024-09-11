@@ -9,7 +9,14 @@ class TestOpenClose(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         self.expected_dev_count = 5
-        self.devices = ics.find_devices([ics.ics.NEODEVICE_FIRE2, ics.NEODEVICE_FIRE3, ics.NEODEVICE_VCAN42, ics.NEODEVICE_RADMOON2])
+        self.devices = ics.find_devices(
+            [
+                ics.ics.NEODEVICE_FIRE2,
+                ics.NEODEVICE_FIRE3,
+                ics.NEODEVICE_VCAN42,
+                ics.NEODEVICE_RADMOON2,
+            ]
+        )
 
     @classmethod
     def setUp(self):
@@ -58,7 +65,7 @@ class TestOpenClose(unittest.TestCase):
         self._check_devices()
         devices = ics.find_devices([ics.NEODEVICE_FIRE2, ics.NEODEVICE_VCAN42])
         self.assertTrue(len(devices) == 2)
-    
+
     def test_find_fire3_and_moon2(self):
         self._check_devices()
         devices = ics.find_devices([ics.NEODEVICE_FIRE3, ics.NEODEVICE_RADMOON2])
@@ -69,28 +76,56 @@ class TestOpenClose(unittest.TestCase):
         for dev in self.devices:
             if dev.serial_number != ics.find_devices([dev.DeviceType])[0].serial_number:
                 continue  # skip 2nd moon2
-            self.assertEqual(ics.find_devices([dev.DeviceType])[0].NumberOfClients, 0, f"Device {dev} not at 0 NumberOfClients before opening")
+            self.assertEqual(
+                ics.find_devices([dev.DeviceType])[0].NumberOfClients,
+                0,
+                f"Device {dev} not at 0 NumberOfClients before opening",
+            )
             self.assertEqual(dev.MaxAllowedClients, 1)
             d = ics.open_device(dev)
             try:
                 self.assertEqual(dev, d)
-                self.assertEqual(ics.find_devices([dev.DeviceType])[0].NumberOfClients, 1, f"Device {dev} failed to increment NumberOfClients after opening")  # must search again to see number of clients actually increment
+                self.assertEqual(
+                    ics.find_devices([dev.DeviceType])[0].NumberOfClients,
+                    1,
+                    f"Device {dev} failed to increment NumberOfClients after opening",
+                )  # must search again to see number of clients actually increment
                 self.assertEqual(dev.MaxAllowedClients, 1)
 
-                self.assertEqual(ics.find_devices([d.DeviceType])[0].NumberOfClients, 1, f"Device {d} failed to increment NumberOfClients after opening")
+                self.assertEqual(
+                    ics.find_devices([d.DeviceType])[0].NumberOfClients,
+                    1,
+                    f"Device {d} failed to increment NumberOfClients after opening",
+                )
                 self.assertEqual(d.MaxAllowedClients, 1)
             finally:
                 ics.close_device(d)
-                self.assertEqual(ics.find_devices([dev.DeviceType])[0].NumberOfClients, 0, f"Device {dev} failed to decrement NumberOfClients after opening")
-                self.assertEqual(ics.find_devices([d.DeviceType])[0].NumberOfClients, 0, f"Device {d} failed to decrement NumberOfClients after opening")
-            
+                self.assertEqual(
+                    ics.find_devices([dev.DeviceType])[0].NumberOfClients,
+                    0,
+                    f"Device {dev} failed to decrement NumberOfClients after opening",
+                )
+                self.assertEqual(
+                    ics.find_devices([d.DeviceType])[0].NumberOfClients,
+                    0,
+                    f"Device {d} failed to decrement NumberOfClients after opening",
+                )
+
             # Now try with NeoDevice functions
             try:
                 dev.open()
-                self.assertEqual(ics.find_devices([dev.DeviceType])[0].NumberOfClients, 1, f"Device {dev} failed to increment NumberOfClients after opening")
+                self.assertEqual(
+                    ics.find_devices([dev.DeviceType])[0].NumberOfClients,
+                    1,
+                    f"Device {dev} failed to increment NumberOfClients after opening",
+                )
             finally:
                 dev.close()
-                self.assertEqual(ics.find_devices([dev.DeviceType])[0].NumberOfClients, 0, f"Device {dev} failed to decrement NumberOfClients after opening")
+                self.assertEqual(
+                    ics.find_devices([dev.DeviceType])[0].NumberOfClients,
+                    0,
+                    f"Device {dev} failed to decrement NumberOfClients after opening",
+                )
 
     def test_open_close_by_serial(self):
         self._check_devices()
@@ -107,7 +142,9 @@ class TestOpenClose(unittest.TestCase):
                 d = ics.open_device()
                 first_devices.append(d)
             except ics.RuntimeError as ex:
-                raise RuntimeError(f"Failed to open first found device on iteration {len(first_devices)}: {ex}")
+                raise RuntimeError(
+                    f"Failed to open first found device on iteration {len(first_devices)}: {ex}"
+                )
         self.assertEqual(self.expected_dev_count, len(first_devices))
         # Close by API
         for device in first_devices:
@@ -120,32 +157,54 @@ class TestOpenClose(unittest.TestCase):
                 try:
                     ics.open_device(dev)
                     error_count = ics.close_device(dev)
-                    self.assertEqual(error_count, 0, f"Error count was not 0 on {dev} iteration {x}...")
+                    self.assertEqual(
+                        error_count,
+                        0,
+                        f"Error count was not 0 on {dev} iteration {x}...",
+                    )
                 except Exception as ex:
                     print(f"Failed at iteration {x} {dev}: {ex}...")
                     raise ex
-                
+
                 # Now try with NeoDevice functions
                 try:
                     dev.open()
                     error_count = dev.close()
-                    self.assertEqual(error_count, 0, f"Error count was not 0 on {dev} iteration {x}...")
+                    self.assertEqual(
+                        error_count,
+                        0,
+                        f"Error count was not 0 on {dev} iteration {x}...",
+                    )
                 except Exception as ex:
                     print(f"Failed at iteration {x} {dev}: {ex}...")
                     raise ex
-    
+
     def test_auto_close(self):
         self._check_devices()
-        devices = ics.find_devices([ics.ics.NEODEVICE_FIRE2, ics.NEODEVICE_FIRE3, ics.NEODEVICE_VCAN42, ics.NEODEVICE_RADMOON2])
+        devices = ics.find_devices(
+            [
+                ics.ics.NEODEVICE_FIRE2,
+                ics.NEODEVICE_FIRE3,
+                ics.NEODEVICE_VCAN42,
+                ics.NEODEVICE_RADMOON2,
+            ]
+        )
         for dev in devices:
             ics.open_device(dev)
         del devices
-        devices = ics.find_devices([ics.ics.NEODEVICE_FIRE2, ics.NEODEVICE_FIRE3, ics.NEODEVICE_VCAN42, ics.NEODEVICE_RADMOON2])
+        devices = ics.find_devices(
+            [
+                ics.ics.NEODEVICE_FIRE2,
+                ics.NEODEVICE_FIRE3,
+                ics.NEODEVICE_VCAN42,
+                ics.NEODEVICE_RADMOON2,
+            ]
+        )
         for dev in devices:
             ics.open_device(dev)
             ics.close_device(dev)
         del devices
-    
+
     def test_can_only_open_once(self):
         self._check_devices()
         for dev in self.devices:
@@ -155,8 +214,6 @@ class TestOpenClose(unittest.TestCase):
             with self.assertRaises(SystemError):
                 dev.open()
             ics.close_device(dev)
-        
-
 
 
 if __name__ == "__main__":

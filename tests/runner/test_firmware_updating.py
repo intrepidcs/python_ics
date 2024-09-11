@@ -36,14 +36,16 @@ class BaseTests:
                 f"Failed to find correct number of devices of type {self.device_type}! Expected {self.num_devices}, got {len(devices)}.",
             )
             return devices[0]
-        
+
         def test_update_firmware(self):
             device = self._get_device()
             device.open()
             # get firmware version
             self.assertEqual(device.SerialNumber, ics.get_serial_number(device))
             self.assertEqual(device.get_serial_number(), ics.get_serial_number(device))
-            info = ics.get_hw_firmware_info(device)  # must be open! Gives iefs ver, pcb rev, bootloader rev, manuf date
+            info = ics.get_hw_firmware_info(
+                device
+            )  # must be open! Gives iefs ver, pcb rev, bootloader rev, manuf date
             # print(device.Name, device.serial_number)
             # print(f"MCHIP IEF v{info.iAppMajor}.{info.iAppMinor}")
             # print(f"MCHIP BL v{info.iBootLoaderVersionMajor}.{info.iBootLoaderVersionMinor}")
@@ -54,53 +56,56 @@ class BaseTests:
             self.assertEqual(int(pcbsn[5]), info.iBoardRevMajor)
             self.assertEqual(int(pcbsn[6], 36), info.iBoardRevMinor)
             self.assertEqual(pcbsn, device.get_pcb_serial_number())
-            
+
             # Mass check ics vs device func attributes
             info_comp = device.get_hw_firmware_info()
             for attr in dir(info_comp):
-                if attr[0] == "_": continue
+                if attr[0] == "_":
+                    continue
                 self.assertEqual(getattr(info_comp, attr), getattr(info, attr))
-            
+
             device.close()
-            
+
             # first flash old firmware
             iefs = {ics.VCAN42_MCHIP_ID: self.old_firmware_path}
             ics.set_reflash_callback(reflash_callback)
-            ics.flash_devices(device, iefs, message_callback)  # device must be closed?!?!
-            
+            ics.flash_devices(
+                device, iefs, message_callback
+            )  # device must be closed?!?!
+
             # check IEF version and that update is needed
             device.open()
             self.assertEqual(1, ics.firmware_update_required(device))
-            
+
             # then force firmware update
-            ics.force_firmware_update(device)  # device needs to be open and will stay open!
-            
+            ics.force_firmware_update(
+                device
+            )  # device needs to be open and will stay open!
+
             # check it again
             self.assertEqual(0, ics.firmware_update_required(device))
             device.close()
-            
+
             # update with new iefs
             iefs = {ics.VCAN42_MCHIP_ID: self.new_firmware_path}
             ics.flash_devices(device, iefs, message_callback)
-            
+
             # check one last time
             device.open()
             self.assertEqual(0, ics.firmware_update_required(device))
             device.close()
-            
+
             # ics.flash_accessory_firmware(device, data, index[, check_success])
             # ics.get_accessory_firmware_version()
-            
+
             # ics.get_all_chip_versions(device, api_index, instance_index)
             # ics.get_backup_power_enabled(device)
             # ics.get_backup_power_ready(device)
             # ics.get_bus_voltage(device, reserved)
             # ics.get_device_status(device)
-            
-            
-            
+
             # ics.get_last_api_error(device)
-            
+
             # ics.get_performance_parameters(device)
             # ics.get_rtc(device)
             # ics.get_script_status()  # Documentation needs updating to include "device" parameter

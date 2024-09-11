@@ -63,9 +63,11 @@ class BaseTests:
             for device in self.devices:
                 # Clear any messages in the buffer
                 _, _ = ics.get_messages(device, False, 1)
-                _ = ics.get_error_messages(device)  # Documentation is wrong -- says it can take 3 args but only takes 1
+                _ = ics.get_error_messages(
+                    device
+                )  # Documentation is wrong -- says it can take 3 args but only takes 1
                 # may need more clearing of errors here
-        
+
         def _tx_rx_devices(self, tx_device, rx_devices: list):
             self._prepare_devices()
             tx_msg = ics.SpyMessage()
@@ -79,34 +81,43 @@ class BaseTests:
             ics.transmit_messages(tx_device, tx_msg)
             # CAN ACK timeout in firmware is 200ms, so wait 300ms for ACK
             time.sleep(0.3)
-            
+
             # rx HSCAN msg
             for device in rx_devices:
                 rx_messages, error_count = ics.get_messages(device, False, 1)
                 self.assertEqual(error_count, 0, str(device))
-                self.assertEqual(len(rx_messages), 1, f"Device {str(device)} didnt find 1 msg but {len(rx_messages)} msgs")
+                self.assertEqual(
+                    len(rx_messages),
+                    1,
+                    f"Device {str(device)} didnt find 1 msg but {len(rx_messages)} msgs",
+                )
                 for rx_msg in rx_messages:
                     if rx_msg.NetworkID == tx_msg.NetworkID:
                         if rx_msg.ArbIDOrHeader == tx_msg.ArbIDOrHeader:
                             self.assertEqual(rx_msg.ExtraDataPtr, tx_msg.ExtraDataPtr)
-                            self.assertFalse(are_errors_present(rx_msg), f"Device {str(device)} rx msg error: {hex(rx_msg.StatusBitField)}")
+                            self.assertFalse(
+                                are_errors_present(rx_msg),
+                                f"Device {str(device)} rx msg error: {hex(rx_msg.StatusBitField)}",
+                            )
                             datetime.datetime.fromtimestamp(rx_msg.TimeHardware)
                             self.assertGreater(rx_msg.TimeSystem, 0)
                             self.assertEqual(rx_msg.TimeStampHardwareID, 9)
                             self.assertEqual(rx_msg.TimeStampSystemID, 1)
-            
+
             for device in self.devices:
                 self.assertFalse(ics.get_error_messages(device))
-        
+
         def test_vcan42_transmit(self):
             self._tx_rx_devices(self.vcan42, self.devices[1:])  # rx on fire2 and fire3
-        
+
         def test_fire2_transmit(self):
-            self._tx_rx_devices(self.fire2, [self.devices[0], self.devices[-1]])  # rx on vcan42 and fire3
-        
+            self._tx_rx_devices(
+                self.fire2, [self.devices[0], self.devices[-1]]
+            )  # rx on vcan42 and fire3
+
         def test_fire3_transmit(self):
             self._tx_rx_devices(self.fire3, self.devices[:-1])  # rx on vcan42 and fire2
-        
+
         def test_spy_message(self):
             msg = ics.SpyMessage()
             with self.assertRaises(TypeError):
@@ -124,25 +135,26 @@ class BaseTests:
             self.assertTrue(len(msg.ExtraDataPtr) == 255)
             msg.ExtraDataPtr = tuple([x for x in range(256)])
             self.assertIsNone(msg.ExtraDataPtr)
-            
+
             msg.Data = ()
             msg.ExtraDataPtr = tuple([x for x in range(8)])
             self.assertTrue(msg.Data == msg.ExtraDataPtr)
             self.assertTrue(msg.NumberBytesData == 8)
             msg.Data = ()
             self.assertIsNone(msg.ExtraDataPtr)
-            
+
             msg.ExtraDataPtr = tuple([x for x in range(16)])
             self.assertTrue(msg.Data == tuple([x for x in range(8)]))
             self.assertTrue(msg.Data == msg.ExtraDataPtr[:8])
             self.assertTrue(msg.NumberBytesData == 16)
-            
+
             msg.ExtraDataPtr = ()
             self.assertTrue(msg.Data == ())
-            
-            msg.Data = tuple([x for x in range(16)])
-            self.assertTrue(msg.Data == msg.ExtraDataPtr[:8])  # This looks like an error... but its fixed now???
 
+            msg.Data = tuple([x for x in range(16)])
+            self.assertTrue(
+                msg.Data == msg.ExtraDataPtr[:8]
+            )  # This looks like an error... but its fixed now???
 
 
 class TestHSCAN1(BaseTests.TestCAN):
@@ -155,6 +167,7 @@ class TestHSCAN2(BaseTests.TestCAN):
     @classmethod
     def setUpClass(cls):
         cls.netid = ics.NETID_HSCAN2
+
 
 if __name__ == "__main__":
     unittest.main()

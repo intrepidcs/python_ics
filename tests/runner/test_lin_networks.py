@@ -33,18 +33,20 @@ class BaseTests:
             for device in self.devices:
                 # Clear any messages in the buffer
                 _, _ = ics.get_messages(device, False, 1)
-                _ = ics.get_error_messages(device)  # Documentation is wrong -- says it can take 3 args but only takes 1
+                _ = ics.get_error_messages(
+                    device
+                )  # Documentation is wrong -- says it can take 3 args but only takes 1
                 # may need more clearing of errors here
-        
+
         def _tx_rx_lin_devices(self, master_dev, slave_dev):
             self._prepare_devices()
-            
+
             master_msg = ics.SpyMessageJ1850()
             master_msg.Header = (0xC1,)
             master_msg.NetworkID = ics.NETID_LIN
             master_msg.Data = ()
             master_msg.StatusBitField = ics.SPY_STATUS_LIN_MASTER
-            
+
             slave_msg = ics.SpyMessageJ1850()
             slave_msg.Header = (0xC1,)
             slave_msg.NetworkID = self.netid
@@ -56,15 +58,15 @@ class BaseTests:
                 if checksum > 255:
                     checksum -= 255
             slave_msg.Data += ((~checksum & 0xFF),)
-            
+
             # transmit slave msg first
             ics.transmit_messages(slave_dev, slave_msg)
             time.sleep(0.5)
-            
+
             # transmit master msg
             ics.transmit_messages(master_dev, master_msg)
             time.sleep(0.5)
-            
+
             # find msg
             rx_msgs, errors = ics.get_messages(slave_dev, False, 1)
             self.assertFalse(errors)
@@ -75,13 +77,13 @@ class BaseTests:
                     if msg.ArbIDOrHeader == master_msg.Header:
                         if msg.Data == master_msg.Data:
                             break
-            
+
             for device in self.devices:
                 self.assertFalse(ics.get_error_messages(device))
-        
+
         def test_fire2_master_tx(self):
             self._tx_rx_lin_devices(self.fire2, self.fire3)
-        
+
         def test_fire3_master_tx(self):
             self._tx_rx_lin_devices(self.fire3, self.fire2)
 
@@ -97,15 +99,18 @@ class TestLIN2(BaseTests.TestCAN):
     def setUpClass(cls):
         cls.netid = ics.NETID_LIN2
 
+
 class TestLIN3(BaseTests.TestCAN):
     @classmethod
     def setUpClass(cls):
         cls.netid = ics.NETID_LIN3
 
+
 class TestLIN4(BaseTests.TestCAN):
     @classmethod
     def setUpClass(cls):
         cls.netid = ics.NETID_LIN4
+
 
 if __name__ == "__main__":
     unittest.main()
