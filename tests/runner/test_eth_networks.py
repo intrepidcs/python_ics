@@ -80,7 +80,7 @@ class BaseTests:
                     break
                 ics.transmit_messages(tx_dev, tx_msg)
                 time.sleep(0.1)
-                _tx_msgs = ics.get_messages(tx_dev, False, 0)
+                _, _ = ics.get_messages(tx_dev, False, 0)
                 # Process the messages
                 rx_msgs, errors = ics.get_messages(rx_dev, False, 2)
                 for rx_msg in rx_msgs:
@@ -114,31 +114,33 @@ class BaseTests:
             payload_size = 64
             tx_msg = ics.SpyMessage()
             tx_msg.NetworkID = self.fire2_netid & 0xFF
+            tx_msg.NetworkID2 = (self.fire2_netid >> 8) & 0xFF
             tx_msg.Protocol = ics.SPY_PROTOCOL_ETHERNET
             tx_msg.ExtraDataPtr = (self.fire2_netid,) + ics_mac_address + ics_mac_address + ether_type + tuple([x & 0xFF for x in range(payload_size)])
 
             self._test_tx_rx(self.fire2, self.fire3, tx_msg, self.fire3_netid)
         
-        # def test_ethernet_fire3(self):
-        #     start_time = time.time()
-        #     toggle_com = True
-        #     while not self._check_ethernet_link(toggle_com, self.fire3, self.fire3_netid):
-        #         toggle_com = False
-        #         if time.time() - start_time > 10.0:
-        #             raise TimeoutError(f"Failed to establish link in 10sec on {self.fire3}")
-        #     time.sleep(1)
+        def test_ethernet_fire3(self):
+            start_time = time.time()
+            toggle_com = True
+            while not self._check_ethernet_link(toggle_com, self.fire3, self.fire3_netid):
+                toggle_com = False
+                if time.time() - start_time > 10.0:
+                    raise TimeoutError(f"Failed to establish link in 10sec on {self.fire3}")
+            time.sleep(1)
             
-        #     # Create SpyMessage for transmission
-        #     ics_mac_address = (0x00, 0xFC, 0x70, 0xFF, 0xDE, 0xAD)
-        #     ether_type = (0xFF, 0xFF)
-        #     payload_size = 64
-        #     tx_msg = ics.SpyMessage()
-        #     tx_msg.NetworkID = self.fire3_netid & 0xFF
-        #     tx_msg.Protocol = ics.SPY_PROTOCOL_ETHERNET
-        #     tx_msg.ExtraDataPtr = (self.fire3_netid,) + ics_mac_address + ics_mac_address + ether_type + tuple([x & 0xFF for x in range(payload_size)])
+            # Create SpyMessage for transmission
+            ics_mac_address = (0x00, 0xFC, 0x70, 0xFF, 0xDE, 0xAD)
+            ether_type = (0xFF, 0xFF)
+            payload_size = 64
+            tx_msg = ics.SpyMessage()
+            tx_msg.NetworkID = self.fire3_netid & 0xFF
+            tx_msg.NetworkID2 = (self.fire3_netid >> 8) & 0xFF
+            tx_msg.Protocol = ics.SPY_PROTOCOL_ETHERNET
+            tx_msg.ExtraDataPtr = (self.fire3_netid,) + ics_mac_address + ics_mac_address + ether_type + tuple([x & 0xFF for x in range(payload_size)])
 
-        #     self._test_tx_rx(self.fire3, self.fire2, tx_msg, self.fire2_netid)
-            
+            self._test_tx_rx(self.fire3, self.fire2, tx_msg, self.fire2_netid)
+
 
 
 class TestEthernet(BaseTests.TestCAN):
