@@ -27,6 +27,15 @@ PC -> USB -> NIC -> ETH -> Fire3 -> CAN1/2 network v v
           -> NIC -> ETH -> Moon2 -> 100/1000BASE-T1 network v
           -> NIC -> ETH -> Moon2 -> 100/1000BASE-T1 network ^
 
+Software setup:
+- Both Moon2 USB NIC adapter properties must be set:
+    - "ASIX USB to Gigabit Ethernet Family Adapter" -> "Ethernet" (windows 10)
+    - "ASIX USB to Gigabit Ethernet Family Adapter #2" -> "Ethernet 2" (windows 10)
+        - IPV6 disabled
+        - IPV4 IP address: 192.168.69.10, 192.168.69.11
+        - IPV4 subnet mask: 255.255.255.0
+
 Hardware / software testing:
 - Run all python ics functions on all hardware
 - Verify all networks, transmit, recieve, message functions
+- Verify all example scripts are fully working

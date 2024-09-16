@@ -25,11 +25,6 @@ class BaseTests:
                 ics.load_default_settings(device)
                 ics.close_device(device)
 
-        def _set_windows_network_properties(self):
-            pass
-            "netsh interface ipv4 show config"
-            "netsh interface ipv4 set address 'Ethernet' static 192.168.69.10"
-
         def _set_link_mode_setting(self, device, link_mode: int):
             ics.open_device(device)
             base_settings = ics.get_device_settings(device)
