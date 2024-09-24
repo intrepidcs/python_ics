@@ -343,7 +343,16 @@ void __destroy_PyNeoDeviceEx_Handle(PyObject* handle)
     }
     */
 }
-
+bool PyNeoDeviceEx_IsHandleNull(PyObject* object, void** handle)
+{
+    if (object == NULL || object == Py_None || object == Py_False || (PyLong_CheckExact(object) && PyLong_AsLong(object) == 0)) {
+        *handle = NULL;
+        return true;
+    }
+    else {
+        return false;
+    }
+}
 // Return the _handle attribute of PyNeoDeviceEx. Sets handle to NULL on failure or not valid.
 // Returns false on error and exception is set. Returns true on success.
 bool PyNeoDeviceEx_GetHandle(PyObject* object, void** handle)
@@ -353,11 +362,6 @@ bool PyNeoDeviceEx_GetHandle(PyObject* object, void** handle)
         return false;
     }
     *handle = NULL;
-    if (object == NULL || object == Py_None || object == Py_False ||
-        (PyLong_CheckExact(object) && PyLong_AsLong(object) == 0)) {
-        *handle = NULL;
-        return true;
-    }
     if (!PyNeoDeviceEx_CheckExact(object)) {
         return set_ics_exception(exception_runtime_error(), "Object is not of type PyNeoDeviceEx");
     }
@@ -1448,8 +1452,9 @@ PyObject* meth_flash_devices(PyObject* self, PyObject* args)
     PyObject* obj = NULL;
     PyObject* callback = NULL;
     PyObject* dict;
+    OptionsFindNeoEx opts = { 0 };
     int network_id = -1;
-    if (!PyArg_ParseTuple(args, arg_parse("OO|Oi:", __FUNCTION__), &obj, &dict, &callback, &network_id)) {
+    if (!PyArg_ParseTuple(args, arg_parse("OO|OiO:", __FUNCTION__), &obj, &dict, &callback, &network_id, &opts)) {
         return NULL;
     }
     if (obj && !PyNeoDeviceEx_CheckExact(obj)) {
@@ -1487,7 +1492,6 @@ PyObject* meth_flash_devices(PyObject* self, PyObject* args)
         reflash_count++;
     }
     // handle network_id if provided, otherwise 0
-    OptionsFindNeoEx opts = { 0 };
     opts.CANOptions.iNetworkID = static_cast<unsigned long>(network_id);
     POptionsFindNeoEx popts = NULL;
     if (network_id != -1)
@@ -2632,8 +2636,15 @@ PyObject* meth_set_context(PyObject* self, PyObject* args)
         return set_ics_exception(exception_runtime_error(),
                                  "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx, integer, False, 0, or NULL");
     }
-    if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
-        return NULL;
+    if (PyNeoDeviceEx_IsHandleNull(obj, &handle))
+    {
+        handle = NULL;
+    }
+    else 
+    {
+        if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
+            return set_ics_exception(exception_runtime_error(), "Failed to retrieve handle.");
+        }
     }
     try {
         ice::Library* lib = dll_get_library();
