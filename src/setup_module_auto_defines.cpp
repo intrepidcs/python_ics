@@ -193,7 +193,6 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, NEODEVICE_VCAN42);
 	result += PyModule_AddIntMacro(module, NEODEVICE_CMPROBE);
 	result += PyModule_AddIntMacro(module, NEODEVICE_EEVB);
-	result += PyModule_AddIntMacro(module, NEODEVICE_VCANRF);
 	result += PyModule_AddIntMacro(module, NEODEVICE_FIRE2);
 	result += PyModule_AddIntMacro(module, NEODEVICE_FLEX);
 	result += PyModule_AddIntMacro(module, NEODEVICE_RADGALAXY);
@@ -861,7 +860,6 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, SCyanSettings_SIZE);
 	result += PyModule_AddIntMacro(module, SVCAN3Settings_SIZE);
 	result += PyModule_AddIntMacro(module, SVCAN4Settings_SIZE);
-	result += PyModule_AddIntMacro(module, SVCANRFSettings_SIZE);
 	result += PyModule_AddIntMacro(module, SECUSettings_SIZE);
 	result += PyModule_AddIntMacro(module, SPendantSettings_SIZE);
 	result += PyModule_AddIntMacro(module, SIEVBSettings_SIZE);
@@ -1030,7 +1028,6 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, DeviceRADMoon2SettingsType);
 	result += PyModule_AddIntMacro(module, DeviceRADPlutoSettingsType);
 	result += PyModule_AddIntMacro(module, DeviceRADGigalogSettingsType);
-	result += PyModule_AddIntMacro(module, DeviceVCANRFSettingsType);
 	result += PyModule_AddIntMacro(module, DeviceEEVBSettingsType);
 	result += PyModule_AddIntMacro(module, DeviceVCAN4IndSettingsType);
 	result += PyModule_AddIntMacro(module, DeviceNeoECU12SettingsType);

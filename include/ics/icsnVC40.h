@@ -250,7 +250,6 @@ typedef unsigned __int64 uint64_t;
 #define NEODEVICE_VCAN42 (0x00400000)
 #define NEODEVICE_CMPROBE (0x00800000)
 #define NEODEVICE_EEVB (0x01000000)
-#define NEODEVICE_VCANRF (0x02000000)
 #define NEODEVICE_FIRE2 (0x04000000)
 #define NEODEVICE_FLEX (0x08000000)
 #define NEODEVICE_RADGALAXY (0x10000000)
@@ -959,12 +958,6 @@ typedef union _stChipVersions
 		uint8_t mpic_maj;
 		uint8_t mpic_min;
 	} vcan3_versions;
-
-	struct
-	{
-		uint8_t mpic_maj;
-		uint8_t mpic_min;
-	} vcanrf_versions;
 
 	struct
 	{
@@ -2568,52 +2561,6 @@ typedef struct _SVCAN4Settings
 	ETHERNET_SETTINGS2 ethernet2;
 } SVCAN4Settings;
 #define SVCAN4Settings_SIZE 342
-
-typedef struct _SVCANRFSettings
-{
-	CAN_SETTINGS can1;
-	CAN_SETTINGS can2;
-	CAN_SETTINGS can3;
-	CAN_SETTINGS can4;
-
-	LIN_SETTINGS lin1;
-	LIN_SETTINGS lin2;
-
-	uint16_t network_enables;
-	uint16_t network_enabled_on_boot;
-
-	uint32_t pwr_man_timeout;
-	uint16_t pwr_man_enable;
-
-	uint16_t misc_io_initial_ddr;
-	uint16_t misc_io_initial_latch;
-	uint16_t misc_io_analog_enable;
-	uint16_t misc_io_report_period;
-	uint16_t misc_io_on_report_events;
-
-	uint16_t iso15765_separation_time_offset;
-
-	uint16_t iso9141_kwp_enable_reserved;
-	ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings;
-
-	uint16_t perf_en;
-
-	uint16_t iso_parity;
-	uint16_t iso_msg_termination;
-	uint16_t iso_tester_pullup_enable;
-	uint16_t network_enables_2;
-
-	ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings_2;
-	uint16_t iso_parity_2;
-	uint16_t iso_msg_termination_2;
-
-	uint16_t idle_wakeup_network_enables_1;
-	uint16_t idle_wakeup_network_enables_2;
-
-	uint16_t disableFwLEDs : 1;
-	uint16_t reservedZero : 15;
-} SVCANRFSettings;
-#define SVCANRFSettings_SIZE 340
 
 typedef struct _SECUSettings
 {
@@ -4796,7 +4743,6 @@ typedef struct _GLOBAL_SETTINGS
 		SRADGigalogSettings radgigalog;
 		SCANHubSettings canhub;
 		SNeoECU12Settings neoecu12;
-		SVCANRFSettings vcanrf;
 		SEEVBSettings eevb;
 		SFlexVnetzSettings flexvnetz;
 		SVividCANSettings vividcan;
@@ -4837,7 +4783,6 @@ typedef enum _EDeviceSettingsType
 	DeviceRADMoon2SettingsType,
 	DeviceRADPlutoSettingsType,
 	DeviceRADGigalogSettingsType,
-	DeviceVCANRFSettingsType,
 	DeviceEEVBSettingsType,
 	DeviceVCAN4IndSettingsType,
 	DeviceNeoECU12SettingsType,
@@ -4898,7 +4843,6 @@ typedef struct _SDeviceSettings
 		SRADGigalogSettings radgigalog;
 		SCANHubSettings canhub;
 		SNeoECU12Settings neoecu12;
-		SVCANRFSettings vcanrf;
 		SEEVBSettings eevb;
 		SFlexVnetzSettings flexvnetz;
 		SVividCANSettings vividcan;
@@ -5785,7 +5729,6 @@ CHECK_STRUCT_SIZE(SFireVnetSettings);
 CHECK_STRUCT_SIZE(SCyanSettings);
 CHECK_STRUCT_SIZE(SVCAN3Settings);
 CHECK_STRUCT_SIZE(SVCAN4Settings);
-CHECK_STRUCT_SIZE(SVCANRFSettings);
 CHECK_STRUCT_SIZE(SECUSettings);
 CHECK_STRUCT_SIZE(SPendantSettings);
 CHECK_STRUCT_SIZE(SIEVBSettings);
