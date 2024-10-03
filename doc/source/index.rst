@@ -1884,9 +1884,6 @@ Module Variables
     .. py:data:: NEODEVICE_VCAN4_IND
             :annotation: = 18
 
-    .. py:data:: NEODEVICE_VCANRF
-            :annotation: = 33554432
-
     .. py:data:: NEODEVICE_VIVIDCAN
             :annotation: = 1073741824
 

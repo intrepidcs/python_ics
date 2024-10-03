@@ -162,8 +162,6 @@ char* neodevice_to_string(unsigned long type)
             return "CM Probe";
         case NEODEVICE_EEVB:
             return "EEVB";
-        case NEODEVICE_VCANRF:
-            return "ValueCAN.rf";
         case NEODEVICE_FIRE2:
             return "neoVI FIRE 2";
         case NEODEVICE_FLEX:
