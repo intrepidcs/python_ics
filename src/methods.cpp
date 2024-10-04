@@ -411,6 +411,7 @@ bool PyNeoDeviceEx_SetHandle(PyObject* object, void* handle)
 
 // Get the _name attribute of PyNeoDeviceEx.
 // Returns false on error and exception is set. Returns true on success.
+
 bool PyNeoDeviceEx_GetName(PyObject* object, PyObject* name)
 {
     if (!object) {
@@ -3673,9 +3674,9 @@ PyObject* meth_flash_accessory_firmware(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, arg_parse("OO|b:", __FUNCTION__), &obj, &parms, &check_success)) {
         return NULL;
     }
-    /*if (!PyArg_ParseTuple(args, arg_parse("OiO|b:", __FUNCTION__), &obj, &accessory_indx, &bytes_obj, &check_success)) {
-        return NULL;
-    }*/
+#ifndef ENABLE_ACCESSORY_API
+    return set_ics_exception(exception_runtime_error(), "Accessory API not enabled");
+#else
 
     if (!PyNeoDeviceEx_CheckExact(obj)) {
         return set_ics_exception(exception_runtime_error(),
@@ -3769,6 +3770,7 @@ PyObject* meth_flash_accessory_firmware(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
+#endif // ENABLE_ACCESSORY_API
 }
 
 PyObject* meth_get_accessory_firmware_version(PyObject* self, PyObject* args)
@@ -3780,6 +3782,9 @@ PyObject* meth_get_accessory_firmware_version(PyObject* self, PyObject* args)
         return NULL;
     }
 
+#ifndef ENABLE_ACCESSORY_API
+    return set_ics_exception(exception_runtime_error(), "Accessory API not enabled");
+#else
     if (!PyNeoDeviceEx_CheckExact(obj)) {
         return set_ics_exception(exception_runtime_error(),
                                  "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
@@ -3867,6 +3872,7 @@ PyObject* meth_get_accessory_firmware_version(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
+#endif // ENABLE_ACCESSORY_API
 }
 
 PyObject* meth_set_safe_boot_mode(PyObject* self, PyObject* args)
