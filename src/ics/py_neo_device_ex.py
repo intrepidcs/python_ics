@@ -89,6 +89,11 @@ class PyNeoDeviceEx(ics.neo_device_ex.neo_device_ex):
             return ics.base36enc(self.SerialNumber)
         else:
             raise ValueError(f"Failed to convert SerialNumber {self.SerialNumber} to a valid serial number.")
+    
+    @property
+    def AutoHandleClose(self) -> bool:
+        """Return the AutoHandleClose from the internal NeoDevice object."""
+        return self._auto_handle_close
 
     def open(self, *args, **kwargs):
         """Open the device. Returns a reference to Self on open. See ics.open_device for details on arguments."""
@@ -481,3 +486,7 @@ class PyNeoDeviceEx(ics.neo_device_ex.neo_device_ex):
     def set_safe_boot_mode(self, *args, **kwargs):
         "See ics.set_safe_boot_mode for details on arguments."
         return ics.set_safe_boot_mode(self, *args, **kwargs)
+    
+    def flash_devices(self, *args, **kwargs):
+        "See ics.flash_devices for details on arguments. This is an internal intrepid function only."
+        return ics.flash_device(self, *args, **kwargs)
