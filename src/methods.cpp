@@ -276,9 +276,8 @@ bool PyNeoDeviceEx_CheckExact(PyObject* object)
 
     return strncmp(type_obj->tp_name, CLASS_NAME, sizeof(CLASS_NAME) / sizeof(CLASS_NAME[0])) == 0;
     // This will fail on cleanup because we can't import ics anymore...
-    //return _isPythonModuleObject_IsInstance(object, "ics.py_neo_device_ex", "PyNeoDeviceEx") == 1;
+    // return _isPythonModuleObject_IsInstance(object, "ics.py_neo_device_ex", "PyNeoDeviceEx") == 1;
 }
-
 
 // Get the NeoDeviceEx from PyNeoDeviceEx. Caller is responsible for managing the
 // Py_buffer and nde is UB once Py_buffer goes out of scope.
@@ -289,8 +288,8 @@ bool PyNeoDeviceEx_CheckExact(PyObject* object)
 // Example:
 //   Py_buffer buffer = {};
 //   NeoDeviceEx* nde = NULL;
-//   if (PyNeoDeviceEx_GetNeoDeviceEx(obj, &buffer, &nde)) { 
-//       // use nde here 
+//   if (PyNeoDeviceEx_GetNeoDeviceEx(obj, &buffer, &nde)) {
+//       // use nde here
 //   }
 //   PyBuffer_Release(&buffer);
 bool PyNeoDeviceEx_GetNeoDeviceEx(PyObject* object, Py_buffer* buffer, NeoDeviceEx** nde)
@@ -342,7 +341,16 @@ void __destroy_PyNeoDeviceEx_Handle(PyObject* handle)
     }
     */
 }
-
+bool PyNeoDeviceEx_IsHandleNull(PyObject* object, void** handle)
+{
+    if (object == NULL || object == Py_None || object == Py_False || (PyLong_CheckExact(object) && PyLong_AsLong(object) == 0)) {
+        *handle = NULL;
+        return true;
+    }
+    else {
+        return false;
+    }
+}
 // Return the _handle attribute of PyNeoDeviceEx. Sets handle to NULL on failure or not valid.
 // Returns false on error and exception is set. Returns true on success.
 bool PyNeoDeviceEx_GetHandle(PyObject* object, void** handle)
@@ -370,7 +378,6 @@ bool PyNeoDeviceEx_GetHandle(PyObject* object, void** handle)
     return true;
 }
 
-
 // Set the _handle attribute of PyNeoDeviceEx.
 // Returns false on error and exception is set. Returns true on success.
 bool PyNeoDeviceEx_SetHandle(PyObject* object, void* handle)
@@ -381,7 +388,7 @@ bool PyNeoDeviceEx_SetHandle(PyObject* object, void* handle)
     }
     if (!PyNeoDeviceEx_CheckExact(object)) {
         set_ics_exception(exception_runtime_error(), "Object is not of type PyNeoDeviceEx");
-        return false;    
+        return false;
     }
     PyObject* _handle = PyObject_GetAttrString(object, "_handle");
     if (!_handle) {
@@ -444,7 +451,6 @@ bool PyNeoDeviceEx_SetName(PyObject* object, PyObject* name)
     // Get the _handle of PyNeoDeviceEx
     return PyObject_SetAttrString(object, "_name", name) == 0;
 }
-
 
 PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
 {
@@ -522,11 +528,8 @@ PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
             if (!PyNeoDeviceEx_SetNeoDeviceEx(obj, &devices[i])) {
                 return NULL;
             }
-            if (!PyNeoDeviceEx_SetName(obj, 
-                PyUnicode_FromString(
-                    neodevice_to_string(devices[i].neoDevice.DeviceType)
-                ))
-            ) {
+            if (!PyNeoDeviceEx_SetName(obj,
+                                       PyUnicode_FromString(neodevice_to_string(devices[i].neoDevice.DeviceType)))) {
                 return NULL;
             }
             PyTuple_SetItem(tuple, i, obj);
@@ -662,11 +665,8 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
                 if (!PyNeoDeviceEx_SetNeoDeviceEx(device, &devices[i])) {
                     return NULL;
                 }
-                if (!PyNeoDeviceEx_SetName(device, 
-                    PyUnicode_FromString(
-                        neodevice_to_string(devices[i].neoDevice.DeviceType)
-                    ))
-                ) {
+                if (!PyNeoDeviceEx_SetName(
+                        device, PyUnicode_FromString(neodevice_to_string(devices[i].neoDevice.DeviceType)))) {
                     return NULL;
                 }
                 break;
@@ -743,12 +743,10 @@ PyObject* meth_close_device(PyObject* self, PyObject* args)
         return NULL;
     }
     if (obj == NULL) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type PyNeoDeviceEx, got NULL");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type PyNeoDeviceEx, got NULL");
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type PyNeoDeviceEx");
     }
     try {
         ice::Library* lib = dll_get_library();
@@ -829,8 +827,7 @@ PyObject* meth_get_rtc(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -890,8 +887,7 @@ PyObject* meth_set_rtc(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -951,8 +947,7 @@ PyObject* meth_coremini_load(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -994,8 +989,8 @@ PyObject* meth_coremini_load(PyObject* self, PyObject* args)
         for (int i = 0; i < tuple_size; ++i) {
             PyObject* value = PyTuple_GET_ITEM(arg_data, i);
             if (!PyLong_CheckExact(value)) {
-                return set_ics_exception(
-                    exception_runtime_error(), "Failed to convert tuple data. Tuple data must be integer type");
+                return set_ics_exception(exception_runtime_error(),
+                                         "Failed to convert tuple data. Tuple data must be integer type");
             }
             data[i] = (unsigned char)PyLong_AsLong(PyTuple_GET_ITEM(arg_data, i));
         }
@@ -1033,8 +1028,7 @@ PyObject* meth_coremini_start(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -1067,8 +1061,7 @@ PyObject* meth_coremini_stop(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -1102,8 +1095,7 @@ PyObject* meth_coremini_clear(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -1137,8 +1129,7 @@ PyObject* meth_coremini_get_status(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -1175,8 +1166,7 @@ PyObject* meth_transmit_messages(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -1254,8 +1244,7 @@ PyObject* meth_get_messages(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -1271,8 +1260,7 @@ PyObject* meth_get_messages(PyObject* self, PyObject* args)
         }
         ice::Function<int __stdcall(void*, unsigned int)> icsneoWaitForRxMessagesWithTimeOut(
             lib, "icsneoWaitForRxMessagesWithTimeOut");
-        ice::Function<int __stdcall(void*, icsSpyMessage*, int*, int*)> icsneoGetMessages(lib,
-                                                                                               "icsneoGetMessages");
+        ice::Function<int __stdcall(void*, icsSpyMessage*, int*, int*)> icsneoGetMessages(lib, "icsneoGetMessages");
         int count = 20000;
         int errors = 0;
         union SpyMessage
@@ -1308,8 +1296,7 @@ PyObject* meth_get_messages(PyObject* self, PyObject* args)
             if (!obj) {
                 // This should only happen if we run out of memory (malloc failure)?
                 PyErr_Print();
-                return set_ics_exception(
-                    exception_runtime_error(), "Failed to allocate " SPY_MESSAGE_OBJECT_NAME);
+                return set_ics_exception(exception_runtime_error(), "Failed to allocate " SPY_MESSAGE_OBJECT_NAME);
             }
             if (use_j1850) {
                 spy_message_j1850_object* msg = (spy_message_j1850_object*)obj;
@@ -1343,8 +1330,7 @@ PyObject* meth_get_script_status(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -1387,8 +1373,7 @@ PyObject* meth_get_error_messages(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -1406,8 +1391,7 @@ PyObject* meth_get_error_messages(PyObject* self, PyObject* args)
         ice::Function<int __stdcall(void*, int*, int*)> icsneoGetErrorMessages(lib, "icsneoGetErrorMessages");
         Py_BEGIN_ALLOW_THREADS;
         if (!icsneoGetErrorMessages(handle, errors, &error_count)) {
-            Py_BLOCK_THREADS return set_ics_exception(exception_runtime_error(),
-                                                        "icsneoGetErrorMessages() Failed");
+            Py_BLOCK_THREADS return set_ics_exception(exception_runtime_error(), "icsneoGetErrorMessages() Failed");
         }
         Py_END_ALLOW_THREADS;
         ice::Function<int __stdcall(int, char*, char*, int*, int*, int*, int*)> icsneoGetErrorInfo(
@@ -1467,12 +1451,13 @@ PyObject* meth_flash_devices(PyObject* self, PyObject* args)
     PyObject* obj = NULL;
     PyObject* callback = NULL;
     PyObject* dict;
-    if (!PyArg_ParseTuple(args, arg_parse("OO|O:", __FUNCTION__), &obj, &dict, &callback)) {
+    OptionsFindNeoEx opts = { 0 };
+    int network_id = -1;
+    if (!PyArg_ParseTuple(args, arg_parse("OO|OiO:", __FUNCTION__), &obj, &dict, &callback, &network_id, &opts)) {
         return NULL;
     }
     if (obj && !PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "First argument must be of PyNeoDeviceEx type");
+        return set_ics_exception(exception_runtime_error(), "First argument must be of PyNeoDeviceEx type");
     }
     if (PyCallable_Check(callback) || PyObject_HasAttrString(callback, "message_callback")) {
         msg_callback = callback;
@@ -1502,7 +1487,18 @@ PyObject* meth_flash_devices(PyObject* self, PyObject* args)
         }
         rc[reflash_count].chipId = id;
         strcpy(rc[reflash_count].path, path);
+        printf(path);
         reflash_count++;
+    }
+    // handle network_id if provided, otherwise 0
+    opts.CANOptions.iNetworkID = static_cast<unsigned long>(network_id);
+    POptionsFindNeoEx popts = NULL;
+    if (network_id != -1)
+        popts = &opts;
+    unsigned long iOptions = 0; // Initialize with default value of 0
+
+    if (network_id != -1) {
+        iOptions = opts.CANOptions.iNetworkID; // Set to network_id if it's not -1
     }
     try {
         ice::Library* lib = dll_get_library();
@@ -1527,7 +1523,8 @@ PyObject* meth_flash_devices(PyObject* self, PyObject* args)
                                     void (*MessageCallback)(const char* message, bool success))>
             FlashDevice2(lib, "FlashDevice2");
         Py_BEGIN_ALLOW_THREADS;
-        if (!FlashDevice2(0x3835C256, &nde->neoDevice, rc, reflash_count, 0, 0, 0, &message_callback)) {
+        if (!FlashDevice2(
+                0x3835C256, &nde->neoDevice, rc, reflash_count, network_id, iOptions, 0, &message_callback)) {
             Py_BLOCK_THREADS;
             PyBuffer_Release(&buffer);
             return set_ics_exception(exception_runtime_error(), "FlashDevice2() Failed");
@@ -1620,8 +1617,7 @@ PyObject* meth_get_device_settings(PyObject* self, PyObject* args)
     if (!PyNeoDeviceEx_CheckExact(obj)) {
         PyBuffer_Release(&settings_buffer);
         Py_DECREF(settings);
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -1652,9 +1648,10 @@ PyObject* meth_get_device_settings(PyObject* self, PyObject* args)
         }
         // int _stdcall icsneoGetDeviceSettings(void* hObject, SDeviceSettings* pSettings, int iNumBytes,
         // EPlasmaIonVnetChannel_t vnetSlot)
-        ice::Function<int __stdcall(void*, SDeviceSettings*, int, EPlasmaIonVnetChannel_t)>
-            icsneoGetDeviceSettings(lib, "icsneoGetDeviceSettings");
-        if (!icsneoGetDeviceSettings(handle, (SDeviceSettings*)settings_buffer.buf, static_cast<int>(settings_buffer.len), vnet_slot)) {
+        ice::Function<int __stdcall(void*, SDeviceSettings*, int, EPlasmaIonVnetChannel_t)> icsneoGetDeviceSettings(
+            lib, "icsneoGetDeviceSettings");
+        if (!icsneoGetDeviceSettings(
+                handle, (SDeviceSettings*)settings_buffer.buf, static_cast<int>(settings_buffer.len), vnet_slot)) {
             Py_BLOCK_THREADS;
             PyBuffer_Release(&settings_buffer);
             Py_DECREF(settings);
@@ -1680,8 +1677,7 @@ PyObject* meth_set_device_settings(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -1702,8 +1698,11 @@ PyObject* meth_set_device_settings(PyObject* self, PyObject* args)
         Py_buffer settings_buffer = {};
         PyObject_GetBuffer(settings, &settings_buffer, PyBUF_CONTIG);
         Py_BEGIN_ALLOW_THREADS;
-        if (!icsneoSetDeviceSettings(
-                handle, (SDeviceSettings*)settings_buffer.buf, static_cast<int>(settings_buffer.len), save_to_eeprom, vnet_slot)) {
+        if (!icsneoSetDeviceSettings(handle,
+                                     (SDeviceSettings*)settings_buffer.buf,
+                                     static_cast<int>(settings_buffer.len),
+                                     save_to_eeprom,
+                                     vnet_slot)) {
             Py_BLOCK_THREADS;
             PyBuffer_Release(&settings_buffer);
             return set_ics_exception(exception_runtime_error(), "icsneoSetDeviceSettings() Failed");
@@ -1724,8 +1723,7 @@ PyObject* meth_load_default_settings(PyObject* self, PyObject* args) // icsneoLo
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -1742,9 +1740,9 @@ PyObject* meth_load_default_settings(PyObject* self, PyObject* args) // icsneoLo
         }
         ice::Function<int __stdcall(void*)> icsneoLoadDefaultSettings(lib, "icsneoLoadDefaultSettings");
         void* handle = NULL;
-    if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
-        return NULL;
-    }
+        if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
+            return NULL;
+        }
         Py_BEGIN_ALLOW_THREADS;
         if (!icsneoLoadDefaultSettings(handle)) {
             Py_BLOCK_THREADS;
@@ -1769,8 +1767,7 @@ PyObject* meth_read_sdcard(PyObject* self,
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     // We only read 512 bytes internally, x4 for future compatibility?
     unsigned char data[2048] = { 0 };
@@ -1783,9 +1780,9 @@ PyObject* meth_read_sdcard(PyObject* self,
         ice::Function<int __stdcall(void*, unsigned long, unsigned char*, unsigned long*)> icsneoReadSDCard(
             lib, "icsneoReadSDCard");
         void* handle = NULL;
-    if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
-        return NULL;
-    }
+        if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
+            return NULL;
+        }
         Py_BEGIN_ALLOW_THREADS;
         if (!icsneoReadSDCard(handle, index, data, &size)) {
             Py_BLOCK_THREADS;
@@ -1819,8 +1816,7 @@ PyObject* meth_write_sdcard(
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     if (!PyByteArray_CheckExact(ba_obj)) {
         return set_ics_exception(exception_runtime_error(), "Argument must be a bytearray");
@@ -1835,12 +1831,11 @@ PyObject* meth_write_sdcard(
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
-        ice::Function<int __stdcall(void*, unsigned long, unsigned char*)> icsneoWriteSDCard(lib,
-                                                                                                  "icsneoWriteSDCard");
+        ice::Function<int __stdcall(void*, unsigned long, unsigned char*)> icsneoWriteSDCard(lib, "icsneoWriteSDCard");
         void* handle = NULL;
-    if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
-        return NULL;
-    }
+        if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
+            return NULL;
+        }
         Py_BEGIN_ALLOW_THREADS;
         if (!icsneoWriteSDCard(handle, index, (unsigned char*)PyByteArray_AsString(ba_obj))) {
             Py_BLOCK_THREADS;
@@ -1914,8 +1909,7 @@ PyObject* meth_coremini_start_fblock(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -1949,8 +1943,7 @@ PyObject* meth_coremini_stop_fblock(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -1984,8 +1977,7 @@ PyObject* meth_coremini_get_fblock_status(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -2021,8 +2013,7 @@ PyObject* meth_coremini_read_app_signal(PyObject* self, PyObject* args) // Scrip
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -2059,8 +2050,7 @@ PyObject* meth_coremini_write_app_signal(PyObject* self, PyObject* args) // Scri
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -2096,8 +2086,7 @@ PyObject* meth_coremini_read_tx_message(PyObject* self, PyObject* args) // Scrip
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -2109,8 +2098,8 @@ PyObject* meth_coremini_read_tx_message(PyObject* self, PyObject* args) // Scrip
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
-        ice::Function<int __stdcall(void*, unsigned int, void*)> icsneoScriptReadTxMessage(
-            lib, "icsneoScriptReadTxMessage");
+        ice::Function<int __stdcall(void*, unsigned int, void*)> icsneoScriptReadTxMessage(lib,
+                                                                                           "icsneoScriptReadTxMessage");
         PyObject* msg = NULL;
         if (j1850) {
             msg = PyObject_CallObject((PyObject*)&spy_message_j1850_object_type, NULL);
@@ -2156,8 +2145,7 @@ PyObject* meth_coremini_read_rx_message(PyObject* self, PyObject* args) // Scrip
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -2235,8 +2223,7 @@ PyObject* meth_coremini_write_tx_message(PyObject* self, PyObject* args) // icsn
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -2291,8 +2278,7 @@ PyObject* meth_coremini_write_rx_message(PyObject* self, PyObject* args) // icsn
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -2352,8 +2338,7 @@ PyObject* meth_get_performance_parameters(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -2412,7 +2397,8 @@ PyObject* meth_validate_hobject(PyObject* self, PyObject* args)
     }
     if (!PyLong_CheckExact(obj) && !PyNeoDeviceEx_CheckExact(obj)) {
         return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx" " or Integer");
+                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx"
+                                 " or Integer");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -2445,8 +2431,7 @@ PyObject* meth_get_last_api_error(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -2516,8 +2501,7 @@ PyObject* meth_get_serial_number(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -2551,8 +2535,7 @@ PyObject* meth_get_hw_firmware_info(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -2564,8 +2547,7 @@ PyObject* meth_get_hw_firmware_info(PyObject* self, PyObject* args)
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
-        ice::Function<int __stdcall(void*, stAPIFirmwareInfo*)> icsneoGetHWFirmwareInfo(lib,
-                                                                                             "icsneoGetHWFirmwareInfo");
+        ice::Function<int __stdcall(void*, stAPIFirmwareInfo*)> icsneoGetHWFirmwareInfo(lib, "icsneoGetHWFirmwareInfo");
         PyObject* info = _getPythonModuleObject("ics.structures.st_api_firmware_info", "st_api_firmware_info");
         if (!info) {
             return NULL;
@@ -2615,8 +2597,7 @@ PyObject* meth_request_enter_sleep_mode(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -2649,14 +2630,20 @@ PyObject* meth_set_context(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
         return NULL;
     }
-    if (!PyNeoDeviceEx_CheckExact(obj) && !PyLong_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
-    }
-    
     void* handle = NULL;
-    if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
-        return NULL;
+    if (!PyNeoDeviceEx_CheckExact(obj) && obj != Py_None && obj == Py_False && obj == 0) {
+        return set_ics_exception(exception_runtime_error(),
+                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx, integer, False, 0, or NULL");
+    }
+    if (PyNeoDeviceEx_IsHandleNull(obj, &handle))
+    {
+        handle = NULL;
+    }
+    else 
+    {
+        if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
+            return set_ics_exception(exception_runtime_error(), "Failed to retrieve handle.");
+        }
     }
     try {
         ice::Library* lib = dll_get_library();
@@ -2667,6 +2654,7 @@ PyObject* meth_set_context(PyObject* self, PyObject* args)
         ice::Function<int __stdcall(void*)> icsneoSetContext(lib, "icsneoSetContext");
         Py_BEGIN_ALLOW_THREADS;
         if (!icsneoSetContext(handle)) {
+            printf("did we fail here after !icsneoSetContext(handle)");
             Py_BLOCK_THREADS;
             return set_ics_exception(exception_runtime_error(), "icsneoSetContext() Failed");
         }
@@ -2685,8 +2673,7 @@ PyObject* meth_force_firmware_update(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj) && !PyLong_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -2719,8 +2706,7 @@ PyObject* meth_firmware_update_required(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj) && !PyLong_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -2753,8 +2739,7 @@ PyObject* meth_get_dll_firmware_info(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -2766,8 +2751,8 @@ PyObject* meth_get_dll_firmware_info(PyObject* self, PyObject* args)
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
-        ice::Function<int __stdcall(void*, stAPIFirmwareInfo*)> icsneoGetDLLFirmwareInfo(
-            lib, "icsneoGetDLLFirmwareInfo");
+        ice::Function<int __stdcall(void*, stAPIFirmwareInfo*)> icsneoGetDLLFirmwareInfo(lib,
+                                                                                         "icsneoGetDLLFirmwareInfo");
         PyObject* info = _getPythonModuleObject("ics.structures.st_api_firmware_info", "st_api_firmware_info");
         if (!info) {
             return NULL;
@@ -2795,8 +2780,7 @@ PyObject* meth_get_backup_power_enabled(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -2808,8 +2792,8 @@ PyObject* meth_get_backup_power_enabled(PyObject* self, PyObject* args)
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
-        ice::Function<int __stdcall(void*, unsigned int&)> icsneoGetBackupPowerEnabled(
-            lib, "icsneoGetBackupPowerEnabled");
+        ice::Function<int __stdcall(void*, unsigned int&)> icsneoGetBackupPowerEnabled(lib,
+                                                                                       "icsneoGetBackupPowerEnabled");
         Py_BEGIN_ALLOW_THREADS;
         if (!icsneoGetBackupPowerEnabled(handle, enabled)) {
             Py_BLOCK_THREADS;
@@ -2831,8 +2815,7 @@ PyObject* meth_set_backup_power_enabled(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -2844,8 +2827,8 @@ PyObject* meth_set_backup_power_enabled(PyObject* self, PyObject* args)
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
-        ice::Function<int __stdcall(void*, unsigned int)> icsneoSetBackupPowerEnabled(
-            lib, "icsneoSetBackupPowerEnabled");
+        ice::Function<int __stdcall(void*, unsigned int)> icsneoSetBackupPowerEnabled(lib,
+                                                                                      "icsneoSetBackupPowerEnabled");
         Py_BEGIN_ALLOW_THREADS;
         if (!icsneoSetBackupPowerEnabled(handle, enabled)) {
             Py_BLOCK_THREADS;
@@ -2867,8 +2850,7 @@ PyObject* meth_get_backup_power_ready(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -2880,8 +2862,7 @@ PyObject* meth_get_backup_power_ready(PyObject* self, PyObject* args)
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
-        ice::Function<int __stdcall(void*, unsigned int&)> icsneoGetBackupPowerReady(lib,
-                                                                                          "icsneoGetBackupPowerReady");
+        ice::Function<int __stdcall(void*, unsigned int&)> icsneoGetBackupPowerReady(lib, "icsneoGetBackupPowerReady");
         Py_BEGIN_ALLOW_THREADS;
         if (!icsneoGetBackupPowerReady(handle, enabled)) {
             Py_BLOCK_THREADS;
@@ -2906,8 +2887,7 @@ PyObject* meth_load_readbin(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -2949,8 +2929,8 @@ PyObject* meth_load_readbin(PyObject* self, PyObject* args)
         for (int i = 0; i < tuple_size; ++i) {
             PyObject* value = PyTuple_GET_ITEM(arg_data, i);
             if (!PyLong_CheckExact(value)) {
-                return set_ics_exception(
-                    exception_runtime_error(), "Failed to convert tuple data. Tuple data must be integer type");
+                return set_ics_exception(exception_runtime_error(),
+                                         "Failed to convert tuple data. Tuple data must be integer type");
             }
             data[i] = (unsigned char)PyLong_AsLong(PyTuple_GET_ITEM(arg_data, i));
         }
@@ -2992,8 +2972,7 @@ PyObject* meth_iso15765_transmit_message(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     if (_isPythonModuleObject_IsInstance(
             obj_tx_msg, "ics.structures.st_cm_iso157652_tx_message", "st_cm_iso157652_tx_message") != 1) {
@@ -3040,8 +3019,7 @@ PyObject* meth_iso15765_receive_message(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     if (_isPythonModuleObject_IsInstance(
             obj_rx_msg, "ics.structures.st_cm_iso157652_rx_message", "st_cm_iso157652_rx_message") != 1) {
@@ -3089,8 +3067,7 @@ PyObject* meth_iso15765_enable_networks(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -3124,8 +3101,7 @@ PyObject* meth_iso15765_disable_networks(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -3159,8 +3135,7 @@ PyObject* meth_get_active_vnet_channel(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -3172,8 +3147,8 @@ PyObject* meth_get_active_vnet_channel(PyObject* self, PyObject* args)
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
-        ice::Function<int __stdcall(void*, unsigned long*)> icsneoGetActiveVNETChannel(
-            lib, "icsneoGetActiveVNETChannel");
+        ice::Function<int __stdcall(void*, unsigned long*)> icsneoGetActiveVNETChannel(lib,
+                                                                                       "icsneoGetActiveVNETChannel");
         Py_BEGIN_ALLOW_THREADS;
         if (!icsneoGetActiveVNETChannel(handle, &channel)) {
             Py_BLOCK_THREADS;
@@ -3195,8 +3170,7 @@ PyObject* meth_set_active_vnet_channel(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -3208,8 +3182,8 @@ PyObject* meth_set_active_vnet_channel(PyObject* self, PyObject* args)
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
-        ice::Function<int __stdcall(void*, unsigned long)> icsneoSetActiveVNETChannel(
-            lib, "icsneoSetActiveVNETChannel");
+        ice::Function<int __stdcall(void*, unsigned long)> icsneoSetActiveVNETChannel(lib,
+                                                                                      "icsneoSetActiveVNETChannel");
         Py_BEGIN_ALLOW_THREADS;
         if (!icsneoSetActiveVNETChannel(handle, channel)) {
             Py_BLOCK_THREADS;
@@ -3232,8 +3206,7 @@ PyObject* meth_set_bit_rate(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -3268,8 +3241,7 @@ PyObject* meth_set_fd_bit_rate(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -3305,8 +3277,7 @@ PyObject* meth_set_bit_rate_ex(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -3340,8 +3311,7 @@ PyObject* meth_get_timestamp_for_msg(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     if (!PySpyMessage_CheckExact(obj_msg) && !PySpyMessageJ1850_CheckExact(obj_msg)) {
         return set_ics_exception(exception_runtime_error(),
@@ -3382,8 +3352,7 @@ PyObject* meth_get_device_status(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -3403,8 +3372,8 @@ PyObject* meth_get_device_status(PyObject* self, PyObject* args)
         PyObject_GetBuffer(device_status, &device_status_buffer, PyBUF_CONTIG);
 
         size_t device_status_size = device_status_buffer.len;
-        ice::Function<int __stdcall(void*, icsDeviceStatus*, size_t*)> icsneoGetDeviceStatus(
-            lib, "icsneoGetDeviceStatus");
+        ice::Function<int __stdcall(void*, icsDeviceStatus*, size_t*)> icsneoGetDeviceStatus(lib,
+                                                                                             "icsneoGetDeviceStatus");
         double timestamp = 0;
         Py_BEGIN_ALLOW_THREADS;
         if (!icsneoGetDeviceStatus(handle, (icsDeviceStatus*)device_status_buffer.buf, &device_status_size)) {
@@ -3436,8 +3405,7 @@ PyObject* meth_enable_network_com(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -3482,8 +3450,7 @@ PyObject* meth_enable_bus_voltage_monitor(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -3519,8 +3486,7 @@ PyObject* meth_get_bus_voltage(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -3534,8 +3500,8 @@ PyObject* meth_get_bus_voltage(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         // int _stdcall icsneoGetBusVoltage(void* hObject, unsigned long* pVBusVoltage, unsigned int reserved
-        ice::Function<int __stdcall(void*, unsigned long*, unsigned int)> icsneoGetBusVoltage(
-            lib, "icsneoGetBusVoltage");
+        ice::Function<int __stdcall(void*, unsigned long*, unsigned int)> icsneoGetBusVoltage(lib,
+                                                                                              "icsneoGetBusVoltage");
         Py_BEGIN_ALLOW_THREADS;
         if (!icsneoGetBusVoltage(handle, &mV, reserved)) {
             Py_BLOCK_THREADS;
@@ -3568,8 +3534,7 @@ PyObject* meth_read_jupiter_firmware(PyObject* self, PyObject* args)
     // TODO: Documentation doesn't say what return value is.
 
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -3618,8 +3583,7 @@ PyObject* meth_write_jupiter_firmware(PyObject* self, PyObject* args)
         return set_ics_exception(exception_runtime_error(), "Argument must be of Bytes type ");
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -3672,13 +3636,8 @@ PyObject* meth_flash_accessory_firmware(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, arg_parse("OO|b:", __FUNCTION__), &obj, &parms, &check_success)) {
         return NULL;
     }
-#ifndef ENABLE_ACCESSORY_API
-    return set_ics_exception(exception_runtime_error(), "Accessory API not enabled");
-#else
-
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -3693,8 +3652,10 @@ PyObject* meth_flash_accessory_firmware(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         int function_error = (int)AccessoryOperationError;
-        // int __stdcall icsneoFlashAccessoryFirmware(void* hObject, FlashAccessoryFirmwareParams* param, int* errorCode)
-        //int __stdcall icsneoFlashPhyFirmware(void* hObject, unsigned char phyIndx, unsigned char* fileData, size_t fileDataSize, int* errorCode)
+        // int __stdcall icsneoFlashAccessoryFirmware(void* hObject, FlashAccessoryFirmwareParams* param, int*
+        // errorCode)
+        // int __stdcall icsneoFlashPhyFirmware(void* hObject, unsigned char phyIndx, unsigned char* fileData, size_t
+        // fileDataSize, int* errorCode)
         ice::Function<int __stdcall(void*, FlashAccessoryFirmwareParams*, int*)> icsneoFlashAccessoryFirmware(
             lib, "icsneoFlashAccessoryFirmware");
 
@@ -3747,7 +3708,7 @@ PyObject* meth_flash_accessory_firmware(PyObject* self, PyObject* args)
                 case AccessoryIndexError:
                     ss << "AccessoryIndexError";
                     break;
-                case AccessoryParamApiVersionError :
+                case AccessoryParamApiVersionError:
                     ss << "AccessoryParamApiVersionError ";
                     break;
                 case AccessoryParamSizeMismatchError:
@@ -3784,8 +3745,7 @@ PyObject* meth_get_accessory_firmware_version(PyObject* self, PyObject* args)
     return set_ics_exception(exception_runtime_error(), "Accessory API not enabled");
 #else
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -3798,7 +3758,8 @@ PyObject* meth_get_accessory_firmware_version(PyObject* self, PyObject* args)
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
-        // int __stdcall icsneoGetAccessoryFirmwareVersion(void* hObject, unsigned char index, unsigned int* fwVers, int* errorCode)
+        // int __stdcall icsneoGetAccessoryFirmwareVersion(void* hObject, unsigned char index, unsigned int* fwVers,
+        // int* errorCode)
         ice::Function<int __stdcall(void*, unsigned char, unsigned int*, int*)> icsneoGetAccessoryFirmwareVersion(
             lib, "icsneoGetAccessoryFirmwareVersion");
 
@@ -3806,7 +3767,8 @@ PyObject* meth_get_accessory_firmware_version(PyObject* self, PyObject* args)
         int function_error = 0;
         Py_BEGIN_ALLOW_THREADS;
         if (!icsneoGetAccessoryFirmwareVersion(handle, accessory_indx, &accessory_version, &function_error)) {
-            Py_BLOCK_THREADS return set_ics_exception(exception_runtime_error(), "icsneoGetAccessoryFirmwareVersion() Failed");
+            Py_BLOCK_THREADS return set_ics_exception(exception_runtime_error(),
+                                                      "icsneoGetAccessoryFirmwareVersion() Failed");
         }
         Py_END_ALLOW_THREADS;
         // check the return value to make sure we are good
@@ -3850,7 +3812,7 @@ PyObject* meth_get_accessory_firmware_version(PyObject* self, PyObject* args)
                 case AccessoryIndexError:
                     ss << "AccessoryIndexError";
                     break;
-                case AccessoryParamApiVersionError :
+                case AccessoryParamApiVersionError:
                     ss << "AccessoryParamApiVersionError ";
                     break;
                 case AccessoryParamSizeMismatchError:
@@ -3882,8 +3844,7 @@ PyObject* meth_set_safe_boot_mode(PyObject* self, PyObject* args)
     }
 
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -3897,8 +3858,7 @@ PyObject* meth_set_safe_boot_mode(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         // int _stdcall icsneoSetSafeBootMode(void* hObject, const uint8_t enable)
-        ice::Function<int __stdcall(void*, const uint8_t)> icsneoSetSafeBootMode(
-            lib, "icsneoSetSafeBootMode");
+        ice::Function<int __stdcall(void*, const uint8_t)> icsneoSetSafeBootMode(lib, "icsneoSetSafeBootMode");
 
         unsigned int accessory_version = 0;
         int function_error = 0;
@@ -3946,7 +3906,7 @@ PyObject* meth_get_library_path(PyObject* self)
         }
         bool okay = false;
         auto path = lib->getPath(&okay);
-        //auto isLoaded = lib->isLoaded();
+        // auto isLoaded = lib->isLoaded();
         return Py_BuildValue("s", path.c_str());
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -3961,8 +3921,7 @@ PyObject* meth_get_disk_details(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -3974,8 +3933,7 @@ PyObject* meth_get_disk_details(PyObject* self, PyObject* args)
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
-        ice::Function<int __stdcall(void*, SDiskDetails*)> icsneoRequestDiskDetails(lib,
-                                                                                         "icsneoRequestDiskDetails");
+        ice::Function<int __stdcall(void*, SDiskDetails*)> icsneoRequestDiskDetails(lib, "icsneoRequestDiskDetails");
 
         PyObject* details = _getPythonModuleObject("ics.structures.s_disk_details", "s_disk_details");
         if (!details) {
@@ -4008,8 +3966,7 @@ PyObject* meth_disk_format(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -4047,8 +4004,7 @@ PyObject* meth_disk_format_cancel(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -4082,8 +4038,7 @@ PyObject* meth_get_disk_format_progress(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -4129,8 +4084,7 @@ PyObject* meth_enable_doip_line(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -4165,8 +4119,7 @@ PyObject* meth_is_device_feature_supported(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -4201,8 +4154,7 @@ PyObject* meth_get_pcb_serial_number(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -4216,8 +4168,7 @@ PyObject* meth_get_pcb_serial_number(PyObject* self, PyObject* args)
         }
         char pcbsn[32] = { 0 };
         size_t length = sizeof pcbsn / sizeof pcbsn[0];
-        ice::Function<int __stdcall(void*, char*, size_t*)> icsneoGetPCBSerialNumber(lib,
-                                                                                          "icsneoGetPCBSerialNumber");
+        ice::Function<int __stdcall(void*, char*, size_t*)> icsneoGetPCBSerialNumber(lib, "icsneoGetPCBSerialNumber");
         Py_BEGIN_ALLOW_THREADS;
         if (!icsneoGetPCBSerialNumber(handle, pcbsn, &length)) {
             Py_BLOCK_THREADS;
@@ -4241,8 +4192,7 @@ PyObject* meth_set_led_property(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -4296,8 +4246,7 @@ PyObject* meth_start_dhcp_server(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -4354,8 +4303,7 @@ PyObject* meth_stop_dhcp_server(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -4390,8 +4338,7 @@ PyObject* meth_wbms_manager_write_lock(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -4426,8 +4373,7 @@ PyObject* meth_wbms_manager_reset(PyObject* self, PyObject* args)
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -4439,8 +4385,8 @@ PyObject* meth_wbms_manager_reset(PyObject* self, PyObject* args)
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
-        ice::Function<int __stdcall(void*, const EwBMSManagerPort_t)> icsneowBMSManagerReset(
-            lib, "icsneowBMSManagerReset");
+        ice::Function<int __stdcall(void*, const EwBMSManagerPort_t)> icsneowBMSManagerReset(lib,
+                                                                                             "icsneowBMSManagerReset");
         Py_BEGIN_ALLOW_THREADS;
         if (!icsneowBMSManagerReset(handle, manager)) {
             Py_BLOCK_THREADS;
@@ -4467,8 +4413,7 @@ PyObject* meth_uart_write(PyObject* self, PyObject* args)
 
     // Get the device handle
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -4513,8 +4458,7 @@ PyObject* meth_uart_read(PyObject* self, PyObject* args)
     }
     // Get the device handle
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -4568,8 +4512,7 @@ PyObject* meth_uart_set_baudrate(PyObject* self, PyObject* args)
     }
     // Get the device handle
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -4607,8 +4550,7 @@ PyObject* meth_uart_get_baudrate(PyObject* self, PyObject* args)
     }
     // Get the device handle
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -4651,8 +4593,7 @@ PyObject* meth_generic_api_send_command(PyObject* self, PyObject* args)
     }
     // Get the device handle
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -4678,8 +4619,13 @@ PyObject* meth_generic_api_send_command(PyObject* self, PyObject* args)
             icsneoGenericAPISendCommand(lib, "icsneoGenericAPISendCommand");
         unsigned char functionError = 0;
         Py_BEGIN_ALLOW_THREADS;
-        if (!icsneoGenericAPISendCommand(
-                handle, apiIndex, instanceIndex, functionIndex, (void*)data.buf, static_cast<unsigned int>(data.len), &functionError)) {
+        if (!icsneoGenericAPISendCommand(handle,
+                                         apiIndex,
+                                         instanceIndex,
+                                         functionIndex,
+                                         (void*)data.buf,
+                                         static_cast<unsigned int>(data.len),
+                                         &functionError)) {
             Py_BLOCK_THREADS;
             return set_ics_exception(exception_runtime_error(), "icsneoGenericAPISendCommand() Failed");
         }
@@ -4703,8 +4649,7 @@ PyObject* meth_generic_api_read_data(PyObject* self, PyObject* args)
     }
     // Get the device handle
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -4730,8 +4675,7 @@ PyObject* meth_generic_api_read_data(PyObject* self, PyObject* args)
             unsigned char* bData,
             unsigned int* length)
         */
-        ice::Function<int __stdcall(
-            void*, unsigned char, unsigned char, unsigned char*, unsigned char*, unsigned int*)>
+        ice::Function<int __stdcall(void*, unsigned char, unsigned char, unsigned char*, unsigned char*, unsigned int*)>
             icsneoGenericAPIReadData(lib, "icsneoGenericAPIReadData");
         unsigned char functionIndex = 0;
         Py_BEGIN_ALLOW_THREADS;
@@ -4768,8 +4712,7 @@ PyObject* meth_generic_api_get_status(PyObject* self, PyObject* args)
     }
     // Get the device handle
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -4829,8 +4772,7 @@ PyObject* meth_get_gptp_status(PyObject* self, PyObject* args)
     if (!PyNeoDeviceEx_CheckExact(obj)) {
         PyBuffer_Release(&status_buffer);
         Py_DECREF(status);
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -4884,8 +4826,7 @@ PyObject* meth_get_all_chip_versions(PyObject* self, PyObject* args)
     if (!PyNeoDeviceEx_CheckExact(obj)) {
         PyBuffer_Release(&py_struct_buffer);
         Py_DECREF(py_struct);
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -4902,9 +4843,10 @@ PyObject* meth_get_all_chip_versions(PyObject* self, PyObject* args)
         // Get the struct
         Py_BEGIN_ALLOW_THREADS;
         // int _stdcall icsneoGetAllChipVersions(void* hObject, stChipVersions* pInfo, int ipInfoSize)
-        ice::Function<int __stdcall(void*, stChipVersions*, int)> icsneoGetAllChipVersions(
-            lib, "icsneoGetAllChipVersions");
-        if (!icsneoGetAllChipVersions(handle, (stChipVersions*)py_struct_buffer.buf, static_cast<int>(py_struct_buffer.len))) {
+        ice::Function<int __stdcall(void*, stChipVersions*, int)> icsneoGetAllChipVersions(lib,
+                                                                                           "icsneoGetAllChipVersions");
+        if (!icsneoGetAllChipVersions(
+                handle, (stChipVersions*)py_struct_buffer.buf, static_cast<int>(py_struct_buffer.len))) {
             Py_BLOCK_THREADS;
             PyBuffer_Release(&py_struct_buffer);
             Py_DECREF(py_struct);
