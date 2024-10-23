@@ -162,6 +162,8 @@ char* neodevice_to_string(unsigned long type)
             return "CM Probe";
         case NEODEVICE_EEVB:
             return "EEVB";
+        case NEODEVICE_VCANRF:
+            return "ValueCAN.rf";
         case NEODEVICE_FIRE2:
             return "neoVI FIRE 2";
         case NEODEVICE_FLEX:
@@ -341,16 +343,7 @@ void __destroy_PyNeoDeviceEx_Handle(PyObject* handle)
     }
     */
 }
-bool PyNeoDeviceEx_IsHandleNull(PyObject* object, void** handle)
-{
-    if (object == NULL || object == Py_None || object == Py_False || (PyLong_CheckExact(object) && PyLong_AsLong(object) == 0)) {
-        *handle = NULL;
-        return true;
-    }
-    else {
-        return false;
-    }
-}
+
 // Return the _handle attribute of PyNeoDeviceEx. Sets handle to NULL on failure or not valid.
 // Returns false on error and exception is set. Returns true on success.
 bool PyNeoDeviceEx_GetHandle(PyObject* object, void** handle)
@@ -377,7 +370,6 @@ bool PyNeoDeviceEx_GetHandle(PyObject* object, void** handle)
     *handle = ptr;
     return true;
 }
-
 // Set the _handle attribute of PyNeoDeviceEx.
 // Returns false on error and exception is set. Returns true on success.
 bool PyNeoDeviceEx_SetHandle(PyObject* object, void* handle)
@@ -416,7 +408,6 @@ bool PyNeoDeviceEx_SetHandle(PyObject* object, void* handle)
 
 // Get the _name attribute of PyNeoDeviceEx.
 // Returns false on error and exception is set. Returns true on success.
-
 bool PyNeoDeviceEx_GetName(PyObject* object, PyObject* name)
 {
     if (!object) {
@@ -1451,9 +1442,8 @@ PyObject* meth_flash_devices(PyObject* self, PyObject* args)
     PyObject* obj = NULL;
     PyObject* callback = NULL;
     PyObject* dict;
-    OptionsFindNeoEx opts = { 0 };
     int network_id = -1;
-    if (!PyArg_ParseTuple(args, arg_parse("OO|OiO:", __FUNCTION__), &obj, &dict, &callback, &network_id, &opts)) {
+    if (!PyArg_ParseTuple(args, arg_parse("OO|Oi:", __FUNCTION__), &obj, &dict, &callback, &network_id)) {
         return NULL;
     }
     if (obj && !PyNeoDeviceEx_CheckExact(obj)) {
@@ -1491,6 +1481,7 @@ PyObject* meth_flash_devices(PyObject* self, PyObject* args)
         reflash_count++;
     }
     // handle network_id if provided, otherwise 0
+    OptionsFindNeoEx opts = { 0 };
     opts.CANOptions.iNetworkID = static_cast<unsigned long>(network_id);
     POptionsFindNeoEx popts = NULL;
     if (network_id != -1)
@@ -2631,20 +2622,18 @@ PyObject* meth_set_context(PyObject* self, PyObject* args)
         return NULL;
     }
     void* handle = NULL;
-    if (!PyNeoDeviceEx_CheckExact(obj) && obj != Py_None && obj == Py_False && obj == 0) {
+    if (!PyNeoDeviceEx_CheckExact(obj) && obj == Py_False) {
         return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx, integer, False, 0, or NULL");
+                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx, or False");
     }
-    if (PyNeoDeviceEx_IsHandleNull(obj, &handle))
-    {
-        handle = NULL;
-    }
-    else 
-    {
-        if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
-            return set_ics_exception(exception_runtime_error(), "Failed to retrieve handle.");
-        }
-    }
+    if (obj == Py_False){
+		handle = NULL;
+	} else {
+    if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
+      return set_ics_exception(exception_runtime_error(),
+                               "Failed to retrieve handle.");
+		}
+	}
     try {
         ice::Library* lib = dll_get_library();
         if (!lib) {
@@ -2654,7 +2643,6 @@ PyObject* meth_set_context(PyObject* self, PyObject* args)
         ice::Function<int __stdcall(void*)> icsneoSetContext(lib, "icsneoSetContext");
         Py_BEGIN_ALLOW_THREADS;
         if (!icsneoSetContext(handle)) {
-            printf("did we fail here after !icsneoSetContext(handle)");
             Py_BLOCK_THREADS;
             return set_ics_exception(exception_runtime_error(), "icsneoSetContext() Failed");
         }
@@ -3636,6 +3624,10 @@ PyObject* meth_flash_accessory_firmware(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, arg_parse("OO|b:", __FUNCTION__), &obj, &parms, &check_success)) {
         return NULL;
     }
+    /*if (!PyArg_ParseTuple(args, arg_parse("OiO|b:", __FUNCTION__), &obj, &accessory_indx, &bytes_obj, &check_success))
+    { return NULL;
+    }*/
+
     if (!PyNeoDeviceEx_CheckExact(obj)) {
         return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
@@ -3729,7 +3721,6 @@ PyObject* meth_flash_accessory_firmware(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-#endif // ENABLE_ACCESSORY_API
 }
 
 PyObject* meth_get_accessory_firmware_version(PyObject* self, PyObject* args)
@@ -3741,9 +3732,6 @@ PyObject* meth_get_accessory_firmware_version(PyObject* self, PyObject* args)
         return NULL;
     }
 
-#ifndef ENABLE_ACCESSORY_API
-    return set_ics_exception(exception_runtime_error(), "Accessory API not enabled");
-#else
     if (!PyNeoDeviceEx_CheckExact(obj)) {
         return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
@@ -3832,7 +3820,6 @@ PyObject* meth_get_accessory_firmware_version(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-#endif // ENABLE_ACCESSORY_API
 }
 
 PyObject* meth_set_safe_boot_mode(PyObject* self, PyObject* args)
