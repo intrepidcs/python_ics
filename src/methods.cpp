@@ -370,7 +370,6 @@ bool PyNeoDeviceEx_GetHandle(PyObject* object, void** handle)
     *handle = ptr;
     return true;
 }
-// Set the _handle attribute of PyNeoDeviceEx.
 // Returns false on error and exception is set. Returns true on success.
 bool PyNeoDeviceEx_SetHandle(PyObject* object, void* handle)
 {
@@ -2622,11 +2621,13 @@ PyObject* meth_set_context(PyObject* self, PyObject* args)
         return NULL;
     }
     void* handle = NULL;
-    if (!PyNeoDeviceEx_CheckExact(obj) && obj == Py_False) {
+    if (!PyNeoDeviceEx_CheckExact(obj) && obj != Py_None && obj != Py_False && !(PyLong_Check(obj) && PyLong_AsLong(obj) == 0)) {
+        printf("Object type: %s\n", Py_TYPE(obj)->tp_name);
         return set_ics_exception(exception_runtime_error(),
                                  "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx, or False");
     }
-    if (obj == Py_False){
+    printf("Object type: %s\n", Py_TYPE(obj)->tp_name);
+    if (obj == Py_None || obj == Py_False || (PyLong_Check(obj) && PyLong_AsLong(obj) == 0)){
 		handle = NULL;
 	} else {
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
