@@ -2622,11 +2622,9 @@ PyObject* meth_set_context(PyObject* self, PyObject* args)
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_CheckExact(obj) && obj != Py_None && obj != Py_False && !(PyLong_Check(obj) && PyLong_AsLong(obj) == 0)) {
-        printf("Object type: %s\n", Py_TYPE(obj)->tp_name);
         return set_ics_exception(exception_runtime_error(),
                                  "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx, or False");
     }
-    printf("Object type: %s\n", Py_TYPE(obj)->tp_name);
     if (obj == Py_None || obj == Py_False || (PyLong_Check(obj) && PyLong_AsLong(obj) == 0)){
 		handle = NULL;
 	} else {
