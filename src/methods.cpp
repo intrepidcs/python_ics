@@ -1442,7 +1442,8 @@ PyObject* meth_flash_devices(PyObject* self, PyObject* args)
     PyObject* callback = NULL;
     PyObject* dict;
     int network_id = -1;
-    if (!PyArg_ParseTuple(args, arg_parse("OO|Oi:", __FUNCTION__), &obj, &dict, &callback, &network_id)) {
+    unsigned long iOptions = 0;
+    if (!PyArg_ParseTuple(args, arg_parse("OO|Oii:", __FUNCTION__), &obj, &dict, &callback, &network_id, &iOptions)) {
         return NULL;
     }
     if (obj && !PyNeoDeviceEx_CheckExact(obj)) {
@@ -1485,10 +1486,9 @@ PyObject* meth_flash_devices(PyObject* self, PyObject* args)
     POptionsFindNeoEx popts = NULL;
     if (network_id != -1)
         popts = &opts;
-    unsigned long iOptions = 0; // Initialize with default value of 0
-
-    if (network_id != -1) {
-        iOptions = opts.CANOptions.iNetworkID; // Set to network_id if it's not -1
+    // If iOptions was provided, use it. Otherwise, fall back to network_id.
+    if (iOptions == 0 && network_id != -1) {
+        iOptions = opts.CANOptions.iNetworkID;
     }
     try {
         ice::Library* lib = dll_get_library();
@@ -2625,6 +2625,9 @@ PyObject* meth_set_context(PyObject* self, PyObject* args)
         return set_ics_exception(exception_runtime_error(),
                                  "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx, or False");
     }
+    // Set 'handle' to NULL if 'obj' is None, False, or a zero-valued integer. 
+    // Otherwise, attempt to retrieve the handle using 'PyNeoDeviceEx_GetHandle'.
+    // If handle retrieval fails, raise a runtime error exception.
     if (obj == Py_None || obj == Py_False || (PyLong_Check(obj) && PyLong_AsLong(obj) == 0)){
 		handle = NULL;
 	} else {
