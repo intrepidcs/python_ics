@@ -168,6 +168,26 @@ class TestHSCAN2(BaseTests.TestCAN):
     def setUpClass(cls):
         cls.netid = ics.NETID_HSCAN2
 
+class TestHSCAN3(BaseTests.TestCAN):
+    @classmethod
+    def setUpClass(cls):
+        cls.netid = ics.NETID_HSCAN2
+
+class TestMSCAN(BaseTests.TestCAN):
+    @classmethod
+    def setUpClass(cls):
+        cls.netid = ics.NETID_MSCAN
+
+class TestLSFTCAN(BaseTests.TestCAN):
+    @classmethod
+    def setUpClass(cls):
+        cls.netid = ics.NETID_LSFTCAN
+
+class TestSWCAN(BaseTests.TestCAN):
+    @classmethod
+    def setUpClass(cls):
+        cls.netid = ics.NETID_SWCAN
+
 
 if __name__ == "__main__":
     unittest.main()

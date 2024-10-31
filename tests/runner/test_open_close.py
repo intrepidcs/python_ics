@@ -9,14 +9,11 @@ class TestOpenClose(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         self.expected_dev_count = 5
-        self.devices = ics.find_devices(
-            [
-                ics.ics.NEODEVICE_FIRE2,
-                ics.NEODEVICE_FIRE3,
-                ics.NEODEVICE_VCAN42,
-                ics.NEODEVICE_RADMOON2,
-            ]
-        )
+        # Weird error here where ics.find_devices([...]) with all device types crashes python and going one by one fixes it
+        ics.find_devices([ics.NEODEVICE_FIRE2])
+        ics.find_devices([ics.NEODEVICE_FIRE2, ics.NEODEVICE_FIRE3])
+        ics.find_devices([ics.NEODEVICE_FIRE2, ics.NEODEVICE_FIRE3, ics.NEODEVICE_VCAN42])
+        self.devices = ics.find_devices([ics.NEODEVICE_FIRE2, ics.NEODEVICE_FIRE3, ics.NEODEVICE_VCAN42, ics.NEODEVICE_RADMOON2])
 
     @classmethod
     def setUp(self):
@@ -183,7 +180,7 @@ class TestOpenClose(unittest.TestCase):
         self._check_devices()
         devices = ics.find_devices(
             [
-                ics.ics.NEODEVICE_FIRE2,
+                ics.NEODEVICE_FIRE2,
                 ics.NEODEVICE_FIRE3,
                 ics.NEODEVICE_VCAN42,
                 ics.NEODEVICE_RADMOON2,
@@ -194,7 +191,7 @@ class TestOpenClose(unittest.TestCase):
         del devices
         devices = ics.find_devices(
             [
-                ics.ics.NEODEVICE_FIRE2,
+                ics.NEODEVICE_FIRE2,
                 ics.NEODEVICE_FIRE3,
                 ics.NEODEVICE_VCAN42,
                 ics.NEODEVICE_RADMOON2,

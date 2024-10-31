@@ -1,5 +1,4 @@
 from subprocess import PIPE, Popen
-import time
 import unittest
 import ics
 
