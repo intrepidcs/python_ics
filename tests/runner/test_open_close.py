@@ -14,6 +14,7 @@ class TestOpenClose(unittest.TestCase):
         ics.find_devices([ics.NEODEVICE_FIRE2, ics.NEODEVICE_FIRE3])
         ics.find_devices([ics.NEODEVICE_FIRE2, ics.NEODEVICE_FIRE3, ics.NEODEVICE_VCAN42])
         self.devices = ics.find_devices([ics.NEODEVICE_FIRE2, ics.NEODEVICE_FIRE3, ics.NEODEVICE_VCAN42, ics.NEODEVICE_RADMOON2])
+        
 
     @classmethod
     def setUp(self):
