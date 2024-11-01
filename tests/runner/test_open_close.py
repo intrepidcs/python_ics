@@ -28,8 +28,9 @@ class TestOpenClose(unittest.TestCase):
         del self.devices
 
     def _check_devices(self):
+        devices = ics.find_devices([ics.NEODEVICE_FIRE2, ics.NEODEVICE_FIRE3, ics.NEODEVICE_VCAN42, ics.NEODEVICE_RADMOON2])
         self.assertEqual(
-            len(self.devices),
+            len(devices),
             self.expected_dev_count,
             f"Device check expected {self.expected_dev_count} devices, found {len(self.devices)}: {self.devices}...",
         )
