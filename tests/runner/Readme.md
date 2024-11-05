@@ -12,8 +12,8 @@ Each runner consists of the following ICS hardware:
 
 Runner platforms:
 - Windows 10
-- MAC
-- Linux
+- MacOS (something? M1)
+- Linux (Debian)
 - Linux ARM (Raspberry PI)
 
 Hardware setup:

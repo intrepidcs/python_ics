@@ -9,11 +9,7 @@ class TestOpenClose(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         self.expected_dev_count = 5
-        # Weird error here where ics.find_devices([...]) with all device types crashes python and going one by one fixes it
-        ics.find_devices([ics.NEODEVICE_FIRE2])
-        ics.find_devices([ics.NEODEVICE_FIRE2, ics.NEODEVICE_FIRE3])
-        ics.find_devices([ics.NEODEVICE_FIRE2, ics.NEODEVICE_FIRE3, ics.NEODEVICE_VCAN42])
-        self.devices = ics.find_devices([ics.NEODEVICE_FIRE2, ics.NEODEVICE_FIRE3, ics.NEODEVICE_VCAN42, ics.NEODEVICE_RADMOON2])
+        self.devices = ics.find_devices()
 
     @classmethod
     def setUp(self):
@@ -27,12 +23,22 @@ class TestOpenClose(unittest.TestCase):
         del self.devices
 
     def _check_devices(self):
+        devices = ics.find_devices()
         self.assertEqual(
-            len(self.devices),
+            len(devices),
             self.expected_dev_count,
             f"Device check expected {self.expected_dev_count} devices, found {len(self.devices)}: {self.devices}...",
         )
 
+    def test_find_device_filters(self):
+        # Weird error here where ics.find_devices([...]) with all device types crashes python and going one by one sometimes fixes it
+        ics.find_devices([ics.NEODEVICE_FIRE2])
+        ics.find_devices([ics.NEODEVICE_FIRE2, ics.NEODEVICE_FIRE3])
+        ics.find_devices([ics.NEODEVICE_FIRE2, ics.NEODEVICE_FIRE3, ics.NEODEVICE_VCAN42])
+        ics.find_devices([ics.NEODEVICE_FIRE2, ics.NEODEVICE_FIRE3, ics.NEODEVICE_VCAN42, ics.NEODEVICE_RADMOON2])
+        # assigning output to variable does help or hurt too
+        devices = ics.find_devices([ics.NEODEVICE_FIRE2, ics.NEODEVICE_FIRE3, ics.NEODEVICE_VCAN42, ics.NEODEVICE_RADMOON2])
+    
     def test_find_moon2s(self):
         self._check_devices()
         devices = ics.find_devices([ics.NEODEVICE_RADMOON2])
