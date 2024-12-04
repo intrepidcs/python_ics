@@ -40,13 +40,20 @@ class BaseTests:
             info_comp = device.get_dll_firmware_info()
             self.assertEqual(info.iAppMajor, info_comp.iAppMajor)
             self.assertEqual(info.iAppMinor, info_comp.iAppMinor)
-            device.close()
-
+            # device.close()
+            time.sleep(4)
             # ics.get_device_status(device)
-            ics.get_last_api_error(
-                device
-            )  # TODO figure out best way to replicate api error to read
+            # ics.get_last_api_error(device)  # TODO figure out best way to replicate api error to read
 
+        def test_library_location(self):
+            device = self._get_device()
+            device = ics.open_device(device)
+            path = ics.get_library_path()
+            print(path)
+            ics.override_library_name(r"./icsneo40-v2")
+            path = ics.get_library_path()
+            print(path)
+            # need to put dlls in proper locations and write assertions
 
 class TestValueCAN42Settings(BaseTests.TestSettings):
     @classmethod

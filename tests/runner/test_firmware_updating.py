@@ -37,7 +37,7 @@ class BaseTests:
             )
             return devices[0]
 
-        def test_update_firmware(self):
+        def _test_update_firmware(self):
             device = self._get_device()
             device.open()
             # get firmware version
@@ -111,16 +111,47 @@ class BaseTests:
             # ics.get_script_status()  # Documentation needs updating to include "device" parameter
             # ics.get_timestamp_for_msg(device, msg)
 
+        def test_accessary_firmware(self):
+            device = self._get_device()
+            device.open()
+            ics.flash_accessory_firmware(device, data, index[, check_success])
+            ics.get_accessory_firmware_version()            
 
 class TestValueCAN42Settings(BaseTests.TestSettings):
     @classmethod
     def setUpClass(cls):
         cls.device_type = ics.NEODEVICE_VCAN42
+        cls.chip_id = ics.VCAN42_MCHIP_ID
         cls.num_devices = 1
-        cls.old_firmware_path = r"E:\Users\NCejka\Downloads\vcan42_mchip_v1_23.ief"
-        cls.new_firmware_path = r"E:\Users\NCejka\Downloads\vcan42_mchip_v4_90.ief"
+        cls.new_firmware_path = r"C:\Users\JHarrison\Downloads\vcan42_mchip.ief"
+        cls.old_firmware_path = r"C:\Users\JHarrison\Downloads\vcan42_mchip_v4_90.ief"
         print("DEBUG: Testing VCAN42...")
 
+    def test_update_firmware(self):
+        self._test_update_firmware()
+
+class TestRADMoon2Settings(BaseTests.TestSettings):
+    @classmethod
+    def setUpClass(cls):
+        cls.device_type = ics.NEODEVICE_RADMOON2
+        cls.chip_id = ics.RADMOON2_ZL_MCHIP_ID
+        cls.num_devices = 2
+        print("DEBUG: Testing MOON2s...")
+
+
+class TestFire3Settings(BaseTests.TestSettings):
+    @classmethod
+    def setUpClass(cls):
+        cls.device_type = ics.NEODEVICE_FIRE3
+        cls.num_devices = 1
+        print("DEBUG: Testing FIRE3...")
+
+class TestFire2Settings(BaseTests.TestSettings):
+    @classmethod
+    def setUpClass(cls):
+        cls.device_type = ics.NEODEVICE_FIRE2
+        cls.num_devices = 1
+        print("DEBUG: Testing FIRE2...")
 
 if __name__ == "__main__":
     unittest.main()

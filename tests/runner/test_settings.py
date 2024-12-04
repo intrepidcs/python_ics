@@ -116,22 +116,22 @@ class TestRADMoon2Settings(BaseTests.TestSettings):
 
 
 # HAVING ISSUES SETTING SETTINGS WITH THIS UNIT!
-# class TestFire3Settings(BaseTests.TestSettings):
-#     @classmethod
-#     def setUpClass(cls):
-#         cls.device_type = ics.NEODEVICE_FIRE3
-#         cls.device_settings_type = e_device_settings_type.DeviceFire3SettingsType
-#         cls.num_devices = 1
-#         print("DEBUG: Testing FIRE3...")
+class TestFire3Settings(BaseTests.TestSettings):
+    @classmethod
+    def setUpClass(cls):
+        cls.device_type = ics.NEODEVICE_FIRE3
+        cls.device_settings_type = e_device_settings_type.DeviceFire3SettingsType
+        cls.num_devices = 1
+        print("DEBUG: Testing FIRE3...")
 
 # ISSUES CONNECTING TO THIS DEVICE AT ALL!!!
-# class TestFire2Settings(BaseTests.TestSettings):
-#     @classmethod
-#     def setUpClass(cls):
-#         cls.device_type = ics.NEODEVICE_FIRE2
-#         cls.device_settings_type = e_device_settings_type.DeviceFire2SettingsType
-#         cls.num_devices = 1
-#         print("DEBUG: Testing FIRE2...")
+class TestFire2Settings(BaseTests.TestSettings):
+    @classmethod
+    def setUpClass(cls):
+        cls.device_type = ics.NEODEVICE_FIRE2
+        cls.device_settings_type = e_device_settings_type.DeviceFire2SettingsType
+        cls.num_devices = 1
+        print("DEBUG: Testing FIRE2...")
 
 
 class TestValueCAN42Settings(BaseTests.TestSettings):

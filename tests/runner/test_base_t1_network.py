@@ -34,12 +34,12 @@ class BaseTests:
             ics.close_device(device)
 
         def test_ethernet_moon2s(self):
-            dev1_nic_ip = "192.168.69.10"
-            dev2_nic_ip = "192.168.69.11"
+            dev1_nic_ip = "192.168.200.01"
+            dev2_nic_ip = "168.154.84.7"
             loop_count = 100
             bidirectional_traffic = True
             ethernet_exe_path = (
-                r"C:\Users\NCejka\Documents\Aws' Ethernet test app\ethernet_test.exe"
+                r"C:\DevJonas\ethernet_test\Debug\ethernet_test.exe"
             )
 
             args = [

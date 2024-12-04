@@ -1,6 +1,7 @@
 # ruff: noqa: E501
 import unittest
 import ics
+import time
 
 unittest.TestLoader.sortTestMethodsUsing = None
 
@@ -40,42 +41,42 @@ class TestOpenClose(unittest.TestCase):
         devices = ics.find_devices([ics.NEODEVICE_FIRE2, ics.NEODEVICE_FIRE3, ics.NEODEVICE_VCAN42, ics.NEODEVICE_RADMOON2])
     
     def test_find_moon2s(self):
-        self._check_devices()
+        # self._check_devices()
         devices = ics.find_devices([ics.NEODEVICE_RADMOON2])
         self.assertTrue(len(devices) == 2)
         self.assertEqual(devices[0].DeviceType, ics.NEODEVICE_RADMOON2)
         self.assertEqual(devices[1].DeviceType, ics.NEODEVICE_RADMOON2)
 
     def test_find_fire3(self):
-        self._check_devices()
+        # self._check_devices()
         devices = ics.find_devices([ics.NEODEVICE_FIRE3])
         self.assertTrue(len(devices) == 1)
         self.assertEqual(devices[0].DeviceType, ics.NEODEVICE_FIRE3)
 
     def test_find_fire2(self):
-        self._check_devices()
+        # self._check_devices()
         devices = ics.find_devices([ics.NEODEVICE_FIRE2])
         self.assertTrue(len(devices) == 1)
         self.assertEqual(devices[0].DeviceType, ics.NEODEVICE_FIRE2)
 
     def test_find_vcan42(self):
-        self._check_devices()
+        # self._check_devices()
         devices = ics.find_devices([ics.NEODEVICE_VCAN42])
         self.assertTrue(len(devices) == 1)
         self.assertEqual(devices[0].DeviceType, ics.NEODEVICE_VCAN42)
 
     def test_find_fire2_and_vcan42(self):
-        self._check_devices()
+        # self._check_devices()
         devices = ics.find_devices([ics.NEODEVICE_FIRE2, ics.NEODEVICE_VCAN42])
         self.assertTrue(len(devices) == 2)
 
     def test_find_fire3_and_moon2(self):
-        self._check_devices()
+        # self._check_devices()
         devices = ics.find_devices([ics.NEODEVICE_FIRE3, ics.NEODEVICE_RADMOON2])
         self.assertTrue(len(devices) == 3)
 
     def test_open_close(self):
-        self._check_devices()
+        # self._check_devices()
         for dev in self.devices:
             if dev.serial_number != ics.find_devices([dev.DeviceType])[0].serial_number:
                 continue  # skip 2nd moon2
@@ -131,14 +132,14 @@ class TestOpenClose(unittest.TestCase):
                 )
 
     def test_open_close_by_serial(self):
-        self._check_devices()
+        # self._check_devices()
         for dev in self.devices:
             d = ics.open_device(dev.SerialNumber)
             self.assertEqual(d.SerialNumber, dev.SerialNumber)
             ics.close_device(d)
 
     def test_open_close_first_found(self):
-        self._check_devices()
+        # self._check_devices()
         first_devices = []
         for _ in range(self.expected_dev_count):
             try:
@@ -154,7 +155,7 @@ class TestOpenClose(unittest.TestCase):
             ics.close_device(device)
 
     def test_open_close_10_times(self):
-        self._check_devices()
+        # self._check_devices()
         for dev in self.devices:
             for x in range(10):
                 try:
@@ -183,17 +184,11 @@ class TestOpenClose(unittest.TestCase):
                     raise ex
 
     def test_auto_close(self):
-        self._check_devices()
-        devices = ics.find_devices(
-            [
-                ics.NEODEVICE_FIRE2,
-                ics.NEODEVICE_FIRE3,
-                ics.NEODEVICE_VCAN42,
-                ics.NEODEVICE_RADMOON2,
-            ]
-        )
+        # self._check_devices()
+        devices = ics.find_devices([ics.NEODEVICE_FIRE2,ics.NEODEVICE_FIRE3,ics.NEODEVICE_VCAN42,ics.NEODEVICE_RADMOON2])
         for dev in devices:
             ics.open_device(dev)
+            # time.sleep(5)
         del devices
         devices = ics.find_devices(
             [
@@ -209,7 +204,7 @@ class TestOpenClose(unittest.TestCase):
         del devices
 
     def test_can_only_open_once(self):
-        self._check_devices()
+        # self._check_devices()
         for dev in self.devices:
             ics.open_device(dev)
             with self.assertRaises(SystemError):

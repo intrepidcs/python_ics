@@ -10,7 +10,7 @@ unittest.TestLoader.sortTestMethodsUsing = None
 
 def print_message(msg):
     if isinstance(msg, ics.st_cm_iso157652_rx_message.st_cm_iso157652_rx_message):
-        print("\tArbID: {}\tData: {}".format(hex(msg.ArbIDOrHeader), [hex(x) for x in msg.Data]))
+        print("\tArbID: {}\tData: {}".format(hex(msg.id), [hex(x) for x in msg.Data]))
     return
     print("\t" + str(type(msg)))
     for attribute in dir(msg):
@@ -146,7 +146,7 @@ class BaseTests:
             if is_canfd:
                 msg.iscanFD = 1
                 msg.isBRSEnabled = 1
-            print_message(msg)
+            # print_message(msg)
             print("Setting up iso15765 message on {}...".format(device))
             ics.iso15765_receive_message(device, netid, msg)
             print("Setup iso15765 message on {}.".format(device))
