@@ -183,7 +183,7 @@ class TestSettings(unittest.TestCase):
         self.assertEqual(vnet_channel, 1)  # TODO verify this actually works
 
     def test_get_all_chip_versions(self):
-        path = ics.get_library_path()
+        # path = ics.get_library_path()
         # device = self._get_device()
         # device = ics.open_device(device)
         device = ics.find_devices([ics.NEODEVICE_FIRE3])
