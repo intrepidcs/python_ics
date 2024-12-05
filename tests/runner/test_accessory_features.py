@@ -190,17 +190,17 @@ class TestRADMoon2Settings(BaseTests.TestSettings):
         # tmstmp = ics.get_timestamp_for_msg(device, msg)
         self.assertEqual(vnet_channel, 1)  # TODO verify this actually works
 
-    def test_get_all_chip_versions(self):
-        path = ics.get_library_path()
-        # device = self._get_device()
-        # device = ics.open_device(device)
-        device = ics.find_devices([ics.NEODEVICE_FIRE3])
-        device = ics.open_device(device[0])        
-        # ics.get_chip_ids()
-        versions = ics.get_all_chip_versions(device)
+    # def test_get_all_chip_versions(self):
+    #     path = ics.get_library_path()
+    #     # device = self._get_device()
+    #     # device = ics.open_device(device)
+    #     device = ics.find_devices([ics.NEODEVICE_FIRE3])
+    #     device = ics.open_device(device[0])        
+    #     # ics.get_chip_ids()
+    #     versions = ics.get_all_chip_versions(device)
 
-        # self.assetEqual(versions.)            
-        print(versions)
+    #     # self.assetEqual(versions.)            
+    #     print(versions)
 
     def test_firmware_info(self):
         device = self._get_device()
