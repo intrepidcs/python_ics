@@ -4,8 +4,8 @@ import unittest
 import ctypes
 
 # Load the DLL explicitly
-dll_path = r'C:\DevJonas\vspy3\Projects\icsneoVIDLL\Debug\icsneo40.dll'
-ctypes.CDLL(dll_path)
+# dll_path = r'C:\DevJonas\vspy3\Projects\icsneoVIDLL\Debug\icsneo40.dll'
+# ctypes.CDLL(dll_path)
 
 import ics
 
