@@ -38,6 +38,4 @@ jobs:
         run: |
           source .venv/bin/activate
           sudo setcap cap_net_admin,cap_net_raw+ep $(realpath $(which python3))
-          pip install pytest
-          pytest --forked
           python3 -m unittest discover -s tests.runner --verbose
