@@ -189,10 +189,10 @@ class TestSettings(unittest.TestCase):
         device = ics.find_devices([ics.NEODEVICE_FIRE3])
         device = ics.open_device(device[0])        
         # ics.get_chip_ids()
-        versions = ics.get_all_chip_versions(device)
+        # versions = ics.get_all_chip_versions(device)
 
         # self.assetEqual(versions.)            
-        print(versions)
+        # print(versions)
 
     def test_firmware_info(self):
         # device = self._get_device()
