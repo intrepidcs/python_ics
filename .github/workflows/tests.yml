@@ -97,11 +97,9 @@ jobs:
           Write-Output "----------------------------------------------"
           python setup.py build -g
           python setup.py install --force
-    #      pip install .
-      
+    #      pip install .      
       - name: Run unit tests
         run: |
           .venv\Scripts\Activate.ps1
-      #    sudo setcap cap_net_admin,cap_net_raw+ep $(realpath $(which python3))
           python3 -m unittest discover -s tests.runner --verbose
           pytest -n auto
