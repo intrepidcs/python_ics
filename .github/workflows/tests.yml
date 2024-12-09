@@ -74,7 +74,7 @@ jobs:
           python3 -m unittest discover -s tests.runner --verbose
           pytest -n auto
 
-    test_windows:
+  test_windows:
     if: github.repository == 'Jonas-Harrison-ICS/python_ics'
     name: Windows unit tests
     runs-on: [ self-hosted, Windows, x64, Hardware ]
