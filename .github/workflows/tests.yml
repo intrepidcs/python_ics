@@ -41,3 +41,67 @@ jobs:
           sudo setcap cap_net_admin,cap_net_raw+ep $(realpath $(which python3))
           python3 -m unittest discover -s tests.runner --verbose
           pytest -n auto
+
+  test_macos:
+    if: github.repository == 'Jonas-Harrison-ICS/python_ics'
+    name: MAC-OS ARM64 unit tests
+    runs-on: [ self-hosted, Macos, ARM64, Hardware ]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive     
+          fetch-depth: 0 
+        # needed for history/tags##
+
+      - name: Setup Python
+        run: |
+          python3 -m venv .venv
+          source .venv/bin/activate
+          python3 -m pip install --upgrade pip
+          echo "----------------------------------------------"
+          pip install -r requirements.txt
+          pip install pytest-xdist
+          pwd
+          echo "----------------------------------------------"
+          python setup.py build -g
+          python setup.py install --force
+    #      pip install .
+      
+      - name: Run unit tests
+        run: |
+          source .venv/bin/activate
+          sudo setcap cap_net_admin,cap_net_raw+ep $(realpath $(which python3))
+          python3 -m unittest discover -s tests.runner --verbose
+          pytest -n auto
+
+    test_windows:
+    if: github.repository == 'Jonas-Harrison-ICS/python_ics'
+    name: Windows unit tests
+    runs-on: [ self-hosted, Windows, x64, Hardware ]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive     
+          fetch-depth: 0 
+        # needed for history/tags##
+
+      - name: Setup Python
+        run: |
+          python3 -m venv .venv
+          .venv\Scripts\Activate.ps1
+          python3 -m pip install --upgrade pip
+          Write-Output "----------------------------------------------"
+          pip install -r requirements.txt
+          pip install pytest-xdist
+          pwd
+          Write-Output "----------------------------------------------"
+          python setup.py build -g
+          python setup.py install --force
+    #      pip install .
+      
+      - name: Run unit tests
+        run: |
+          .venv\Scripts\Activate.ps1
+      #    sudo setcap cap_net_admin,cap_net_raw+ep $(realpath $(which python3))
+          python3 -m unittest discover -s tests.runner --verbose
+          pytest -n auto
