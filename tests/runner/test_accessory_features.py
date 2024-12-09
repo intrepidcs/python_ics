@@ -231,16 +231,13 @@ class TestSettings(unittest.TestCase):
         # ics.iso15765_disable_networks(device)
             
     def test_get_gptp_status(self):
-        try:
-            # device = self._get_device()
-            # device = ics.open_device(device)
-            device = ics.find_devices([ics.NEODEVICE_FIRE3])
-            device = ics.open_device(device[0])      
-            status = ics.get_gptp_status(device)
-            self.assertIsNotNone(status)
-            # print(status)
-        except Exception as ex:
-            print(str(ex))
+        # device = self._get_device()
+        # device = ics.open_device(device)
+        device = ics.find_devices([ics.NEODEVICE_FIRE3])
+        device = ics.open_device(device[0])      
+        status = ics.get_gptp_status(device)
+        self.assertIsNotNone(status)
+        # print(status)
         
     def test_performance_parameters(self):
         # device = self._get_device()
