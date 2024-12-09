@@ -45,7 +45,7 @@ jobs:
   test_macos:
     if: github.repository == 'Jonas-Harrison-ICS/python_ics'
     name: MAC-OS ARM64 unit tests
-    runs-on: [ self-hosted, Macos, ARM64, Hardware ]
+    runs-on: [ self-hosted, macOS, ARM64, Hardware ]
     steps:
       - uses: actions/checkout@v4
         with:
