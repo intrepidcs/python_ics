@@ -90,7 +90,7 @@ jobs:
           python -m pip install --upgrade pip
           Write-Output "----------------------------------------------"
           pip install -r requirements.txt
-          pip install pytest-xdist
+  #        pip install pytest-xdist
           pwd
           Write-Output "----------------------------------------------"
           python setup.py build -g
