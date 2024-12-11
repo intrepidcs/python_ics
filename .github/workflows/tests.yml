@@ -93,10 +93,6 @@ jobs:
           pip install -r requirements.txt
           pwd
           Write-Output "---------------------------------------------- INSTALLED REQUIREMENTS.TXT"
-          python setup.py build -g
-          Write-Output "---------------------------------------------- PYTHON SETUP BUILT"
-          python setup.py install --force
-          Write-Output "---------------------------------------------- PYTHON SETUP INSTALLED"
     #      pip install .      
       - name: Run unit tests
         run: |
