@@ -68,8 +68,8 @@ def _build_libusb():
     print("stdout:", result.stdout)
     print("stderr:", result.stderr)
 
-    subprocess.check_output(["make", "-j" + CPUS], cwd=LIBUSB_BUILD)
-    subprocess.check_output(["make", "install"], cwd=LIBUSB_BUILD)
+    subprocess.run(["make", "-j" + CPUS], cwd=LIBUSB_BUILD)
+    subprocess.run(["make", "install"], cwd=LIBUSB_BUILD)
 
 def _build_libpcap():
     os.makedirs(LIBPCAP_BUILD, exist_ok=True)
