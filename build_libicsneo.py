@@ -56,7 +56,7 @@ def _build_libusb():
     else:
         env["CFLAGS"] = "-fPIC"
         env["CXXFLAGS"] = "-fPIC"
-    result = subprocess.check_output([
+    result = subprocess.run([
         f"{LIBUSB_SOURCE}/configure",
         "--disable-shared",
         "--enable-static",
