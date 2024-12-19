@@ -1,4 +1,3 @@
-import platform
 import subprocess
 import multiprocessing
 import os
@@ -51,23 +50,20 @@ def checkout():
 def _build_libusb():
     os.makedirs(LIBUSB_BUILD, exist_ok=True)
     env = os.environ.copy()
-    if "DARWIN" in platform.system().upper():
-    # if sys.platform == "darwin":
+    if sys.platform == "darwin":
         env["CFLAGS"] = "-arch x86_64 -arch arm64 -mmacosx-version-min=10.13"
         env["CXXFLAGS"] = "-arch x86_64 -arch arm64 -mmacosx-version-min=10.13"
     else:
-        print("platform is "+ platform.system())
-        print("platform is "+ sys.platform)
         env["CFLAGS"] = "-fPIC"
         env["CXXFLAGS"] = "-fPIC"
-    subprocess.check_output([
-        f"{LIBUSB_SOURCE}/configure",
-        "--disable-shared",
-        "--enable-static",
-        "--disable-dependency-tracking",
-        f"--prefix={LIBUSB_INSTALL}",
-        "--disable-udev"
-    ], cwd=LIBUSB_BUILD, env=env)
+    # subprocess.check_output([
+    #     f"{LIBUSB_SOURCE}/configure",
+    #     "--disable-shared",
+    #     "--enable-static",
+    #     "--disable-dependency-tracking",
+    #     f"--prefix={LIBUSB_INSTALL}",
+    #     "--disable-udev"
+    # ], cwd=LIBUSB_BUILD, env=env)
 
     subprocess.check_output(["make", "-j" + CPUS], cwd=LIBUSB_BUILD)
     subprocess.check_output(["make", "install"], cwd=LIBUSB_BUILD)
@@ -142,8 +138,6 @@ def _build_libicsneo_macos():
     )
 
 def build():
-    print("platform is "+ platform.system())
-    print("platform is "+ sys.platform)
     print("Building libusb...")
     _build_libusb()
     print("Building libpcap...")
