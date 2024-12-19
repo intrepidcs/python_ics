@@ -56,14 +56,17 @@ def _build_libusb():
     else:
         env["CFLAGS"] = "-fPIC"
         env["CXXFLAGS"] = "-fPIC"
-    # subprocess.check_output([
-    #     f"{LIBUSB_SOURCE}/configure",
-    #     "--disable-shared",
-    #     "--enable-static",
-    #     "--disable-dependency-tracking",
-    #     f"--prefix={LIBUSB_INSTALL}",
-    #     "--disable-udev"
-    # ], cwd=LIBUSB_BUILD, env=env)
+    result = subprocess.check_output([
+        f"{LIBUSB_SOURCE}/configure",
+        "--disable-shared",
+        "--enable-static",
+        "--disable-dependency-tracking",
+        f"--prefix={LIBUSB_INSTALL}",
+        "--disable-udev"
+    ], cwd=LIBUSB_BUILD, env=env)
+
+    print("stdout:", result.stdout)
+    print("stderr:", result.stderr)
 
     subprocess.check_output(["make", "-j" + CPUS], cwd=LIBUSB_BUILD)
     subprocess.check_output(["make", "install"], cwd=LIBUSB_BUILD)
