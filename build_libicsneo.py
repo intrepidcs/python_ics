@@ -1,3 +1,4 @@
+import platform
 import subprocess
 import multiprocessing
 import os
@@ -50,7 +51,8 @@ def checkout():
 def _build_libusb():
     os.makedirs(LIBUSB_BUILD, exist_ok=True)
     env = os.environ.copy()
-    if sys.platform == "darwin":
+    if "DARWIN" in platform.system().upper():
+    # if sys.platform == "darwin":
         env["CFLAGS"] = "-arch x86_64 -arch arm64 -mmacosx-version-min=10.13"
         env["CXXFLAGS"] = "-arch x86_64 -arch arm64 -mmacosx-version-min=10.13"
     else:
