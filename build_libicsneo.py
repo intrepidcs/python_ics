@@ -142,6 +142,8 @@ def _build_libicsneo_macos():
     )
 
 def build():
+    print("platform is "+ platform.system())
+    print("platform is "+ sys.platform)
     print("Building libusb...")
     _build_libusb()
     print("Building libpcap...")
