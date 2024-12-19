@@ -80,7 +80,7 @@ def _build_libpcap():
     else:
         env["CFLAGS"] = "-fPIC"
         env["CXXFLAGS"] = "-fPIC"
-    subprocess.check_output([
+    subprocess.run([
         f"{LIBPCAP_SOURCE}/configure",
         "--disable-shared",
         "--disable-usb",
@@ -97,8 +97,8 @@ def _build_libpcap():
         f"--prefix={LIBPCAP_INSTALL}",
     ], cwd=LIBPCAP_BUILD, env=env)
 
-    subprocess.check_output(["make", "-j" + CPUS], cwd=LIBPCAP_BUILD)
-    subprocess.check_output(["make", "install"], cwd=LIBPCAP_BUILD)
+    subprocess.run(["make", "-j" + CPUS], cwd=LIBPCAP_BUILD)
+    subprocess.run(["make", "install"], cwd=LIBPCAP_BUILD)
 
 def _build_libicsneo_linux():
     print("Cleaning libicsneo...")
@@ -123,7 +123,7 @@ def _build_libicsneo_linux():
     )
 
 def _build_libicsneo_macos():
-    subprocess.check_output(
+    subprocess.run(
         [
             "cmake",
             "-DCMAKE_BUILD_TYPE=Release",
@@ -136,7 +136,7 @@ def _build_libicsneo_macos():
         ]
     )
 
-    subprocess.check_output(
+    subprocess.run(
         ["cmake", "--build", LIBICSNEO_BUILD, "--target", "icsneolegacy", "--parallel", CPUS]
     )
 
