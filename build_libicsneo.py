@@ -56,6 +56,8 @@ def _build_libusb():
         env["CFLAGS"] = "-arch x86_64 -arch arm64 -mmacosx-version-min=10.13"
         env["CXXFLAGS"] = "-arch x86_64 -arch arm64 -mmacosx-version-min=10.13"
     else:
+        print("platform is "+ platform.system())
+        print("platform is "+ sys.platform)
         env["CFLAGS"] = "-fPIC"
         env["CXXFLAGS"] = "-fPIC"
     subprocess.check_output([
