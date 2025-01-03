@@ -143,13 +143,13 @@ def _build_libicsneo_macos():
 
 def build():
     print("Building libusb...")
-    # _build_libusb()
+    _build_libusb()
     print("Building libpcap...")
-    # _build_libpcap()
-    # if sys.platform == "darwin":
-    #     _build_libicsneo_macos()
-    # elif sys.platform == "linux":
-    #     _build_libicsneo_linux()
+    _build_libpcap()
+    if sys.platform == "darwin":
+        _build_libicsneo_macos()
+    elif sys.platform == "linux":
+        _build_libicsneo_linux()
 
 def copy():
     if sys.platform == "darwin":
