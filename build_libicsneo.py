@@ -53,7 +53,7 @@ def _build_libusb():
     env = os.environ.copy()
     if "DARWIN" in platform.system().upper():
         env["CFLAGS"] = "-arch arm64 -mmacosx-version-min=10.13"
-        env["CXXFLAGS"] = "arch arm64 -mmacosx-version-min=10.13"
+        env["CXXFLAGS"] = "-arch arm64 -mmacosx-version-min=10.13"
     else:
         env["CFLAGS"] = "-fPIC"
         env["CXXFLAGS"] = "-fPIC"
@@ -75,7 +75,7 @@ def _build_libusb():
 def _build_libpcap():
     os.makedirs(LIBPCAP_BUILD, exist_ok=True)
     env = os.environ.copy()
-    if sys.platform == "darwin":
+    if "DARWIN" in platform.system().upper():
         env["CFLAGS"] = "-arch x86_64 -arch arm64 -mmacosx-version-min=10.13"
         env["CXXFLAGS"] = "-arch x86_64 -arch arm64 -mmacosx-version-min=10.13"
     else:
@@ -143,7 +143,7 @@ def _build_libicsneo_macos():
 
 def build():
     print("Building libusb...")
-    _build_libusb()
+    # _build_libusb()
     print("Building libpcap...")
     _build_libpcap()
     if sys.platform == "darwin":
