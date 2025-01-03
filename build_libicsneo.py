@@ -54,6 +54,7 @@ def _build_libusb():
     if "DARWIN" in platform.system().upper():
         env["CFLAGS"] = "-arch arm64 -mmacosx-version-min=10.13"
         env["CXXFLAGS"] = "-arch arm64 -mmacosx-version-min=10.13"
+        os.system('echo THIS IS A TEST')
     else:
         env["CFLAGS"] = "-fPIC"
         env["CXXFLAGS"] = "-fPIC"
