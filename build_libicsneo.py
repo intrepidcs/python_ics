@@ -52,9 +52,8 @@ def _build_libusb():
     os.makedirs(LIBUSB_BUILD, exist_ok=True)
     env = os.environ.copy()
     if "DARWIN" in platform.system().upper():
-        env["CFLAGS"] = "-arch arm64 -mmacosx-version-min=10.13"
-        env["CXXFLAGS"] = "-arch arm64 -mmacosx-version-min=10.13"
-        os.system('echo THIS IS A TEST')
+        env["CFLAGS"] = "-arch x86_64 -mmacosx-version-min=10.13"
+        env["CXXFLAGS"] = "-arch x86_64 -mmacosx-version-min=10.13"
     else:
         env["CFLAGS"] = "-fPIC"
         env["CXXFLAGS"] = "-fPIC"
