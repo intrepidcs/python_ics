@@ -87,8 +87,8 @@ def _build_libpcap():
     os.makedirs(LIBPCAP_BUILD, exist_ok=True)
     env = os.environ.copy()
     if "DARWIN" in platform.system().upper():
-        env["CFLAGS"] = "-arch x86_64 -arch arm64 -mmacosx-version-min=10.13"
-        env["CXXFLAGS"] = "-arch x86_64 -arch arm64 -mmacosx-version-min=10.13"
+        env["CFLAGS"] = "-arch arm64 -mmacosx-version-min=10.13"
+        env["CXXFLAGS"] = "-arch arm64 -mmacosx-version-min=10.13"
     else:
         env["CFLAGS"] = "-fPIC"
         env["CXXFLAGS"] = "-fPIC"
@@ -139,7 +139,7 @@ def _build_libicsneo_macos():
         [
             "cmake",
             "-DCMAKE_BUILD_TYPE=Release",
-            "-DCMAKE_OSX_ARCHITECTURES=arm64;x86_64",
+            "-DCMAKE_OSX_ARCHITECTURES=arm64;arm64",
             "-DLIBICSNEO_BUILD_ICSNEOLEGACY=ON",
             "-DCMAKE_OSX_DEPLOYMENT_TARGET=10.13",
             f"-DCMAKE_PREFIX_PATH={LIBUSB_INSTALL};{LIBPCAP_INSTALL}",
