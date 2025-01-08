@@ -345,7 +345,7 @@ class TestSettings(unittest.TestCase):
         device = ics.find_devices([ics.NEODEVICE_FIRE3])
         device = ics.open_device(device[0])
         bit_rate = 2000
-        success = ics.set_bit_rate_ex(device, bit_rate, ics.NETID_HSCAN, iOptions) # missing example usage
+        # success = ics.set_bit_rate_ex(device, bit_rate, ics.NETID_HSCAN, iOptions) # missing example usage
         # missing args in documentation
         print(success)
 
