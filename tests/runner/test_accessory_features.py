@@ -55,6 +55,7 @@ class TestSettings(unittest.TestCase):
 
         self.assertGreaterEqual(int(base36, 36), serial_range_min)
         self.assertLessEqual(int(base36, 36), serial_range_max)
+        time.sleep(6)
         # print(base36)
 
     def test_disk_functions(self):
@@ -73,6 +74,7 @@ class TestSettings(unittest.TestCase):
         self.assertIsNot(details, None)
         self.assertIsNone(format)
         self.assertIsNone(format_cancel)
+        time.sleep(6)
         # if (not device.DeviceType == ics.NEODEVICE_RADMOON2) and (not device.DeviceType == ics.NEODEVICE_VCAN42):
         #     ics.read_sdcard(device, 0)  # icsneoReadSDCard(), Accepts a PyNeoDeviceEx and sector index. Returns a bytearray of 512 bytes max. Exception on error.
         # pass
@@ -88,6 +90,7 @@ class TestSettings(unittest.TestCase):
         ics.transmit_messages(device, msg)
         # msg.Data
         self.assertEqual(0, msg.Data)
+        time.sleep(6)
 
     def test_bus_voltage(self):
         # device = self._get_device()
@@ -109,6 +112,8 @@ class TestSettings(unittest.TestCase):
             self.assertFalse(voltage)
             # vcan4 does not allow for reading bus voltage
 
+        time.sleep(6)
+
     def test_enable_doip_line(self):
         device = ics.find_devices([ics.NEODEVICE_FIRE3])
         device = ics.open_device(device[0])
@@ -116,6 +121,7 @@ class TestSettings(unittest.TestCase):
         # device = ics.open_device(device)
         ics.enable_doip_line(device, 1)
         ics.enable_network_com(device, True, ics.NETID_HSCAN)
+        time.sleep(6)
 
     def test_enable_network_com(self):
         device = ics.find_devices([ics.NEODEVICE_FIRE3])
@@ -123,6 +129,7 @@ class TestSettings(unittest.TestCase):
         # device = self._get_device()
         # device = ics.open_device(device)            
         ics.enable_network_com(device, True, ics.NETID_HSCAN)
+        time.sleep(6)
 
     def test_generic_api(self):
         api_index = 1
@@ -149,6 +156,7 @@ class TestSettings(unittest.TestCase):
         msg = ics.SpyMessage()
         tmstmp = ics.get_timestamp_for_msg(device, msg) # need to explicitly test this function
         self.assertEqual(tmstmp, 0.0)  # TODO verify this actually works
+        time.sleep(6)
 
     def test_backup_power(self):
         # device = self._get_device()
@@ -159,6 +167,7 @@ class TestSettings(unittest.TestCase):
         ics.get_backup_power_enabled(device)
         ics.get_backup_power_ready(device)
         ics.get_bus_voltage(device, 0)
+        time.sleep(6)
 
     def test_active_vnet_channel(self):
         import inspect
@@ -186,6 +195,7 @@ class TestSettings(unittest.TestCase):
         # msg = ics.SpyMessage()
         # tmstmp = ics.get_timestamp_for_msg(device, msg)
         self.assertEqual(vnet_channel, 1)  # TODO verify this actually works
+        time.sleep(6)
 
     def test_get_all_chip_versions(self):
         # path = ics.get_library_path()
@@ -194,10 +204,11 @@ class TestSettings(unittest.TestCase):
         device = ics.find_devices([ics.NEODEVICE_FIRE3])
         device = ics.open_device(device[0])        
         # ics.get_chip_ids()
-        # versions = ics.get_all_chip_versions(device)
+        versions = ics.get_all_chip_versions(device)
 
         # self.assetEqual(versions.)            
         # print(versions)
+        time.sleep(6)
 
     def test_firmware_info(self):
         # device = self._get_device()
@@ -234,6 +245,7 @@ class TestSettings(unittest.TestCase):
 
         # ics.iso15765_enable_networks(device, ics.NETID_HSCAN)
         # ics.iso15765_disable_networks(device)
+        time.sleep(6)
             
     def test_get_gptp_status(self):
         # device = self._get_device()
@@ -243,6 +255,7 @@ class TestSettings(unittest.TestCase):
         status = ics.get_gptp_status(device)
         self.assertIsNotNone(status)
         # print(status)
+        time.sleep(6)
         
     def test_performance_parameters(self):
         # device = self._get_device()
@@ -252,6 +265,7 @@ class TestSettings(unittest.TestCase):
         perf_params = ics.get_performance_parameters(device)
         self.assertIn(24576, perf_params)
         print(perf_params)
+        time.sleep(6)
 
 
     def test_set_led(self):
@@ -262,6 +276,7 @@ class TestSettings(unittest.TestCase):
         prop = ics.set_led_property(device, 1, 100, 100)
         self.assertIsNone(prop)
         # pass
+        time.sleep(6)
 
     def test_get_set_rtc(self):
         # device = self._get_device()
@@ -275,6 +290,7 @@ class TestSettings(unittest.TestCase):
         self.assertEqual(errors, [])
         self.assertEqual(len(rtc_time), 2)
         self.assertIsNone(rtc)
+        time.sleep(6)
 
     def test_is_device_feature_supported(self):
         from ics.structures.device_feature import DeviceFeature
@@ -284,6 +300,7 @@ class TestSettings(unittest.TestCase):
         device = ics.open_device(device[0])        
         is_supported = ics.is_device_feature_supported(device, DeviceFeature.networkTerminationDWCAN01) # currently only works with fire3
         self.assertEqual(is_supported, 1)
+        time.sleep(6)
 
     def test_read_jupiter_fw(self):
         # need RAD-Jupiter to perform test
@@ -293,6 +310,7 @@ class TestSettings(unittest.TestCase):
         device = ics.open_device(device[0])        
         size = 8
         ics.read_jupiter_firmware(device, size)
+        time.sleep(6)
 
     def test_write_jupiter_fw(self):
         # device = self._get_device()
@@ -301,6 +319,7 @@ class TestSettings(unittest.TestCase):
         device = ics.open_device(device[0])        
         bytes = 8
         ics.write_jupiter_firmware(device, bytes)
+        time.sleep(6)
 
     def test_request_enter_sleep_mode(self):
         # device = self._get_device()
@@ -308,6 +327,7 @@ class TestSettings(unittest.TestCase):
         device = ics.find_devices([ics.NEODEVICE_FIRE3])
         device = ics.open_device(device[0])
         ics.request_enter_sleep_mode(device, 1, 0) # Currently only supported for FIREVNET/PLASMA
+        time.sleep(6)
 
     def test_get_script_status(self):
         # device = self._get_device()
@@ -319,6 +339,7 @@ class TestSettings(unittest.TestCase):
         self.assertIn(51, status)
         self.assertIn(270, status)
         print(status)
+        time.sleep(6)
 
     def test_backup_power_enabled(self):
         # device = self._get_device()
@@ -327,6 +348,7 @@ class TestSettings(unittest.TestCase):
         device = ics.open_device(device[0])
         enabled = ics.set_backup_power_enabled(device)
         self.assertEqual(enabled, 1)
+        time.sleep(6)
 
     def test_set_bit_rate(self):
         # device = self._get_device()
@@ -338,6 +360,7 @@ class TestSettings(unittest.TestCase):
         # ics.set_bit_rate definition might not be complete
         # missing args in documentation
         print(success)
+        time.sleep(6)
 
     def test_set_bit_rate_ex(self):
         # device = self._get_device()
@@ -348,6 +371,7 @@ class TestSettings(unittest.TestCase):
         # success = ics.set_bit_rate_ex(device, bit_rate, ics.NETID_HSCAN, iOptions) # missing example usage
         # missing args in documentation
         print(success)
+        time.sleep(6)
 
     def test_set_fd_bit_rate(self):
         # device = self._get_device()
@@ -357,6 +381,7 @@ class TestSettings(unittest.TestCase):
         bit_rate = 2000
         ret_val = ics.set_fd_bit_rate(device, bit_rate, ics.NETID_HSCAN)
         self.assertEqual(ret_val, 1)
+        time.sleep(6)
 
     def test_set_context(self):
         # device = self._get_device()
@@ -365,6 +390,7 @@ class TestSettings(unittest.TestCase):
         device = ics.open_device(device[0])        
         context = ics.set_context(device)
         self.assertEqual(context, 1)
+        time.sleep(6)
     
     def test_set_reflash_callback(self):
         def callback(msg, progress):
@@ -375,6 +401,7 @@ class TestSettings(unittest.TestCase):
         device = ics.open_device(device[0])
         success = ics.set_reflash_callback(callback)
         print(success)
+        time.sleep(6)
 
     def test_safe_boot_mode(self):
         # device = self._get_device()
@@ -385,6 +412,7 @@ class TestSettings(unittest.TestCase):
         self.assertIsNone(mode)
         mode = ics.set_safe_boot_mode(device, False)
         self.assertIsNone(mode)
+        time.sleep(6)
 
     def test_dhcp_server(self):
         # device = self._get_device()
@@ -393,6 +421,7 @@ class TestSettings(unittest.TestCase):
         device = ics.open_device(device[0])
         ics.start_dhcp_server(device, ics.NETID_HSCAN) # documentation is missing args usage
         ics.stop_dhcp_server(device, ics.NETID_HSCAN) # documentation is missing args usage
+        time.sleep(6)
 
     def test_uart_get_baudrate(self):
         from ics.structures.e_uart_port_t import e_uart_port_t
@@ -402,6 +431,7 @@ class TestSettings(unittest.TestCase):
         device = ics.open_device(device[0])
         baudrate = ics.uart_get_baudrate(device, e_uart_port_t.eUART0, 2000) # example usage uses ics.uart_set_baudrate() instead of get
         print(baudrate)
+        time.sleep(6)
         # TypeError: meth_uart_get_baudrate() takes exactly 3 arguments (2 given)
         # documentation only has 2 arguments
 
@@ -414,6 +444,7 @@ class TestSettings(unittest.TestCase):
         data = ics.uart_read(device, e_uart_port_t.eUART0)
         # Error: uart_read(): icsneoUartRead() Failed
         print(f"Read {len(data)} bytes: {data}")
+        time.sleep(6)
 
     def test_uart_write(self):
         from ics.structures.e_uart_port_t import e_uart_port_t
@@ -423,6 +454,7 @@ class TestSettings(unittest.TestCase):
         device = ics.open_device(device[0])
         data = ics.uart_write(device, e_uart_port_t.eUART0, b'my uart data goes here')
         print(f"Read {len(data)} bytes: {data}")
+        time.sleep(6)
         # ics.ics.RuntimeError: Error: uart_write(): icsneoUartWrite() Failed
     
     def test_validate_hobject(self):
@@ -432,6 +464,7 @@ class TestSettings(unittest.TestCase):
         device = ics.open_device(device[0])
         validated = ics.validate_hobject(device)
         self.assertEqual(validated, 1)
+        time.sleep(6)
 
     def test_write_sdcard(self):
         # device = self._get_device()
@@ -441,6 +474,7 @@ class TestSettings(unittest.TestCase):
         byte_arr = bytearray(512)
         ics.write_sdcard(device, 0, byte_arr) # no example usage in documentation
         print()
+        time.sleep(6)
             
 
 # class TestRADMoon2Settings(BaseTests.TestSettings):
