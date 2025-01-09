@@ -425,12 +425,12 @@ class TestSettings(unittest.TestCase):
         device = ics.find_devices([ics.NEODEVICE_FIRE3])
         device = ics.open_device(device[0])        
         bit_rate = 2000
-        success = ics.set_bit_rate(device, bit_rate, ics.NETID_HSCAN) # will only work with NEODEVICE_VCAN3 and NEODEVICE_CT_OBD
+        # success = ics.set_bit_rate(device, bit_rate, ics.NETID_HSCAN) # will only work with NEODEVICE_VCAN3 and NEODEVICE_CT_OBD
         ics.close_device(device)
         time.sleep(6)        
         # ics.set_bit_rate definition might not be complete
         # missing args in documentation
-        print(success)
+        # print(success)
 
 
     def test_set_bit_rate_ex(self):
