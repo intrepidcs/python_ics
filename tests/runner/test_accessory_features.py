@@ -29,6 +29,7 @@ class TestSettings(unittest.TestCase):
     def setUp(self):
         self.device = ics.find_devices([ics.NEODEVICE_FIRE3])
         self.device = ics.open_device(self.device[0])
+        time.sleep(6)
         # pass
 
     def tearDown(self):
