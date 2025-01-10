@@ -27,7 +27,6 @@ class TestSettings(unittest.TestCase):
     device = None
     @classmethod
     def setup(self):
-        self.assertGreaterEqual
         self.device = ics.find_devices([ics.NEODEVICE_FIRE3])
         self.device = ics.open_device(self.device[0])
         # pass
@@ -39,44 +38,6 @@ class TestSettings(unittest.TestCase):
     def _get_device(self):
         devices = ics.find_devices([self.device_type])
         return devices[0]
-
-    def suite():
-        suite = unittest.TestSuite()
-        suite.addTest(TestSettings('test_base36enc'))
-        suite.addTest(TestSettings('test_disk_functions'))
-        suite.addTest(TestSettings('test_radio_message'))
-        suite.addTest(TestSettings('test_bus_voltage'))
-        suite.addTest(TestSettings('test_enable_doip_line'))
-        suite.addTest(TestSettings('test_enable_network_com'))
-        suite.addTest(TestSettings('test_generic_api'))
-        suite.addTest(TestSettings('test_backup_power'))
-        suite.addTest(TestSettings('test_active_vnet_channel'))
-        suite.addTest(TestSettings('test_get_all_chip_versions'))
-        suite.addTest(TestSettings('test_firmware_info'))
-        suite.addTest(TestSettings('test_get_gptp_status'))
-        suite.addTest(TestSettings('test_performance_parameters'))
-        suite.addTest(TestSettings('test_set_led'))
-        suite.addTest(TestSettings('test_get_set_rtc'))
-        suite.addTest(TestSettings('test_is_device_feature_supported'))
-        suite.addTest(TestSettings('test_read_jupiter_fw'))
-        suite.addTest(TestSettings('test_write_jupiter_fw'))
-        suite.addTest(TestSettings('test_request_enter_sleep_mode'))
-        suite.addTest(TestSettings('test_get_script_status'))
-        suite.addTest(TestSettings('test_backup_power_enabled'))
-        suite.addTest(TestSettings('test_set_bit_rate'))
-        suite.addTest(TestSettings('test_set_bit_rate_ex'))
-        suite.addTest(TestSettings('test_set_fd_bit_rate'))
-        suite.addTest(TestSettings('test_set_context'))
-        suite.addTest(TestSettings('test_set_reflash_callback'))
-        suite.addTest(TestSettings('test_safe_boot_mode'))
-        suite.addTest(TestSettings('test_dhcp_server'))
-        suite.addTest(TestSettings('test_uart_get_baudrate'))
-        suite.addTest(TestSettings('test_uart_read'))
-        suite.addTest(TestSettings('test_uart_write'))
-        suite.addTest(TestSettings('test_validate_hobject'))
-        suite.addTest(TestSettings('test_write_sdcard'))
-        return suite
-
 
     def test_base36enc(self):
         # device = ics.find_devices([ics.NEODEVICE_FIRE3])
@@ -573,7 +534,43 @@ class TestSettings(unittest.TestCase):
 #         cls.num_devices = 1
 #         print("DEBUG: Testing VCAN42...")
 
-
+    def suite():
+        suite = unittest.TestSuite()
+        suite.addTest(TestSettings('test_base36enc'))
+        suite.addTest(TestSettings('test_disk_functions'))
+        suite.addTest(TestSettings('test_radio_message'))
+        suite.addTest(TestSettings('test_bus_voltage'))
+        suite.addTest(TestSettings('test_enable_doip_line'))
+        suite.addTest(TestSettings('test_enable_network_com'))
+        suite.addTest(TestSettings('test_generic_api'))
+        suite.addTest(TestSettings('test_backup_power'))
+        suite.addTest(TestSettings('test_active_vnet_channel'))
+        suite.addTest(TestSettings('test_get_all_chip_versions'))
+        suite.addTest(TestSettings('test_firmware_info'))
+        suite.addTest(TestSettings('test_get_gptp_status'))
+        suite.addTest(TestSettings('test_performance_parameters'))
+        suite.addTest(TestSettings('test_set_led'))
+        suite.addTest(TestSettings('test_get_set_rtc'))
+        suite.addTest(TestSettings('test_is_device_feature_supported'))
+        suite.addTest(TestSettings('test_read_jupiter_fw'))
+        suite.addTest(TestSettings('test_write_jupiter_fw'))
+        suite.addTest(TestSettings('test_request_enter_sleep_mode'))
+        suite.addTest(TestSettings('test_get_script_status'))
+        suite.addTest(TestSettings('test_backup_power_enabled'))
+        suite.addTest(TestSettings('test_set_bit_rate'))
+        suite.addTest(TestSettings('test_set_bit_rate_ex'))
+        suite.addTest(TestSettings('test_set_fd_bit_rate'))
+        suite.addTest(TestSettings('test_set_context'))
+        suite.addTest(TestSettings('test_set_reflash_callback'))
+        suite.addTest(TestSettings('test_safe_boot_mode'))
+        suite.addTest(TestSettings('test_dhcp_server'))
+        suite.addTest(TestSettings('test_uart_get_baudrate'))
+        suite.addTest(TestSettings('test_uart_read'))
+        suite.addTest(TestSettings('test_uart_write'))
+        suite.addTest(TestSettings('test_validate_hobject'))
+        suite.addTest(TestSettings('test_write_sdcard'))
+        return suite
+    
 if __name__ == "__main__":
     # unittest.main()
     runner = unittest.TextTestRunner()
