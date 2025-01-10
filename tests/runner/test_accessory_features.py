@@ -26,7 +26,7 @@ unittest.TestLoader.sortTestMethodsUsing = None
 class TestSettings(unittest.TestCase):
     device = None
     # @classmethod
-    def setup(self):
+    def setUp(self):
         self.device = ics.find_devices([ics.NEODEVICE_FIRE3])
         self.device = ics.open_device(self.device[0])
         # pass
