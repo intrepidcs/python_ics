@@ -631,6 +631,6 @@ class TestSettings(unittest.TestCase):
 #     return suite
     
 if __name__ == "__main__":
-    # unittest.main()
-    runner = unittest.TextTestRunner()
-    runner.run(TestSettings.suite())
+    unittest.main()
+    # runner = unittest.TextTestRunner()
+    # runner.run(TestSettings.suite())
