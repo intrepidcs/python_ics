@@ -162,8 +162,6 @@ char* neodevice_to_string(unsigned long type)
             return "CM Probe";
         case NEODEVICE_EEVB:
             return "EEVB";
-        case NEODEVICE_VCANRF:
-            return "ValueCAN.rf";
         case NEODEVICE_FIRE2:
             return "neoVI FIRE 2";
         case NEODEVICE_FLEX:
@@ -1442,8 +1440,8 @@ PyObject* meth_flash_devices(PyObject* self, PyObject* args)
     PyObject* callback = NULL;
     PyObject* dict;
     int network_id = -1;
-    unsigned long iOptions = 0;
-    if (!PyArg_ParseTuple(args, arg_parse("OO|Oii:", __FUNCTION__), &obj, &dict, &callback, &network_id, &iOptions)) {
+    unsigned long kOptions = 0;
+    if (!PyArg_ParseTuple(args, arg_parse("OO|Oii:", __FUNCTION__), &obj, &dict, &callback, &network_id, &kOptions)) {
         return NULL;
     }
     if (obj && !PyNeoDeviceEx_CheckExact(obj)) {
@@ -1477,7 +1475,6 @@ PyObject* meth_flash_devices(PyObject* self, PyObject* args)
         }
         rc[reflash_count].chipId = id;
         strcpy(rc[reflash_count].path, path);
-        printf(path);
         reflash_count++;
     }
     // handle network_id if provided, otherwise 0
@@ -1486,9 +1483,9 @@ PyObject* meth_flash_devices(PyObject* self, PyObject* args)
     POptionsFindNeoEx popts = NULL;
     if (network_id != -1)
         popts = &opts;
-    // If iOptions was provided, use it. Otherwise, fall back to network_id.
-    if (iOptions == 0 && network_id != -1) {
-        iOptions = opts.CANOptions.iNetworkID;
+    // If kOptions was provided, use it. Otherwise, fall back to network_id.
+    if (kOptions == 0 && network_id != -1) {
+        kOptions = opts.CANOptions.iNetworkID;
     }
     try {
         ice::Library* lib = dll_get_library();
@@ -1514,7 +1511,7 @@ PyObject* meth_flash_devices(PyObject* self, PyObject* args)
             FlashDevice2(lib, "FlashDevice2");
         Py_BEGIN_ALLOW_THREADS;
         if (!FlashDevice2(
-                0x3835C256, &nde->neoDevice, rc, reflash_count, network_id, iOptions, 0, &message_callback)) {
+                0x3835C256, &nde->neoDevice, rc, reflash_count, network_id, kOptions, 0, &message_callback)) {
             Py_BLOCK_THREADS;
             PyBuffer_Release(&buffer);
             return set_ics_exception(exception_runtime_error(), "FlashDevice2() Failed");
@@ -3626,12 +3623,13 @@ PyObject* meth_flash_accessory_firmware(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, arg_parse("OO|b:", __FUNCTION__), &obj, &parms, &check_success)) {
         return NULL;
     }
-    /*if (!PyArg_ParseTuple(args, arg_parse("OiO|b:", __FUNCTION__), &obj, &accessory_indx, &bytes_obj, &check_success))
-    { return NULL;
-    }*/
+#ifndef ENABLE_ACCESSORY_API
+    return set_ics_exception(exception_runtime_error(), "Accessory API not enabled");
+#else
 
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(),
+                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -3646,10 +3644,8 @@ PyObject* meth_flash_accessory_firmware(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         int function_error = (int)AccessoryOperationError;
-        // int __stdcall icsneoFlashAccessoryFirmware(void* hObject, FlashAccessoryFirmwareParams* param, int*
-        // errorCode)
-        // int __stdcall icsneoFlashPhyFirmware(void* hObject, unsigned char phyIndx, unsigned char* fileData, size_t
-        // fileDataSize, int* errorCode)
+        // int __stdcall icsneoFlashAccessoryFirmware(void* hObject, FlashAccessoryFirmwareParams* param, int* errorCode)
+        //int __stdcall icsneoFlashPhyFirmware(void* hObject, unsigned char phyIndx, unsigned char* fileData, size_t fileDataSize, int* errorCode)
         ice::Function<int __stdcall(void*, FlashAccessoryFirmwareParams*, int*)> icsneoFlashAccessoryFirmware(
             lib, "icsneoFlashAccessoryFirmware");
 
@@ -3702,7 +3698,7 @@ PyObject* meth_flash_accessory_firmware(PyObject* self, PyObject* args)
                 case AccessoryIndexError:
                     ss << "AccessoryIndexError";
                     break;
-                case AccessoryParamApiVersionError:
+                case AccessoryParamApiVersionError :
                     ss << "AccessoryParamApiVersionError ";
                     break;
                 case AccessoryParamSizeMismatchError:
@@ -3723,6 +3719,7 @@ PyObject* meth_flash_accessory_firmware(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
+#endif // ENABLE_ACCESSORY_API
 }
 
 PyObject* meth_get_accessory_firmware_version(PyObject* self, PyObject* args)
@@ -3734,8 +3731,12 @@ PyObject* meth_get_accessory_firmware_version(PyObject* self, PyObject* args)
         return NULL;
     }
 
+#ifndef ENABLE_ACCESSORY_API
+    return set_ics_exception(exception_runtime_error(), "Accessory API not enabled");
+#else
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(),
+                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -3748,8 +3749,7 @@ PyObject* meth_get_accessory_firmware_version(PyObject* self, PyObject* args)
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
-        // int __stdcall icsneoGetAccessoryFirmwareVersion(void* hObject, unsigned char index, unsigned int* fwVers,
-        // int* errorCode)
+        // int __stdcall icsneoGetAccessoryFirmwareVersion(void* hObject, unsigned char index, unsigned int* fwVers, int* errorCode)
         ice::Function<int __stdcall(void*, unsigned char, unsigned int*, int*)> icsneoGetAccessoryFirmwareVersion(
             lib, "icsneoGetAccessoryFirmwareVersion");
 
@@ -3757,8 +3757,7 @@ PyObject* meth_get_accessory_firmware_version(PyObject* self, PyObject* args)
         int function_error = 0;
         Py_BEGIN_ALLOW_THREADS;
         if (!icsneoGetAccessoryFirmwareVersion(handle, accessory_indx, &accessory_version, &function_error)) {
-            Py_BLOCK_THREADS return set_ics_exception(exception_runtime_error(),
-                                                      "icsneoGetAccessoryFirmwareVersion() Failed");
+            Py_BLOCK_THREADS return set_ics_exception(exception_runtime_error(), "icsneoGetAccessoryFirmwareVersion() Failed");
         }
         Py_END_ALLOW_THREADS;
         // check the return value to make sure we are good
@@ -3802,7 +3801,7 @@ PyObject* meth_get_accessory_firmware_version(PyObject* self, PyObject* args)
                 case AccessoryIndexError:
                     ss << "AccessoryIndexError";
                     break;
-                case AccessoryParamApiVersionError:
+                case AccessoryParamApiVersionError :
                     ss << "AccessoryParamApiVersionError ";
                     break;
                 case AccessoryParamSizeMismatchError:
@@ -3822,6 +3821,7 @@ PyObject* meth_get_accessory_firmware_version(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
+#endif // ENABLE_ACCESSORY_API
 }
 
 PyObject* meth_set_safe_boot_mode(PyObject* self, PyObject* args)
