@@ -1440,8 +1440,8 @@ PyObject* meth_flash_devices(PyObject* self, PyObject* args)
     PyObject* callback = NULL;
     PyObject* dict;
     int network_id = -1;
-    unsigned long kOptions = 0;
-    if (!PyArg_ParseTuple(args, arg_parse("OO|Oii:", __FUNCTION__), &obj, &dict, &callback, &network_id, &kOptions)) {
+    unsigned long iOptions = 0;
+    if (!PyArg_ParseTuple(args, arg_parse("OO|Oik:", __FUNCTION__), &obj, &dict, &callback, &network_id, &iOptions)) {
         return NULL;
     }
     if (obj && !PyNeoDeviceEx_CheckExact(obj)) {
@@ -1483,9 +1483,9 @@ PyObject* meth_flash_devices(PyObject* self, PyObject* args)
     POptionsFindNeoEx popts = NULL;
     if (network_id != -1)
         popts = &opts;
-    // If kOptions was provided, use it. Otherwise, fall back to network_id.
-    if (kOptions == 0 && network_id != -1) {
-        kOptions = opts.CANOptions.iNetworkID;
+    // If iOptions was provided, use it. Otherwise, fall back to network_id.
+    if (iOptions == 0 && network_id != -1) {
+        iOptions = opts.CANOptions.iNetworkID;
     }
     try {
         ice::Library* lib = dll_get_library();
@@ -1511,7 +1511,7 @@ PyObject* meth_flash_devices(PyObject* self, PyObject* args)
             FlashDevice2(lib, "FlashDevice2");
         Py_BEGIN_ALLOW_THREADS;
         if (!FlashDevice2(
-                0x3835C256, &nde->neoDevice, rc, reflash_count, network_id, kOptions, 0, &message_callback)) {
+                0x3835C256, &nde->neoDevice, rc, reflash_count, network_id, iOptions, 0, &message_callback)) {
             Py_BLOCK_THREADS;
             PyBuffer_Release(&buffer);
             return set_ics_exception(exception_runtime_error(), "FlashDevice2() Failed");
