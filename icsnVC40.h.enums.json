@@ -2658,14 +2658,6 @@
                 "enum_value": null
             },
             {
-                "name": "DeviceVCANRFSettingsType",
-                "data_type": "int",
-                "array_length": 0,
-                "bitfield_size": 0,
-                "is_enum": false,
-                "enum_value": null
-            },
-            {
                 "name": "DeviceEEVBSettingsType",
                 "data_type": "int",
                 "array_length": 0,
@@ -3997,22 +3989,6 @@
                 "bitfield_size": 0,
                 "is_enum": true,
                 "enum_value": "1/(int)(!!(sizeof(SVCAN4Settings)"
-            }
-        ]
-    },
-    {
-        "names": [],
-        "data_type": "Enum",
-        "packing": 0,
-        "is_anonymous": true,
-        "members": [
-            {
-                "name": "assert_line_6001 ",
-                "data_type": "int",
-                "array_length": 0,
-                "bitfield_size": 0,
-                "is_enum": true,
-                "enum_value": "1/(int)(!!(sizeof(SVCANRFSettings)"
             }
         ]
     },
