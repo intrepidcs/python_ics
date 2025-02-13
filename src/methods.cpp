@@ -5,10 +5,12 @@
 #ifndef USING_STUDIO_8
 #define USING_STUDIO_8 1
 #endif
+#pragma warning(push, 0)
 #include <icsnVC40.h>
 #ifdef _USE_INTERNAL_HEADER_
 #include <icsnVC40Internal.h>
 #endif
+#pragma warning(pop)
 #include <datetime.h>
 #include "object_spy_message.h"
 #include "setup_module_auto_defines.h"
@@ -57,8 +59,537 @@ typedef struct
 #endif
 #endif
 
+
+#pragma warning(push)
+// warning C4191: 'type cast': unsafe conversion from 'PyObject *(__cdecl *)(PyObject *,PyObject *,PyObject *)' 
+// to 'PyCFunction' Making a function call using the resulting pointer may cause your program to fail
+#pragma warning(disable: 4191)
+PyMethodDef IcsMethods[] = {
+    _EZ_ICS_STRUCT_METHOD("find_devices",
+                          "icsneoFindNeoDevices",
+                          "FindNeoDevices",
+                          meth_find_devices,
+                          METH_VARARGS | METH_KEYWORDS,
+                          _DOC_FIND_DEVICES),
+    _EZ_ICS_STRUCT_METHOD("open_device",
+                          "icsneoOpenNeoDevice",
+                          "OpenNeoDevice",
+                          meth_open_device,
+                          METH_VARARGS | METH_KEYWORDS,
+                          _DOC_OPEN_DEVICES),
+    _EZ_ICS_STRUCT_METHOD("close_device",
+                          "icsneoClosePort",
+                          "ClosePort",
+                          meth_close_device,
+                          METH_VARARGS,
+                          _DOC_CLOSE_DEVICES),
+    _EZ_ICS_STRUCT_METHOD("get_rtc", "icsneoGetRTC", "GetRTC", meth_get_rtc, METH_VARARGS, _DOC_GET_RTC),
+    _EZ_ICS_STRUCT_METHOD("set_rtc", "icsneoSetRTC", "SetRTC", meth_set_rtc, METH_VARARGS, _DOC_SET_RTC),
+    _EZ_ICS_STRUCT_METHOD("coremini_load",
+                          "icsneoScriptLoad",
+                          "ScriptLoad",
+                          meth_coremini_load,
+                          METH_VARARGS,
+                          _DOC_COREMINI_LOAD),
+    _EZ_ICS_STRUCT_METHOD("coremini_start",
+                          "icsneoScriptStart",
+                          "ScriptStart",
+                          meth_coremini_start,
+                          METH_VARARGS,
+                          _DOC_COREMINI_START),
+    _EZ_ICS_STRUCT_METHOD("coremini_stop",
+                          "icsneoScriptStop",
+                          "ScriptStop",
+                          meth_coremini_stop,
+                          METH_VARARGS,
+                          _DOC_COREMINI_STOP),
+    _EZ_ICS_STRUCT_METHOD("coremini_clear",
+                          "icsneoScriptClear",
+                          "ScriptClear",
+                          meth_coremini_clear,
+                          METH_VARARGS,
+                          _DOC_COREMINI_CLEAR),
+    _EZ_ICS_STRUCT_METHOD("coremini_get_status",
+                          "icsneoScriptGetScriptStatus",
+                          "ScriptGetScriptStatus",
+                          meth_coremini_get_status,
+                          METH_VARARGS,
+                          _DOC_COREMINI_GET_STATUS),
+    _EZ_ICS_STRUCT_METHOD("transmit_messages",
+                          "icsneoTxMessages",
+                          "TxMessages",
+                          meth_transmit_messages,
+                          METH_VARARGS,
+                          _DOC_TRANSMIT_MESSAGES),
+    _EZ_ICS_STRUCT_METHOD("get_messages",
+                          "icsneoGetMessages",
+                          "GetMessages",
+                          meth_get_messages,
+                          METH_VARARGS,
+                          _DOC_GET_MESSAGES),
+    _EZ_ICS_STRUCT_METHOD("get_script_status",
+                          "icsneoScriptGetScriptStatusEx",
+                          "ScriptGetScriptStatusEx",
+                          meth_get_script_status,
+                          METH_VARARGS,
+                          "Accepts a  PyNeoDeviceEx"
+                          ", exception on error. Returns a list of values of what ulParameters would hold"),
+    _EZ_ICS_STRUCT_METHOD("get_error_messages",
+                          "icsneoGetErrorMessages",
+                          "GetErrorMessages",
+                          meth_get_error_messages,
+                          METH_VARARGS,
+                          _DOC_GET_ERROR_MESSAGES),
+#ifdef _USE_INTERNAL_HEADER_
+    _EZ_ICS_STRUCT_METHOD("flash_devices",
+                          "FlashDevice2",
+                          "FlashDevice2",
+                          meth_flash_devices,
+                          METH_VARARGS,
+                          "int _stdcall FlashDevice2()"),
+#endif
+    _EZ_ICS_STRUCT_METHOD("set_reflash_callback",
+                          "icsneoSetReflashDisplayCallbacks",
+                          "SetReflashDisplayCallback",
+                          meth_set_reflash_callback,
+                          METH_VARARGS,
+                          _DOC_SET_REFLASH_CALLBACK),
+    _EZ_ICS_STRUCT_METHOD("get_device_settings",
+                          "icsneoGetDeviceSettings",
+                          "GetDeviceSettings",
+                          meth_get_device_settings,
+                          METH_VARARGS,
+                          _DOC_GET_DEVICE_SETTINGS),
+    _EZ_ICS_STRUCT_METHOD("set_device_settings",
+                          "icsneoSetDeviceSettings",
+                          "SetDeviceSettings",
+                          meth_set_device_settings,
+                          METH_VARARGS,
+                          _DOC_SET_DEVICE_SETTINGS),
+    _EZ_ICS_STRUCT_METHOD("load_default_settings",
+                          "icsneoLoadDefaultSettings",
+                          "LoadDefaultSettings",
+                          meth_load_default_settings,
+                          METH_VARARGS,
+                          _DOC_LOAD_DEFAULT_SETTINGS),
+    //_EZ_ICS_STRUCT_METHOD("spy_message_to_j1850", METH_spy_message_to_j1850, METH_VARARGS, "Accepts a "
+    // MODULE_NAME
+    //"."
+    // SPY_MESSAGE_OBJECT_NAME ", and returns a " MODULE_NAME "." SPY_MESSAGE_J1850_OBJECT_NAME ". Exception on
+    // error."),
+    _EZ_ICS_STRUCT_METHOD("read_sdcard",
+                          "icsneoReadSDCard",
+                          "ReadSDCard",
+                          meth_read_sdcard,
+                          METH_VARARGS,
+                          "icsneoReadSDCard(), Accepts a  PyNeoDeviceEx"
+                          " and sector index. Returns a bytearray of 512 bytes max. Exception on error."),
+    _EZ_ICS_STRUCT_METHOD("write_sdcard",
+                          "icsneoWriteSDCard",
+                          "WriteSDCard",
+                          meth_write_sdcard,
+                          METH_VARARGS,
+                          "icsneoReadSDCard(), Accepts a  PyNeoDeviceEx"
+                          ", sector index, and a bytearray of 512 bytes. Exception on error."),
+    { "create_neovi_radio_message",
+      (PyCFunction)meth_create_neovi_radio_message,
+      METH_VARARGS | METH_KEYWORDS,
+      _DOC_CREATE_NEOVI_RADIO_MESSAGE },
+    _EZ_ICS_STRUCT_METHOD("coremini_start_fblock",
+                          "icsneoScriptStartFBlock",
+                          "ScriptStartFBlock",
+                          meth_coremini_start_fblock,
+                          METH_VARARGS,
+                          _DOC_COREMINI_START_FBLOCK),
+    _EZ_ICS_STRUCT_METHOD("coremini_stop_fblock",
+                          "icsneoScriptStopFBlock",
+                          "ScriptStopFBlock",
+                          meth_coremini_stop_fblock,
+                          METH_VARARGS,
+                          _DOC_COREMINI_STOP_FBLOCK),
+    _EZ_ICS_STRUCT_METHOD("coremini_get_fblock_status",
+                          "icsneoScriptGetFBlockStatus",
+                          "ScriptGetFBlockStatus",
+                          meth_coremini_get_fblock_status,
+                          METH_VARARGS,
+                          _DOC_COREMINI_GET_FBLOCK_STATUS),
+    _EZ_ICS_STRUCT_METHOD("coremini_read_app_signal",
+                          "icsneoScriptReadAppSignal",
+                          "ScriptReadAppSignal",
+                          meth_coremini_read_app_signal,
+                          METH_VARARGS,
+                          _DOC_COREMINI_READ_APP_SIGNAL),
+    _EZ_ICS_STRUCT_METHOD("coremini_write_app_signal",
+                          "icsneoScriptWriteAppSignal",
+                          "ScriptWriteAppSignal",
+                          meth_coremini_write_app_signal,
+                          METH_VARARGS,
+                          _DOC_COREMINI_WRITE_APP_SIGNAL),
+    _EZ_ICS_STRUCT_METHOD("coremini_read_tx_message",
+                          "icsneoScriptReadTxMessage",
+                          "ScriptReadTxMessage",
+                          meth_coremini_read_tx_message,
+                          METH_VARARGS,
+                          _DOC_COREMINI_READ_TX_MESSAGE),
+    _EZ_ICS_STRUCT_METHOD("coremini_read_rx_message",
+                          "icsneoScriptReadRxMessage",
+                          "ScriptReadRxMessage",
+                          meth_coremini_read_rx_message,
+                          METH_VARARGS,
+                          _DOC_COREMINI_READ_RX_MESSAGE),
+    _EZ_ICS_STRUCT_METHOD("coremini_write_tx_message",
+                          "icsneoScriptWriteTxMessage",
+                          "ScriptWriteTxMessage",
+                          meth_coremini_write_tx_message,
+                          METH_VARARGS,
+                          _DOC_COREMINI_WRITE_TX_MESSAGE),
+    _EZ_ICS_STRUCT_METHOD("coremini_write_rx_message",
+                          "icsneoScriptWriteRxMessage",
+                          "ScriptWriteRxMessage",
+                          meth_coremini_write_rx_message,
+                          METH_VARARGS,
+                          _DOC_COREMINI_WRITE_RX_MESSAGE),
+    _EZ_ICS_STRUCT_METHOD("get_performance_parameters",
+                          "icsneoGetPerformanceParameters",
+                          "GetPerformanceParameters",
+                          meth_get_performance_parameters,
+                          METH_VARARGS,
+                          _DOC_GET_PERFORMANCE_PARAMETERS),
+    _EZ_ICS_STRUCT_METHOD("validate_hobject",
+                          "icsneoValidateHObject",
+                          "ValidateHObject",
+                          meth_validate_hobject,
+                          METH_VARARGS,
+                          _DOC_VALIDATE_HOBJECT),
+    _EZ_ICS_STRUCT_METHOD("get_last_api_error",
+                          "icsneoGetLastAPIError",
+                          "GetLastAPIError",
+                          meth_get_last_api_error,
+                          METH_VARARGS,
+                          _DOC_GET_LAST_API_ERROR),
+    _EZ_ICS_STRUCT_METHOD("get_dll_version",
+                          "icsneoGetDLLVersion",
+                          "GetDLLVersion",
+                          meth_get_dll_version,
+                          METH_NOARGS,
+                          _DOC_GET_DLL_VERSION),
+    _EZ_ICS_STRUCT_METHOD("get_serial_number",
+                          "icsneoGetSerialNumber",
+                          "GetSerialNumber",
+                          meth_get_serial_number,
+                          METH_VARARGS,
+                          _DOC_GET_SERIAL_NUMBER),
+    _EZ_ICS_STRUCT_METHOD("get_hw_firmware_info",
+                          "icsneoGetHWFirmwareInfo",
+                          "GetHWFirmwareInfo",
+                          meth_get_hw_firmware_info,
+                          METH_VARARGS,
+                          _DOC_GET_HW_FIRMWARE_INFO),
+    _EZ_ICS_STRUCT_METHOD("request_enter_sleep_mode",
+                          "icsneoRequestEnterSleepMode",
+                          "RequestEnterSleepMode",
+                          meth_request_enter_sleep_mode,
+                          METH_VARARGS,
+                          _DOC_REQUEST_ENTER_SLEEP_MODE),
+    { "base36enc", (PyCFunction)meth_base36enc, METH_VARARGS | METH_KEYWORDS, _DOC_BASE36ENC },
+    _EZ_ICS_STRUCT_METHOD("set_context",
+                          "icsneoSetContext",
+                          "SetContext",
+                          meth_set_context,
+                          METH_VARARGS,
+                          _DOC_SET_CONTEXT),
+    _EZ_ICS_STRUCT_METHOD("force_firmware_update",
+                          "icsneoForceFirmwareUpdate",
+                          "ForceFirmwareUpdate",
+                          meth_force_firmware_update,
+                          METH_VARARGS,
+                          _DOC_FORCE_FIRMWARE_UPDATE),
+    _EZ_ICS_STRUCT_METHOD("firmware_update_required",
+                          "icsneoFirmwareUpdateRequired",
+                          "FirmwareUpdateRequired",
+                          meth_firmware_update_required,
+                          METH_VARARGS,
+                          _DOC_FIRMWARE_UPDATE_REQUIRED),
+    _EZ_ICS_STRUCT_METHOD("get_dll_firmware_info",
+                          "icsneoGetDLLFirmwareInfo",
+                          "GetDLLFirmwareInfo",
+                          meth_get_dll_firmware_info,
+                          METH_VARARGS,
+                          _DOC_GET_DLL_FIRMWARE_INFO),
+    _EZ_ICS_STRUCT_METHOD("get_backup_power_enabled",
+                          "icsneoGetBackupPowerEnabled",
+                          "GetBackupPowerEnabled",
+                          meth_get_backup_power_enabled,
+                          METH_VARARGS,
+                          _DOC_GET_BACKUP_POWER_ENABLED),
+    _EZ_ICS_STRUCT_METHOD("set_backup_power_enabled",
+                          "icsneoSetBackupPowerEnabled",
+                          "SetBackupPowerEnabled",
+                          meth_set_backup_power_enabled,
+                          METH_VARARGS,
+                          _DOC_SET_BACKUP_POWER_ENABLED),
+    _EZ_ICS_STRUCT_METHOD("get_backup_power_ready",
+                          "icsneoGetBackupPowerReady",
+                          "GetBackupPowerReady",
+                          meth_get_backup_power_ready,
+                          METH_VARARGS,
+                          _DOC_GET_BACKUP_POWER_READY),
+#ifdef _USE_INTERNAL_HEADER_
+    _EZ_ICS_STRUCT_METHOD("load_readbin",
+                          "icsneoScriptLoadReadBin",
+                          "ScriptLoadReadBin",
+                          meth_load_readbin,
+                          METH_VARARGS,
+                          _DOC_LOAD_READBIN),
+#endif
+    _EZ_ICS_STRUCT_METHOD("iso15765_transmit_message",
+                          "icsneoISO15765_TransmitMessage",
+                          "ISO15765_TransmitMessage",
+                          meth_iso15765_transmit_message,
+                          METH_VARARGS,
+                          _DOC_ISO15765_TRANSMIT_MESSAGE),
+    _EZ_ICS_STRUCT_METHOD("iso15765_receive_message",
+                          "icsneoISO15765_ReceiveMessage",
+                          "ISO15765_ReceiveMessage",
+                          meth_iso15765_receive_message,
+                          METH_VARARGS,
+                          _DOC_ISO15765_RECEIVE_MESSAGE),
+    _EZ_ICS_STRUCT_METHOD("iso15765_enable_networks",
+                          "icsneoISO15765_EnableNetworks",
+                          "ISO15765_EnableNetworks",
+                          meth_iso15765_enable_networks,
+                          METH_VARARGS,
+                          _DOC_ISO15765_ENABLE_NETWORKS),
+    _EZ_ICS_STRUCT_METHOD("iso15765_disable_networks",
+                          "icsneoISO15765_DisableNetworks",
+                          "ISO15765_DisableNetworks",
+                          meth_iso15765_disable_networks,
+                          METH_VARARGS,
+                          _DOC_ISO15765_DISABLE_NETWORKS),
+
+    _EZ_ICS_STRUCT_METHOD("get_active_vnet_channel",
+                          "icsneoGetActiveVNETChannel",
+                          "GetActiveVNETChannel",
+                          meth_get_active_vnet_channel,
+                          METH_VARARGS,
+                          _DOC_GET_ACTIVE_VNET_CHANNEL),
+    _EZ_ICS_STRUCT_METHOD("set_active_vnet_channel",
+                          "icsneoSetActiveVNETChannel",
+                          "SetActiveVNETChannel",
+                          meth_set_active_vnet_channel,
+                          METH_VARARGS,
+                          _DOC_SET_ACTIVE_VNET_CHANNEL),
+    _EZ_ICS_STRUCT_METHOD("set_bit_rate",
+                          "icsneoSetBitRate",
+                          "SetBitRate",
+                          meth_set_bit_rate,
+                          METH_VARARGS,
+                          _DOC_SET_BIT_RATE),
+    _EZ_ICS_STRUCT_METHOD("set_fd_bit_rate",
+                          "icsneoSetFDBitRate",
+                          "SetFDBitRate",
+                          meth_set_fd_bit_rate,
+                          METH_VARARGS,
+                          _DOC_SET_FD_BIT_RATE),
+    _EZ_ICS_STRUCT_METHOD("set_bit_rate_ex",
+                          "icsneoSetBitRateEx",
+                          "SetBitRateEx",
+                          meth_set_bit_rate_ex,
+                          METH_VARARGS,
+                          _DOC_SET_BIT_RATE_EX),
+    _EZ_ICS_STRUCT_METHOD("get_timestamp_for_msg",
+                          "icsneoGetTimeStampForMsg",
+                          "GetTimeStampForMsg",
+                          meth_get_timestamp_for_msg,
+                          METH_VARARGS,
+                          _DOC_GET_TIMESTAMP_FOR_MSG),
+    _EZ_ICS_STRUCT_METHOD("get_device_status",
+                          "icsneoGetDeviceStatus",
+                          "GetDeviceStatus",
+                          meth_get_device_status,
+                          METH_VARARGS,
+                          _DOC_GET_DEVICE_STATUS),
+
+    _EZ_ICS_STRUCT_METHOD("enable_network_com",
+                          "icsneoEnableNetworkCom",
+                          "EnableNetworkCom",
+                          meth_enable_network_com,
+                          METH_VARARGS,
+                          _DOC_ENABLE_NETWORK_COM),
+
+    _EZ_ICS_STRUCT_METHOD("enable_bus_voltage_monitor",
+                          "icsneoEnableBusVoltageMonitor",
+                          "EnableBusVoltageMonitor",
+                          meth_enable_bus_voltage_monitor,
+                          METH_VARARGS,
+                          _DOC_ENABLE_BUS_VOLTAGE_MONITOR),
+    _EZ_ICS_STRUCT_METHOD("get_bus_voltage",
+                          "icsneoGetBusVoltage",
+                          "GetBusVoltage",
+                          meth_get_bus_voltage,
+                          METH_VARARGS,
+                          _DOC_GET_BUS_VOLTAGE),
+
+    _EZ_ICS_STRUCT_METHOD("read_jupiter_firmware",
+                          "icsneoReadJupiterFirmware",
+                          "ReadJupiterFirmware",
+                          meth_read_jupiter_firmware,
+                          METH_VARARGS,
+                          _DOC_READ_JUPITER_FIRMWARE),
+    _EZ_ICS_STRUCT_METHOD("write_jupiter_firmware",
+                          "icsneoWriteJupiterFirmware",
+                          "WriteJupiterFirmware",
+                          meth_write_jupiter_firmware,
+                          METH_VARARGS,
+                          _DOC_WRITE_JUPITER_FIRMWARE),
+
+    _EZ_ICS_STRUCT_METHOD("get_disk_details",
+                          "icsneoRequestDiskDetails",
+                          "RequestDiskDetails",
+                          meth_get_disk_details,
+                          METH_VARARGS,
+                          _DOC_GET_DISK_DETAILS),
+    _EZ_ICS_STRUCT_METHOD("disk_format",
+                          "icsneoRequestDiskFormat",
+                          "RequestDiskFormat",
+                          meth_disk_format,
+                          METH_VARARGS,
+                          _DOC_DISK_FORMAT),
+    _EZ_ICS_STRUCT_METHOD("disk_format_cancel",
+                          "icsneoRequestDiskFormatCancel",
+                          "RequestDiskFormatCancel",
+                          meth_disk_format_cancel,
+                          METH_VARARGS,
+                          _DOC_DISK_FORMAT_CANCEL),
+    _EZ_ICS_STRUCT_METHOD("get_disk_format_progress",
+                          "icsneoRequestDiskFormatProgress",
+                          "RequestDiskFormatProgress",
+                          meth_get_disk_format_progress,
+                          METH_VARARGS,
+                          _DOC_DISK_FORMAT_PROGRESS),
+    _EZ_ICS_STRUCT_METHOD("enable_doip_line",
+                          "icsneoEnableDOIPLine",
+                          "EnableDOIPLine",
+                          meth_enable_doip_line,
+                          METH_VARARGS,
+                          _DOC_ENABLE_DOIP_LINE),
+    _EZ_ICS_STRUCT_METHOD("is_device_feature_supported",
+                          "icsneoIsDeviceFeatureSupported",
+                          "IsDeviceFeatureSupported",
+                          meth_is_device_feature_supported,
+                          METH_VARARGS,
+                          _DOC_IS_DEVICE_FEATURE_SUPPORTED),
+    _EZ_ICS_STRUCT_METHOD("get_pcb_serial_number",
+                          "icsneoGetPCBSerialNumber",
+                          "GetPCBSerialNumber",
+                          meth_get_pcb_serial_number,
+                          METH_VARARGS,
+                          _DOC_GET_PCB_SERIAL_NUMBER),
+    _EZ_ICS_STRUCT_METHOD("set_led_property",
+                          "icsneoSetLedProperty",
+                          "SetLedProperty",
+                          meth_set_led_property,
+                          METH_VARARGS,
+                          _DOC_SET_LED_PROPERTY),
+    _EZ_ICS_STRUCT_METHOD("start_dhcp_server",
+                          "icsneoStartDHCPServer",
+                          "StartDHCPServer",
+                          meth_start_dhcp_server,
+                          METH_VARARGS,
+                          _DOC_START_DHCP_SERVER),
+    _EZ_ICS_STRUCT_METHOD("stop_dhcp_server",
+                          "icsneoStopDHCPServer",
+                          "StopDHCPServer",
+                          meth_stop_dhcp_server,
+                          METH_VARARGS,
+                          _DOC_STOP_DHCP_SERVER),
+
+    _EZ_ICS_STRUCT_METHOD("wbms_manager_write_lock",
+                          "icsneowBMSManagerWriteLock",
+                          "wBMSManagerWriteLock",
+                          meth_wbms_manager_write_lock,
+                          METH_VARARGS,
+                          _DOC_WBMS_MANAGER_WRITE_LOCK),
+    _EZ_ICS_STRUCT_METHOD("wbms_manager_reset",
+                          "icsneowBMSManagerReset",
+                          "wBMSManagerReset",
+                          meth_wbms_manager_reset,
+                          METH_VARARGS,
+                          _DOC_WBMS_MANAGER_RESET),
+    _EZ_ICS_STRUCT_METHOD("uart_write", "icsneoUartWrite", "UartWrite", meth_uart_write, METH_VARARGS, _DOC_UART_WRITE),
+    _EZ_ICS_STRUCT_METHOD("uart_read", "icsneoUartRead", "UartRead", meth_uart_read, METH_VARARGS, _DOC_UART_READ),
+    _EZ_ICS_STRUCT_METHOD("uart_set_baudrate",
+                          "icsneoUartSetBaudrate",
+                          "UartSetBaudrate",
+                          meth_uart_set_baudrate,
+                          METH_VARARGS,
+                          _DOC_UART_SET_BAUDRATE),
+    _EZ_ICS_STRUCT_METHOD("uart_get_baudrate",
+                          "icsneoUartGetBaudrate",
+                          "UartGetBaudrate",
+                          meth_uart_get_baudrate,
+                          METH_VARARGS,
+                          _DOC_UART_GET_BAUDRATE),
+    _EZ_ICS_STRUCT_METHOD("generic_api_send_command",
+                          "icsneoGenericAPISendCommand",
+                          "GenericAPISendCommand",
+                          meth_generic_api_send_command,
+                          METH_VARARGS,
+                          _DOC_GENERIC_API_SEND_COMMAND),
+    _EZ_ICS_STRUCT_METHOD("generic_api_read_data",
+                          "icsneoGenericAPIReadData",
+                          "GenericAPIReadData",
+                          meth_generic_api_read_data,
+                          METH_VARARGS,
+                          _DOC_GENERIC_API_READ_DATA),
+    _EZ_ICS_STRUCT_METHOD("generic_api_get_status",
+                          "icsneoGenericAPIGetStatus",
+                          "GenericAPIGetStatus",
+                          meth_generic_api_get_status,
+                          METH_VARARGS,
+                          _DOC_GENERIC_API_GET_STATUS),
+    _EZ_ICS_STRUCT_METHOD("get_gptp_status",
+                          "icsneoGetGPTPStatus",
+                          "GetGPTPStatus",
+                          meth_get_gptp_status,
+                          METH_VARARGS,
+                          _DOC_GET_GPTP_STATUS),
+    _EZ_ICS_STRUCT_METHOD("get_all_chip_versions",
+                          "icsneoGetAllChipVersions",
+                          "GetAllChipVersions",
+                          meth_get_all_chip_versions,
+                          METH_VARARGS,
+                          _DOC_GET_ALL_CHIP_VERSIONS),
+
+    _EZ_ICS_STRUCT_METHOD("flash_accessory_firmware",
+                          "icsneoFlashAccessoryFirmware",
+                          "FlashAccessoryFirmware",
+                          meth_flash_accessory_firmware,
+                          METH_VARARGS,
+                          _DOC_FLASH_ACCESSORY_FIRMWARE),
+    _EZ_ICS_STRUCT_METHOD("get_accessory_firmware_version",
+                          "icsneoGetAccessoryFwVersion",
+                          "GetAccessoryFwVersion",
+                          meth_get_accessory_firmware_version,
+                          METH_VARARGS,
+                          _DOC_GET_ACCESSORY_FIRMWARE_VERSION),
+    _EZ_ICS_STRUCT_METHOD("set_safe_boot_mode",
+                          "icsneoSetSafeBootMode",
+                          "SetSafeBootMode",
+                          meth_set_safe_boot_mode,
+                          METH_VARARGS,
+                          _DOC_SET_SAFE_BOOT_MODE),
+
+    { "override_library_name", (PyCFunction)meth_override_library_name, METH_VARARGS, _DOC_OVERRIDE_LIBRARY_NAME },
+    { "get_library_path", (PyCFunction)meth_get_library_path, METH_NOARGS, "" },
+
+    { NULL, NULL, 0, NULL }
+};
+
+#pragma warning(pop)
+
 // Internal function
-char* neodevice_to_string(unsigned long type)
+const char* neodevice_to_string(unsigned long type)
 {
     switch (type) {
         case NEODEVICE_UNKNOWN:
@@ -132,6 +663,14 @@ char* neodevice_to_string(unsigned long type)
             return "RAD-Comet";
         case NEODEVICE_FIRE3_FLEXRAY:
             return "neoVI FIRE 3 Flexray";
+        case NEODEVICE_NEOVI_CONNECT:
+            return "neoVI CONNECT";
+        case NEODEVICE_RADCOMET3:
+            return "RAD-COMET3";
+        case NEODEVICE_RADMOONT1S:
+            return "RAD-MOON-T1S";
+        case NEODEVICE_GIGASTAR2:
+            return "RAD-GigaStar2";
         case NEODEVICE_RED:
             return "neoVI RED";
         case NEODEVICE_ECU:
@@ -176,10 +715,10 @@ char* neodevice_to_string(unsigned long type)
         case NEODEVICE_DONT_REUSE1:
         case NEODEVICE_DONT_REUSE2:
         case NEODEVICE_DONT_REUSE3:
+        case NEODEVICE_DONT_REUSE4:
         default:
             return "Unknown";
     };
-    return "Intrepid Device";
 }
 
 bool _convertListOrTupleToArray(PyObject* obj, std::vector<PyObject*>* results)
@@ -325,15 +864,17 @@ bool PyNeoDeviceEx_SetNeoDeviceEx(PyObject* object, NeoDeviceEx* src_nde)
     }
     // Get the NeoDeviceEx from PyNeoDeviceEx
     Py_buffer buffer = {};
-    NeoDeviceEx* nde = NULL;
-    int res = PyObject_GetBuffer(object, &buffer, PyBUF_CONTIG);
+    if (PyObject_GetBuffer(object, &buffer, PyBUF_CONTIG) != 0) {
+        return false;
+    }
     memcpy(buffer.buf, src_nde, sizeof(*src_nde));
     PyBuffer_Release(&buffer);
     return true;
 }
 
-void __destroy_PyNeoDeviceEx_Handle(PyObject* handle)
+extern "C" void __destroy_PyNeoDeviceEx_Handle(PyObject* handle)
 {
+    (void)handle;
     /*
     if (handle) {
         delete handle;
@@ -352,7 +893,8 @@ bool PyNeoDeviceEx_GetHandle(PyObject* object, void** handle)
     }
     *handle = NULL;
     if (!PyNeoDeviceEx_CheckExact(object)) {
-        return set_ics_exception(exception_runtime_error(), "Object is not of type PyNeoDeviceEx");
+        set_ics_exception(exception_runtime_error(), "Object is not of type PyNeoDeviceEx");
+        return false;
     }
     PyObject* _handle = PyObject_GetAttrString(object, "_handle");
     if (!_handle) {
@@ -442,8 +984,12 @@ bool PyNeoDeviceEx_SetName(PyObject* object, PyObject* name)
 
 PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
 {
+    (void)self;
     PyObject* device_types = NULL;
     int network_id = -1;
+#if (PY_MAJOR_VERSION) >= 3 && (PY_MINOR_VERSION >= 13) 
+    const
+#endif
     char* kwords[] = { "device_types", "network_id", NULL };
     if (!PyArg_ParseTupleAndKeywords(
             args, keywords, arg_parse("|Oi:", __FUNCTION__), kwords, &device_types, &network_id)) {
@@ -481,11 +1027,10 @@ PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
         */
         ice::Function<int __stdcall(NeoDeviceEx*, int*, unsigned int*, unsigned int, POptionsFindNeoEx*, unsigned long)>
             icsneoFindDevices(lib, "icsneoFindDevices");
-        NeoDeviceEx devices[255] = { 0 };
+        NeoDeviceEx devices[255] = {};
         int count = 255;
 
-        //
-        OptionsFindNeoEx opts = { 0 };
+        OptionsFindNeoEx opts = {};
         opts.CANOptions.iNetworkID = network_id;
         POptionsFindNeoEx popts = NULL;
         if (network_id != -1)
@@ -526,11 +1071,11 @@ PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
 {
+    (void)self;
     unsigned long serial_number = 0;
     PyObject* device = NULL;
     PyObject* network_ids = NULL;
@@ -539,6 +1084,9 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
     int network_id = -1;
     bool use_neovi_server = false;
     bool device_need_ref_inc = false;
+#if (PY_MAJOR_VERSION) >= 3 && (PY_MINOR_VERSION >= 13) 
+    const
+#endif
     char* kwords[] = { "device", "network_ids", "config_read", "options", "network_id", "use_server", NULL };
     if (!PyArg_ParseTupleAndKeywords(args,
                                      keywords,
@@ -569,7 +1117,7 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
         if (!_convertListOrTupleToArray(network_ids, &network_ids_vector))
             return NULL;
         network_ids_list_size = static_cast<unsigned int>(network_ids_vector.size());
-        network_ids_list.reset((new unsigned char(network_ids_list_size)));
+        network_ids_list.reset(new unsigned char[network_ids_list_size]);
         for (unsigned int i = 0; i < network_ids_list_size; ++i)
             network_ids_list[i] = (unsigned char)PyLong_AsLong(network_ids_vector[i]);
         use_network_ids = true;
@@ -578,7 +1126,7 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
     // Verify device type
     if (device && PyLong_CheckExact(device)) {
         // Device is a serial number in integer format
-        serial_number = PyLong_AsLong(device);
+        serial_number = PyLong_AsUnsignedLong(device);
     } else if (device && PyUnicode_CheckExact(device)) {
         // Lets convert the base36 string into an integer
         PyObject* module_name = PyUnicode_FromString("builtins");
@@ -596,7 +1144,7 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
                 PyErr_Print();
                 return NULL;
             } else {
-                serial_number = PyLong_AsLong(return_value);
+                serial_number = PyLong_AsUnsignedLong(return_value);
             }
         } else {
             return set_ics_exception(exception_runtime_error(), "Failed to convert serial number string to integer.");
@@ -623,7 +1171,7 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
             NeoDeviceEx devices[255];
             int count = 255;
 
-            OptionsFindNeoEx opts = { 0 };
+            OptionsFindNeoEx opts = {};
             opts.CANOptions.iNetworkID = network_id;
             POptionsFindNeoEx popts = NULL;
             if (network_id != -1)
@@ -680,7 +1228,7 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
         */
         ice::Function<int __stdcall(NeoDeviceEx*, void**, unsigned char*, int, int, OptionsFindNeoEx*, unsigned long)>
             icsneoOpenDevice(lib, "icsneoOpenDevice");
-        OptionsFindNeoEx opts = { 0 };
+        OptionsFindNeoEx opts = {};
         opts.CANOptions.iNetworkID = network_id;
         POptionsFindNeoEx popts = NULL;
         if (network_id != -1)
@@ -721,11 +1269,11 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_close_device(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
         return NULL;
@@ -767,7 +1315,6 @@ PyObject* meth_close_device(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 /*
@@ -810,6 +1357,7 @@ __int64 _tm_secs_offset(tm* t1, tm* t2)
 
 PyObject* meth_get_rtc(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
         return NULL;
@@ -864,11 +1412,11 @@ PyObject* meth_get_rtc(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_set_rtc(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* datetime_object = NULL;
     PyObject* obj = NULL;
     if (!PyArg_ParseTuple(args, arg_parse("O|O:", __FUNCTION__), &obj, &datetime_object)) {
@@ -904,7 +1452,7 @@ PyObject* meth_set_rtc(PyObject* self, PyObject* args)
     ics_time.hour = PyDateTime_DATE_GET_HOUR(datetime_object);
     ics_time.day = PyDateTime_GET_DAY(datetime_object);
     ics_time.month = PyDateTime_GET_MONTH(datetime_object);
-    ics_time.year = PyDateTime_GET_YEAR(datetime_object) % 100;
+    ics_time.year = static_cast<unsigned char>(PyDateTime_GET_YEAR(datetime_object) % 100);
     try {
         ice::Library* lib = dll_get_library();
         if (!lib) {
@@ -922,15 +1470,14 @@ PyObject* meth_set_rtc(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_coremini_load(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* arg_data = NULL;
     int location;
     PyObject* obj = NULL;
-    bool isFileData = false;
     if (!PyArg_ParseTuple(args, arg_parse("OOi:", __FUNCTION__), &obj, &arg_data, &location)) {
         return NULL;
     }
@@ -965,7 +1512,7 @@ PyObject* meth_coremini_load(PyObject* self, PyObject* args)
         fsize = ftell(f);
         rewind(f);
         data = (unsigned char*)malloc(sizeof(char) * fsize);
-        data_size = (int)fread(data, 1, fsize, f);
+        data_size = (int)fread(data, 1, static_cast<size_t>(fsize), f);
         fclose(f);
         if (fsize != data_size) {
             return set_ics_exception(exception_runtime_error(), "CoreMini binary file size mismatch");
@@ -996,7 +1543,7 @@ PyObject* meth_coremini_load(PyObject* self, PyObject* args)
         ice::Function<int __stdcall(void*, const unsigned char*, unsigned long, int)> icsneoScriptLoad(
             lib, "icsneoScriptLoad");
         Py_BEGIN_ALLOW_THREADS;
-        if (!icsneoScriptLoad(handle, data, data_size, location)) {
+        if (!icsneoScriptLoad(handle, data, static_cast<unsigned long>(data_size), location)) {
             Py_BLOCK_THREADS;
             return set_ics_exception(exception_runtime_error(), "icsneoScriptLoad() Failed");
         }
@@ -1005,11 +1552,11 @@ PyObject* meth_coremini_load(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_coremini_start(PyObject* self, PyObject* args)
 {
+    (void)self;
     int location;
     PyObject* obj = NULL;
     if (!PyArg_ParseTuple(args, arg_parse("Oi:", __FUNCTION__), &obj, &location)) {
@@ -1039,11 +1586,11 @@ PyObject* meth_coremini_start(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_coremini_stop(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
         return NULL;
@@ -1072,11 +1619,11 @@ PyObject* meth_coremini_stop(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_coremini_clear(PyObject* self, PyObject* args)
 {
+    (void)self;
     int location;
     PyObject* obj = NULL;
     if (!PyArg_ParseTuple(args, arg_parse("Oi:", __FUNCTION__), &obj, &location)) {
@@ -1107,11 +1654,11 @@ PyObject* meth_coremini_clear(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_coremini_get_status(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
         return NULL;
@@ -1142,11 +1689,11 @@ PyObject* meth_coremini_get_status(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_transmit_messages(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* temp;
     bool created_tuple = false;
     PyObject* obj = NULL;
@@ -1179,10 +1726,10 @@ PyObject* meth_transmit_messages(PyObject* self, PyObject* args)
         }
         ice::Function<int __stdcall(void*, icsSpyMessage*, int, int)> icsneoTxMessages(lib, "icsneoTxMessages");
         const Py_ssize_t TUPLE_COUNT = PyTuple_Size(tuple);
-        icsSpyMessage** msgs = new icsSpyMessage*[TUPLE_COUNT]();
+        icsSpyMessage** msgs = new icsSpyMessage*[static_cast<size_t>(TUPLE_COUNT)]();
         for (int i = 0; i < TUPLE_COUNT; ++i) {
-            spy_message_object* obj = (spy_message_object*)PyTuple_GetItem(tuple, i);
-            if (!obj) {
+            spy_message_object* _obj = (spy_message_object*)PyTuple_GetItem(tuple, static_cast<Py_ssize_t>(i));
+            if (!_obj) {
                 if (created_tuple) {
                     Py_XDECREF(tuple);
                 }
@@ -1190,7 +1737,7 @@ PyObject* meth_transmit_messages(PyObject* self, PyObject* args)
                 return set_ics_exception(exception_runtime_error(),
                                          "Tuple item must be of " MODULE_NAME "." SPY_MESSAGE_OBJECT_NAME);
             }
-            msgs[i] = &(obj->msg);
+            msgs[i] = &(_obj->msg);
         }
         Py_BEGIN_ALLOW_THREADS;
         for (int i = 0; i < TUPLE_COUNT; ++i) {
@@ -1202,13 +1749,6 @@ PyObject* meth_transmit_messages(PyObject* self, PyObject* args)
                 delete[] msgs;
                 return set_ics_exception(exception_runtime_error(), "icsneoTxMessages() Failed");
             }
-            /*
-            if (msgs[i]->ExtraDataPtrEnabled && msgs[i]->ExtraDataPtr != NULL) {
-                delete msgs[i]->ExtraDataPtr;
-                msgs[i]->ExtraDataPtr = NULL;
-                msgs[i]->ExtraDataPtrEnabled = 0;
-            }
-            */
         }
         Py_END_ALLOW_THREADS;
         if (created_tuple) {
@@ -1219,12 +1759,11 @@ PyObject* meth_transmit_messages(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_get_messages(PyObject* self, PyObject* args)
 {
-    // Py_RETURN_NONE;
+    (void)self;
     double timeout = 0.1;
     int use_j1850 = 0;
     PyObject* obj = NULL;
@@ -1275,29 +1814,29 @@ PyObject* meth_get_messages(PyObject* self, PyObject* args)
         Py_END_ALLOW_THREADS;
         PyObject* tuple = PyTuple_New(count);
         for (int i = 0; i < count; ++i) {
-            PyObject* obj = NULL;
+            PyObject* _obj = NULL;
             if (use_j1850) {
-                obj = PyObject_CallObject((PyObject*)&spy_message_j1850_object_type, NULL);
+                _obj = PyObject_CallObject((PyObject*)&spy_message_j1850_object_type, NULL);
             } else {
-                obj = PyObject_CallObject((PyObject*)&spy_message_object_type, NULL);
+                _obj = PyObject_CallObject((PyObject*)&spy_message_object_type, NULL);
             }
-            if (!obj) {
+            if (!_obj) {
                 // This should only happen if we run out of memory (malloc failure)?
                 PyErr_Print();
                 return set_ics_exception(exception_runtime_error(), "Failed to allocate " SPY_MESSAGE_OBJECT_NAME);
             }
             if (use_j1850) {
-                spy_message_j1850_object* msg = (spy_message_j1850_object*)obj;
+                spy_message_j1850_object* msg = (spy_message_j1850_object*)_obj;
                 memcpy(&msg->msg, &msgs[i].msg_j1850, sizeof(msgs[i].msg_j1850));
                 // Looks like icsneo40 does its own memory management so don't delete when we dealloc
                 msg->noExtraDataPtrCleanup = true;
             } else {
-                spy_message_object* msg = (spy_message_object*)obj;
+                spy_message_object* msg = (spy_message_object*)_obj;
                 memcpy(&msg->msg, &msgs[i].msg, sizeof(msgs[i].msg));
                 // Looks like icsneo40 does its own memory management so don't delete when we dealloc
                 msg->noExtraDataPtrCleanup = true;
             }
-            PyTuple_SetItem(tuple, i, obj);
+            PyTuple_SetItem(tuple, i, _obj);
         }
         PyObject* result = Py_BuildValue("(O,i)", tuple, errors);
         // We have to decrement the ref counter here because BuildValue increases it and
@@ -1308,11 +1847,11 @@ PyObject* meth_get_messages(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_get_script_status(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
         return NULL;
@@ -1347,15 +1886,15 @@ PyObject* meth_get_script_status(PyObject* self, PyObject* args)
     }
     PyObject* list_object = PyList_New(0);
     for (unsigned long i = 0; i < parameters_count; ++i) {
-        PyObject* obj = Py_BuildValue("i", parameters[i]);
-        PyList_Append(list_object, obj);
+        PyObject* _obj = Py_BuildValue("i", parameters[i]);
+        PyList_Append(list_object, _obj);
     }
     return list_object;
 }
 
 PyObject* meth_get_error_messages(PyObject* self, PyObject* args)
 {
-    // return PyList_New(0);
+    (void)self;
     PyObject* obj = NULL;
     if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
         return NULL;
@@ -1414,9 +1953,9 @@ PyObject* meth_get_error_messages(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
+#ifdef _USE_INTERNAL_HEADER_
 PyObject* msg_callback = NULL;
 static void message_callback(const char* message, bool success)
 {
@@ -1433,9 +1972,9 @@ static void message_callback(const char* message, bool success)
     PyGILState_Release(state);
 }
 
-#ifdef _USE_INTERNAL_HEADER_
 PyObject* meth_flash_devices(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     PyObject* callback = NULL;
     PyObject* dict;
@@ -1522,7 +2061,6 @@ PyObject* meth_flash_devices(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 #endif // _USE_INTERNAL_HEADER_
 
@@ -1545,6 +2083,7 @@ static void message_reflash_callback(const wchar_t* message, unsigned long progr
 // void _stdcall icsneoSetReflashCallback( void(*OnReflashUpdate)(const wchar_t*,unsigned long) )
 PyObject* meth_set_reflash_callback(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* callback = NULL;
     if (!PyArg_ParseTuple(args, arg_parse("|O:", __FUNCTION__), &callback)) {
         return NULL;
@@ -1579,11 +2118,11 @@ PyObject* meth_set_reflash_callback(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_get_device_settings(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     long device_type_override = -1;
     EPlasmaIonVnetChannel_t vnet_slot = (EPlasmaIonVnetChannel_t)PlasmaIonVnetChannelMain;
@@ -1651,11 +2190,11 @@ PyObject* meth_get_device_settings(PyObject* self, PyObject* args)
         PyBuffer_Release(&settings_buffer);
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_set_device_settings(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     PyObject* settings = NULL;
     int save_to_eeprom = 1;
@@ -1700,11 +2239,11 @@ PyObject* meth_set_device_settings(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_load_default_settings(PyObject* self, PyObject* args) // icsneoLoadDefaultSettings
 {
+    (void)self;
     PyObject* obj = NULL;
     if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
         return NULL;
@@ -1716,9 +2255,6 @@ PyObject* meth_load_default_settings(PyObject* self, PyObject* args) // icsneoLo
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
         return NULL;
     }
-    int errors[600] = { 0 };
-    int error_count = 600;
-    PyObject* list = PyList_New(0);
     try {
         ice::Library* lib = dll_get_library();
         if (!lib) {
@@ -1726,10 +2262,6 @@ PyObject* meth_load_default_settings(PyObject* self, PyObject* args) // icsneoLo
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         ice::Function<int __stdcall(void*)> icsneoLoadDefaultSettings(lib, "icsneoLoadDefaultSettings");
-        void* handle = NULL;
-        if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
-            return NULL;
-        }
         Py_BEGIN_ALLOW_THREADS;
         if (!icsneoLoadDefaultSettings(handle)) {
             Py_BLOCK_THREADS;
@@ -1740,13 +2272,13 @@ PyObject* meth_load_default_settings(PyObject* self, PyObject* args) // icsneoLo
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_read_sdcard(PyObject* self,
                            PyObject* args) // icsneoReadSDCard(int hObject,unsigned long iSectorIndex,unsigned char
                                            // *data, unsigned long *bytesRead)
 {
+    (void)self;
     PyObject* obj = NULL;
     unsigned long index = 0;
     unsigned long size = 0;
@@ -1789,13 +2321,13 @@ PyObject* meth_read_sdcard(PyObject* self,
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_write_sdcard(
     PyObject* self,
     PyObject* args) // icsneoWriteSDCard(int hObject,unsigned long iSectorIndex,const unsigned char *data)
 {
+    (void)self;
     PyObject* obj = NULL;
     unsigned long index = 0;
     PyObject* ba_obj = NULL;
@@ -1833,13 +2365,11 @@ PyObject* meth_write_sdcard(
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_create_neovi_radio_message(PyObject* self, PyObject* args, PyObject* keywords)
 {
-    // int PyArg_ParseTupleAndKeywords(PyObject *args, PyObject *kw, const char *format, char *keywords[], ...)
-    PyObject* obj = NULL;
+    (void)self;
     int relay1 = 0;
     int relay2 = 0;
     int relay3 = 0;
@@ -1851,6 +2381,9 @@ PyObject* meth_create_neovi_radio_message(PyObject* self, PyObject* args, PyObje
     int lsb = 0;
     int analog = 0;
     int relay_timeout = 0;
+#if (PY_MAJOR_VERSION) >= 3 && (PY_MINOR_VERSION >= 13) 
+    const
+#endif
     char* kwords[] = { "Relay1",       "Relay2", "Relay3",          "Relay4",          "Relay5",
                        "LED5",         "LED6",   "MSB_report_rate", "LSB_report_rate", "analog_change_report_rate",
                        "relay_timeout" };
@@ -1890,9 +2423,10 @@ PyObject* meth_create_neovi_radio_message(PyObject* self, PyObject* args, PyObje
 
 PyObject* meth_coremini_start_fblock(PyObject* self, PyObject* args)
 {
-    int index;
+    (void)self;
+    unsigned int index;
     PyObject* obj = NULL;
-    if (!PyArg_ParseTuple(args, arg_parse("Oi:", __FUNCTION__), &obj, &index)) {
+    if (!PyArg_ParseTuple(args, arg_parse("OI:", __FUNCTION__), &obj, &index)) {
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
@@ -1919,14 +2453,14 @@ PyObject* meth_coremini_start_fblock(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_coremini_stop_fblock(PyObject* self, PyObject* args)
 {
-    int index;
+    (void)self;
+    unsigned int index;
     PyObject* obj = NULL;
-    if (!PyArg_ParseTuple(args, arg_parse("Oi:", __FUNCTION__), &obj, &index)) {
+    if (!PyArg_ParseTuple(args, arg_parse("OI:", __FUNCTION__), &obj, &index)) {
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
@@ -1953,14 +2487,14 @@ PyObject* meth_coremini_stop_fblock(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_coremini_get_fblock_status(PyObject* self, PyObject* args)
 {
-    int index;
+    (void)self;
+    unsigned int index;
     PyObject* obj = NULL;
-    if (!PyArg_ParseTuple(args, arg_parse("Oi:", __FUNCTION__), &obj, &index)) {
+    if (!PyArg_ParseTuple(args, arg_parse("OI:", __FUNCTION__), &obj, &index)) {
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
@@ -1989,14 +2523,14 @@ PyObject* meth_coremini_get_fblock_status(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_coremini_read_app_signal(PyObject* self, PyObject* args) // ScriptReadAppSignal
 {
-    int index;
+    (void)self;
+    unsigned int index;
     PyObject* obj = NULL;
-    if (!PyArg_ParseTuple(args, arg_parse("Oi:", __FUNCTION__), &obj, &index)) {
+    if (!PyArg_ParseTuple(args, arg_parse("OI:", __FUNCTION__), &obj, &index)) {
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
@@ -2025,15 +2559,15 @@ PyObject* meth_coremini_read_app_signal(PyObject* self, PyObject* args) // Scrip
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_coremini_write_app_signal(PyObject* self, PyObject* args) // ScriptWriteAppSignal
 {
-    int index;
+    (void)self;
+    unsigned int index;
     PyObject* obj = NULL;
     double value = 0;
-    if (!PyArg_ParseTuple(args, arg_parse("Oid:", __FUNCTION__), &obj, &index, &value)) {
+    if (!PyArg_ParseTuple(args, arg_parse("OId:", __FUNCTION__), &obj, &index, &value)) {
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
@@ -2061,15 +2595,15 @@ PyObject* meth_coremini_write_app_signal(PyObject* self, PyObject* args) // Scri
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_coremini_read_tx_message(PyObject* self, PyObject* args) // ScriptReadTxMessage
 {
-    int index;
+    (void)self;
+    unsigned int index;
     PyObject* obj = NULL;
     int j1850 = 0;
-    if (!PyArg_ParseTuple(args, arg_parse("Oi|b:", __FUNCTION__), &obj, &index, &j1850)) {
+    if (!PyArg_ParseTuple(args, arg_parse("OI|b:", __FUNCTION__), &obj, &index, &j1850)) {
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
@@ -2103,7 +2637,7 @@ PyObject* meth_coremini_read_tx_message(PyObject* self, PyObject* args) // Scrip
             }
             Py_END_ALLOW_THREADS;
         } else {
-            PyObject* msg = PyObject_CallObject((PyObject*)&spy_message_object_type, NULL);
+            msg = PyObject_CallObject((PyObject*)&spy_message_object_type, NULL);
             if (!msg) {
                 // This should only happen if we run out of memory (malloc failure)?
                 PyErr_Print();
@@ -2120,15 +2654,15 @@ PyObject* meth_coremini_read_tx_message(PyObject* self, PyObject* args) // Scrip
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_coremini_read_rx_message(PyObject* self, PyObject* args) // ScriptReadRxMessage
 {
-    int index;
+    (void)self;
+    unsigned int index;
     PyObject* obj = NULL;
     int j1850 = 0;
-    if (!PyArg_ParseTuple(args, arg_parse("Oi|b:", __FUNCTION__), &obj, &index, &j1850)) {
+    if (!PyArg_ParseTuple(args, arg_parse("OI|b:", __FUNCTION__), &obj, &index, &j1850)) {
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
@@ -2173,13 +2707,13 @@ PyObject* meth_coremini_read_rx_message(PyObject* self, PyObject* args) // Scrip
             }
             Py_END_ALLOW_THREADS;
         } else {
-            PyObject* msg = PyObject_CallObject((PyObject*)&spy_message_object_type, NULL);
+            msg = PyObject_CallObject((PyObject*)&spy_message_object_type, NULL);
             if (!msg) {
                 // This should only happen if we run out of memory (malloc failure)?
                 PyErr_Print();
                 return set_ics_exception(exception_runtime_error(), "Failed to allocate " SPY_MESSAGE_OBJECT_NAME);
             }
-            PyObject* msg_mask = PyObject_CallObject((PyObject*)&spy_message_object_type, NULL);
+            msg_mask = PyObject_CallObject((PyObject*)&spy_message_object_type, NULL);
             if (!msg_mask) {
                 // This should only happen if we run out of memory (malloc failure)?
                 PyErr_Print();
@@ -2197,16 +2731,16 @@ PyObject* meth_coremini_read_rx_message(PyObject* self, PyObject* args) // Scrip
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_coremini_write_tx_message(PyObject* self, PyObject* args) // icsneoScriptWriteTxMessage
 {
-    int index;
+    (void)self;
+    unsigned int index;
     PyObject* obj = NULL;
     PyObject* msg_obj = NULL;
     int j1850 = 0;
-    if (!PyArg_ParseTuple(args, arg_parse("OiO|b:", __FUNCTION__), &obj, &index, &msg_obj, &j1850)) {
+    if (!PyArg_ParseTuple(args, arg_parse("OIO|b:", __FUNCTION__), &obj, &index, &msg_obj, &j1850)) {
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
@@ -2217,7 +2751,6 @@ PyObject* meth_coremini_write_tx_message(PyObject* self, PyObject* args) // icsn
         return NULL;
     }
     void* msg = NULL;
-    void* msg_mask = NULL;
     if (j1850) {
         // We are going to use icsSpyMessageJ1850 objects here.
         if (!PySpyMessageJ1850_CheckExact(msg_obj)) {
@@ -2251,17 +2784,17 @@ PyObject* meth_coremini_write_tx_message(PyObject* self, PyObject* args) // icsn
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_coremini_write_rx_message(PyObject* self, PyObject* args) // icsneoScriptWriteRxMessage
 {
-    int index;
+    (void)self;
+    unsigned int index;
     PyObject* obj = NULL;
     PyObject* msg_obj = NULL;
     PyObject* msg_mask_obj = NULL;
     int j1850 = 0;
-    if (!PyArg_ParseTuple(args, arg_parse("OiOO|b:", __FUNCTION__), &obj, &index, &msg_obj, &msg_mask_obj, &j1850)) {
+    if (!PyArg_ParseTuple(args, arg_parse("OIOO|b:", __FUNCTION__), &obj, &index, &msg_obj, &msg_mask_obj, &j1850)) {
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
@@ -2315,11 +2848,11 @@ PyObject* meth_coremini_write_rx_message(PyObject* self, PyObject* args) // icsn
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_get_performance_parameters(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
         return NULL;
@@ -2373,11 +2906,11 @@ PyObject* meth_get_performance_parameters(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_validate_hobject(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
         return NULL;
@@ -2408,11 +2941,11 @@ PyObject* meth_validate_hobject(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_get_last_api_error(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
         return NULL;
@@ -2458,11 +2991,12 @@ PyObject* meth_get_last_api_error(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_get_dll_version(PyObject* self, PyObject* args)
 {
+    (void)self;
+    (void)args;
     try {
         ice::Library* lib = dll_get_library();
         if (!lib) {
@@ -2478,11 +3012,11 @@ PyObject* meth_get_dll_version(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_get_serial_number(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
         return NULL;
@@ -2512,11 +3046,11 @@ PyObject* meth_get_serial_number(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_get_hw_firmware_info(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
         return NULL;
@@ -2553,11 +3087,11 @@ PyObject* meth_get_hw_firmware_info(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_base36enc(PyObject* self, PyObject* args)
 {
+    (void)self;
     unsigned long long value = 0;
     if (!PyArg_ParseTuple(args, arg_parse("K:", __FUNCTION__), &value)) {
         return NULL;
@@ -2576,6 +3110,7 @@ PyObject* meth_base36enc(PyObject* self, PyObject* args)
 
 PyObject* meth_request_enter_sleep_mode(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     unsigned int timeout_ms = 0;
     unsigned int mode = 0;
@@ -2608,11 +3143,11 @@ PyObject* meth_request_enter_sleep_mode(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_set_context(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
         return NULL;
@@ -2650,11 +3185,11 @@ PyObject* meth_set_context(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_force_firmware_update(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
         return NULL;
@@ -2683,11 +3218,11 @@ PyObject* meth_force_firmware_update(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_firmware_update_required(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
         return NULL;
@@ -2716,11 +3251,11 @@ PyObject* meth_firmware_update_required(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_get_dll_firmware_info(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
         return NULL;
@@ -2756,11 +3291,11 @@ PyObject* meth_get_dll_firmware_info(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_get_backup_power_enabled(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     unsigned int enabled = 0;
     if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
@@ -2791,11 +3326,11 @@ PyObject* meth_get_backup_power_enabled(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_set_backup_power_enabled(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     unsigned int enabled = 1;
     if (!PyArg_ParseTuple(args, arg_parse("O|b:", __FUNCTION__), &obj, &enabled)) {
@@ -2826,11 +3361,12 @@ PyObject* meth_set_backup_power_enabled(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
+
 }
 
 PyObject* meth_get_backup_power_ready(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     unsigned int enabled = 0;
     if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
@@ -2860,16 +3396,15 @@ PyObject* meth_get_backup_power_ready(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 // icsneoScriptLoadReadBin
 PyObject* meth_load_readbin(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* arg_data = NULL;
     int location;
     PyObject* obj = NULL;
-    bool isFileData = false;
     if (!PyArg_ParseTuple(args, arg_parse("OOi:", __FUNCTION__), &obj, &arg_data, &location)) {
         return NULL;
     }
@@ -2904,7 +3439,7 @@ PyObject* meth_load_readbin(PyObject* self, PyObject* args)
         fsize = ftell(f);
         rewind(f);
         data = (unsigned char*)malloc(sizeof(char) * fsize);
-        data_size = (int)fread(data, 1, fsize, f);
+        data_size = (int)fread(data, 1, static_cast<size_t>(fsize), f);
         fclose(f);
         if (fsize != data_size) {
             return set_ics_exception(exception_runtime_error(), "Readbin file size mismatch");
@@ -2935,7 +3470,7 @@ PyObject* meth_load_readbin(PyObject* self, PyObject* args)
         ice::Function<int __stdcall(void*, const unsigned char*, unsigned long, int)> icsneoScriptLoadReadBin(
             lib, "icsneoScriptLoadReadBin");
         Py_BEGIN_ALLOW_THREADS;
-        if (!icsneoScriptLoadReadBin(handle, data, data_size, location)) {
+        if (!icsneoScriptLoadReadBin(handle, data, static_cast<unsigned long>(data_size), location)) {
             Py_BLOCK_THREADS;
             return set_ics_exception(exception_runtime_error(), "icsneoScriptLoadReadBin() Failed");
         }
@@ -2944,12 +3479,12 @@ PyObject* meth_load_readbin(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 // void* hObject, unsigned long ulNetworkID, stCM_ISO157652_TxMessage *pMsg, unsigned long ulBlockingTimeout)
 PyObject* meth_iso15765_transmit_message(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     unsigned long ulNetworkID = 0;
     PyObject* obj_tx_msg = NULL;
@@ -2993,11 +3528,11 @@ PyObject* meth_iso15765_transmit_message(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_iso15765_receive_message(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     PyObject* obj_rx_msg = NULL;
     unsigned int iIndex = 0;
@@ -3043,11 +3578,11 @@ PyObject* meth_iso15765_receive_message(PyObject* self, PyObject* args)
         PyBuffer_Release(&obj_rx_msg_buffer);
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_iso15765_enable_networks(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     unsigned long networks = 0;
     if (!PyArg_ParseTuple(args, arg_parse("Oi:", __FUNCTION__), &obj, &networks)) {
@@ -3078,11 +3613,11 @@ PyObject* meth_iso15765_enable_networks(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_iso15765_disable_networks(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
         return NULL;
@@ -3111,11 +3646,11 @@ PyObject* meth_iso15765_disable_networks(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_get_active_vnet_channel(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     unsigned long channel = 0;
     if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
@@ -3146,11 +3681,11 @@ PyObject* meth_get_active_vnet_channel(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_set_active_vnet_channel(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     unsigned long channel = 0;
     if (!PyArg_ParseTuple(args, arg_parse("Oi:", __FUNCTION__), &obj, &channel)) {
@@ -3181,11 +3716,11 @@ PyObject* meth_set_active_vnet_channel(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_set_bit_rate(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     int bitrate = 0;
     int net_id = 0;
@@ -3216,11 +3751,11 @@ PyObject* meth_set_bit_rate(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_set_fd_bit_rate(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     int bitrate = 0;
     int net_id = 0;
@@ -3251,11 +3786,11 @@ PyObject* meth_set_fd_bit_rate(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_set_bit_rate_ex(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     int bitrate = 0;
     int net_id = 0;
@@ -3287,11 +3822,11 @@ PyObject* meth_set_bit_rate_ex(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_get_timestamp_for_msg(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     PyObject* obj_msg = NULL;
     if (!PyArg_ParseTuple(args, arg_parse("OO:", __FUNCTION__), &obj, &obj_msg)) {
@@ -3328,11 +3863,11 @@ PyObject* meth_get_timestamp_for_msg(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_get_device_status(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     int throw_exception_on_size_mismatch = 0;
     if (!PyArg_ParseTuple(args, arg_parse("O|b:", __FUNCTION__), &obj, &throw_exception_on_size_mismatch)) {
@@ -3358,10 +3893,9 @@ PyObject* meth_get_device_status(PyObject* self, PyObject* args)
         Py_buffer device_status_buffer = {};
         PyObject_GetBuffer(device_status, &device_status_buffer, PyBUF_CONTIG);
 
-        size_t device_status_size = device_status_buffer.len;
+        size_t device_status_size = static_cast<size_t>(device_status_buffer.len);
         ice::Function<int __stdcall(void*, icsDeviceStatus*, size_t*)> icsneoGetDeviceStatus(lib,
                                                                                              "icsneoGetDeviceStatus");
-        double timestamp = 0;
         Py_BEGIN_ALLOW_THREADS;
         if (!icsneoGetDeviceStatus(handle, (icsDeviceStatus*)device_status_buffer.buf, &device_status_size)) {
             Py_BLOCK_THREADS;
@@ -3380,11 +3914,11 @@ PyObject* meth_get_device_status(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_enable_network_com(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     bool enable = true;
     long net_id = -1;
@@ -3425,11 +3959,11 @@ PyObject* meth_enable_network_com(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_enable_bus_voltage_monitor(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     unsigned int enable = 1;
     unsigned int reserved = 0;
@@ -3462,11 +3996,11 @@ PyObject* meth_enable_bus_voltage_monitor(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_get_bus_voltage(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     unsigned int reserved = 0;
     if (!PyArg_ParseTuple(args, arg_parse("O|i:", __FUNCTION__), &obj, &reserved)) {
@@ -3499,11 +4033,11 @@ PyObject* meth_get_bus_voltage(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_read_jupiter_firmware(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     size_t fileSize = 0;
     EPlasmaIonVnetChannel_t channel = PlasmaIonVnetChannelMain;
@@ -3517,7 +4051,8 @@ PyObject* meth_read_jupiter_firmware(PyObject* self, PyObject* args)
         return NULL;
     }
     // Resize the ByteArray
-    int ret_val = PyByteArray_Resize(ba, fileSize);
+    int ret_val = PyByteArray_Resize(ba, static_cast<Py_ssize_t>(fileSize));
+    (void)ret_val;
     // TODO: Documentation doesn't say what return value is.
 
     if (!PyNeoDeviceEx_CheckExact(obj)) {
@@ -3555,11 +4090,11 @@ PyObject* meth_read_jupiter_firmware(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_write_jupiter_firmware(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     PyObject* bytes_obj = NULL;
     EPlasmaIonVnetChannel_t channel = PlasmaIonVnetChannelMain;
@@ -3599,7 +4134,7 @@ PyObject* meth_write_jupiter_firmware(PyObject* self, PyObject* args)
 
         Py_BEGIN_ALLOW_THREADS;
         // if (!icsneoWriteJupiterFirmware(handle, (char*)bytes_buffer.buf, bytes_buffer.len, channel)) {
-        if (!icsneoWriteJupiterFirmware(handle, bytes_str, bsize, channel)) {
+        if (!icsneoWriteJupiterFirmware(handle, bytes_str, static_cast<size_t>(bsize), channel)) {
             Py_BLOCK_THREADS;
             Py_DECREF(bytes);
             // PyBuffer_Release(&bytes_buffer);
@@ -3612,11 +4147,11 @@ PyObject* meth_write_jupiter_firmware(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_flash_accessory_firmware(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     PyObject* parms = NULL;
     bool check_success = true;
@@ -3724,6 +4259,7 @@ PyObject* meth_flash_accessory_firmware(PyObject* self, PyObject* args)
 
 PyObject* meth_get_accessory_firmware_version(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     char accessory_indx = 0;
     bool check_success = true;
@@ -3826,6 +4362,7 @@ PyObject* meth_get_accessory_firmware_version(PyObject* self, PyObject* args)
 
 PyObject* meth_set_safe_boot_mode(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     bool enable = true;
     if (!PyArg_ParseTuple(args, arg_parse("Ob:", __FUNCTION__), &obj, &enable)) {
@@ -3849,8 +4386,6 @@ PyObject* meth_set_safe_boot_mode(PyObject* self, PyObject* args)
         // int _stdcall icsneoSetSafeBootMode(void* hObject, const uint8_t enable)
         ice::Function<int __stdcall(void*, const uint8_t)> icsneoSetSafeBootMode(lib, "icsneoSetSafeBootMode");
 
-        unsigned int accessory_version = 0;
-        int function_error = 0;
         Py_BEGIN_ALLOW_THREADS;
         if (!icsneoSetSafeBootMode(handle, enable)) {
             Py_BLOCK_THREADS return set_ics_exception(exception_runtime_error(), "icsneoSetSafeBootMode() Failed");
@@ -3864,6 +4399,7 @@ PyObject* meth_set_safe_boot_mode(PyObject* self, PyObject* args)
 
 PyObject* meth_override_library_name(PyObject* self, PyObject* args)
 {
+    (void)self;
     const char* name = NULL;
     if (!PyArg_ParseTuple(args, arg_parse("s:", __FUNCTION__), &name)) {
         return NULL;
@@ -3882,11 +4418,11 @@ PyObject* meth_override_library_name(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_get_library_path(PyObject* self)
 {
+    (void)self;
     try {
         ice::Library* lib = dll_get_library();
         if (!lib) {
@@ -3900,11 +4436,11 @@ PyObject* meth_get_library_path(PyObject* self)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_get_disk_details(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
         return NULL;
@@ -3944,11 +4480,11 @@ PyObject* meth_get_disk_details(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_disk_format(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* details = NULL;
     PyObject* obj = NULL;
     if (!PyArg_ParseTuple(args, arg_parse("OO:", __FUNCTION__), &obj, &details)) {
@@ -3983,11 +4519,11 @@ PyObject* meth_disk_format(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_disk_format_cancel(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
         return NULL;
@@ -4017,11 +4553,11 @@ PyObject* meth_disk_format_cancel(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_get_disk_format_progress(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
         return NULL;
@@ -4062,11 +4598,11 @@ PyObject* meth_get_disk_format_progress(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_enable_doip_line(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     bool enable = false;
     if (!PyArg_ParseTuple(args, arg_parse("O|b:", __FUNCTION__), &obj, &enable)) {
@@ -4096,14 +4632,13 @@ PyObject* meth_enable_doip_line(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_is_device_feature_supported(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     unsigned int feature = 0;
-    bool enable = false;
     if (!PyArg_ParseTuple(args, arg_parse("OI:", __FUNCTION__), &obj, &feature)) {
         return NULL;
     }
@@ -4133,11 +4668,11 @@ PyObject* meth_is_device_feature_supported(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_get_pcb_serial_number(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
         return NULL;
@@ -4168,11 +4703,11 @@ PyObject* meth_get_pcb_serial_number(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_set_led_property(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     unsigned int led = 0;
     unsigned int prop = 0;
@@ -4205,11 +4740,11 @@ PyObject* meth_set_led_property(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_start_dhcp_server(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     unsigned int NetworkID = 0;
     const char* pDeviceIPAddress = NULL;
@@ -4281,11 +4816,11 @@ PyObject* meth_start_dhcp_server(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_stop_dhcp_server(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     unsigned int NetworkID = 0;
     if (!PyArg_ParseTuple(args, arg_parse("OI:", __FUNCTION__), &obj, &NetworkID)) {
@@ -4315,11 +4850,11 @@ PyObject* meth_stop_dhcp_server(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_wbms_manager_write_lock(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     EwBMSManagerPort_t manager = eManagerPortA;
     EwBMSManagerLockState_t lock_state = eLockManager;
@@ -4351,11 +4886,11 @@ PyObject* meth_wbms_manager_write_lock(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_wbms_manager_reset(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     EwBMSManagerPort_t manager = eManagerPortA;
     if (!PyArg_ParseTuple(args, arg_parse("OI:", __FUNCTION__), &obj, &manager)) {
@@ -4386,11 +4921,11 @@ PyObject* meth_wbms_manager_reset(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_uart_write(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     EUartPort_t port = eUART0;
     Py_buffer data = {};
@@ -4420,7 +4955,7 @@ PyObject* meth_uart_write(PyObject* self, PyObject* args)
         ice::Function<int __stdcall(void*, const EUartPort_t, const void*, const size_t, size_t*, uint8_t*)>
             icsneoUartWrite(lib, "icsneoUartWrite");
         Py_BEGIN_ALLOW_THREADS;
-        if (!icsneoUartWrite(handle, port, data.buf, data.len, &bytesActuallySent, &flags)) {
+        if (!icsneoUartWrite(handle, port, data.buf, static_cast<size_t>(data.len), &bytesActuallySent, &flags)) {
             Py_BLOCK_THREADS;
             return set_ics_exception(exception_runtime_error(), "icsneoUartWrite() Failed");
         }
@@ -4433,11 +4968,11 @@ PyObject* meth_uart_write(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_uart_read(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     EUartPort_t port = eUART0;
     unsigned int bytesToRead = 256;
@@ -4462,8 +4997,8 @@ PyObject* meth_uart_read(PyObject* self, PyObject* args)
         if (!lib) {
             free(buffer);
             buffer = NULL;
-            char buffer[512];
-            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+            char _buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(_buffer));
         }
         size_t bytesActuallyRead = 0;
         // int _stdcall icsneoUartRead(void* hObject, const EUartPort_t uart, void* bData, const size_t bytesToRead,
@@ -4478,7 +5013,7 @@ PyObject* meth_uart_read(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), "icsneoUartRead() Failed");
         }
         Py_END_ALLOW_THREADS;
-        PyObject* ba_result = PyByteArray_FromStringAndSize((const char*)buffer, bytesActuallyRead);
+        PyObject* ba_result = PyByteArray_FromStringAndSize((const char*)buffer, static_cast<Py_ssize_t>(bytesActuallyRead));
         // PyObject* value = Py_BuildValue("O", ba_result);
         free(buffer);
         buffer = NULL;
@@ -4488,11 +5023,11 @@ PyObject* meth_uart_read(PyObject* self, PyObject* args)
         buffer = NULL;
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_uart_set_baudrate(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     EUartPort_t port = eUART0;
     unsigned int baudrate = 0;
@@ -4527,11 +5062,11 @@ PyObject* meth_uart_set_baudrate(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_uart_get_baudrate(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     EUartPort_t port = eUART0;
     if (!PyArg_ParseTuple(args, arg_parse("OII:", __FUNCTION__), &obj, &port)) {
@@ -4566,11 +5101,11 @@ PyObject* meth_uart_get_baudrate(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_generic_api_send_command(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     unsigned char apiIndex = 0;
     unsigned char instanceIndex = 0;
@@ -4624,11 +5159,11 @@ PyObject* meth_generic_api_send_command(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_generic_api_read_data(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     unsigned char apiIndex = 0;
     unsigned char instanceIndex = 0;
@@ -4653,8 +5188,8 @@ PyObject* meth_generic_api_read_data(PyObject* self, PyObject* args)
         if (!lib) {
             free(buffer);
             buffer = NULL;
-            char buffer[512];
-            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+            char _buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(_buffer));
         }
         /*
         int _stdcall icsneoGenericAPIReadData(void* hObject,
@@ -4687,11 +5222,11 @@ PyObject* meth_generic_api_read_data(PyObject* self, PyObject* args)
         buffer = NULL;
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_generic_api_get_status(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     unsigned char apiIndex = 0;
     unsigned char instanceIndex = 0;
@@ -4740,11 +5275,11 @@ PyObject* meth_generic_api_get_status(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 PyObject* meth_get_gptp_status(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
         return NULL;
@@ -4792,12 +5327,12 @@ PyObject* meth_get_gptp_status(PyObject* self, PyObject* args)
         PyBuffer_Release(&status_buffer);
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }
 
 // int _stdcall icsneoGetAllChipVersions(void* hObject, stChipVersions* pInfo, int ipInfoSize)
 PyObject* meth_get_all_chip_versions(PyObject* self, PyObject* args)
 {
+    (void)self;
     PyObject* obj = NULL;
     if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
         return NULL;
@@ -4848,5 +5383,4 @@ PyObject* meth_get_all_chip_versions(PyObject* self, PyObject* args)
         PyBuffer_Release(&py_struct_buffer);
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-    return set_ics_exception(exception_runtime_error(), "This is a bug!");
 }

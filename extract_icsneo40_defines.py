@@ -78,9 +78,10 @@ def extract():
     with open("src/setup_module_auto_defines.cpp", "w") as f:
         print(boiler_plate, file=f)
         # Include the header files needed for the defines
-        print('#include "setup_module_auto_defines.h"\n#include <Python.h>\n#include "ics/icsnVC40.h"', file=f)
+        
+        print('#include "setup_module_auto_defines.h"\n#include <Python.h>\n#pragma warning(push, 0)\n#include "ics/icsnVC40.h"\n#pragma warning(pop)', file=f)
         if use_internal:
-            print('#include "ics/icsnVC40Internal.h"', file=f)
+            print('#pragma warning(push, 0)\n#include "ics/icsnVC40Internal.h"\n#pragma warning(pop)', file=f)
 
         print("\nint setup_module_auto_defines(PyObject * module)\n{", file=f)
         print("\tint result = 0;\n", file=f)
