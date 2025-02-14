@@ -70,14 +70,20 @@ def get_ics_extension_compiler_arguments() -> List[str]:
     """Return a list of compiler arguments to append for compiling the ics extension module"""
     # gcc and clang arguments
     GCC_COMPILE_ARGS = [
-        "-fpermissive",
-        "-Wno-unused-variable",
-        "-Wno-unused-function",
-        "-Wno-write-strings",
+        "-Wno-unknown-pragmas",
     ]
     # Set compiler flags here
     if "WINDOWS" in platform.system().upper():
-        compile_args = []
+        compile_args = [
+            "/W4",
+            "/Wall", # Displays all warnings displayed by /W4 and all other warnings that /W4 doesn't include
+            #"/WX", # Treats all compiler warnings as errors.
+            "/external:anglebrackets",
+            "/external:W0",
+            "/wd4710",
+            "/wd4711",
+            "/wd5045"
+        ]
         # mingw and clang python builds won't have MSC in the version string
         if "MSC" not in sys.version:
             compile_args = GCC_COMPILE_ARGS

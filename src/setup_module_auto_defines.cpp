@@ -6,7 +6,9 @@
 
 #include "setup_module_auto_defines.h"
 #include <Python.h>
+#pragma warning(push, 0)
 #include "ics/icsnVC40.h"
+#pragma warning(pop)
 
 int setup_module_auto_defines(PyObject * module)
 {
@@ -137,6 +139,16 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, NETID_SPI4);
 	result += PyModule_AddIntMacro(module, NETID_SPI5);
 	result += PyModule_AddIntMacro(module, NETID_SPI6);
+	result += PyModule_AddIntMacro(module, NETID_SPI7);
+	result += PyModule_AddIntMacro(module, NETID_SPI8);
+	result += PyModule_AddIntMacro(module, NETID_LIN_09);
+	result += PyModule_AddIntMacro(module, NETID_LIN_10);
+	result += PyModule_AddIntMacro(module, NETID_LIN_11);
+	result += PyModule_AddIntMacro(module, NETID_LIN_12);
+	result += PyModule_AddIntMacro(module, NETID_LIN_13);
+	result += PyModule_AddIntMacro(module, NETID_LIN_14);
+	result += PyModule_AddIntMacro(module, NETID_LIN_15);
+	result += PyModule_AddIntMacro(module, NETID_LIN_16);
 	result += PyModule_AddIntMacro(module, NETID_MAX);
 	result += PyModule_AddIntMacro(module, NETID_INVALID);
 	result += PyModule_AddIntMacro(module, NEODEVICE_UNKNOWN);
@@ -175,8 +187,10 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, NEODEVICE_RADMOON3);
 	result += PyModule_AddIntMacro(module, NEODEVICE_RADCOMET);
 	result += PyModule_AddIntMacro(module, NEODEVICE_FIRE3_FLEXRAY);
-	result += PyModule_AddIntMacro(module, NEODEVICE_RED2_OEM);
+	result += PyModule_AddIntMacro(module, NEODEVICE_NEOVI_CONNECT);
 	result += PyModule_AddIntMacro(module, NEODEVICE_RADCOMET3);
+	result += PyModule_AddIntMacro(module, NEODEVICE_RADMOONT1S);
+	result += PyModule_AddIntMacro(module, NEODEVICE_GIGASTAR2);
 	result += PyModule_AddIntMacro(module, NEODEVICE_RED);
 	result += PyModule_AddIntMacro(module, NEODEVICE_ECU);
 	result += PyModule_AddIntMacro(module, NEODEVICE_IEVB);
@@ -196,7 +210,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, NEODEVICE_VCAN42);
 	result += PyModule_AddIntMacro(module, NEODEVICE_CMPROBE);
 	result += PyModule_AddIntMacro(module, NEODEVICE_EEVB);
-	result += PyModule_AddIntMacro(module, NEODEVICE_VCANRF);
+	result += PyModule_AddIntMacro(module, NEODEVICE_DONT_REUSE4);
 	result += PyModule_AddIntMacro(module, NEODEVICE_FIRE2);
 	result += PyModule_AddIntMacro(module, NEODEVICE_FLEX);
 	result += PyModule_AddIntMacro(module, NEODEVICE_RADGALAXY);
@@ -539,7 +553,6 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, OP_ETH_GENERAL_SETTINGS_SIZE);
 	result += PyModule_AddIntMacro(module, RAD_GPTP_SETTINGS_SIZE);
 	result += PyModule_AddIntMacro(module, RAD_GPTP_AND_TAP_SETTINGS_SIZE);
-	result += PyModule_AddIntMacro(module, HW_ETH_SETTINGS_SIZE);
 	// enum
 	result += PyModule_AddIntMacro(module, OPETH_LINK_AUTO);
 	result += PyModule_AddIntMacro(module, OPETH_LINK_MASTER);
@@ -567,6 +580,10 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS2_FLAG2_IP_CONFIG_NOT_ALLOWED);
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS2_FLAG2_SFP_ID_SHIFT);
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS2_FLAG2_SFP_ID_MASK);
+	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS2_FLAG2_CUT_THRU_TAP_ENABLE);
+	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS2_FLAG2_SNF_TAP_ENABLE);
+	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS2_FLAG2_DISABLE_TAP_TO_HOST);
+	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS2_FLAG2_SHOW_TAP_TX_RECEIPT);
 	// enum
 	result += PyModule_AddIntMacro(module, SFP_ID_UNKNOWN);
 	result += PyModule_AddIntMacro(module, SFP_ID_FINISAR_FCLF8522P2BTL);
@@ -592,6 +609,11 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS10G_FLAG_PKT_CHECK);
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS10G_FLAG_PKT_GEN);
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS10G_FLAG_IP_CONFIG_NOT_ALLOWED);
+	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS10G_FLAG_CUT_THRU_TAP_ENABLE);
+	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS10G_FLAG_SNF_TAP_ENABLE);
+	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS10G_FLAG_DISABLE_TAP_TO_HOST);
+	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS10G_FLAG_MACSEC_ENABLE);
+	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS10G_FLAG_SHOW_TAP_TX_RECEIPT);
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS10G_FLAG_COMM_IN_USE);
 	result += PyModule_AddIntMacro(module, ETHERNET10G_SETTINGS_SIZE);
 	result += PyModule_AddIntMacro(module, ETHERNET10T1S_SETTINGS_SIZE);
@@ -600,7 +622,6 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, ETHERNET10T1S_SETTINGS_FLAG_BUS_DECODING_BEACONS);
 	result += PyModule_AddIntMacro(module, ETHERNET10T1S_SETTINGS_FLAG_BUS_DECODING_ALL);
 	result += PyModule_AddIntMacro(module, ETHERNET10T1S_SETTINGS_EXT_SIZE);
-	result += PyModule_AddIntMacro(module, ETHERNET10T1S_SETTINGS_EXT_FLAG_ENABLE_MULTI_ID);
 	// enum
 	result += PyModule_AddIntMacro(module, MACSEC_PACKET_NO_VLAN_OR_MPLS);
 	result += PyModule_AddIntMacro(module, MACSEC_PACKET_SINGLE_VLAN);
@@ -873,7 +894,6 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, SCyanSettings_SIZE);
 	result += PyModule_AddIntMacro(module, SVCAN3Settings_SIZE);
 	result += PyModule_AddIntMacro(module, SVCAN4Settings_SIZE);
-	result += PyModule_AddIntMacro(module, SVCANRFSettings_SIZE);
 	result += PyModule_AddIntMacro(module, SECUSettings_SIZE);
 	result += PyModule_AddIntMacro(module, SPendantSettings_SIZE);
 	result += PyModule_AddIntMacro(module, SIEVBSettings_SIZE);
@@ -1022,6 +1042,9 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, SRADBMSSettings_SIZE);
 	result += PyModule_AddIntMacro(module, SRADCometSettings_SIZE);
 	result += PyModule_AddIntMacro(module, SRADComet3Settings_SIZE);
+	result += PyModule_AddIntMacro(module, SRADGigastar2Settings_SIZE);
+	result += PyModule_AddIntMacro(module, SRADMoonT1SSettings_SIZE);
+	result += PyModule_AddIntMacro(module, SNeoVIConnectSettings_SIZE);
 	result += PyModule_AddIntMacro(module, GS_VERSION);
 	result += PyModule_AddIntMacro(module, GLOBAL_SETTINGS_SIZE);
 	result += PyModule_AddIntMacro(module, NEOVI_3G_MAX_SETTINGS_SIZE);
@@ -1040,7 +1063,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, DeviceRADMoon2SettingsType);
 	result += PyModule_AddIntMacro(module, DeviceRADPlutoSettingsType);
 	result += PyModule_AddIntMacro(module, DeviceRADGigalogSettingsType);
-	result += PyModule_AddIntMacro(module, DeviceVCANRFSettingsType);
+	result += PyModule_AddIntMacro(module, DeviceDeprecatedType);
 	result += PyModule_AddIntMacro(module, DeviceEEVBSettingsType);
 	result += PyModule_AddIntMacro(module, DeviceVCAN4IndSettingsType);
 	result += PyModule_AddIntMacro(module, DeviceNeoECU12SettingsType);
@@ -1065,9 +1088,11 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, DeviceFire3SettingsType);
 	result += PyModule_AddIntMacro(module, DeviceFire3FlexraySettingsType);
 	result += PyModule_AddIntMacro(module, DeviceRADCometSettingsType);
-	result += PyModule_AddIntMacro(module, DeviceRed2OemSettingsType);
+	result += PyModule_AddIntMacro(module, DeviceNeoVIConnectSettingsType);
 	result += PyModule_AddIntMacro(module, DeviceRADComet3SettingsType);
 	result += PyModule_AddIntMacro(module, DeviceRADGalaxy2SettingsType);
+	result += PyModule_AddIntMacro(module, DeviceRADGigastar2SettingsType);
+	result += PyModule_AddIntMacro(module, DeviceRADMoonT1SSettingsType);
 	result += PyModule_AddIntMacro(module, DeviceSettingsTypeMax);
 	result += PyModule_AddIntMacro(module, DeviceSettingsNone);
 	// end of enum -  } EDeviceSettingsType;

@@ -24,6 +24,7 @@ classifiers=[
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
     ]
 
 [project.urls]
@@ -43,11 +44,12 @@ requires = [
 ]
 [tool.cibuildwheel]
 build = "{*-win32,*-win_amd64,*-macosx_universal2,*-manylinux_x86_64,*-manylinux_aarch64}"
-skip = "cp36-* pp* *-manylinux_i686 *-musllinux_*"
+skip = "cp36-* cp37-* pp* *-manylinux_i686 *-musllinux_*"
 environment = {DISTUTILS_DEBUG=1, MACOSX_DEPLOYMENT_TARGET="10.13", CIBW_ARCHS_LINUX="auto aarch64"}
 before-build = "python -m pip install wheel"
 manylinux-x86_64-image = "quay.io/pypa/manylinux_2_28_x86_64"
 manylinux-aarch64-image = "quay.io/pypa/manylinux_2_28_aarch64"
+free-threaded-support = true
 
 [tool.cibuildwheel.linux]
 before-build = "dnf install -y cmake clang clang-tools-extra flex bison"

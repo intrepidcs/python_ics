@@ -2,6 +2,10 @@
 #include <ice/ice.h>
 #include <cstring>
 
+#pragma warning(push)
+#pragma warning(disable : 4996) // warning C4996: 'strcpy': This function or variable may be unsafe.
+
+
 
 bool dll_reinitialize(char* name)
 {
@@ -30,3 +34,5 @@ ice::Library* dll_get_library(void)
     }
     return mgr["ics"];
 }
+
+#pragma warning(pop)

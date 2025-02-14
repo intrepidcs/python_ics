@@ -78,6 +78,10 @@ extern "C"
         }
         PyDateTime_IMPORT;
 
+#ifdef Py_GIL_DISABLED
+        // Enable the experimental free threaded introduced in 3.13
+        PyUnstable_Module_SetGIL(module, Py_MOD_GIL_NOT_USED);
+#endif
         // Add build constant variables
         setup_module_defines(module);
         setup_module_auto_defines(module);
