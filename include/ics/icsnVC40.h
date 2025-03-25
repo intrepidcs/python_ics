@@ -465,6 +465,7 @@ typedef unsigned __int64 uint64_t;
 #define SPY_STATUS2_ETHERNET_T1S_BURST 0x40000000
 #define SPY_STATUS2_ETHERNET_T1S_ETHERNET 0x80000000
 #define SPY_STATUS3_ETHERNET_TX_COLLISION 0x00000001
+#define SPY_STATUS3_ETHERNET_T1S_WAKE 0x00000002
 
 /* FlexRay Specific - check protocol before handling */
 #define SPY_STATUS2_FLEXRAY_TX_AB 0x200000
@@ -1072,13 +1073,9 @@ typedef union _stChipVersions
 	{
 		uint8_t zynq_core_major;
 		uint8_t zynq_core_minor;
+		uint8_t usb_core_major;
+		uint8_t usb_core_minor;
 	} radgigastar_versions;
-
-	struct
-	{
-		uint8_t zynq_core_major;
-		uint8_t zynq_core_minor;
-	} radgigastar_usbz_versions;
 
 	struct
 	{
@@ -1183,6 +1180,8 @@ typedef union _stChipVersions
 	{
 		uint8_t zynq_core_major;
 		uint8_t zynq_core_minor;
+		uint8_t usb_core_major;
+		uint8_t usb_core_minor;
 	} radgigastar2_versions;
 
 	struct
@@ -1359,6 +1358,7 @@ typedef struct ETHERNET_SETTINGS_t
 #define ETHERNET_SETTINGS2_FLAG2_SNF_TAP_ENABLE 0x0200 // store and forward
 #define ETHERNET_SETTINGS2_FLAG2_DISABLE_TAP_TO_HOST 0x0400
 #define ETHERNET_SETTINGS2_FLAG2_SHOW_TAP_TX_RECEIPT 0x0800
+#define ETHERNET_SETTINGS2_FLAG2_TCP_COMM_STATIC_PORT_ENABLE 0x1000
 
 typedef enum
 {
@@ -1402,6 +1402,7 @@ typedef struct ETHERNET_SETTINGS2_t
 	 * bit9: store and forward tap enabled (forward RX to tap partner)
 	 * bit10: disable tap frames to host
 	 * bit11: show TX receipt for tap frames
+	 * bit12: enable static port for TCP comm
 	 */
 	uint16_t flags2;
 } ETHERNET_SETTINGS2;
@@ -1426,6 +1427,7 @@ typedef struct ETHERNET_SETTINGS2_t
 #define ETHERNET_SETTINGS10G_FLAG_DISABLE_TAP_TO_HOST 0x00010000
 #define ETHERNET_SETTINGS10G_FLAG_MACSEC_ENABLE 0x00020000
 #define ETHERNET_SETTINGS10G_FLAG_SHOW_TAP_TX_RECEIPT 0x00040000
+#define ETHERNET_SETTINGS10G_FLAG_TCP_COMM_STATIC_PORT_ENABLE 0x00080000
 #define ETHERNET_SETTINGS10G_FLAG_COMM_IN_USE 0x80000000
 
 typedef struct ETHERNET10G_SETTINGS_t
@@ -1450,6 +1452,7 @@ typedef struct ETHERNET10G_SETTINGS_t
 	 * bit16: disable tap frames to host
 	 * bit17: macsec enable
 	 * bit18: show TX receipt for tap frames
+	 * bit19: enable static port for TCP comm
 	 * bit31: comm in use
 	 */
 	uint32_t flags;
@@ -1969,12 +1972,14 @@ enum
 	swUpdateValidateComponent = 6,
 	swUpdateFinalize = 7,
 	swUpdateGetCommunicationVersion = 8,
+	swUpdateCheckFwVersion = 9,
 };
 
 typedef struct
 {
 	uint32_t componentIdentifier; // unique id for the software component - analogous to what used to be "chip id"
 	uint8_t commandType; // See enum
+	uint8_t expansionSlot; // aka vnet slot
 	uint32_t offset;
 	uint32_t commandSizeOrProgress; // size
 	uint8_t commandData[0]; // max size TBD or per-device
@@ -2022,6 +2027,38 @@ struct priority_vector
 	struct port_identity portid;
 	uint16_t port_number;
 };
+struct _scaled_ns {
+	int16_t nanoseconds_msb;
+	int64_t nanoseconds_lsb;
+	int16_t fractional_nanoseconds;
+};
+
+// IEEE 802.1AS-2020 14.3
+// This is a read-only data structure
+struct _current_ds {
+	uint16_t steps_removed;
+	int64_t offset_from_master;
+	struct _scaled_ns last_gm_phase_change;
+	double last_gm_freq_change;
+	uint16_t gm_time_base_indicator;
+	uint32_t gm_change_count;
+	uint32_t time_of_last_gm_change_event;
+	uint32_t time_of_last_gm_phase_change_event;
+	uint32_t time_of_last_gm_freq_change_event;
+};
+
+// IEEE 802.1AS-2020 14.4
+// This is a read-only data structure
+struct _parent_ds {
+	struct port_identity parent_port_identity;
+	int32_t cumulative_rate_ratio;
+	_clock_identity grandmaster_identity;
+	uint8_t gm_clock_quality_clock_class;
+	uint8_t gm_clock_quality_clock_accuracy;
+	uint16_t gm_clock_quality_offset_scaled_log_variance;
+	uint8_t gm_priority1;
+	uint8_t gm_priority2;
+};
 
 typedef struct _GPTPStatus
 {
@@ -2029,15 +2066,16 @@ typedef struct _GPTPStatus
 	struct priority_vector gm_priority;
 	int64_t ms_offset_ns;
 	uint8_t is_sync;
-
 	uint8_t link_status;
 	int64_t link_delay_ns;
 	uint8_t selected_role;
 	uint8_t as_capable;
-
 	uint8_t is_syntonized;
-	uint8_t reserved[8];
+	struct _timestamp last_rx_sync_ts; // t2 in IEEE 1588-2019 Figure-16
+	struct _current_ds current_ds;
+	struct _parent_ds parent_ds;
 } GPTPStatus;
+
 typedef struct _GenericBinaryStatus
 {
 	uint32_t size;
@@ -4311,6 +4349,14 @@ typedef struct
 	uint16_t cmp_device_id;
 } CMP_GLOBAL_DATA;
 
+enum
+{
+	NETWORK_TIMESYNC_OFF,
+	NETWORK_TIMESYNC_AUTO,
+	NETWORK_TIMESYNC_NTP_ONLY,
+	NETWORK_TIMESYNC_GPS_ONLY
+};
+
 typedef struct _SRed2Settings
 {
 	uint16_t perf_en;
@@ -4386,8 +4432,9 @@ typedef struct _SRed2Settings
 	uint16_t iso_tester_pullup_enable;
 	CMP_GLOBAL_DATA cmp_global_data;
 	CMP_NETWORK_DATA cmp_stream_data[CMP_STREAMS_RED2];
+	uint32_t networkTimeSync;
 } SRed2Settings;
-#define SRed2Settings_SIZE (914)
+#define SRed2Settings_SIZE (918)
 
 typedef struct _SFire3Settings
 {
@@ -4498,8 +4545,9 @@ typedef struct _SFire3Settings
 	uint16_t iso_tester_pullup_enable;
 	CMP_GLOBAL_DATA cmp_global_data;
 	CMP_NETWORK_DATA cmp_stream_data[CMP_STREAMS_FIRE3];
+	uint32_t networkTimeSync;
 } SFire3Settings;
-#define SFire3Settings_SIZE (1718)
+#define SFire3Settings_SIZE (1722)
 
 
 typedef struct _SFire3FlexraySettings
@@ -4595,8 +4643,9 @@ typedef struct _SFire3FlexraySettings
 	uint16_t iso_tester_pullup_enable;
 	CMP_GLOBAL_DATA cmp_global_data;
 	CMP_NETWORK_DATA cmp_stream_data[CMP_STREAMS_FIRE3FR];
+	uint32_t networkTimeSync;
 } SFire3FlexraySettings;
-#define SFire3FlexraySettings_SIZE (1368)
+#define SFire3FlexraySettings_SIZE (1372)
 
 typedef struct
 {
@@ -4668,7 +4717,7 @@ typedef struct _SEtherBadgeSettings
 
 #define SEtherBadgeSettings_SIZE 316
 
-#define RADEPSILON_NUM_PORTS 9 // ATSAM + PHYs
+#define RADEPSILON_NUM_PORTS 18 // ATSAM + PHYs
 #define RADEPSILON_MAX_PHY 18
 
 typedef struct _SRADEpsilonSwitchSettings
@@ -4726,8 +4775,10 @@ typedef struct _SRADEpsilonSettings
 	SRADEpsilonSwitchSettings switchSettings; //80
 	ETHERNET_SETTINGS2 ethernet2; //16
 	uint16_t misc_io_on_report_events; //2
-} SRADEpsilonSettings; //386
-#define SRADEpsilonSettings_SIZE 386
+	DISK_SETTINGS disk; //14
+
+} SRADEpsilonSettings; //400
+#define SRADEpsilonSettings_SIZE 400
 
 typedef struct
 {
@@ -5153,8 +5204,9 @@ typedef struct _SRADMoonT1SSettings
 	ETHERNET10T1S_SETTINGS t1s;
 	// 10T1S Extended Settings
 	ETHERNET10T1S_SETTINGS_EXT t1sExt;
+	RAD_GPTP_SETTINGS gPTP;
 } SRADMoonT1SSettings;
-#define SRADMoonT1SSettings_SIZE 124
+#define SRADMoonT1SSettings_SIZE 160
 
 typedef struct _SNeoVIConnectSettings
 {
