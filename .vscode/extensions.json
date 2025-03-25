@@ -4,6 +4,8 @@
         "charliermarsh.ruff",
         "mikoz.black-py",
         "xaver.clang-format",
-        "webfreak.debug"
+        "webfreak.debug",
+        "tamasfe.even-better-toml",
+        "fill-labs.dependi"
     ]
 }
