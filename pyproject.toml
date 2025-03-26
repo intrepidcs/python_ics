@@ -1,30 +1,26 @@
 [project]
 name = "python_ics"
 dynamic = ["version"]
-authors = [
-  {name = "David Rebbe", email = "drebbe@intrepidcs.com"},
-]
-maintainers = [
-  {name = "David Rebbe", email = "drebbe@intrepidcs.com"},
-]
+authors = [{ name = "David Rebbe", email = "drebbe@intrepidcs.com" }]
+maintainers = [{ name = "David Rebbe", email = "drebbe@intrepidcs.com" }]
 description = "Python wrapper for interfacing to IntrepidCS Hardware."
 keywords = ["intrepidcs", "CAN", "Ethernet", "Automotive", "ICS"]
-readme = {file = "README.md", content-type = "text/markdown"}
+readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.9"
-classifiers=[ 
-        "Development Status :: 5 - Production/Stable",
-        "Intended Audience :: Developers",
-        "License :: OSI Approved :: MIT License",
-        "Operating System :: OS Independent",
-        "Topic :: Software Development :: Libraries :: Python Modules",
-        "Programming Language :: Python",
-        "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.10",
-        "Programming Language :: Python :: 3.11",
-        "Programming Language :: Python :: 3.12",
-        "Programming Language :: Python :: 3.13",
-    ]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+]
 
 [project.urls]
 Homepage = "https://intrepidcs.com"
@@ -33,7 +29,7 @@ Repository = "https://github.com/intrepidcs/python_ics/"
 Issues = "https://github.com/intrepidcs/python_ics/issues"
 
 [tool.setuptools.dynamic]
-version = {attr = "ics.__version__"}
+version = { attr = "ics.__version__" }
 
 [build-system]
 requires = [
@@ -41,7 +37,7 @@ requires = [
   "wheel",
   "dunamai",
   "hatchling",
-  "uv-dynamic-versioning"
+  "uv-dynamic-versioning",
 ]
 build-backend = "hatchling.build"
 
@@ -66,7 +62,7 @@ dirty = true
 [tool.cibuildwheel]
 build = "{*-win32,*-win_amd64,*-macosx_universal2,*-manylinux_x86_64,*-manylinux_aarch64}"
 skip = "cp36-* cp37-* pp* *-manylinux_i686 *-musllinux_*"
-environment = {DISTUTILS_DEBUG=1, MACOSX_DEPLOYMENT_TARGET="10.13", CIBW_ARCHS_LINUX="auto aarch64"}
+environment = { CIBW_BUILD_VERBOSITY = 1, DISTUTILS_DEBUG = 1, MACOSX_DEPLOYMENT_TARGET = "10.13", CIBW_ARCHS_LINUX = "auto aarch64" }
 before-build = "python -m pip install wheel"
 manylinux-x86_64-image = "quay.io/pypa/manylinux_2_28_x86_64"
 manylinux-aarch64-image = "quay.io/pypa/manylinux_2_28_aarch64"
