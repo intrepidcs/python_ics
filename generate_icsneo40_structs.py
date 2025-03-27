@@ -746,12 +746,12 @@ def generate(filename="include/ics/icsnVC40.h"):
         import_line = "from ics.structures import {}".format(
             re.sub(r'(\.py)', '', file_name))
         try:
-            print(f"Importing / Verifying {output_dir / file_name}...")
+            print(f"Importing / Verifying {output_dir / file_name}...{' '*20}", end="\r")
             exec(import_line)
         except Exception as ex:
-            print(f"""ERROR: {ex} IMPORT LINE: '{import_line}'""")
+            print(f"""\nERROR: {ex} IMPORT LINE: '{import_line}'""")
             raise ex
-    print("Done.")
+    print("\nDone.")
 
 
 def _write_c_object(f, c_object):

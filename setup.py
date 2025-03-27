@@ -60,8 +60,9 @@ class _build_ics_py(build_py):
                 if pathlib.Path(name).suffix == ".py" and 'icsdebug' not in name:
                     src = (dirpath / name)
                     dest = (gen_path / dirpath.relative_to(src_path) / name)
-                    print(f"Copying {src} to {dest}")
+                    print(f"Copying {src} to {dest}{' '*20}", end="")
                     shutil.copy(src, dest)
+        print("")
         self.run_command("build_libicsneo")
         super().run()
 
