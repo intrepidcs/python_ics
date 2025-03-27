@@ -12,13 +12,14 @@ def get_pkg_version() -> str:
     Returns:
         str: The package version.
     """
-    version = dunamai.Version.from_git()
-    # Set the dev version if the environment variable is set.
-    if os.getenv("PYTHON_ICS_DEV_BUILD") is not None:
-        pkg_version = version.serialize(format="v{base}.dev{distance}", style=dunamai.Style.Pep440)
-    else:
-        pkg_version = version.serialize(format="{base}", style=dunamai.Style.Pep440)
-    return pkg_version
+    # version = dunamai.Version.from_git()
+    # # Set the dev version if the environment variable is set.
+    # if os.getenv("PYTHON_ICS_DEV_BUILD") is not None:
+    #     pkg_version = version.serialize(format="v{base}.dev{distance}", style=dunamai.Style.Pep440)
+    # else:
+    #     pkg_version = version.serialize(format="{base}", style=dunamai.Style.Pep440)
+    return dunamai.Version.from_git().serialize(metadata=False)
+    # return pkg_version
 
 def create_version_py(path: pathlib.Path = pathlib.Path("gen/ics/__version.py")) -> None:
     """
