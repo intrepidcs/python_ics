@@ -56,3 +56,44 @@ jobs:
           pattern: python_ics-*
           merge-multiple: true
           path: ./wheelhouse/
+
+  deploy_pypi:
+    name: "Deploy PyPI"
+    runs-on: ubuntu-latest
+    needs: build_wheels
+    if: |
+      github.ref_name	 == 'master' ||
+      startsWith(github.event.ref, 'refs/tags/v')
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+
+      - name: Set up Python
+        run: |
+          uv python install 3.12
+          uv venv -p 3.12
+          source .venv/bin/activate
+          uv pip install check-wheel-contents twine
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: python_ics-*
+          merge-multiple: true
+          path: ./wheelhouse/
+
+      - name: "Publish to PyPI"
+        if: |
+          github.ref_name	 == 'master' ||
+          startsWith(github.event.ref, 'refs/tags/v')
+        run: |
+          source .venv/bin/activate
+          uv pip install check-wheel-contents twine
+          check-wheel-contents ./wheelhouse/*.whl
+          twine upload -u __token__ -p ${{ secrets.PYPI_TOKEN }} --verbose ./wheelhouse/*

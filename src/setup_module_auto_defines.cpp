@@ -383,6 +383,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, SPY_STATUS2_ETHERNET_T1S_BURST);
 	result += PyModule_AddIntMacro(module, SPY_STATUS2_ETHERNET_T1S_ETHERNET);
 	result += PyModule_AddIntMacro(module, SPY_STATUS3_ETHERNET_TX_COLLISION);
+	result += PyModule_AddIntMacro(module, SPY_STATUS3_ETHERNET_T1S_WAKE);
 	result += PyModule_AddIntMacro(module, SPY_STATUS2_FLEXRAY_TX_AB);
 	result += PyModule_AddIntMacro(module, SPY_STATUS2_FLEXRAY_TX_AB_NO_A);
 	result += PyModule_AddIntMacro(module, SPY_STATUS2_FLEXRAY_TX_AB_NO_B);
@@ -584,6 +585,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS2_FLAG2_SNF_TAP_ENABLE);
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS2_FLAG2_DISABLE_TAP_TO_HOST);
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS2_FLAG2_SHOW_TAP_TX_RECEIPT);
+	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS2_FLAG2_TCP_COMM_STATIC_PORT_ENABLE);
 	// enum
 	result += PyModule_AddIntMacro(module, SFP_ID_UNKNOWN);
 	result += PyModule_AddIntMacro(module, SFP_ID_FINISAR_FCLF8522P2BTL);
@@ -614,6 +616,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS10G_FLAG_DISABLE_TAP_TO_HOST);
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS10G_FLAG_MACSEC_ENABLE);
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS10G_FLAG_SHOW_TAP_TX_RECEIPT);
+	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS10G_FLAG_TCP_COMM_STATIC_PORT_ENABLE);
 	result += PyModule_AddIntMacro(module, ETHERNET_SETTINGS10G_FLAG_COMM_IN_USE);
 	result += PyModule_AddIntMacro(module, ETHERNET10G_SETTINGS_SIZE);
 	result += PyModule_AddIntMacro(module, ETHERNET10T1S_SETTINGS_SIZE);
@@ -713,6 +716,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, swUpdateValidateComponent);
 	result += PyModule_AddIntMacro(module, swUpdateFinalize);
 	result += PyModule_AddIntMacro(module, swUpdateGetCommunicationVersion);
+	result += PyModule_AddIntMacro(module, swUpdateCheckFwVersion);
 	// end of enum -  };
 
 	result += PyModule_AddIntMacro(module, SExtSubCmdHdr_SIZE);
@@ -1003,6 +1007,13 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, CMP_STREAMS_FIRE3);
 	result += PyModule_AddIntMacro(module, CMP_STREAMS_FIRE3FR);
 	result += PyModule_AddIntMacro(module, CMP_STREAMS_RED2);
+	// enum
+	result += PyModule_AddIntMacro(module, NETWORK_TIMESYNC_OFF);
+	result += PyModule_AddIntMacro(module, NETWORK_TIMESYNC_AUTO);
+	result += PyModule_AddIntMacro(module, NETWORK_TIMESYNC_NTP_ONLY);
+	result += PyModule_AddIntMacro(module, NETWORK_TIMESYNC_GPS_ONLY);
+	// end of enum -  };
+
 	result += PyModule_AddIntMacro(module, SRed2Settings_SIZE);
 	result += PyModule_AddIntMacro(module, SFire3Settings_SIZE);
 	result += PyModule_AddIntMacro(module, SFire3FlexraySettings_SIZE);

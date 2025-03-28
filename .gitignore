@@ -1,6 +1,10 @@
 # python virtual environment
 .venv/
 
+icsnVC40_processed.h
+icsnVC40.h.*
+*.whl
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
