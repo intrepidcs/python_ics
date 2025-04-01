@@ -1368,6 +1368,7 @@ typedef enum
 	SFP_ID_ICS_MV2112A2,
 	SFP_ID_ICS_MV2221MB1,
 	SFP_ID_ICS_MV3244,
+	SFP_ID_ICS_MC8670,
 	// add new entries here
 	SFP_ID_MAX,
 } SfpId;
@@ -1482,6 +1483,8 @@ typedef struct ETHERNET10T1S_SETTINGS_t
 #define ETHERNET10T1S_SETTINGS_FLAG_TERMINATION 0x02
 #define ETHERNET10T1S_SETTINGS_FLAG_BUS_DECODING_BEACONS 0x04
 #define ETHERNET10T1S_SETTINGS_FLAG_BUS_DECODING_ALL 0x08
+#define ETHERNET10T1S_SETTINGS_FLAG_ENABLE_PLCA_COL_DET 0x10
+#define ETHERNET10T1S_SETTINGS_FLAG_ENABLE_CSMA_FALLBACK 0x20
 
 typedef struct ETHERNET10T1S_SETTINGS_EXT_t
 {
@@ -2083,6 +2086,22 @@ typedef struct _GenericBinaryStatus
 	uint16_t status;
 	uint8_t reserved[8];
 } GenericBinaryStatus;
+
+//-----------------------------------------------------------------
+#define MULTI_MAC__ADDR_LEN 6
+#define MULTI_MAC__MAX_MAC_CNT 32
+typedef struct _MacAddrEntry
+{
+	uint16_t mMacId;
+	uint8_t mMacAddr[MULTI_MAC__ADDR_LEN];
+} MacAddrEntry;
+
+typedef struct _MultiMacAddrInfo
+{
+	uint16_t mAddrCnt;
+	MacAddrEntry mMacEntries[MULTI_MAC__MAX_MAC_CNT];
+} MultiMacAddrInfo;
+//-----------------------------------------------------------------
 
 #define GENERIC_BINARY_STATUS_ERROR_UNKNOWN_BINARY 0x0001
 #define GENERIC_BINARY_STATUS_ERROR_OVERSIZE 0x0002
@@ -2884,9 +2903,15 @@ enum eGPTPPort
 	ePortOpEth10 = 10,
 	ePortOpEth11 = 11,
 	ePortOpEth12 = 12,
+
 	ePortStdEth1 = 13,
 	ePortStdEth2 = 14,
 	ePortStdEth3 = 15,
+
+	ePortOpEth13 = 16,
+	ePortOpEth14 = 17,
+	ePortOpEth15 = 18,
+	ePortOpEth16 = 19,
 };
 
 /* GPTP port role options */
@@ -3345,9 +3370,14 @@ typedef struct _SRADGigastarSettings
 
 	RAD_GPTP_SETTINGS gPTP;
 	uint64_t network_enables_5;
+	// SFP T1S
+	ETHERNET10T1S_SETTINGS sfp_t1s_1;
+	ETHERNET10T1S_SETTINGS_EXT sfp_t1s_ext_1;
+	ETHERNET10T1S_SETTINGS sfp_t1s_2;
+	ETHERNET10T1S_SETTINGS_EXT sfp_t1s_ext_2;
 } SRADGigastarSettings;
 
-#define SRADGigastarSettings_SIZE 710
+#define SRADGigastarSettings_SIZE 766
 
 typedef struct _SRADGalaxy2Settings
 {
@@ -5177,8 +5207,13 @@ typedef struct _SRADGigaStar2Settings
 	ETHERNET_SETTINGS2 ethT1s8;
 	ETHERNET10T1S_SETTINGS t1s8;
 	ETHERNET10T1S_SETTINGS_EXT t1s8Ext;
+	// SFP T1S
+	ETHERNET10T1S_SETTINGS sfp_t1s_1;
+	ETHERNET10T1S_SETTINGS_EXT sfp_t1s_ext_1;
+	ETHERNET10T1S_SETTINGS sfp_t1s_2;
+	ETHERNET10T1S_SETTINGS_EXT sfp_t1s_ext_2;
 } SRADGigastar2Settings;
-#define SRADGigastar2Settings_SIZE 2024
+#define SRADGigastar2Settings_SIZE 2080
 
 typedef struct _SRADMoonT1SSettings
 {
@@ -6217,6 +6252,14 @@ typedef enum PhyErrorType
 	PhyGetVersionError = 10,
 	PhyIndexError = 11,
 } PhyErrorType;
+
+typedef enum _EDevNameType
+{
+	EDevNameTypeDefault,
+	EDevNameTypeNoSerial,
+	EDevNameTypeTCP,
+	EDevNameTypeTCPShort,
+} EDevNameType;
 
 // Update this assert when we add features to this enum
 //static_assert(NUM_VALID_DEVICE_FEATURES == (networkTerminationDWCAN08 + 1));
