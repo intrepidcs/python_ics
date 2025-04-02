@@ -16,6 +16,8 @@
 #include "setup_module_auto_defines.h"
 
 #include <memory>
+#include <sstream>
+#include <string>
 
 extern PyTypeObject spy_message_object_type;
 // __func__, __FUNCTION__ and __PRETTY_FUNCTION__ are not preprocessor macros.
@@ -59,11 +61,10 @@ typedef struct
 #endif
 #endif
 
-
 #pragma warning(push)
-// warning C4191: 'type cast': unsafe conversion from 'PyObject *(__cdecl *)(PyObject *,PyObject *,PyObject *)' 
+// warning C4191: 'type cast': unsafe conversion from 'PyObject *(__cdecl *)(PyObject *,PyObject *,PyObject *)'
 // to 'PyCFunction' Making a function call using the resulting pointer may cause your program to fail
-#pragma warning(disable: 4191)
+#pragma warning(disable : 4191)
 PyMethodDef IcsMethods[] = {
     _EZ_ICS_STRUCT_METHOD("find_devices",
                           "icsneoFindNeoDevices",
@@ -579,6 +580,12 @@ PyMethodDef IcsMethods[] = {
                           meth_set_safe_boot_mode,
                           METH_VARARGS,
                           _DOC_SET_SAFE_BOOT_MODE),
+    _EZ_ICS_STRUCT_METHOD("get_device_name",
+                          "icsneoGetDeviceName",
+                          "GetDeviceName",
+                          meth_get_device_name,
+                          METH_VARARGS,
+                          _DOC_GET_DEVICE_NAME),
 
     { "override_library_name", (PyCFunction)meth_override_library_name, METH_VARARGS, _DOC_OVERRIDE_LIBRARY_NAME },
     { "get_library_path", (PyCFunction)meth_get_library_path, METH_NOARGS, "" },
@@ -589,136 +596,165 @@ PyMethodDef IcsMethods[] = {
 #pragma warning(pop)
 
 // Internal function
-const char* neodevice_to_string(unsigned long type)
+auto device_name_from_nde(NeoDeviceEx* nde) -> std::string
 {
-    switch (type) {
-        case NEODEVICE_UNKNOWN:
-            return "Unknown";
-        case NEODEVICE_BLUE:
-            return "neoVI BLUE";
-        case NEODEVICE_ECU_AVB:
-            return "neoECU AVB/TSN";
-        case NEODEVICE_RADSUPERMOON:
-            return "RAD-Supermoon";
-        case NEODEVICE_DW_VCAN:
-            return "ValueCAN DW";
-        case NEODEVICE_RADMOON2:
-            return "RAD-Moon 2";
-        case NEODEVICE_RADGIGALOG:
-            return "RAD-Gigalog";
-        case NEODEVICE_VCAN41:
-            return "ValueCAN 4-1";
-        case NEODEVICE_FIRE:
-            return "neoVI FIRE";
-        case NEODEVICE_RADPLUTO:
-            return "RAD-Pluto";
-        case NEODEVICE_VCAN42_EL:
-            return "ValueCAN 4-2EL";
-        case NEODEVICE_RADIO_CANHUB:
-            return "neoRAD-IO2-CANHUB";
-        case NEODEVICE_NEOECU12:
-            return "neoECU12";
-        case NEODEVICE_OBD2_LC:
-            return "neoOBD2-LC";
-        case NEODEVICE_RAD_MOON_DUO:
-            return "RAD-Moon Duo";
-        case NEODEVICE_VCAN3:
-            return "ValueCAN 3";
-        case NEODEVICE_FIRE3:
-            return "neoVI FIRE 3";
-        case NEODEVICE_RADJUPITER:
-            return "RAD-Jupiter";
-        case NEODEVICE_VCAN4_IND:
-            return "ValueCAN 4 Industrial";
-        case NEODEVICE_GIGASTAR:
-            return "RAD-Gigastar";
-        case NEODEVICE_RED2:
-            return "neoVI RED 2";
-        case NEODEVICE_FIRE2_REDLINE:
-            return "neoVI FIRE 2 Redline";
-        case NEODEVICE_ETHER_BADGE:
-            return "EtherBADGE";
-        case NEODEVICE_RAD_A2B:
-            return "RAD-A2B";
-        case NEODEVICE_RADEPSILON:
-            return "RAD-Epsilon";
-        case NEODEVICE_OBD2_SIM_DOIP:
-        case NEODEVICE_OBD2_SIM:
-            return "neoOBD2-SIM";
-        case NEODEVICE_OBD2_DEV:
-            return "neoOBD2-DEV";
-        case NEODEVICE_ECU22:
-            return "neoECU22";
-        case NEODEVICE_RADEPSILON_T:
-            return "RAD-EpsilonT";
-        case NEODEVICE_RADEPSILON_EXPRESS:
-            return "RAD-Epsilon Express";
-        case NEODEVICE_RADPROXIMA:
-            return "RAD-Proxima";
-        case NEODEVICE_RAD_BMS:
-            return "RAD-wBMS";
-        case NEODEVICE_RADMOON3:
-            return "RAD-Moon3";
-        case NEODEVICE_RADCOMET:
-            return "RAD-Comet";
-        case NEODEVICE_FIRE3_FLEXRAY:
-            return "neoVI FIRE 3 Flexray";
-        case NEODEVICE_NEOVI_CONNECT:
-            return "neoVI CONNECT";
-        case NEODEVICE_RADCOMET3:
-            return "RAD-COMET3";
-        case NEODEVICE_RADMOONT1S:
-            return "RAD-MOON-T1S";
-        case NEODEVICE_GIGASTAR2:
-            return "RAD-GigaStar2";
-        case NEODEVICE_RED:
-            return "neoVI RED";
-        case NEODEVICE_ECU:
-            return "neoECU";
-        case NEODEVICE_IEVB: // also NEODEVICE_NEOECUCHIP
-            return "IEVB";
-        case NEODEVICE_PENDANT:
-            return "Pendant";
-        case NEODEVICE_OBD2_PRO:
-            return "neoOBD2 PRO";
-        case NEODEVICE_ECUCHIP_UART:
-            return "ECUCHIP";
-        case NEODEVICE_PLASMA: // also NEODEVICE_ANY_PLASMA
-            return "neoVI PLASMA";
-        case NEODEVICE_NEOANALOG:
-            return "neoAnalog";
-        case NEODEVICE_CT_OBD:
-            return "neoOBD CT";
-        case NEODEVICE_ION: // also NEODEVICE_ANY_ION
-            return "neoVI ION";
-        case NEODEVICE_RADSTAR:
-            return "RAD-Star";
-        case NEODEVICE_VCAN44:
-            return "ValueCAN 4-4";
-        case NEODEVICE_VCAN42:
-            return "ValueCAN 4-2";
-        case NEODEVICE_CMPROBE:
-            return "CM Probe";
-        case NEODEVICE_EEVB:
-            return "EEVB";
-        case NEODEVICE_FIRE2:
-            return "neoVI FIRE 2";
-        case NEODEVICE_FLEX:
-            return "neoVI FLEX";
-        case NEODEVICE_RADGALAXY:
-            return "RAD-Galaxy";
-        case NEODEVICE_RADSTAR2:
-            return "RAD-Star 2";
-        case NEODEVICE_VIVIDCAN:
-            return "VividCAN";
-        case NEODEVICE_DONT_REUSE0:
-        case NEODEVICE_DONT_REUSE1:
-        case NEODEVICE_DONT_REUSE2:
-        case NEODEVICE_DONT_REUSE3:
-        case NEODEVICE_DONT_REUSE4:
-        default:
-            return "Unknown";
-    };
+    if (!nde) {
+        return std::string("Bug: nde invalid!");
+    }
+    try {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return std::string(dll_get_error(buffer));
+        }
+        std::string name;
+        name.reserve(255);
+        // Get the struct
+        Py_BEGIN_ALLOW_THREADS;
+        // int _stdcall icsneoGetDeviceName(const NeoDeviceEx* nde, char* name, const size_t length, const enum
+        // _EDevNameType devNameType)
+        ice::Function<int __stdcall(const NeoDeviceEx*, char*, const size_t, const enum _EDevNameType)>
+            icsneoGetDeviceName(lib, "icsneoGetDeviceName");
+        if (auto length =
+                icsneoGetDeviceName(const_cast<NeoDeviceEx*>(nde), &name[0], name.capacity(), EDevNameTypeNoSerial);
+            length == 0) {
+            Py_BLOCK_THREADS;
+            return std::string("icsneoGetDeviceName() Failed");
+        }
+        Py_END_ALLOW_THREADS;
+        return name;
+    } catch (ice::Exception& ex) {
+        // Legacy support - we are assuming icsneoGetDeviceName isn't available here
+        // and suppressing ex error message.
+        switch (nde->neoDevice.DeviceType) {
+            case NEODEVICE_UNKNOWN:
+                return "Unknown";
+            case NEODEVICE_BLUE:
+                return "neoVI BLUE";
+            case NEODEVICE_ECU_AVB:
+                return "neoECU AVB/TSN";
+            case NEODEVICE_RADSUPERMOON:
+                return "RAD-Supermoon";
+            case NEODEVICE_DW_VCAN:
+                return "ValueCAN DW";
+            case NEODEVICE_RADMOON2:
+                return "RAD-Moon 2";
+            case NEODEVICE_RADGIGALOG:
+                return "RAD-Gigalog";
+            case NEODEVICE_VCAN41:
+                return "ValueCAN 4-1";
+            case NEODEVICE_FIRE:
+                return "neoVI FIRE";
+            case NEODEVICE_RADPLUTO:
+                return "RAD-Pluto";
+            case NEODEVICE_VCAN42_EL:
+                return "ValueCAN 4-2EL";
+            case NEODEVICE_RADIO_CANHUB:
+                return "neoRAD-IO2-CANHUB";
+            case NEODEVICE_NEOECU12:
+                return "neoECU12";
+            case NEODEVICE_OBD2_LC:
+                return "neoOBD2-LC";
+            case NEODEVICE_RAD_MOON_DUO:
+                return "RAD-Moon Duo";
+            case NEODEVICE_VCAN3:
+                return "ValueCAN 3";
+            case NEODEVICE_FIRE3:
+                return "neoVI FIRE 3";
+            case NEODEVICE_RADJUPITER:
+                return "RAD-Jupiter";
+            case NEODEVICE_VCAN4_IND:
+                return "ValueCAN 4 Industrial";
+            case NEODEVICE_GIGASTAR:
+                return "RAD-Gigastar";
+            case NEODEVICE_RED2:
+                return "neoVI RED 2";
+            case NEODEVICE_FIRE2_REDLINE:
+                return "neoVI FIRE 2 Redline";
+            case NEODEVICE_ETHER_BADGE:
+                return "EtherBADGE";
+            case NEODEVICE_RAD_A2B:
+                return "RAD-A2B";
+            case NEODEVICE_RADEPSILON:
+                return "RAD-Epsilon";
+            case NEODEVICE_OBD2_SIM_DOIP:
+            case NEODEVICE_OBD2_SIM:
+                return "neoOBD2-SIM";
+            case NEODEVICE_OBD2_DEV:
+                return "neoOBD2-DEV";
+            case NEODEVICE_ECU22:
+                return "neoECU22";
+            case NEODEVICE_RADEPSILON_T:
+                return "RAD-EpsilonT";
+            case NEODEVICE_RADEPSILON_EXPRESS:
+                return "RAD-Epsilon Express";
+            case NEODEVICE_RADPROXIMA:
+                return "RAD-Proxima";
+            case NEODEVICE_RAD_BMS:
+                return "RAD-wBMS";
+            case NEODEVICE_RADMOON3:
+                return "RAD-Moon3";
+            case NEODEVICE_RADCOMET:
+                return "RAD-Comet";
+            case NEODEVICE_FIRE3_FLEXRAY:
+                return "neoVI FIRE 3 Flexray";
+            case NEODEVICE_NEOVI_CONNECT:
+                return "neoVI CONNECT";
+            case NEODEVICE_RADCOMET3:
+                return "RAD-COMET3";
+            case NEODEVICE_RADMOONT1S:
+                return "RAD-MOON-T1S";
+            case NEODEVICE_GIGASTAR2:
+                return "RAD-GigaStar2";
+            case NEODEVICE_RED:
+                return "neoVI RED";
+            case NEODEVICE_ECU:
+                return "neoECU";
+            case NEODEVICE_IEVB: // also NEODEVICE_NEOECUCHIP
+                return "IEVB";
+            case NEODEVICE_PENDANT:
+                return "Pendant";
+            case NEODEVICE_OBD2_PRO:
+                return "neoOBD2 PRO";
+            case NEODEVICE_ECUCHIP_UART:
+                return "ECUCHIP";
+            case NEODEVICE_PLASMA: // also NEODEVICE_ANY_PLASMA
+                return "neoVI PLASMA";
+            case NEODEVICE_NEOANALOG:
+                return "neoAnalog";
+            case NEODEVICE_CT_OBD:
+                return "neoOBD CT";
+            case NEODEVICE_ION: // also NEODEVICE_ANY_ION
+                return "neoVI ION";
+            case NEODEVICE_RADSTAR:
+                return "RAD-Star";
+            case NEODEVICE_VCAN44:
+                return "ValueCAN 4-4";
+            case NEODEVICE_VCAN42:
+                return "ValueCAN 4-2";
+            case NEODEVICE_CMPROBE:
+                return "CM Probe";
+            case NEODEVICE_EEVB:
+                return "EEVB";
+            case NEODEVICE_FIRE2:
+                return "neoVI FIRE 2";
+            case NEODEVICE_FLEX:
+                return "neoVI FLEX";
+            case NEODEVICE_RADGALAXY:
+                return "RAD-Galaxy";
+            case NEODEVICE_RADSTAR2:
+                return "RAD-Star 2";
+            case NEODEVICE_VIVIDCAN:
+                return "VividCAN";
+            case NEODEVICE_DONT_REUSE0:
+            case NEODEVICE_DONT_REUSE1:
+            case NEODEVICE_DONT_REUSE2:
+            case NEODEVICE_DONT_REUSE3:
+            case NEODEVICE_DONT_REUSE4:
+            default:
+                return "Unknown";
+        };
+    }
 }
 
 bool _convertListOrTupleToArray(PyObject* obj, std::vector<PyObject*>* results)
@@ -987,10 +1023,10 @@ PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
     (void)self;
     PyObject* device_types = NULL;
     int network_id = -1;
-#if (PY_MAJOR_VERSION) >= 3 && (PY_MINOR_VERSION >= 13) 
+#if (PY_MAJOR_VERSION) >= 3 && (PY_MINOR_VERSION >= 13)
     const
 #endif
-    char* kwords[] = { "device_types", "network_id", NULL };
+        char* kwords[] = { "device_types", "network_id", NULL };
     if (!PyArg_ParseTupleAndKeywords(
             args, keywords, arg_parse("|Oi:", __FUNCTION__), kwords, &device_types, &network_id)) {
         return NULL;
@@ -1061,8 +1097,7 @@ PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
             if (!PyNeoDeviceEx_SetNeoDeviceEx(obj, &devices[i])) {
                 return NULL;
             }
-            if (!PyNeoDeviceEx_SetName(obj,
-                                       PyUnicode_FromString(neodevice_to_string(devices[i].neoDevice.DeviceType)))) {
+            if (!PyNeoDeviceEx_SetName(obj, PyUnicode_FromString(device_name_from_nde(&devices[i]).c_str()))) {
                 return NULL;
             }
             PyTuple_SetItem(tuple, i, obj);
@@ -1084,10 +1119,10 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
     int network_id = -1;
     bool use_neovi_server = false;
     bool device_need_ref_inc = false;
-#if (PY_MAJOR_VERSION) >= 3 && (PY_MINOR_VERSION >= 13) 
+#if (PY_MAJOR_VERSION) >= 3 && (PY_MINOR_VERSION >= 13)
     const
 #endif
-    char* kwords[] = { "device", "network_ids", "config_read", "options", "network_id", "use_server", NULL };
+        char* kwords[] = { "device", "network_ids", "config_read", "options", "network_id", "use_server", NULL };
     if (!PyArg_ParseTupleAndKeywords(args,
                                      keywords,
                                      arg_parse("|OOiiib:", __FUNCTION__),
@@ -1201,8 +1236,7 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
                 if (!PyNeoDeviceEx_SetNeoDeviceEx(device, &devices[i])) {
                     return NULL;
                 }
-                if (!PyNeoDeviceEx_SetName(
-                        device, PyUnicode_FromString(neodevice_to_string(devices[i].neoDevice.DeviceType)))) {
+                if (!PyNeoDeviceEx_SetName(device, PyUnicode_FromString(device_name_from_nde(&devices[i]).c_str()))) {
                     return NULL;
                 }
                 break;
@@ -2049,8 +2083,7 @@ PyObject* meth_flash_devices(PyObject* self, PyObject* args)
                                     void (*MessageCallback)(const char* message, bool success))>
             FlashDevice2(lib, "FlashDevice2");
         Py_BEGIN_ALLOW_THREADS;
-        if (!FlashDevice2(
-                0x3835C256, &nde->neoDevice, rc, reflash_count, network_id, iOptions, 0, &message_callback)) {
+        if (!FlashDevice2(0x3835C256, &nde->neoDevice, rc, reflash_count, network_id, iOptions, 0, &message_callback)) {
             Py_BLOCK_THREADS;
             PyBuffer_Release(&buffer);
             return set_ics_exception(exception_runtime_error(), "FlashDevice2() Failed");
@@ -2381,12 +2414,12 @@ PyObject* meth_create_neovi_radio_message(PyObject* self, PyObject* args, PyObje
     int lsb = 0;
     int analog = 0;
     int relay_timeout = 0;
-#if (PY_MAJOR_VERSION) >= 3 && (PY_MINOR_VERSION >= 13) 
+#if (PY_MAJOR_VERSION) >= 3 && (PY_MINOR_VERSION >= 13)
     const
 #endif
-    char* kwords[] = { "Relay1",       "Relay2", "Relay3",          "Relay4",          "Relay5",
-                       "LED5",         "LED6",   "MSB_report_rate", "LSB_report_rate", "analog_change_report_rate",
-                       "relay_timeout" };
+        char* kwords[] = { "Relay1",       "Relay2", "Relay3",          "Relay4",          "Relay5",
+                           "LED5",         "LED6",   "MSB_report_rate", "LSB_report_rate", "analog_change_report_rate",
+                           "relay_timeout" };
     // Accepts keywords: Relay1-Relay5 (boolean), LED5 (boolean), LED6 (boolean), MSB_report_rate (int),
     // LSB_report_rate (int), analog_change_report_rate (int), relay_timeout (int).
     if (!PyArg_ParseTupleAndKeywords(args,
@@ -3153,21 +3186,21 @@ PyObject* meth_set_context(PyObject* self, PyObject* args)
         return NULL;
     }
     void* handle = NULL;
-    if (!PyNeoDeviceEx_CheckExact(obj) && obj != Py_None && obj != Py_False && !(PyLong_Check(obj) && PyLong_AsLong(obj) == 0)) {
+    if (!PyNeoDeviceEx_CheckExact(obj) && obj != Py_None && obj != Py_False &&
+        !(PyLong_Check(obj) && PyLong_AsLong(obj) == 0)) {
         return set_ics_exception(exception_runtime_error(),
                                  "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx, or False");
     }
-    // Set 'handle' to NULL if 'obj' is None, False, or a zero-valued integer. 
+    // Set 'handle' to NULL if 'obj' is None, False, or a zero-valued integer.
     // Otherwise, attempt to retrieve the handle using 'PyNeoDeviceEx_GetHandle'.
     // If handle retrieval fails, raise a runtime error exception.
-    if (obj == Py_None || obj == Py_False || (PyLong_Check(obj) && PyLong_AsLong(obj) == 0)){
-		handle = NULL;
-	} else {
-    if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
-      return set_ics_exception(exception_runtime_error(),
-                               "Failed to retrieve handle.");
-		}
-	}
+    if (obj == Py_None || obj == Py_False || (PyLong_Check(obj) && PyLong_AsLong(obj) == 0)) {
+        handle = NULL;
+    } else {
+        if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
+            return set_ics_exception(exception_runtime_error(), "Failed to retrieve handle.");
+        }
+    }
     try {
         ice::Library* lib = dll_get_library();
         if (!lib) {
@@ -3361,7 +3394,6 @@ PyObject* meth_set_backup_power_enabled(PyObject* self, PyObject* args)
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
-
 }
 
 PyObject* meth_get_backup_power_ready(PyObject* self, PyObject* args)
@@ -4163,8 +4195,7 @@ PyObject* meth_flash_accessory_firmware(PyObject* self, PyObject* args)
 #else
 
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -4179,8 +4210,10 @@ PyObject* meth_flash_accessory_firmware(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         int function_error = (int)AccessoryOperationError;
-        // int __stdcall icsneoFlashAccessoryFirmware(void* hObject, FlashAccessoryFirmwareParams* param, int* errorCode)
-        //int __stdcall icsneoFlashPhyFirmware(void* hObject, unsigned char phyIndx, unsigned char* fileData, size_t fileDataSize, int* errorCode)
+        // int __stdcall icsneoFlashAccessoryFirmware(void* hObject, FlashAccessoryFirmwareParams* param, int*
+        // errorCode)
+        // int __stdcall icsneoFlashPhyFirmware(void* hObject, unsigned char phyIndx, unsigned char* fileData, size_t
+        // fileDataSize, int* errorCode)
         ice::Function<int __stdcall(void*, FlashAccessoryFirmwareParams*, int*)> icsneoFlashAccessoryFirmware(
             lib, "icsneoFlashAccessoryFirmware");
 
@@ -4233,7 +4266,7 @@ PyObject* meth_flash_accessory_firmware(PyObject* self, PyObject* args)
                 case AccessoryIndexError:
                     ss << "AccessoryIndexError";
                     break;
-                case AccessoryParamApiVersionError :
+                case AccessoryParamApiVersionError:
                     ss << "AccessoryParamApiVersionError ";
                     break;
                 case AccessoryParamSizeMismatchError:
@@ -4271,8 +4304,7 @@ PyObject* meth_get_accessory_firmware_version(PyObject* self, PyObject* args)
     return set_ics_exception(exception_runtime_error(), "Accessory API not enabled");
 #else
     if (!PyNeoDeviceEx_CheckExact(obj)) {
-        return set_ics_exception(exception_runtime_error(),
-                                 "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
     void* handle = NULL;
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
@@ -4285,7 +4317,8 @@ PyObject* meth_get_accessory_firmware_version(PyObject* self, PyObject* args)
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
-        // int __stdcall icsneoGetAccessoryFirmwareVersion(void* hObject, unsigned char index, unsigned int* fwVers, int* errorCode)
+        // int __stdcall icsneoGetAccessoryFirmwareVersion(void* hObject, unsigned char index, unsigned int* fwVers,
+        // int* errorCode)
         ice::Function<int __stdcall(void*, unsigned char, unsigned int*, int*)> icsneoGetAccessoryFirmwareVersion(
             lib, "icsneoGetAccessoryFirmwareVersion");
 
@@ -4293,7 +4326,8 @@ PyObject* meth_get_accessory_firmware_version(PyObject* self, PyObject* args)
         int function_error = 0;
         Py_BEGIN_ALLOW_THREADS;
         if (!icsneoGetAccessoryFirmwareVersion(handle, accessory_indx, &accessory_version, &function_error)) {
-            Py_BLOCK_THREADS return set_ics_exception(exception_runtime_error(), "icsneoGetAccessoryFirmwareVersion() Failed");
+            Py_BLOCK_THREADS return set_ics_exception(exception_runtime_error(),
+                                                      "icsneoGetAccessoryFirmwareVersion() Failed");
         }
         Py_END_ALLOW_THREADS;
         // check the return value to make sure we are good
@@ -4337,7 +4371,7 @@ PyObject* meth_get_accessory_firmware_version(PyObject* self, PyObject* args)
                 case AccessoryIndexError:
                     ss << "AccessoryIndexError";
                     break;
-                case AccessoryParamApiVersionError :
+                case AccessoryParamApiVersionError:
                     ss << "AccessoryParamApiVersionError ";
                     break;
                 case AccessoryParamSizeMismatchError:
@@ -5013,7 +5047,8 @@ PyObject* meth_uart_read(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), "icsneoUartRead() Failed");
         }
         Py_END_ALLOW_THREADS;
-        PyObject* ba_result = PyByteArray_FromStringAndSize((const char*)buffer, static_cast<Py_ssize_t>(bytesActuallyRead));
+        PyObject* ba_result =
+            PyByteArray_FromStringAndSize((const char*)buffer, static_cast<Py_ssize_t>(bytesActuallyRead));
         // PyObject* value = Py_BuildValue("O", ba_result);
         free(buffer);
         buffer = NULL;
@@ -5381,6 +5416,48 @@ PyObject* meth_get_all_chip_versions(PyObject* self, PyObject* args)
         return py_struct;
     } catch (ice::Exception& ex) {
         PyBuffer_Release(&py_struct_buffer);
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+}
+
+PyObject* meth_get_device_name(PyObject* self, PyObject* args) // icsneoGetDeviceName
+{
+    (void)self;
+    PyObject* obj = NULL;
+    EDevNameType dev_name_type = EDevNameTypeDefault;
+    if (!PyArg_ParseTuple(args, arg_parse("O|I:", __FUNCTION__), &obj, &dev_name_type)) {
+        return NULL;
+    }
+    // Get the NeoDeviceEx from PyNeoDeviceEx
+    Py_buffer nde_buffer = {};
+    NeoDeviceEx* nde = NULL;
+    if (!PyNeoDeviceEx_GetNeoDeviceEx(obj, &nde_buffer, &nde)) {
+        return NULL;
+    }
+    try {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            PyBuffer_Release(&nde_buffer);
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        char name[255] = {};
+        // Get the struct
+        Py_BEGIN_ALLOW_THREADS;
+        // int _stdcall icsneoGetDeviceName(const NeoDeviceEx* nde, char* name, const size_t length, const enum
+        // _EDevNameType devNameType)
+        ice::Function<int __stdcall(const NeoDeviceEx*, char*, const size_t, const enum _EDevNameType)>
+            icsneoGetDeviceName(lib, "icsneoGetDeviceName");
+        if (auto length = icsneoGetDeviceName(const_cast<NeoDeviceEx*>(nde), name, 255, dev_name_type); length == 0) {
+            Py_BLOCK_THREADS;
+            PyBuffer_Release(&nde_buffer);
+            return set_ics_exception(exception_runtime_error(), "icsneoGetDeviceName() Failed");
+        }
+        Py_END_ALLOW_THREADS;
+        PyObject* value = Py_BuildValue("s", name);
+        return value;
+    } catch (ice::Exception& ex) {
+        PyBuffer_Release(&nde_buffer);
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
 }

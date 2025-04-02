@@ -593,6 +593,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, SFP_ID_ICS_MV2112A2);
 	result += PyModule_AddIntMacro(module, SFP_ID_ICS_MV2221MB1);
 	result += PyModule_AddIntMacro(module, SFP_ID_ICS_MV3244);
+	result += PyModule_AddIntMacro(module, SFP_ID_ICS_MC8670);
 	result += PyModule_AddIntMacro(module, SFP_ID_MAX);
 	// end of enum -  } SfpId;
 
@@ -624,6 +625,8 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, ETHERNET10T1S_SETTINGS_FLAG_TERMINATION);
 	result += PyModule_AddIntMacro(module, ETHERNET10T1S_SETTINGS_FLAG_BUS_DECODING_BEACONS);
 	result += PyModule_AddIntMacro(module, ETHERNET10T1S_SETTINGS_FLAG_BUS_DECODING_ALL);
+	result += PyModule_AddIntMacro(module, ETHERNET10T1S_SETTINGS_FLAG_ENABLE_PLCA_COL_DET);
+	result += PyModule_AddIntMacro(module, ETHERNET10T1S_SETTINGS_FLAG_ENABLE_CSMA_FALLBACK);
 	result += PyModule_AddIntMacro(module, ETHERNET10T1S_SETTINGS_EXT_SIZE);
 	// enum
 	result += PyModule_AddIntMacro(module, MACSEC_PACKET_NO_VLAN_OR_MPLS);
@@ -720,6 +723,8 @@ int setup_module_auto_defines(PyObject * module)
 	// end of enum -  };
 
 	result += PyModule_AddIntMacro(module, SExtSubCmdHdr_SIZE);
+	result += PyModule_AddIntMacro(module, MULTI_MAC__ADDR_LEN);
+	result += PyModule_AddIntMacro(module, MULTI_MAC__MAX_MAC_CNT);
 	result += PyModule_AddIntMacro(module, GENERIC_BINARY_STATUS_ERROR_UNKNOWN_BINARY);
 	result += PyModule_AddIntMacro(module, GENERIC_BINARY_STATUS_ERROR_OVERSIZE);
 	result += PyModule_AddIntMacro(module, GENERIC_BINARY_STATUS_ERROR_BINARY_EMPTY);
@@ -919,6 +924,10 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, ePortStdEth1);
 	result += PyModule_AddIntMacro(module, ePortStdEth2);
 	result += PyModule_AddIntMacro(module, ePortStdEth3);
+	result += PyModule_AddIntMacro(module, ePortOpEth13);
+	result += PyModule_AddIntMacro(module, ePortOpEth14);
+	result += PyModule_AddIntMacro(module, ePortOpEth15);
+	result += PyModule_AddIntMacro(module, ePortOpEth16);
 	// end of enum -  };
 
 	// enum
@@ -1212,6 +1221,13 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, PhyGetVersionError);
 	result += PyModule_AddIntMacro(module, PhyIndexError);
 	// end of enum -  } PhyErrorType;
+
+	// enum
+	result += PyModule_AddIntMacro(module, EDevNameTypeDefault);
+	result += PyModule_AddIntMacro(module, EDevNameTypeNoSerial);
+	result += PyModule_AddIntMacro(module, EDevNameTypeTCP);
+	result += PyModule_AddIntMacro(module, EDevNameTypeTCPShort);
+	// end of enum -  } EDevNameType;
 
 	result += PyModule_AddIntMacro(module, NUM_DEVICE_FEATURE_BITFIELDS);
 	// enum

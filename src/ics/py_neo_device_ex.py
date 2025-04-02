@@ -53,7 +53,7 @@ class PyNeoDeviceEx(ics.neo_device_ex.neo_device_ex):
     @property
     def Name(self) -> str:
         """Return the internal device name from python_ics"""
-        return self._name
+        return self._name.rstrip()
 
     @property
     def DeviceType(self) -> int:
@@ -490,3 +490,7 @@ class PyNeoDeviceEx(ics.neo_device_ex.neo_device_ex):
     def flash_devices(self, *args, **kwargs):
         "See ics.flash_devices for details on arguments. This is an internal intrepid function only."
         return ics.flash_device(self, *args, **kwargs)
+    
+    def get_device_name(self, *args, **kwargs):
+        "see ics.get_device_name for details on arguments."
+        return ics.get_device_name(self, *args, **kwargs)

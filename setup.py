@@ -83,7 +83,8 @@ def get_ics_extension_compiler_arguments() -> List[str]:
             "/external:W0",
             "/wd4710",
             "/wd4711",
-            "/wd5045"
+            "/wd5045",
+            "/std:c++17",
         ]
         # mingw and clang python builds won't have MSC in the version string
         if "MSC" not in sys.version:
