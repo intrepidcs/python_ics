@@ -1695,7 +1695,7 @@ Module Variables
     .. py:data:: NEODEVICE_BLUE
             :annotation: = 1
 
-    .. py:data:: NEODEVICE_CMPROBE
+    .. py:data:: NEODEVICE_CMPROBE_DEPRECATED
             :annotation: = 8388608
 
     .. py:data:: NEODEVICE_CT_OBD
@@ -1719,19 +1719,19 @@ Module Variables
     .. py:data:: NEODEVICE_ECU
             :annotation: = 128
 
-    .. py:data:: NEODEVICE_ECU22
+    .. py:data:: NEODEVICE_ECU22_DEPRECATED
             :annotation: = 27
 
     .. py:data:: NEODEVICE_ECUCHIP_UART
             :annotation: = 2048
 
-    .. py:data:: NEODEVICE_ECU_AVB
+    .. py:data:: NEODEVICE_ECU_AVB_DEPRECATED
             :annotation: = 2
 
-    .. py:data:: NEODEVICE_EEVB
+    .. py:data:: NEODEVICE_EEVB_DEPRECATED
             :annotation: = 16777216
 
-    .. py:data:: NEODEVICE_ETHER_BADGE
+    .. py:data:: NEODEVICE_ETHER_BADGE_DEPRECATED
             :annotation: = 22
 
     .. py:data:: NEODEVICE_FIRE
@@ -1740,7 +1740,7 @@ Module Variables
     .. py:data:: NEODEVICE_FIRE2
             :annotation: = 67108864
 
-    .. py:data:: NEODEVICE_FIRE2_REDLINE
+    .. py:data:: NEODEVICE_FIRE2_REDLINE_DEPRECATED
             :annotation: = 21
 
     .. py:data:: NEODEVICE_FIRE3
@@ -1779,19 +1779,19 @@ Module Variables
     .. py:data:: NEODEVICE_NEW_DEVICE_59
             :annotation: = 33
 
-    .. py:data:: NEODEVICE_OBD2_DEV
+    .. py:data:: NEODEVICE_OBD2_DEV_DEPRECATED
             :annotation: = 26
 
     .. py:data:: NEODEVICE_OBD2_LC
             :annotation: = 13
 
-    .. py:data:: NEODEVICE_OBD2_PRO
+    .. py:data:: NEODEVICE_OBD2_PRO_DEPRECATED
             :annotation: = 1024
 
-    .. py:data:: NEODEVICE_OBD2_SIM
+    .. py:data:: NEODEVICE_OBD2_SIM_DEPRECATED
             :annotation: = 2147483648
 
-    .. py:data:: NEODEVICE_OBD2_SIM_DOIP
+    .. py:data:: NEODEVICE_OBD2_SIM_DOIP_DEPRECATED
             :annotation: = 25
 
     .. py:data:: NEODEVICE_PENDANT
@@ -1815,7 +1815,7 @@ Module Variables
     .. py:data:: NEODEVICE_RADGALAXY
             :annotation: = 268435456
 
-    .. py:data:: NEODEVICE_RADGIGALOG
+    .. py:data:: NEODEVICE_RADGIGALOG_DEPRECATED
             :annotation: = 6
 
     .. py:data:: NEODEVICE_RADIO_CANHUB
@@ -1830,19 +1830,19 @@ Module Variables
     .. py:data:: NEODEVICE_RADMOON3
             :annotation: = 35
 
-    .. py:data:: NEODEVICE_RADPLUTO
+    .. py:data:: NEODEVICE_RADPLUTO_DEPRECATED
             :annotation: = 9
 
     .. py:data:: NEODEVICE_RADPROXIMA
             :annotation: = 30
 
-    .. py:data:: NEODEVICE_RADSTAR
+    .. py:data:: NEODEVICE_RADSTAR_DEPRECATED
             :annotation: = 524288
 
     .. py:data:: NEODEVICE_RADSTAR2
             :annotation: = 536870912
 
-    .. py:data:: NEODEVICE_RADSUPERMOON
+    .. py:data:: NEODEVICE_RADSUPERMOON_DEPRECATED
             :annotation: = 3
 
     .. py:data:: NEODEVICE_RAD_A2B
@@ -1851,7 +1851,7 @@ Module Variables
     .. py:data:: NEODEVICE_RAD_BMS
             :annotation: = 34
 
-    .. py:data:: NEODEVICE_RAD_MOON_DUO
+    .. py:data:: NEODEVICE_RAD_MOON_DUO_DEPRECATED
             :annotation: = 14
 
     .. py:data:: NEODEVICE_RED
