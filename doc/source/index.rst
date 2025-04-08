@@ -1722,7 +1722,7 @@ Module Variables
     .. py:data:: NEODEVICE_ECU22_DEPRECATED
             :annotation: = 27
 
-    .. py:data:: NEODEVICE_ECUCHIP_UART
+    .. py:data:: NEODEVICE_ECUCHIP_UART_DEPRECATED
             :annotation: = 2048
 
     .. py:data:: NEODEVICE_ECU_AVB_DEPRECATED

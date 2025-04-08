@@ -691,8 +691,6 @@ auto device_name_from_nde(NeoDeviceEx* nde) -> std::string
                 return "neoECU";
             case NEODEVICE_PENDANT:
                 return "Pendant";
-            case NEODEVICE_ECUCHIP_UART:
-                return "ECUCHIP";
             case NEODEVICE_PLASMA: // also NEODEVICE_ANY_PLASMA
                 return "neoVI PLASMA";
             case NEODEVICE_NEOANALOG:

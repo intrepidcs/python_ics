@@ -252,7 +252,7 @@ typedef unsigned __int64 uint64_t;
 #define NEODEVICE_IEVB_DEPRECATED (0x00000100)
 #define NEODEVICE_PENDANT (0x00000200)
 #define NEODEVICE_OBD2_PRO_DEPRECATED (0x00000400)
-#define NEODEVICE_ECUCHIP_UART (0x00000800)
+#define NEODEVICE_ECUCHIP_UART_DEPRECATED (0x00000800)
 #define NEODEVICE_PLASMA (0x00001000)
 #define NEODEVICE_DONT_REUSE0 (0x00002000) //NEODEVICE_FIRE_VNET
 #define NEODEVICE_NEOANALOG (0x00004000)
@@ -2812,61 +2812,6 @@ typedef struct _SPendantSettings
 } SPendantSettings;
 #define SPendantSettings_SIZE 470
 
-typedef struct _SIEVBSettings
-{
-	/* see SECUSettings */
-	uint32_t ecu_id;
-
-	uint16_t selected_network; /* not supported yet - default to HSCAN */
-
-	CAN_SETTINGS can1;
-	LIN_SETTINGS lin1;
-
-	uint16_t network_enables;
-	uint16_t network_enables_2;
-	uint16_t network_enabled_on_boot;
-
-	uint16_t misc_io_initial_ddr;
-	uint16_t misc_io_initial_latch;
-	uint16_t misc_io_analog_enable;
-	uint16_t misc_io_report_period;
-	uint16_t misc_io_on_report_events;
-	uint16_t ain_sample_period;
-	uint16_t ain_threshold;
-
-	uint16_t iso15765_separation_time_offset;
-
-	CAN_SETTINGS can2;
-	LIN_SETTINGS lin2;
-
-	UART_SETTINGS uart;
-	UART_SETTINGS uart2;
-
-	STextAPISettings text_api;
-
-	uint32_t reserved_1;
-	uint32_t reserved_2;
-
-	uint32_t pwr_man_timeout;
-	uint16_t pwr_man_enable;
-
-	uint16_t idle_wakeup_network_enables_1;
-	uint16_t idle_wakeup_network_enables_2;
-
-	uint16_t misc_io_analog_enable_2;
-
-	ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings;
-	uint16_t iso_parity;
-	uint16_t iso_msg_termination;
-	uint16_t iso_tester_pullup_enable;
-
-	ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings_2;
-	uint16_t iso_parity_2;
-	uint16_t iso_msg_termination_2;
-
-} SIEVBSettings;
-#define SIEVBSettings_SIZE 434
-
 typedef struct _SEEVBSettings
 {
 	uint32_t ecu_id;
@@ -5326,7 +5271,6 @@ typedef struct _GLOBAL_SETTINGS
 		SVCAN3Settings vcan3;
 		SVCAN4Settings vcan4;
 		SECUSettings ecu;
-		SIEVBSettings ievb;
 		SPendantSettings pendant;
 		SRADGalaxySettings radgalaxy;
 		SRADStar2Settings radstar2;
@@ -5435,7 +5379,6 @@ typedef struct _SDeviceSettings
 		SVCAN3Settings vcan3;
 		SVCAN4Settings vcan4;
 		SECUSettings ecu;
-		SIEVBSettings ievb;
 		SPendantSettings pendant;
 		SRADGalaxySettings radgalaxy;
 		SRADStar2Settings radstar2;
@@ -6318,7 +6261,6 @@ CHECK_STRUCT_SIZE(SVCAN3Settings);
 CHECK_STRUCT_SIZE(SVCAN4Settings);
 CHECK_STRUCT_SIZE(SECUSettings);
 CHECK_STRUCT_SIZE(SPendantSettings);
-CHECK_STRUCT_SIZE(SIEVBSettings);
 CHECK_STRUCT_SIZE(SEEVBSettings);
 CHECK_STRUCT_SIZE(SRADGalaxySettings);
 CHECK_STRUCT_SIZE(SRADStar2Settings);

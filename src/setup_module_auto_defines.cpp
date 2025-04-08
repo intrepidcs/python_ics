@@ -184,7 +184,6 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, NEODEVICE_RED);
 	result += PyModule_AddIntMacro(module, NEODEVICE_ECU);
 	result += PyModule_AddIntMacro(module, NEODEVICE_PENDANT);
-	result += PyModule_AddIntMacro(module, NEODEVICE_ECUCHIP_UART);
 	result += PyModule_AddIntMacro(module, NEODEVICE_PLASMA);
 	result += PyModule_AddIntMacro(module, NEODEVICE_DONT_REUSE0);
 	result += PyModule_AddIntMacro(module, NEODEVICE_NEOANALOG);
@@ -889,7 +888,6 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, SVCAN4Settings_SIZE);
 	result += PyModule_AddIntMacro(module, SECUSettings_SIZE);
 	result += PyModule_AddIntMacro(module, SPendantSettings_SIZE);
-	result += PyModule_AddIntMacro(module, SIEVBSettings_SIZE);
 	result += PyModule_AddIntMacro(module, SEEVBSettings_SIZE);
 	// enum
 	result += PyModule_AddIntMacro(module, ePortDisabled);
