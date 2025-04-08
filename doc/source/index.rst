@@ -1755,7 +1755,7 @@ Module Variables
     .. py:data:: NEODEVICE_GIGASTAR
             :annotation: = 19
 
-    .. py:data:: NEODEVICE_IEVB
+    .. py:data:: NEODEVICE_IEVB_DEPRECATED
             :annotation: = 256
 
     .. py:data:: NEODEVICE_ION
