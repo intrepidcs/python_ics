@@ -705,8 +705,6 @@ auto device_name_from_nde(NeoDeviceEx* nde) -> std::string
                 return "ValueCAN 4-2";
             case NEODEVICE_FIRE2:
                 return "neoVI FIRE 2";
-            case NEODEVICE_FLEX:
-                return "neoVI FLEX";
             case NEODEVICE_RADGALAXY:
                 return "RAD-Galaxy";
             case NEODEVICE_RADSTAR2:

@@ -196,7 +196,6 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, NEODEVICE_VCAN42);
 	result += PyModule_AddIntMacro(module, NEODEVICE_DONT_REUSE4);
 	result += PyModule_AddIntMacro(module, NEODEVICE_FIRE2);
-	result += PyModule_AddIntMacro(module, NEODEVICE_FLEX);
 	result += PyModule_AddIntMacro(module, NEODEVICE_RADGALAXY);
 	result += PyModule_AddIntMacro(module, NEODEVICE_RADSTAR2);
 	result += PyModule_AddIntMacro(module, NEODEVICE_VIVIDCAN);
