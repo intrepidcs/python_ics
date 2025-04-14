@@ -17,7 +17,6 @@ def get_device_specific_settings(s: s_device_settings) -> object:
     setting_map[e_device_settings_type.DeviceFireSettingsType] = "fire"
     setting_map[e_device_settings_type.DeviceFireVnetSettingsType] = "firevnet"
     setting_map[e_device_settings_type.DeviceFlexVnetzSettingsType] = "flexvnetz"
-    setting_map[e_device_settings_type.DeviceIEVBSettingsType] = "ievb"
     setting_map[e_device_settings_type.DeviceNeoECU12SettingsType] = "neoecu12"
     setting_map[e_device_settings_type.DeviceOBD2ProSettingsType] = "obd2pro"
     setting_map[e_device_settings_type.DeviceRADGalaxySettingsType] = "radgalaxy"

@@ -1722,7 +1722,7 @@ Module Variables
     .. py:data:: NEODEVICE_ECU22_DEPRECATED
             :annotation: = 27
 
-    .. py:data:: NEODEVICE_ECUCHIP_UART
+    .. py:data:: NEODEVICE_ECUCHIP_UART_DEPRECATED
             :annotation: = 2048
 
     .. py:data:: NEODEVICE_ECU_AVB_DEPRECATED
@@ -1749,13 +1749,13 @@ Module Variables
     .. py:data:: NEODEVICE_FIRE3_FLEXRAY
             :annotation: = 37
 
-    .. py:data:: NEODEVICE_FLEX
+    .. py:data:: NEODEVICE_FLEX_DEPRECATED
             :annotation: = 134217728
 
     .. py:data:: NEODEVICE_GIGASTAR
             :annotation: = 19
 
-    .. py:data:: NEODEVICE_IEVB
+    .. py:data:: NEODEVICE_IEVB_DEPRECATED
             :annotation: = 256
 
     .. py:data:: NEODEVICE_ION
