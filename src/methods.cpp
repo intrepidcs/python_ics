@@ -631,22 +631,14 @@ auto device_name_from_nde(NeoDeviceEx* nde) -> std::string
                 return "Unknown";
             case NEODEVICE_BLUE:
                 return "neoVI BLUE";
-            case NEODEVICE_ECU_AVB:
-                return "neoECU AVB/TSN";
-            case NEODEVICE_RADSUPERMOON:
-                return "RAD-Supermoon";
             case NEODEVICE_DW_VCAN:
                 return "ValueCAN DW";
             case NEODEVICE_RADMOON2:
                 return "RAD-Moon 2";
-            case NEODEVICE_RADGIGALOG:
-                return "RAD-Gigalog";
             case NEODEVICE_VCAN41:
                 return "ValueCAN 4-1";
             case NEODEVICE_FIRE:
                 return "neoVI FIRE";
-            case NEODEVICE_RADPLUTO:
-                return "RAD-Pluto";
             case NEODEVICE_VCAN42_EL:
                 return "ValueCAN 4-2EL";
             case NEODEVICE_RADIO_CANHUB:
@@ -655,8 +647,6 @@ auto device_name_from_nde(NeoDeviceEx* nde) -> std::string
                 return "neoECU12";
             case NEODEVICE_OBD2_LC:
                 return "neoOBD2-LC";
-            case NEODEVICE_RAD_MOON_DUO:
-                return "RAD-Moon Duo";
             case NEODEVICE_VCAN3:
                 return "ValueCAN 3";
             case NEODEVICE_FIRE3:
@@ -669,25 +659,12 @@ auto device_name_from_nde(NeoDeviceEx* nde) -> std::string
                 return "RAD-Gigastar";
             case NEODEVICE_RED2:
                 return "neoVI RED 2";
-            case NEODEVICE_FIRE2_REDLINE:
-                return "neoVI FIRE 2 Redline";
-            case NEODEVICE_ETHER_BADGE:
-                return "EtherBADGE";
             case NEODEVICE_RAD_A2B:
                 return "RAD-A2B";
             case NEODEVICE_RADEPSILON:
                 return "RAD-Epsilon";
-            case NEODEVICE_OBD2_SIM_DOIP:
-            case NEODEVICE_OBD2_SIM:
-                return "neoOBD2-SIM";
-            case NEODEVICE_OBD2_DEV:
-                return "neoOBD2-DEV";
-            case NEODEVICE_ECU22:
-                return "neoECU22";
             case NEODEVICE_RADEPSILON_T:
                 return "RAD-EpsilonT";
-            case NEODEVICE_RADEPSILON_EXPRESS:
-                return "RAD-Epsilon Express";
             case NEODEVICE_RADPROXIMA:
                 return "RAD-Proxima";
             case NEODEVICE_RAD_BMS:
@@ -710,14 +687,8 @@ auto device_name_from_nde(NeoDeviceEx* nde) -> std::string
                 return "neoVI RED";
             case NEODEVICE_ECU:
                 return "neoECU";
-            case NEODEVICE_IEVB: // also NEODEVICE_NEOECUCHIP
-                return "IEVB";
             case NEODEVICE_PENDANT:
                 return "Pendant";
-            case NEODEVICE_OBD2_PRO:
-                return "neoOBD2 PRO";
-            case NEODEVICE_ECUCHIP_UART:
-                return "ECUCHIP";
             case NEODEVICE_PLASMA: // also NEODEVICE_ANY_PLASMA
                 return "neoVI PLASMA";
             case NEODEVICE_NEOANALOG:
@@ -726,20 +697,12 @@ auto device_name_from_nde(NeoDeviceEx* nde) -> std::string
                 return "neoOBD CT";
             case NEODEVICE_ION: // also NEODEVICE_ANY_ION
                 return "neoVI ION";
-            case NEODEVICE_RADSTAR:
-                return "RAD-Star";
             case NEODEVICE_VCAN44:
                 return "ValueCAN 4-4";
             case NEODEVICE_VCAN42:
                 return "ValueCAN 4-2";
-            case NEODEVICE_CMPROBE:
-                return "CM Probe";
-            case NEODEVICE_EEVB:
-                return "EEVB";
             case NEODEVICE_FIRE2:
                 return "neoVI FIRE 2";
-            case NEODEVICE_FLEX:
-                return "neoVI FLEX";
             case NEODEVICE_RADGALAXY:
                 return "RAD-Galaxy";
             case NEODEVICE_RADSTAR2:
