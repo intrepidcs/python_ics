@@ -598,6 +598,11 @@ typedef struct _NeoDeviceEx
 #define DRIVER_USB1 (0x40)
 #define DRIVER_USB2 (0x80)
 #define DRIVER_USB3 (0xC0)
+#define SERVD_DRIVER_MASK  (0xFF00)
+#define SERVD_DRIVER_VCP   (0x0100)
+#define SERVD_DRIVER_DXX   (0x0200)
+#define SERVD_DRIVER_CAB   (0x0400)
+#define SERVD_DRIVER_TCP   (0x1000)
 	uint32_t Options;
 
 	void* pAvailWIFINetwork;
@@ -682,6 +687,45 @@ typedef struct _stAPIFirmwareInfo
 /* Settings structures come are all packed to 2 bytes */
 #pragma pack(push, 2)
 
+/* Define number of CMP streams per device*/
+#define CMP_STREAMS_FIRE3 (10)
+#define CMP_STREAMS_FIRE3FR (10)
+#define CMP_STREAMS_RED2 (10)
+#define CMP_STREAMS_A2B (3)
+#define CMP_STREAMS_GIGASTAR (10)
+
+/* CMP Network Enables */
+typedef struct
+{
+	uint8_t bStreamEnabled : 1;
+	uint8_t EthModule : 2;
+	uint8_t bControlEnabled : 1;
+	uint8_t spare : 4;
+	uint8_t streamId;
+	uint8_t dstMac[6];
+	union
+	{
+		uint64_t word;
+		struct
+		{
+			uint16_t network_enables;
+			uint16_t network_enables_2;
+			uint16_t network_enables_3;
+			uint16_t network_enables_4;
+		};
+	} network_enables;
+	uint64_t network_enables_2;
+} CMP_NETWORK_DATA;
+
+/* Global CMP Data */
+typedef struct
+{
+	uint8_t cmp_enabled : 1;
+	uint8_t sparebits : 7;
+	uint8_t spare;
+	uint16_t cmp_device_id;
+} CMP_GLOBAL_DATA;
+
 /* SetBaudrate in CAN_SETTINGS */
 enum
 {
@@ -734,7 +778,10 @@ typedef struct
 	uint8_t TqSync;
 	uint16_t BRP;
 	uint8_t auto_baud;
-	uint8_t innerFrameDelay25us;
+	uint8_t innerFrameDelay25us : 4;
+	uint8_t : 1;
+	uint8_t disableRetransmission : 1;
+	uint8_t canClk : 2;
 } CAN_SETTINGS;
 #define CAN_SETTINGS_SIZE 12
 
@@ -1275,7 +1322,42 @@ typedef struct SRAD_GPTP_SETTINGS_s
 	uint8_t gPTPportRole;
 	uint8_t gptpEnabledPort;
 	uint8_t enableClockSyntonization;
-	uint8_t rsvd[15];
+	uint8_t rsvd_1;
+	uint8_t icsGptpDrvVerHeader;
+	union {
+		uint8_t icsGptpDrvVerMajorMinor;
+		struct {
+			uint8_t icsGptpDrvVerMajor:4;
+			uint8_t icsGptpDrvVerMinor:4;
+		};
+	};
+	union{
+		uint32_t multiPortsEnabledForMaster;
+		struct {
+			uint32_t PORT_AE01:1;	// this is LSB in Little Endian
+			uint32_t PORT_AE02:1;
+			uint32_t PORT_AE03:1;
+			uint32_t PORT_AE04:1;
+			uint32_t PORT_AE05:1;
+			uint32_t PORT_AE06:1;
+			uint32_t PORT_AE07:1;
+			uint32_t PORT_AE08:1;
+			uint32_t PORT_AE09:1;
+			uint32_t PORT_AE10:1;
+			uint32_t PORT_AE11:1;
+			uint32_t PORT_AE12:1;
+
+			uint32_t PORT_ETH1:1;
+			uint32_t PORT_ETH2:1;
+			uint32_t PORT_ETH3:1;
+
+			uint32_t PORT_AE13:1;
+			uint32_t PORT_AE14:1;
+			uint32_t PORT_AE15:1;
+			uint32_t PORT_AE16:1;
+		};
+	};
+	uint8_t rsvd_2[8];
 } RAD_GPTP_SETTINGS; //36 Bytes
 #define RAD_GPTP_SETTINGS_SIZE 36
 
@@ -1369,6 +1451,7 @@ typedef enum
 	SFP_ID_ICS_MV2221MB1,
 	SFP_ID_ICS_MV3244,
 	SFP_ID_ICS_MC8670,
+	SFP_ID_ICS_EN11100,
 	// add new entries here
 	SFP_ID_MAX,
 } SfpId;
@@ -2088,18 +2171,18 @@ typedef struct _GenericBinaryStatus
 } GenericBinaryStatus;
 
 //-----------------------------------------------------------------
-#define MULTI_MAC__ADDR_LEN 6
-#define MULTI_MAC__MAX_MAC_CNT 32
+#define MACADDR_LEN 6
+#define MULTI_MACADDR_CNT 32
 typedef struct _MacAddrEntry
 {
 	uint16_t mMacId;
-	uint8_t mMacAddr[MULTI_MAC__ADDR_LEN];
+	uint8_t mMacAddr[MACADDR_LEN];
 } MacAddrEntry;
 
 typedef struct _MultiMacAddrInfo
 {
 	uint16_t mAddrCnt;
-	MacAddrEntry mMacEntries[MULTI_MAC__MAX_MAC_CNT];
+	MacAddrEntry mMacEntries[MULTI_MACADDR_CNT];
 } MultiMacAddrInfo;
 //-----------------------------------------------------------------
 
@@ -2923,6 +3006,12 @@ enum eGPTPRole
 	eRoleSlave = 3,
 };
 
+enum eGPTPProfile
+{
+	eGPTP_PROFILE_STANDARD = 0,
+	eGPTP_PROFILE_AUTOMOTIVE = 1,
+};
+
 typedef struct _SRADGalaxySettings
 {
 	uint16_t perf_en;
@@ -3165,9 +3254,11 @@ typedef struct _SRADA2BSettings
 	ETHERNET_SETTINGS2 ethernet;
 	RAD_GPTP_SETTINGS gPTP;
 	uint64_t network_enables_5;
+	CMP_GLOBAL_DATA cmp_global_data;
+	CMP_NETWORK_DATA cmp_stream_data[CMP_STREAMS_A2B];
 } SRADA2BSettings;
 
-#define SRADA2BSettings_SIZE 340
+#define SRADA2BSettings_SIZE 416
 
 typedef struct _SRADMoon2Settings
 {
@@ -3375,9 +3466,12 @@ typedef struct _SRADGigastarSettings
 	ETHERNET10T1S_SETTINGS_EXT sfp_t1s_ext_1;
 	ETHERNET10T1S_SETTINGS sfp_t1s_2;
 	ETHERNET10T1S_SETTINGS_EXT sfp_t1s_ext_2;
+
+	CMP_GLOBAL_DATA cmp_global_data;
+	CMP_NETWORK_DATA cmp_stream_data[CMP_STREAMS_GIGASTAR];
 } SRADGigastarSettings;
 
-#define SRADGigastarSettings_SIZE 766
+#define SRADGigastarSettings_SIZE 1010
 
 typedef struct _SRADGalaxy2Settings
 {
@@ -4345,40 +4439,6 @@ typedef struct
 	uint8_t reserved[5];
 } Fire3LinuxSettings;
 
-#define CMP_STREAMS_FIRE3 (10)
-#define CMP_STREAMS_FIRE3FR (10)
-#define CMP_STREAMS_RED2 (10)
-
-typedef struct
-{
-	uint8_t bStreamEnabled : 1;
-	uint8_t EthModule : 2;
-	uint8_t bControlEnabled : 1;
-	uint8_t spare : 4;
-	uint8_t streamId;
-	uint8_t dstMac[6];
-	union
-	{
-		uint64_t word;
-		struct
-		{
-			uint16_t network_enables;
-			uint16_t network_enables_2;
-			uint16_t network_enables_3;
-			uint16_t network_enables_4;
-		};
-	} network_enables;
-	uint64_t network_enables_2;
-} CMP_NETWORK_DATA;
-
-typedef struct
-{
-	uint8_t cmp_enabled : 1;
-	uint8_t sparebits : 7;
-	uint8_t spare;
-	uint16_t cmp_device_id;
-} CMP_GLOBAL_DATA;
-
 enum
 {
 	NETWORK_TIMESYNC_OFF,
@@ -4749,6 +4809,14 @@ typedef struct _SEtherBadgeSettings
 
 #define RADEPSILON_NUM_PORTS 18 // ATSAM + PHYs
 #define RADEPSILON_MAX_PHY 18
+#define EPSILON_88Q6113_SWITCH_A 1
+#define EPSILON_88Q6113_SWITCH_B 2
+#define EPSILON_88Q6113_SWITCH_AB 3
+typedef enum
+{
+	EPSILON_10G_PHY1 = (1 << 0),
+	EPSILON_10G_PHY2 = (1 << 1),
+} Epsilon_10G_PHY_select;
 
 typedef struct _SRADEpsilonSwitchSettings
 {
@@ -6003,7 +6071,7 @@ typedef struct _icsSpyMessageVSB
 		};
 		uint8_t AckBytes[8];
 	};
-	uint32_t ExtraDataPtr;
+	uint32_t ExtraDataPtr; //in the context of a vsb file, this is a size, not a pointer
 	uint8_t MiscData;
 	uint8_t Reserved[3];
 } icsSpyMessageVSB;
@@ -6237,21 +6305,24 @@ typedef enum
 	supportedFeatureMax = 0xFFFF,
 } DeviceFeature;
 
-typedef enum PhyErrorType
+typedef enum AccessoryErrorType
 {
-	PhyOperationError = 0,
-	PhyOperationSuccess = 1,
-	PhyFlashingInitError = 2,
-	PhyFlashingEraseError = 3,
-	PhyFlashingWriteError = 4,
-	PhyFlashingReadError = 5,
-	PhyFlashingVerifyError = 6,
-	PhyFlashingDeinitError = 7,
-	PhyFlashingInvalidHardware = 8,
-	PhyFlashingInvalidDataFile = 9,
-	PhyGetVersionError = 10,
-	PhyIndexError = 11,
-} PhyErrorType;
+	AccessoryOperationError = 0,
+	AccessoryOperationSuccess = 1,
+	AccessoryFlashingInitError = 2,
+	AccessoryFlashingEraseError = 3,
+	AccessoryFlashingWriteError = 4,
+	AccessoryFlashingReadError = 5,
+	AccessoryFlashingVerifyError = 6,
+	AccessoryFlashingDeinitError = 7,
+	AccessoryFlashingInvalidHardware = 8,
+	AccessoryFlashingInvalidDataFile = 9,
+	AccessoryGetVersionError = 10,
+	AccessoryIndexError = 11,
+	AccessoryParamApiVersionError = 12,
+	AccessoryParamSizeMismatchError = 13,
+	AccessoryParameterNull = 14,
+} AccessoryOperationErrorType;
 
 typedef enum _EDevNameType
 {
@@ -6260,6 +6331,41 @@ typedef enum _EDevNameType
 	EDevNameTypeTCP,
 	EDevNameTypeTCPShort,
 } EDevNameType;
+
+#pragma pack(push, 1)
+typedef struct _FlashAccessoryFirmwareParams
+{
+	// set to FlashAccessoryFirmwareAPIVersion - This should increment anytime there is a breakage of ABI / API.
+	uint32_t apiVersion;
+	// sizeof(FlashAccessoryFirmwareParams)
+	uint32_t size;
+	// Device specific Index - we should have an enum/preprocess define for all of these
+	uint8_t index;
+	// firmware data
+	uint8_t* data;
+	// size of firmware data
+	uint32_t dataSize;
+} FlashAccessoryFirmwareParams;
+#pragma pack(pop)
+#if defined(IS_64BIT_SYSTEM)
+#define FlashAccessoryFirmwareParams_SIZE (21)
+#else
+#define FlashAccessoryFirmwareParams_SIZE (17)
+#endif
+
+
+typedef enum _flashAccessoryIndex
+{
+	FLASH_ACCESSORY_EPSILON_10G_PHY1,
+	FLASH_ACCESSORY_EPSILON_10G_PHY2,
+	FLASH_ACCESSORY_EPSILON_SWITCH_A,
+	FLASH_ACCESSORY_EPSILON_SWITCH_B,
+} flashAccessoryIndex;
+
+typedef enum _epsilon10GPHYFW
+{
+	FLASH_ACCESSORY_EPSILON_10G_PHY_FW_0_3_7_0
+} epsilon10GPHYFW;
 
 // Update this assert when we add features to this enum
 //static_assert(NUM_VALID_DEVICE_FEATURES == (networkTerminationDWCAN08 + 1));
@@ -6367,6 +6473,8 @@ CHECK_STRUCT_SIZE(SRADComet3Settings);
 CHECK_STRUCT_SIZE(SRADGigastar2Settings);
 CHECK_STRUCT_SIZE(SRADMoonT1SSettings);
 CHECK_STRUCT_SIZE(SNeoVIConnectSettings);
+CHECK_STRUCT_SIZE(FlashAccessoryFirmwareParams);
+
 #endif /* INTREPID_NO_CHECK_STRUCT_SIZE */
 
 #endif /* _ICSNVC40_H */

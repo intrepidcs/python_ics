@@ -457,6 +457,16 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, DRIVER_USB1);
 	result += PyModule_AddIntMacro(module, DRIVER_USB2);
 	result += PyModule_AddIntMacro(module, DRIVER_USB3);
+	result += PyModule_AddIntMacro(module, SERVD_DRIVER_MASK);
+	result += PyModule_AddIntMacro(module, SERVD_DRIVER_VCP);
+	result += PyModule_AddIntMacro(module, SERVD_DRIVER_DXX);
+	result += PyModule_AddIntMacro(module, SERVD_DRIVER_CAB);
+	result += PyModule_AddIntMacro(module, SERVD_DRIVER_TCP);
+	result += PyModule_AddIntMacro(module, CMP_STREAMS_FIRE3);
+	result += PyModule_AddIntMacro(module, CMP_STREAMS_FIRE3FR);
+	result += PyModule_AddIntMacro(module, CMP_STREAMS_RED2);
+	result += PyModule_AddIntMacro(module, CMP_STREAMS_A2B);
+	result += PyModule_AddIntMacro(module, CMP_STREAMS_GIGASTAR);
 	// enum
 	result += PyModule_AddIntMacro(module, AUTO);
 	result += PyModule_AddIntMacro(module, USE_TQ);
@@ -594,6 +604,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, SFP_ID_ICS_MV2221MB1);
 	result += PyModule_AddIntMacro(module, SFP_ID_ICS_MV3244);
 	result += PyModule_AddIntMacro(module, SFP_ID_ICS_MC8670);
+	result += PyModule_AddIntMacro(module, SFP_ID_ICS_EN11100);
 	result += PyModule_AddIntMacro(module, SFP_ID_MAX);
 	// end of enum -  } SfpId;
 
@@ -723,8 +734,8 @@ int setup_module_auto_defines(PyObject * module)
 	// end of enum -  };
 
 	result += PyModule_AddIntMacro(module, SExtSubCmdHdr_SIZE);
-	result += PyModule_AddIntMacro(module, MULTI_MAC__ADDR_LEN);
-	result += PyModule_AddIntMacro(module, MULTI_MAC__MAX_MAC_CNT);
+	result += PyModule_AddIntMacro(module, MACADDR_LEN);
+	result += PyModule_AddIntMacro(module, MULTI_MACADDR_CNT);
 	result += PyModule_AddIntMacro(module, GENERIC_BINARY_STATUS_ERROR_UNKNOWN_BINARY);
 	result += PyModule_AddIntMacro(module, GENERIC_BINARY_STATUS_ERROR_OVERSIZE);
 	result += PyModule_AddIntMacro(module, GENERIC_BINARY_STATUS_ERROR_BINARY_EMPTY);
@@ -937,6 +948,11 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, eRoleSlave);
 	// end of enum -  };
 
+	// enum
+	result += PyModule_AddIntMacro(module, eGPTP_PROFILE_STANDARD);
+	result += PyModule_AddIntMacro(module, eGPTP_PROFILE_AUTOMOTIVE);
+	// end of enum -  };
+
 	result += PyModule_AddIntMacro(module, SRADGalaxySettings_SIZE);
 	result += PyModule_AddIntMacro(module, SRADStar2Settings_SIZE);
 	result += PyModule_AddIntMacro(module, SRADSuperMoonSettings_SIZE);
@@ -1013,9 +1029,6 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, LINUX_CONFIG_PORT_NONE);
 	result += PyModule_AddIntMacro(module, LINUX_CONFIG_PORT_ETH_01);
 	result += PyModule_AddIntMacro(module, LINUX_CONFIG_PORT_ETH_02);
-	result += PyModule_AddIntMacro(module, CMP_STREAMS_FIRE3);
-	result += PyModule_AddIntMacro(module, CMP_STREAMS_FIRE3FR);
-	result += PyModule_AddIntMacro(module, CMP_STREAMS_RED2);
 	// enum
 	result += PyModule_AddIntMacro(module, NETWORK_TIMESYNC_OFF);
 	result += PyModule_AddIntMacro(module, NETWORK_TIMESYNC_AUTO);
@@ -1030,6 +1043,14 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, SEtherBadgeSettings_SIZE);
 	result += PyModule_AddIntMacro(module, RADEPSILON_NUM_PORTS);
 	result += PyModule_AddIntMacro(module, RADEPSILON_MAX_PHY);
+	result += PyModule_AddIntMacro(module, EPSILON_88Q6113_SWITCH_A);
+	result += PyModule_AddIntMacro(module, EPSILON_88Q6113_SWITCH_B);
+	result += PyModule_AddIntMacro(module, EPSILON_88Q6113_SWITCH_AB);
+	// enum
+	result += PyModule_AddIntMacro(module, EPSILON_10G_PHY1);
+	result += PyModule_AddIntMacro(module, EPSILON_10G_PHY2);
+	// end of enum -  } Epsilon_10G_PHY_select;
+
 	result += PyModule_AddIntMacro(module, SRADEpsilonSettings_SIZE);
 	// enum
 	result += PyModule_AddIntMacro(module, enumWILPortConfig_Single_Port_A);
@@ -1208,19 +1229,22 @@ int setup_module_auto_defines(PyObject * module)
 	// end of enum -  } DeviceFeature;
 
 	// enum
-	result += PyModule_AddIntMacro(module, PhyOperationError);
-	result += PyModule_AddIntMacro(module, PhyOperationSuccess);
-	result += PyModule_AddIntMacro(module, PhyFlashingInitError);
-	result += PyModule_AddIntMacro(module, PhyFlashingEraseError);
-	result += PyModule_AddIntMacro(module, PhyFlashingWriteError);
-	result += PyModule_AddIntMacro(module, PhyFlashingReadError);
-	result += PyModule_AddIntMacro(module, PhyFlashingVerifyError);
-	result += PyModule_AddIntMacro(module, PhyFlashingDeinitError);
-	result += PyModule_AddIntMacro(module, PhyFlashingInvalidHardware);
-	result += PyModule_AddIntMacro(module, PhyFlashingInvalidDataFile);
-	result += PyModule_AddIntMacro(module, PhyGetVersionError);
-	result += PyModule_AddIntMacro(module, PhyIndexError);
-	// end of enum -  } PhyErrorType;
+	result += PyModule_AddIntMacro(module, AccessoryOperationError);
+	result += PyModule_AddIntMacro(module, AccessoryOperationSuccess);
+	result += PyModule_AddIntMacro(module, AccessoryFlashingInitError);
+	result += PyModule_AddIntMacro(module, AccessoryFlashingEraseError);
+	result += PyModule_AddIntMacro(module, AccessoryFlashingWriteError);
+	result += PyModule_AddIntMacro(module, AccessoryFlashingReadError);
+	result += PyModule_AddIntMacro(module, AccessoryFlashingVerifyError);
+	result += PyModule_AddIntMacro(module, AccessoryFlashingDeinitError);
+	result += PyModule_AddIntMacro(module, AccessoryFlashingInvalidHardware);
+	result += PyModule_AddIntMacro(module, AccessoryFlashingInvalidDataFile);
+	result += PyModule_AddIntMacro(module, AccessoryGetVersionError);
+	result += PyModule_AddIntMacro(module, AccessoryIndexError);
+	result += PyModule_AddIntMacro(module, AccessoryParamApiVersionError);
+	result += PyModule_AddIntMacro(module, AccessoryParamSizeMismatchError);
+	result += PyModule_AddIntMacro(module, AccessoryParameterNull);
+	// end of enum -  } AccessoryOperationErrorType;
 
 	// enum
 	result += PyModule_AddIntMacro(module, EDevNameTypeDefault);
@@ -1228,6 +1252,19 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddIntMacro(module, EDevNameTypeTCP);
 	result += PyModule_AddIntMacro(module, EDevNameTypeTCPShort);
 	// end of enum -  } EDevNameType;
+
+	result += PyModule_AddIntMacro(module, FlashAccessoryFirmwareParams_SIZE);
+	result += PyModule_AddIntMacro(module, FlashAccessoryFirmwareParams_SIZE);
+	// enum
+	result += PyModule_AddIntMacro(module, FLASH_ACCESSORY_EPSILON_10G_PHY1);
+	result += PyModule_AddIntMacro(module, FLASH_ACCESSORY_EPSILON_10G_PHY2);
+	result += PyModule_AddIntMacro(module, FLASH_ACCESSORY_EPSILON_SWITCH_A);
+	result += PyModule_AddIntMacro(module, FLASH_ACCESSORY_EPSILON_SWITCH_B);
+	// end of enum -  } flashAccessoryIndex;
+
+	// enum
+	result += PyModule_AddIntMacro(module, FLASH_ACCESSORY_EPSILON_10G_PHY_FW_0_3_7_0);
+	// end of enum -  } epsilon10GPHYFW;
 
 	result += PyModule_AddIntMacro(module, NUM_DEVICE_FEATURE_BITFIELDS);
 	// enum
