@@ -100,7 +100,7 @@ def get_ics_extension_compiler_arguments() -> List[str]:
         compile_args = GCC_COMPILE_ARGS
     elif "DARWIN" in platform.system().upper():
         # Mac doesn't respect the compiler args, but will append with ARCHFLAGS environment variable
-        os.environ["ARCHFLAGS"] += " -std=c++17"
+        os.environ["ARCHFLAGS"] = os.environ.get("ARCHFLAGS", "") + " -std=c++17"
         compile_args = []
     else:
         compile_args = []
