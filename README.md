@@ -83,10 +83,15 @@ PS > python -m pip install .
         - `.\.venv\Scripts\Activate.ps1`
     - Install dependencies:
         - `python -m pip install -r requirements.txt`
-    - Build in debug (`-g` flag):
-        - `python setup.py build -g`
-    - Install into our virtual environment:
-        - `python setup.py install --force`
+    - Set DEBUG environment variable:
+        - $env:DEBUG = "1"
+    - Build the extension:
+        - `python_d setup.py build --debug install --force`
+        - OUTDATED:
+            - Build in debug (`-g` flag):
+                - `python setup.py build -g`
+            - Install into our virtual environment:
+                - `python setup.py install --force`
     - Inside visual studio code:
         - Open the root python_ics directory
             - `code C:\Path\To\python_ics`

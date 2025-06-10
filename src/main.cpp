@@ -69,14 +69,13 @@ extern "C"
 
     PyMODINIT_FUNC PyInit_ics(void)
     {
-        initialize_ics_library();
-
         PyObject* module = PyModule_Create(&IcsModule);
-
         if (!module) {
             return module;
         }
         PyDateTime_IMPORT;
+
+        initialize_ics_library();
 
 #ifdef Py_GIL_DISABLED
         // Enable the experimental free threaded introduced in 3.13

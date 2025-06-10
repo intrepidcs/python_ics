@@ -19,6 +19,28 @@
 #include <sstream>
 #include <string>
 
+// This class allows RAII of the python GIL. This is a C++ replacement of
+// Py_BEGIN_ALLOW_THREADS / Py_END_ALLOW_THREADS
+class PyAllowThreads
+{
+    PyThreadState* _save = nullptr;
+
+  public:
+    // Save the thread state and Release the GIL
+    PyAllowThreads() { _save = PyEval_SaveThread(); }
+    // Restore the thread state and Acquire the GIL
+    virtual ~PyAllowThreads() { restore(); }
+
+    // Restore the thread and GIL state, this is safe to call multiple times.
+    void restore()
+    {
+        if (_save) {
+            PyEval_RestoreThread(_save);
+        }
+        _save = nullptr;
+    }
+};
+
 extern PyTypeObject spy_message_object_type;
 // __func__, __FUNCTION__ and __PRETTY_FUNCTION__ are not preprocessor macros.
 // but MSVC doesn't follow c standard and treats __FUNCTION__ as a string literal macro...
@@ -596,6 +618,7 @@ PyMethodDef IcsMethods[] = {
 #pragma warning(pop)
 
 // Internal function
+// This function doesn't call any python methods and doesn't do anything with thread states or GIL
 auto device_name_from_nde(NeoDeviceEx* nde) -> std::string
 {
     if (!nde) {
@@ -609,8 +632,8 @@ auto device_name_from_nde(NeoDeviceEx* nde) -> std::string
         }
         std::string name;
         name.reserve(255);
+        name.resize(255);
         // Get the struct
-        Py_BEGIN_ALLOW_THREADS;
         // int _stdcall icsneoGetDeviceName(const NeoDeviceEx* nde, char* name, const size_t length, const enum
         // _EDevNameType devNameType)
         ice::Function<int __stdcall(const NeoDeviceEx*, char*, const size_t, const enum _EDevNameType)>
@@ -618,12 +641,10 @@ auto device_name_from_nde(NeoDeviceEx* nde) -> std::string
         if (auto length =
                 icsneoGetDeviceName(const_cast<NeoDeviceEx*>(nde), &name[0], name.capacity(), EDevNameTypeNoSerial);
             length == 0) {
-            Py_BLOCK_THREADS;
             return std::string("icsneoGetDeviceName() Failed");
         }
-        Py_END_ALLOW_THREADS;
         return name;
-    } catch (ice::Exception& ex) {
+    } catch (ice::Exception&) {
         // Legacy support - we are assuming icsneoGetDeviceName isn't available here
         // and suppressing ex error message.
         switch (nde->neoDevice.DeviceType) {
@@ -1035,17 +1056,17 @@ PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
         if (network_id != -1)
             popts = &opts;
 
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoFindDevices(devices,
                                &count,
                                device_types_list.get(),
                                device_types_list_size,
                                (network_id != -1) ? &popts : NULL,
                                0)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoFindDevices() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
 
         PyObject* tuple = PyTuple_New(count);
         if (!tuple) {
@@ -1060,7 +1081,10 @@ PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
             if (!PyNeoDeviceEx_SetNeoDeviceEx(obj, &devices[i])) {
                 return NULL;
             }
-            if (!PyNeoDeviceEx_SetName(obj, PyUnicode_FromString(device_name_from_nde(&devices[i]).c_str()))) {
+            std::string device_name = device_name_from_nde(&devices[i]);
+            PyObject* py_device_name =
+                PyUnicode_FromStringAndSize(device_name.c_str(), static_cast<Py_ssize_t>(device_name.length()));
+            if (!py_device_name || !PyNeoDeviceEx_SetName(obj, py_device_name)) {
                 return NULL;
             }
             PyTuple_SetItem(tuple, i, obj);
@@ -1175,12 +1199,12 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
             if (network_id != -1)
                 popts = &opts;
 
-            Py_BEGIN_ALLOW_THREADS;
+            auto gil = PyAllowThreads();
             if (!icsneoFindDevices(devices, &count, NULL, 0, (network_id != -1) ? &popts : NULL, 0)) {
-                Py_BLOCK_THREADS;
+                gil.restore();
                 return set_ics_exception(exception_runtime_error(), "icsneoFindDevices() Failed");
             }
-            Py_END_ALLOW_THREADS;
+            gil.restore();
             // Find the first free device
             for (int i = 0; i < count; ++i) {
                 // If we are looking for a serial number, check here
@@ -1242,7 +1266,7 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
             PyBuffer_Release(&buffer);
             return NULL;
         }
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoOpenDevice(nde,
                               &handle,
                               use_network_ids ? network_ids_list.get() : NULL,
@@ -1250,11 +1274,11 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
                               options,
                               (network_id != -1) ? popts : NULL,
                               0)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             PyBuffer_Release(&buffer);
             return set_ics_exception(exception_runtime_error(), "icsneoOpenDevice() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         PyBuffer_Release(&buffer);
         if (!PyNeoDeviceEx_SetHandle(device, handle)) {
             return NULL;
@@ -1298,13 +1322,13 @@ PyObject* meth_close_device(PyObject* self, PyObject* args)
         if (!handle) {
             return Py_BuildValue("i", error_count);
         }
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoClosePort(handle, &error_count)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoClosePort() Failed");
         }
         icsneoFreeObject(handle);
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         if (!PyNeoDeviceEx_SetHandle(obj, NULL)) {
             return NULL;
         }
@@ -1374,12 +1398,12 @@ PyObject* meth_get_rtc(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         ice::Function<int __stdcall(void*, icsSpyTime*)> icsneoGetRTC(lib, "icsneoGetRTC");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoGetRTC(handle, &ics_time)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoGetRTC() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         time_t current_time = time(0);
         // Bug #6600 - icsneoSetRTC is utc, icsneoGetRTC is local
         // tm* current_utc_time = gmtime(&current_time); // UTC
@@ -1457,12 +1481,12 @@ PyObject* meth_set_rtc(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         ice::Function<int __stdcall(void*, icsSpyTime*)> icsneoSetRTC(lib, "icsneoSetRTC");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoSetRTC(handle, &ics_time)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoSetRTC() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         Py_RETURN_NONE;
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -1539,12 +1563,12 @@ PyObject* meth_coremini_load(PyObject* self, PyObject* args)
         }
         ice::Function<int __stdcall(void*, const unsigned char*, unsigned long, int)> icsneoScriptLoad(
             lib, "icsneoScriptLoad");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoScriptLoad(handle, data, static_cast<unsigned long>(data_size), location)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoScriptLoad() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         Py_RETURN_NONE;
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -1573,12 +1597,12 @@ PyObject* meth_coremini_start(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         ice::Function<int __stdcall(void*, int)> icsneoScriptStart(lib, "icsneoScriptStart");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoScriptStart(handle, location)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoScriptStart() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         Py_RETURN_NONE;
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -1606,12 +1630,12 @@ PyObject* meth_coremini_stop(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         ice::Function<int __stdcall(void*)> icsneoScriptStop(lib, "icsneoScriptStop");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoScriptStop(handle)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoScriptStop() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         Py_RETURN_NONE;
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -1641,12 +1665,12 @@ PyObject* meth_coremini_clear(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         ice::Function<int __stdcall(void*, int)> icsneoScriptClear(lib, "icsneoScriptClear");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoScriptClear(handle, location)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoScriptClear() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         Py_RETURN_NONE;
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -1676,12 +1700,12 @@ PyObject* meth_coremini_get_status(PyObject* self, PyObject* args)
         }
         ice::Function<int __stdcall(void*, int*)> icsneoScriptGetScriptStatus(lib, "icsneoScriptGetScriptStatus");
         int status = 0;
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoScriptGetScriptStatus(handle, &status)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoScriptClear() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         return Py_BuildValue("b", status == 1);
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -1736,10 +1760,10 @@ PyObject* meth_transmit_messages(PyObject* self, PyObject* args)
             }
             msgs[i] = &(_obj->msg);
         }
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         for (int i = 0; i < TUPLE_COUNT; ++i) {
             if (!icsneoTxMessages(handle, msgs[i], (msgs[i]->NetworkID2 << 8) | msgs[i]->NetworkID, 1)) {
-                Py_BLOCK_THREADS;
+                gil.restore();
                 if (created_tuple) {
                     Py_XDECREF(tuple);
                 }
@@ -1747,7 +1771,7 @@ PyObject* meth_transmit_messages(PyObject* self, PyObject* args)
                 return set_ics_exception(exception_runtime_error(), "icsneoTxMessages() Failed");
             }
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         if (created_tuple) {
             Py_XDECREF(tuple);
         }
@@ -1798,17 +1822,17 @@ PyObject* meth_get_messages(PyObject* self, PyObject* args)
             PyErr_Print();
             return set_ics_exception(exception_runtime_error(), "Failed to allocate " SPY_MESSAGE_OBJECT_NAME);
         }
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (timeout == 0 || icsneoWaitForRxMessagesWithTimeOut(handle, (unsigned int)timeout)) {
             if (!icsneoGetMessages(handle, (icsSpyMessage*)msgs, &count, &errors)) {
-                Py_BLOCK_THREADS;
+                gil.restore();
                 PyMem_Free(msgs);
                 return set_ics_exception(exception_runtime_error(), "icsneoGetMessages() Failed");
             }
         } else {
             count = 0;
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         PyObject* tuple = PyTuple_New(count);
         for (int i = 0; i < count; ++i) {
             PyObject* _obj = NULL;
@@ -1871,13 +1895,13 @@ PyObject* meth_get_script_status(PyObject* self, PyObject* args)
         }
         ice::Function<int __stdcall(void*, unsigned long*, unsigned long, unsigned long&)>
             icsneoScriptGetScriptStatusEx(lib, "icsneoScriptGetScriptStatusEx");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoScriptGetScriptStatusEx(
                 handle, parameters, sizeof(parameters) / sizeof(&parameters[0]), parameters_count)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoScriptGetScriptStatusEx() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
@@ -1913,11 +1937,12 @@ PyObject* meth_get_error_messages(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         ice::Function<int __stdcall(void*, int*, int*)> icsneoGetErrorMessages(lib, "icsneoGetErrorMessages");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoGetErrorMessages(handle, errors, &error_count)) {
-            Py_BLOCK_THREADS return set_ics_exception(exception_runtime_error(), "icsneoGetErrorMessages() Failed");
+            gil.restore();
+            return set_ics_exception(exception_runtime_error(), "icsneoGetErrorMessages() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         ice::Function<int __stdcall(int, char*, char*, int*, int*, int*, int*)> icsneoGetErrorInfo(
             lib, "icsneoGetErrorInfo");
         PyObject* list = PyList_New(0);
@@ -1927,7 +1952,7 @@ PyObject* meth_get_error_messages(PyObject* self, PyObject* args)
             int description_short_length = 255;
             int description_long_length = 255;
             int severity = 0, restart_needed = 0;
-            Py_BEGIN_ALLOW_THREADS;
+            auto gil = PyAllowThreads();
             if (!icsneoGetErrorInfo(errors[i],
                                     description_short,
                                     description_long,
@@ -1935,11 +1960,11 @@ PyObject* meth_get_error_messages(PyObject* self, PyObject* args)
                                     &description_long_length,
                                     &severity,
                                     &restart_needed)) {
-                Py_BLOCK_THREADS;
+                gil.restore();
                 Py_XDECREF(list);
                 return set_ics_exception(exception_runtime_error(), "icsneoGetErrorInfo() Failed");
             }
-            Py_END_ALLOW_THREADS;
+            gil.restore();
             PyObject* tuple = Py_BuildValue(
                 "i, s, s, i, i", errors[i], description_short, description_long, severity, restart_needed);
 
@@ -2045,13 +2070,13 @@ PyObject* meth_flash_devices(PyObject* self, PyObject* args)
                                     unsigned long,
                                     void (*MessageCallback)(const char* message, bool success))>
             FlashDevice2(lib, "FlashDevice2");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!FlashDevice2(0x3835C256, &nde->neoDevice, rc, reflash_count, network_id, iOptions, 0, &message_callback)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             PyBuffer_Release(&buffer);
             return set_ics_exception(exception_runtime_error(), "FlashDevice2() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         PyBuffer_Release(&buffer);
         Py_RETURN_NONE;
     } catch (ice::Exception& ex) {
@@ -2097,19 +2122,19 @@ PyObject* meth_set_reflash_callback(PyObject* self, PyObject* args)
         }
         ice::Function<int __stdcall(void (*)(const wchar_t*, unsigned long))> icsneoSetReflashCallback(
             lib, "icsneoSetReflashCallback");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (callback == Py_None) {
             if (!icsneoSetReflashCallback(NULL)) {
-                Py_BLOCK_THREADS;
+                gil.restore();
                 return set_ics_exception(exception_runtime_error(), "icsneoSetReflashCallback() Failed");
             }
         } else {
             if (!icsneoSetReflashCallback(&message_reflash_callback)) {
-                Py_BLOCK_THREADS;
+                gil.restore();
                 return set_ics_exception(exception_runtime_error(), "icsneoSetReflashCallback() Failed");
             }
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         Py_RETURN_NONE;
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -2154,7 +2179,7 @@ PyObject* meth_get_device_settings(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         // Set/Get the DeviceSettingsType
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         EDeviceSettingsType* setting_type = &((SDeviceSettings*)settings_buffer.buf)->DeviceSettingType;
         if (device_type_override == -1) {
             // int _stdcall icsneoGetDeviceSettingsType(void* hObject, EPlasmaIonVnetChannel_t vnetSlot,
@@ -2162,7 +2187,7 @@ PyObject* meth_get_device_settings(PyObject* self, PyObject* args)
             ice::Function<int __stdcall(void*, EPlasmaIonVnetChannel_t, EDeviceSettingsType*)>
                 icsneoGetDeviceSettingsType(lib, "icsneoGetDeviceSettingsType");
             if (!icsneoGetDeviceSettingsType(handle, vnet_slot, setting_type)) {
-                Py_BLOCK_THREADS;
+                gil.restore();
                 PyBuffer_Release(&settings_buffer);
                 Py_DECREF(settings);
                 return set_ics_exception(exception_runtime_error(), "icsneoGetDeviceSettingsType() Failed");
@@ -2174,12 +2199,12 @@ PyObject* meth_get_device_settings(PyObject* self, PyObject* args)
             lib, "icsneoGetDeviceSettings");
         if (!icsneoGetDeviceSettings(
                 handle, (SDeviceSettings*)settings_buffer.buf, static_cast<int>(settings_buffer.len), vnet_slot)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             PyBuffer_Release(&settings_buffer);
             Py_DECREF(settings);
             return set_ics_exception(exception_runtime_error(), "icsneoGetDeviceSettings() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         PyBuffer_Release(&settings_buffer);
         return settings;
     } catch (ice::Exception& ex) {
@@ -2219,17 +2244,17 @@ PyObject* meth_set_device_settings(PyObject* self, PyObject* args)
             icsneoSetDeviceSettings(lib, "icsneoSetDeviceSettings");
         Py_buffer settings_buffer = {};
         PyObject_GetBuffer(settings, &settings_buffer, PyBUF_CONTIG);
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoSetDeviceSettings(handle,
                                      (SDeviceSettings*)settings_buffer.buf,
                                      static_cast<int>(settings_buffer.len),
                                      save_to_eeprom,
                                      vnet_slot)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             PyBuffer_Release(&settings_buffer);
             return set_ics_exception(exception_runtime_error(), "icsneoSetDeviceSettings() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         PyBuffer_Release(&settings_buffer);
         Py_RETURN_NONE;
     } catch (ice::Exception& ex) {
@@ -2258,12 +2283,12 @@ PyObject* meth_load_default_settings(PyObject* self, PyObject* args) // icsneoLo
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         ice::Function<int __stdcall(void*)> icsneoLoadDefaultSettings(lib, "icsneoLoadDefaultSettings");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoLoadDefaultSettings(handle)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoLoadDefaultSettings() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         Py_RETURN_NONE;
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -2298,12 +2323,12 @@ PyObject* meth_read_sdcard(PyObject* self,
         if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
             return NULL;
         }
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoReadSDCard(handle, index, data, &size)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoReadSDCard() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         PyObject* tuple = PyTuple_New(size);
         if (!tuple) {
             return NULL;
@@ -2351,12 +2376,12 @@ PyObject* meth_write_sdcard(
         if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
             return NULL;
         }
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoWriteSDCard(handle, index, (unsigned char*)PyByteArray_AsString(ba_obj))) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoWriteSDCard() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         Py_RETURN_NONE;
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -2439,12 +2464,12 @@ PyObject* meth_coremini_start_fblock(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         ice::Function<int __stdcall(void*, unsigned int)> icsneoScriptStartFBlock(lib, "icsneoScriptStartFBlock");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoScriptStartFBlock(handle, index)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoScriptStartFBlock() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         Py_RETURN_NONE;
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -2473,12 +2498,12 @@ PyObject* meth_coremini_stop_fblock(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         ice::Function<int __stdcall(void*, unsigned int)> icsneoScriptStopFBlock(lib, "icsneoScriptStopFBlock");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoScriptStopFBlock(handle, index)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoScriptStopFBlock() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         Py_RETURN_NONE;
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -2509,12 +2534,12 @@ PyObject* meth_coremini_get_fblock_status(PyObject* self, PyObject* args)
         ice::Function<int __stdcall(void*, unsigned int, int*)> icsneoScriptGetFBlockStatus(
             lib, "icsneoScriptGetFBlockStatus");
         int status = 0;
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoScriptGetFBlockStatus(handle, index, &status)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoScriptGetFBlockStatus() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         return Py_BuildValue("b", status == 1);
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -2545,12 +2570,12 @@ PyObject* meth_coremini_read_app_signal(PyObject* self, PyObject* args) // Scrip
         ice::Function<int __stdcall(void*, unsigned int, double*)> icsneoScriptReadAppSignal(
             lib, "icsneoScriptReadAppSignal");
         double value = 0;
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoScriptReadAppSignal(handle, index, &value)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoScriptReadAppSignal() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         return Py_BuildValue("d", value);
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -2581,12 +2606,12 @@ PyObject* meth_coremini_write_app_signal(PyObject* self, PyObject* args) // Scri
         }
         ice::Function<int __stdcall(void*, unsigned int, double)> icsneoScriptWriteAppSignal(
             lib, "icsneoScriptWriteAppSignal");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoScriptWriteAppSignal(handle, index, value)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoScriptWriteAppSignal() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         Py_RETURN_NONE;
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -2626,12 +2651,12 @@ PyObject* meth_coremini_read_tx_message(PyObject* self, PyObject* args) // Scrip
                 return set_ics_exception(exception_runtime_error(),
                                          "Failed to allocate " SPY_MESSAGE_J1850_OBJECT_NAME);
             }
-            Py_BEGIN_ALLOW_THREADS;
+            auto gil = PyAllowThreads();
             if (!icsneoScriptReadTxMessage(handle, index, &PySpyMessageJ1850_GetObject(msg)->msg)) {
-                Py_BLOCK_THREADS;
+                gil.restore();
                 return set_ics_exception(exception_runtime_error(), "icsneoScriptReadTxMessage() Failed");
             }
-            Py_END_ALLOW_THREADS;
+            gil.restore();
         } else {
             msg = PyObject_CallObject((PyObject*)&spy_message_object_type, NULL);
             if (!msg) {
@@ -2639,12 +2664,12 @@ PyObject* meth_coremini_read_tx_message(PyObject* self, PyObject* args) // Scrip
                 PyErr_Print();
                 return set_ics_exception(exception_runtime_error(), "Failed to allocate " SPY_MESSAGE_OBJECT_NAME);
             }
-            Py_BEGIN_ALLOW_THREADS;
+            auto gil = PyAllowThreads();
             if (!icsneoScriptReadTxMessage(handle, index, &PySpyMessage_GetObject(msg)->msg)) {
-                Py_BLOCK_THREADS;
+                gil.restore();
                 return set_ics_exception(exception_runtime_error(), "icsneoScriptReadTxMessage() Failed");
             }
-            Py_END_ALLOW_THREADS;
+            gil.restore();
         }
         return msg;
     } catch (ice::Exception& ex) {
@@ -2693,15 +2718,15 @@ PyObject* meth_coremini_read_rx_message(PyObject* self, PyObject* args) // Scrip
                 return set_ics_exception(exception_runtime_error(),
                                          "Failed to allocate " SPY_MESSAGE_J1850_OBJECT_NAME);
             }
-            Py_BEGIN_ALLOW_THREADS;
+            auto gil = PyAllowThreads();
             if (!icsneoScriptReadRxMessage(handle,
                                            index,
                                            &PySpyMessageJ1850_GetObject(msg_mask)->msg,
                                            &PySpyMessageJ1850_GetObject(msg_mask)->msg)) {
-                Py_BLOCK_THREADS;
+                gil.restore();
                 return set_ics_exception(exception_runtime_error(), "icsneoScriptReadRxMessage() Failed");
             }
-            Py_END_ALLOW_THREADS;
+            gil.restore();
         } else {
             msg = PyObject_CallObject((PyObject*)&spy_message_object_type, NULL);
             if (!msg) {
@@ -2715,13 +2740,13 @@ PyObject* meth_coremini_read_rx_message(PyObject* self, PyObject* args) // Scrip
                 PyErr_Print();
                 return set_ics_exception(exception_runtime_error(), "Failed to allocate " SPY_MESSAGE_OBJECT_NAME);
             }
-            Py_BEGIN_ALLOW_THREADS;
+            auto gil = PyAllowThreads();
             if (!icsneoScriptReadRxMessage(
                     handle, index, &PySpyMessage_GetObject(msg)->msg, &PySpyMessage_GetObject(msg_mask)->msg)) {
-                Py_BLOCK_THREADS;
+                gil.restore();
                 return set_ics_exception(exception_runtime_error(), "icsneoScriptReadRxMessage() Failed");
             }
-            Py_END_ALLOW_THREADS;
+            gil.restore();
         }
         return Py_BuildValue("(O,O)", msg, msg_mask);
     } catch (ice::Exception& ex) {
@@ -2770,12 +2795,12 @@ PyObject* meth_coremini_write_tx_message(PyObject* self, PyObject* args) // icsn
         }
         ice::Function<int __stdcall(void*, unsigned int, void*)> icsneoScriptWriteTxMessage(
             lib, "icsneoScriptWriteTxMessage");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoScriptWriteTxMessage(handle, index, msg)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoScriptWriteTxMessage() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         Py_RETURN_NONE;
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -2876,7 +2901,7 @@ PyObject* meth_get_performance_parameters(PyObject* self, PyObject* args)
         int reserved3 = 0;
         int reserved4 = 0;
         int reserved5 = 0;
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoGetPerformanceParameters(handle,
                                             &buffer_count,
                                             &buffer_max,
@@ -2886,10 +2911,10 @@ PyObject* meth_get_performance_parameters(PyObject* self, PyObject* args)
                                             &reserved3,
                                             &reserved4,
                                             &reserved5)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoGetPerformanceParameters() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         return Py_BuildValue("(i,i,i,i,i,i,i,i)",
                              buffer_count,
                              buffer_max,
@@ -2927,12 +2952,12 @@ PyObject* meth_validate_hobject(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         ice::Function<int __stdcall(void*)> icsneoValidateHObject(lib, "icsneoValidateHObject");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoValidateHObject(handle)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return Py_BuildValue("b", false);
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         return Py_BuildValue("b", true);
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -2963,12 +2988,12 @@ PyObject* meth_get_last_api_error(PyObject* self, PyObject* args)
         ice::Function<int __stdcall(int, char*, char*, int*, int*, int*, int*)> icsneoGetErrorInfo(
             lib, "icsneoGetErrorInfo");
         int error = 0;
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoGetLastAPIError(handle, &error)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoGetLastAPIError() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         char description_short[255] = { 0 };
         char description_long[255] = { 0 };
         int description_short_length = 255;
@@ -3001,9 +3026,9 @@ PyObject* meth_get_dll_version(PyObject* self, PyObject* args)
         }
         ice::Function<int __stdcall()> icsneoGetDLLVersion(lib, "icsneoGetDLLVersion");
         int result = 0;
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         result = icsneoGetDLLVersion();
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         return Py_BuildValue("i", result);
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -3032,12 +3057,12 @@ PyObject* meth_get_serial_number(PyObject* self, PyObject* args)
         }
         ice::Function<int __stdcall(void*, unsigned int*)> icsneoGetSerialNumber(lib, "icsneoGetSerialNumber");
         unsigned int serial = 0;
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoGetSerialNumber(handle, &serial)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoGetSerialNumber() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         return Py_BuildValue("i", serial);
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -3072,13 +3097,13 @@ PyObject* meth_get_hw_firmware_info(PyObject* self, PyObject* args)
         Py_buffer info_buffer = {};
         PyObject_GetBuffer(info, &info_buffer, PyBUF_CONTIG);
 
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoGetHWFirmwareInfo(handle, (stAPIFirmwareInfo*)info_buffer.buf)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             PyBuffer_Release(&info_buffer);
             return set_ics_exception(exception_runtime_error(), "icsneoGetHWFirmwareInfo() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         return info;
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -3129,12 +3154,12 @@ PyObject* meth_request_enter_sleep_mode(PyObject* self, PyObject* args)
         }
         ice::Function<int __stdcall(void*, unsigned int, unsigned int, unsigned int)> icsneoRequestEnterSleepMode(
             lib, "icsneoRequestEnterSleepMode");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoRequestEnterSleepMode(handle, timeout_ms, mode, reserved)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoRequestEnterSleepMode() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         return Py_BuildValue("b", true);
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -3171,12 +3196,12 @@ PyObject* meth_set_context(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         ice::Function<int __stdcall(void*)> icsneoSetContext(lib, "icsneoSetContext");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoSetContext(handle)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoSetContext() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         return Py_BuildValue("b", true);
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -3204,12 +3229,12 @@ PyObject* meth_force_firmware_update(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         ice::Function<int __stdcall(void*)> icsneoForceFirmwareUpdate(lib, "icsneoForceFirmwareUpdate");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoForceFirmwareUpdate(handle)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return Py_BuildValue("b", false);
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         return Py_BuildValue("b", true);
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -3237,12 +3262,12 @@ PyObject* meth_firmware_update_required(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         ice::Function<int __stdcall(void*)> icsneoFirmwareUpdateRequired(lib, "icsneoFirmwareUpdateRequired");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoFirmwareUpdateRequired(handle)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return Py_BuildValue("b", false);
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         return Py_BuildValue("b", true);
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -3277,12 +3302,12 @@ PyObject* meth_get_dll_firmware_info(PyObject* self, PyObject* args)
         }
         Py_buffer info_buffer = {};
         PyObject_GetBuffer(info, &info_buffer, PyBUF_CONTIG);
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoGetDLLFirmwareInfo(handle, (stAPIFirmwareInfo*)info_buffer.buf)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoGetDLLFirmwareInfo() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         return info;
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -3312,12 +3337,12 @@ PyObject* meth_get_backup_power_enabled(PyObject* self, PyObject* args)
         }
         ice::Function<int __stdcall(void*, unsigned int&)> icsneoGetBackupPowerEnabled(lib,
                                                                                        "icsneoGetBackupPowerEnabled");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoGetBackupPowerEnabled(handle, enabled)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoGetBackupPowerEnabled() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         return Py_BuildValue("b", enabled);
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -3347,12 +3372,12 @@ PyObject* meth_set_backup_power_enabled(PyObject* self, PyObject* args)
         }
         ice::Function<int __stdcall(void*, unsigned int)> icsneoSetBackupPowerEnabled(lib,
                                                                                       "icsneoSetBackupPowerEnabled");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoSetBackupPowerEnabled(handle, enabled)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoSetBackupPowerEnabled() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         return Py_BuildValue("b", enabled);
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -3381,12 +3406,12 @@ PyObject* meth_get_backup_power_ready(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         ice::Function<int __stdcall(void*, unsigned int&)> icsneoGetBackupPowerReady(lib, "icsneoGetBackupPowerReady");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoGetBackupPowerReady(handle, enabled)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoGetBackupPowerReady() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         return Py_BuildValue("b", enabled);
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -3464,12 +3489,12 @@ PyObject* meth_load_readbin(PyObject* self, PyObject* args)
         }
         ice::Function<int __stdcall(void*, const unsigned char*, unsigned long, int)> icsneoScriptLoadReadBin(
             lib, "icsneoScriptLoadReadBin");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoScriptLoadReadBin(handle, data, static_cast<unsigned long>(data_size), location)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoScriptLoadReadBin() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         Py_RETURN_NONE;
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -3510,14 +3535,14 @@ PyObject* meth_iso15765_transmit_message(PyObject* self, PyObject* args)
         }
         ice::Function<int __stdcall(void*, unsigned long, stCM_ISO157652_TxMessage*, unsigned long)>
             icsneoISO15765_TransmitMessage(lib, "icsneoISO15765_TransmitMessage");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoISO15765_TransmitMessage(
                 handle, ulNetworkID, (stCM_ISO157652_TxMessage*)obj_tx_msg_buffer.buf, ulBlockingTimeout)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             PyBuffer_Release(&obj_tx_msg_buffer);
             return set_ics_exception(exception_runtime_error(), "icsneoISO15765_TransmitMessage() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         PyBuffer_Release(&obj_tx_msg_buffer);
         return Py_BuildValue("b", true);
     } catch (ice::Exception& ex) {
@@ -3560,13 +3585,13 @@ PyObject* meth_iso15765_receive_message(PyObject* self, PyObject* args)
         // memcpy(&rx_msg_temp, &(temp->s), sizeof(temp->s));
         ice::Function<int __stdcall(void*, unsigned int, stCM_ISO157652_RxMessage*)> icsneoISO15765_ReceiveMessage(
             lib, "icsneoISO15765_ReceiveMessage");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoISO15765_ReceiveMessage(handle, iIndex, (stCM_ISO157652_RxMessage*)obj_rx_msg_buffer.buf)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             PyBuffer_Release(&obj_rx_msg_buffer);
             return set_ics_exception(exception_runtime_error(), "icsneoISO15765_ReceiveMessage() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         PyBuffer_Release(&obj_rx_msg_buffer);
         Py_RETURN_NONE;
     } catch (ice::Exception& ex) {
@@ -3598,12 +3623,12 @@ PyObject* meth_iso15765_enable_networks(PyObject* self, PyObject* args)
         }
         ice::Function<int __stdcall(void*, unsigned long)> icsneoISO15765_EnableNetworks(
             lib, "icsneoISO15765_EnableNetworks");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoISO15765_EnableNetworks(handle, networks)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoISO15765_EnableNetworks() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         Py_RETURN_NONE;
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -3631,12 +3656,12 @@ PyObject* meth_iso15765_disable_networks(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         ice::Function<int __stdcall(void*)> icsneoISO15765_DisableNetworks(lib, "icsneoISO15765_DisableNetworks");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoISO15765_DisableNetworks(handle)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoISO15765_DisableNetworks() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         Py_RETURN_NONE;
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -3666,12 +3691,12 @@ PyObject* meth_get_active_vnet_channel(PyObject* self, PyObject* args)
         }
         ice::Function<int __stdcall(void*, unsigned long*)> icsneoGetActiveVNETChannel(lib,
                                                                                        "icsneoGetActiveVNETChannel");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoGetActiveVNETChannel(handle, &channel)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoGetActiveVNETChannel() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         return Py_BuildValue("i", channel);
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -3701,12 +3726,12 @@ PyObject* meth_set_active_vnet_channel(PyObject* self, PyObject* args)
         }
         ice::Function<int __stdcall(void*, unsigned long)> icsneoSetActiveVNETChannel(lib,
                                                                                       "icsneoSetActiveVNETChannel");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoSetActiveVNETChannel(handle, channel)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoSetActiveVNETChannel() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         return Py_BuildValue("i", channel);
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -3736,12 +3761,12 @@ PyObject* meth_set_bit_rate(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         ice::Function<int __stdcall(void*, int, int)> icsneoSetBitRate(lib, "icsneoSetBitRate");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoSetBitRate(handle, bitrate, net_id)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoSetBitRate() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         Py_RETURN_NONE;
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -3771,12 +3796,12 @@ PyObject* meth_set_fd_bit_rate(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         ice::Function<int __stdcall(void*, int, int)> icsneoSetFDBitRate(lib, "icsneoSetFDBitRate");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoSetFDBitRate(handle, bitrate, net_id)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoSetFDBitRate() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         Py_RETURN_NONE;
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -3807,12 +3832,12 @@ PyObject* meth_set_bit_rate_ex(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         ice::Function<int __stdcall(void*, int, int, int)> icsneoSetBitRateEx(lib, "icsneoSetBitRateEx");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoSetBitRateEx(handle, bitrate, net_id, options)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoSetBitRateEx() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         Py_RETURN_NONE;
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -3848,12 +3873,12 @@ PyObject* meth_get_timestamp_for_msg(PyObject* self, PyObject* args)
         ice::Function<int __stdcall(void*, icsSpyMessage*, double*)> icsneoGetTimeStampForMsg(
             lib, "icsneoGetTimeStampForMsg");
         double timestamp = 0;
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoGetTimeStampForMsg(handle, msg, &timestamp)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoGetTimeStampForMsg() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         return Py_BuildValue("d", timestamp);
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -3891,20 +3916,20 @@ PyObject* meth_get_device_status(PyObject* self, PyObject* args)
         size_t device_status_size = static_cast<size_t>(device_status_buffer.len);
         ice::Function<int __stdcall(void*, icsDeviceStatus*, size_t*)> icsneoGetDeviceStatus(lib,
                                                                                              "icsneoGetDeviceStatus");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoGetDeviceStatus(handle, (icsDeviceStatus*)device_status_buffer.buf, &device_status_size)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             PyBuffer_Release(&device_status_buffer);
             return set_ics_exception(exception_runtime_error(), "icsneoGetDeviceStatus() Failed");
         }
         if (throw_exception_on_size_mismatch) {
             if (device_status_size != (size_t)device_status_buffer.len) {
-                Py_BLOCK_THREADS;
+                gil.restore();
                 PyBuffer_Release(&device_status_buffer);
                 return set_ics_exception(exception_runtime_error(), "icsneoGetDeviceStatus() API mismatch detected!");
             }
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         return device_status;
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -3937,19 +3962,19 @@ PyObject* meth_enable_network_com(PyObject* self, PyObject* args)
         // int _stdcall icsneoEnableNetworkComEx(void* hObject, int iEnable, int iNetId)
         ice::Function<int __stdcall(void*, int)> icsneoEnableNetworkCom(lib, "icsneoEnableNetworkCom");
         ice::Function<int __stdcall(void*, int, int)> icsneoEnableNetworkComEx(lib, "icsneoEnableNetworkComEx");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (net_id == -1) {
             if (!icsneoEnableNetworkCom(handle, enable)) {
-                Py_BLOCK_THREADS;
+                gil.restore();
                 return set_ics_exception(exception_runtime_error(), "icsneoEnableNetworkCom() Failed");
             }
         } else {
             if (!icsneoEnableNetworkComEx(handle, enable, net_id)) {
-                Py_BLOCK_THREADS;
+                gil.restore();
                 return set_ics_exception(exception_runtime_error(), "icsneoEnableNetworkComEx() Failed");
             }
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         Py_RETURN_NONE;
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -3981,12 +4006,12 @@ PyObject* meth_enable_bus_voltage_monitor(PyObject* self, PyObject* args)
         // int _stdcall icsneoEnableBusVoltageMonitor(void* hObject, unsigned int enable, unsigned int reserved)
         ice::Function<int __stdcall(void*, unsigned int, unsigned int)> icsneoEnableBusVoltageMonitor(
             lib, "icsneoEnableBusVoltageMonitor");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoEnableBusVoltageMonitor(handle, enable, reserved)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoEnableBusVoltageMonitor() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         Py_RETURN_NONE;
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -4018,12 +4043,12 @@ PyObject* meth_get_bus_voltage(PyObject* self, PyObject* args)
         // int _stdcall icsneoGetBusVoltage(void* hObject, unsigned long* pVBusVoltage, unsigned int reserved
         ice::Function<int __stdcall(void*, unsigned long*, unsigned int)> icsneoGetBusVoltage(lib,
                                                                                               "icsneoGetBusVoltage");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoGetBusVoltage(handle, &mV, reserved)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoGetBusVoltage() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         return Py_BuildValue("i", mV);
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -4072,14 +4097,14 @@ PyObject* meth_read_jupiter_firmware(PyObject* self, PyObject* args)
         Py_buffer ba_buffer = {};
         PyObject_GetBuffer(ba, &ba_buffer, PyBUF_CONTIG);
 
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoReadJupiterFirmware(handle, (char*)ba_buffer.buf, &fileSize, channel)) {
 
-            Py_BLOCK_THREADS;
+            gil.restore();
             PyBuffer_Release(&ba_buffer);
             return set_ics_exception(exception_runtime_error(), "icsneoReadJupiterFirmware() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         PyBuffer_Release(&ba_buffer);
         return Py_BuildValue("Oi", ba, fileSize);
     } catch (ice::Exception& ex) {
@@ -4127,15 +4152,15 @@ PyObject* meth_write_jupiter_firmware(PyObject* self, PyObject* args)
             return NULL;
         }
 
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         // if (!icsneoWriteJupiterFirmware(handle, (char*)bytes_buffer.buf, bytes_buffer.len, channel)) {
         if (!icsneoWriteJupiterFirmware(handle, bytes_str, static_cast<size_t>(bsize), channel)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             Py_DECREF(bytes);
             // PyBuffer_Release(&bytes_buffer);
             return set_ics_exception(exception_runtime_error(), "icsneoWriteJupiterFirmware() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         Py_DECREF(bytes);
         // PyBuffer_Release(&bytes_buffer);
         Py_RETURN_NONE;
@@ -4180,9 +4205,9 @@ PyObject* meth_flash_accessory_firmware(PyObject* self, PyObject* args)
         Py_buffer parms_buffer = {};
         PyObject_GetBuffer(parms, &parms_buffer, PyBUF_CONTIG_RO);
 
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoFlashAccessoryFirmware(handle, (FlashAccessoryFirmwareParams*)parms_buffer.buf, &function_error)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoFlashAccessoryFirmware() Failed");
         }
         // check the return value to make sure we are good
@@ -4241,7 +4266,7 @@ PyObject* meth_flash_accessory_firmware(PyObject* self, PyObject* args)
             };
             return set_ics_exception(exception_runtime_error(), (char*)ss.str().c_str());
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         return Py_BuildValue("i", function_error);
 
     } catch (ice::Exception& ex) {
@@ -4280,12 +4305,12 @@ PyObject* meth_get_accessory_firmware_version(PyObject* self, PyObject* args)
 
         unsigned int accessory_version = 0;
         int function_error = 0;
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoGetAccessoryFirmwareVersion(handle, accessory_indx, &accessory_version, &function_error)) {
-            Py_BLOCK_THREADS return set_ics_exception(exception_runtime_error(),
-                                                      "icsneoGetAccessoryFirmwareVersion() Failed");
+            gil.restore();
+            return set_ics_exception(exception_runtime_error(), "icsneoGetAccessoryFirmwareVersion() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         // check the return value to make sure we are good
         if (check_success && function_error != AccessoryOperationSuccess) {
             std::stringstream ss;
@@ -4375,11 +4400,12 @@ PyObject* meth_set_safe_boot_mode(PyObject* self, PyObject* args)
         // int _stdcall icsneoSetSafeBootMode(void* hObject, const uint8_t enable)
         ice::Function<int __stdcall(void*, const uint8_t)> icsneoSetSafeBootMode(lib, "icsneoSetSafeBootMode");
 
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoSetSafeBootMode(handle, enable)) {
-            Py_BLOCK_THREADS return set_ics_exception(exception_runtime_error(), "icsneoSetSafeBootMode() Failed");
+            gil.restore();
+            return set_ics_exception(exception_runtime_error(), "icsneoSetSafeBootMode() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         Py_RETURN_NONE;
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -4456,14 +4482,14 @@ PyObject* meth_get_disk_details(PyObject* self, PyObject* args)
         Py_buffer details_buffer = {};
         PyObject_GetBuffer(details, &details_buffer, PyBUF_CONTIG);
 
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoRequestDiskDetails(handle, (SDiskDetails*)details_buffer.buf)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             PyBuffer_Release(&details_buffer);
             Py_DECREF(details);
             return set_ics_exception(exception_runtime_error(), "icsneoRequestDiskDetails() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         PyBuffer_Release(&details_buffer);
         return details;
     } catch (ice::Exception& ex) {
@@ -4496,13 +4522,13 @@ PyObject* meth_disk_format(PyObject* self, PyObject* args)
         PyObject_GetBuffer(details, &details_buffer, PyBUF_CONTIG);
         ice::Function<int __stdcall(void*, SDiskDetails*)> icsneoRequestDiskFormat(lib, "icsneoRequestDiskFormat");
 
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoRequestDiskFormat(handle, (SDiskDetails*)details_buffer.buf)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             PyBuffer_Release(&details_buffer);
             return set_ics_exception(exception_runtime_error(), "icsneoRequestDiskFormat() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         PyBuffer_Release(&details_buffer);
         Py_RETURN_NONE;
     } catch (ice::Exception& ex) {
@@ -4532,12 +4558,12 @@ PyObject* meth_disk_format_cancel(PyObject* self, PyObject* args)
         }
         ice::Function<int __stdcall(void*)> icsneoRequestDiskFormatCancel(lib, "icsneoRequestDiskFormatCancel");
 
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoRequestDiskFormatCancel(handle)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoRequestDiskFormatCancel() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         Py_RETURN_NONE;
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -4574,14 +4600,14 @@ PyObject* meth_get_disk_format_progress(PyObject* self, PyObject* args)
         Py_buffer progress_buffer = {};
         PyObject_GetBuffer(progress, &progress_buffer, PyBUF_CONTIG);
 
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoRequestDiskFormatProgress(handle, (SDiskFormatProgress*)progress_buffer.buf)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             PyBuffer_Release(&progress_buffer);
             Py_DECREF(progress);
             return set_ics_exception(exception_runtime_error(), "icsneoRequestDiskFormatProgress() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         PyBuffer_Release(&progress_buffer);
         return progress;
     } catch (ice::Exception& ex) {
@@ -4611,12 +4637,12 @@ PyObject* meth_enable_doip_line(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         ice::Function<int __stdcall(void*, bool)> icsneoEnableDOIPLine(lib, "icsneoEnableDOIPLine");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoEnableDOIPLine(handle, enable)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoEnableDOIPLine() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         Py_RETURN_NONE;
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -4647,12 +4673,12 @@ PyObject* meth_is_device_feature_supported(PyObject* self, PyObject* args)
         unsigned int supported = 0;
         ice::Function<int __stdcall(void*, DeviceFeature, unsigned int*)> icsneoIsDeviceFeatureSupported(
             lib, "icsneoIsDeviceFeatureSupported");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoIsDeviceFeatureSupported(handle, (DeviceFeature)feature, &supported)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoIsDeviceFeatureSupported() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         return Py_BuildValue("I", supported);
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -4682,12 +4708,12 @@ PyObject* meth_get_pcb_serial_number(PyObject* self, PyObject* args)
         char pcbsn[32] = { 0 };
         size_t length = sizeof pcbsn / sizeof pcbsn[0];
         ice::Function<int __stdcall(void*, char*, size_t*)> icsneoGetPCBSerialNumber(lib, "icsneoGetPCBSerialNumber");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoGetPCBSerialNumber(handle, pcbsn, &length)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoGetPCBSerialNumber() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         return Py_BuildValue("s", pcbsn);
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -4719,12 +4745,12 @@ PyObject* meth_set_led_property(PyObject* self, PyObject* args)
         }
         ice::Function<int __stdcall(void*, unsigned int, unsigned int, unsigned int)> icsneoSetLedProperty(
             lib, "icsneoSetLedProperty");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoSetLedProperty(handle, led, prop, value)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoSetLedProperty() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         Py_RETURN_NONE;
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -4786,7 +4812,7 @@ PyObject* meth_start_dhcp_server(PyObject* self, PyObject* args)
                                     uint32_t,
                                     uint8_t)>
             icsneoStartDHCPServer(lib, "icsneoStartDHCPServer");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoStartDHCPServer(handle,
                                    NetworkID,
                                    pDeviceIPAddress,
@@ -4797,10 +4823,10 @@ PyObject* meth_start_dhcp_server(PyObject* self, PyObject* args)
                                    bOverwriteDHCPSettings,
                                    leaseTime,
                                    reserved)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoStartDHCPServer() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         Py_RETURN_NONE;
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -4829,12 +4855,12 @@ PyObject* meth_stop_dhcp_server(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         ice::Function<int __stdcall(void*, unsigned int)> icsneoStopDHCPServer(lib, "icsneoStopDHCPServer");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoStopDHCPServer(handle, NetworkID)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoStopDHCPServer() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         Py_RETURN_NONE;
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -4865,12 +4891,12 @@ PyObject* meth_wbms_manager_write_lock(PyObject* self, PyObject* args)
         }
         ice::Function<int __stdcall(void*, const EwBMSManagerPort_t, const EwBMSManagerLockState_t)>
             icsneowBMSManagerWriteLock(lib, "icsneowBMSManagerWriteLock");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneowBMSManagerWriteLock(handle, manager, lock_state)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneowBMSManagerWriteLock() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         Py_RETURN_NONE;
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -4900,12 +4926,12 @@ PyObject* meth_wbms_manager_reset(PyObject* self, PyObject* args)
         }
         ice::Function<int __stdcall(void*, const EwBMSManagerPort_t)> icsneowBMSManagerReset(lib,
                                                                                              "icsneowBMSManagerReset");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneowBMSManagerReset(handle, manager)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneowBMSManagerReset() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         Py_RETURN_NONE;
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -4943,12 +4969,12 @@ PyObject* meth_uart_write(PyObject* self, PyObject* args)
         size_t bytesActuallySent = 0;
         ice::Function<int __stdcall(void*, const EUartPort_t, const void*, const size_t, size_t*, uint8_t*)>
             icsneoUartWrite(lib, "icsneoUartWrite");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoUartWrite(handle, port, data.buf, static_cast<size_t>(data.len), &bytesActuallySent, &flags)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoUartWrite() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         if (check_size && (size_t)data.len != bytesActuallySent) {
             return set_ics_exception(exception_runtime_error(),
                                      "Bytes actually sent didn't match bytes to send length");
@@ -4994,14 +5020,14 @@ PyObject* meth_uart_read(PyObject* self, PyObject* args)
         // size_t* bytesActuallyRead, uint8_t* flags)
         ice::Function<int __stdcall(void*, const EUartPort_t, const void*, const size_t, size_t*, uint8_t*)>
             icsneoUartRead(lib, "icsneoUartRead");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoUartRead(handle, port, (void*)buffer, bytesToRead, &bytesActuallyRead, &flags)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             free(buffer);
             buffer = NULL;
             return set_ics_exception(exception_runtime_error(), "icsneoUartRead() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         PyObject* ba_result =
             PyByteArray_FromStringAndSize((const char*)buffer, static_cast<Py_ssize_t>(bytesActuallyRead));
         // PyObject* value = Py_BuildValue("O", ba_result);
@@ -5041,12 +5067,12 @@ PyObject* meth_uart_set_baudrate(PyObject* self, PyObject* args)
         // int _stdcall icsneoUartSetBaudrate(void* hObject, const EUartPort_t uart, const uint32_t baudrate)
         ice::Function<int __stdcall(void*, const EUartPort_t, const uint32_t)> icsneoUartSetBaudrate(
             lib, "icsneoUartSetBaudrate");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoUartSetBaudrate(handle, port, baudrate)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoUartSetBaudrate() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         Py_RETURN_NONE;
 
     } catch (ice::Exception& ex) {
@@ -5080,12 +5106,12 @@ PyObject* meth_uart_get_baudrate(PyObject* self, PyObject* args)
         // int _stdcall icsneoUartGetBaudrate(void* hObject, const EUartPort_t uart, uint32_t* baudrate)
         ice::Function<int __stdcall(void*, const EUartPort_t, uint32_t*)> icsneoUartGetBaudrate(
             lib, "icsneoUartGetBaudrate");
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoUartGetBaudrate(handle, port, &baudrate)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoUartGetBaudrate() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         return Py_BuildValue("I", baudrate);
 
     } catch (ice::Exception& ex) {
@@ -5132,7 +5158,7 @@ PyObject* meth_generic_api_send_command(PyObject* self, PyObject* args)
             void*, unsigned char, unsigned char, unsigned char, void*, unsigned int, unsigned char*)>
             icsneoGenericAPISendCommand(lib, "icsneoGenericAPISendCommand");
         unsigned char functionError = 0;
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoGenericAPISendCommand(handle,
                                          apiIndex,
                                          instanceIndex,
@@ -5140,10 +5166,10 @@ PyObject* meth_generic_api_send_command(PyObject* self, PyObject* args)
                                          (void*)data.buf,
                                          static_cast<unsigned int>(data.len),
                                          &functionError)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoGenericAPISendCommand() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         return Py_BuildValue("i", functionError);
 
     } catch (ice::Exception& ex) {
@@ -5192,14 +5218,14 @@ PyObject* meth_generic_api_read_data(PyObject* self, PyObject* args)
         ice::Function<int __stdcall(void*, unsigned char, unsigned char, unsigned char*, unsigned char*, unsigned int*)>
             icsneoGenericAPIReadData(lib, "icsneoGenericAPIReadData");
         unsigned char functionIndex = 0;
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoGenericAPIReadData(handle, apiIndex, instanceIndex, &functionIndex, buffer, &length)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             free(buffer);
             buffer = NULL;
             return set_ics_exception(exception_runtime_error(), "icsneoGenericAPIReadData() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
 
         PyObject* ba = PyByteArray_FromStringAndSize((const char*)buffer, length);
         PyObject* value = Py_BuildValue("IO", functionIndex, ba);
@@ -5252,13 +5278,13 @@ PyObject* meth_generic_api_get_status(PyObject* self, PyObject* args)
         unsigned char functionIndex = 0;
         unsigned char callbackError = 0;
         unsigned char finishedProcessing = 0;
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         if (!icsneoGenericAPIGetStatus(
                 handle, apiIndex, instanceIndex, &functionIndex, &callbackError, &finishedProcessing)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoGenericAPIGetStatus() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
 
         PyObject* value = Py_BuildValue("III", functionIndex, callbackError, finishedProcessing);
         return value;
@@ -5301,16 +5327,16 @@ PyObject* meth_get_gptp_status(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         // Get the gptp_status
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         // int _stdcall icsneoGetGPTPStatus(void* hObject, GPTPStatus* gptpStatus)
         ice::Function<int __stdcall(void*, GPTPStatus*)> icsneoGetGPTPStatus(lib, "icsneoGetGPTPStatus");
         if (!icsneoGetGPTPStatus(handle, (GPTPStatus*)status_buffer.buf)) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             PyBuffer_Release(&status_buffer);
             Py_DECREF(status);
             return set_ics_exception(exception_runtime_error(), "icsneoGetGPTPStatus() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         PyBuffer_Release(&status_buffer);
         return status;
     } catch (ice::Exception& ex) {
@@ -5355,18 +5381,18 @@ PyObject* meth_get_all_chip_versions(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
         // Get the struct
-        Py_BEGIN_ALLOW_THREADS;
+        auto gil = PyAllowThreads();
         // int _stdcall icsneoGetAllChipVersions(void* hObject, stChipVersions* pInfo, int ipInfoSize)
         ice::Function<int __stdcall(void*, stChipVersions*, int)> icsneoGetAllChipVersions(lib,
                                                                                            "icsneoGetAllChipVersions");
         if (!icsneoGetAllChipVersions(
                 handle, (stChipVersions*)py_struct_buffer.buf, static_cast<int>(py_struct_buffer.len))) {
-            Py_BLOCK_THREADS;
+            gil.restore();
             PyBuffer_Release(&py_struct_buffer);
             Py_DECREF(py_struct);
             return set_ics_exception(exception_runtime_error(), "icsneoGetAllChipVersions() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
         PyBuffer_Release(&py_struct_buffer);
         return py_struct;
     } catch (ice::Exception& ex) {
@@ -5396,19 +5422,22 @@ PyObject* meth_get_device_name(PyObject* self, PyObject* args) // icsneoGetDevic
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
-        char name[255] = {};
+        const size_t NAME_SIZE = 255;
+        char name[NAME_SIZE] = {};
         // Get the struct
-        Py_BEGIN_ALLOW_THREADS;
         // int _stdcall icsneoGetDeviceName(const NeoDeviceEx* nde, char* name, const size_t length, const enum
         // _EDevNameType devNameType)
+        auto gil = PyAllowThreads();
         ice::Function<int __stdcall(const NeoDeviceEx*, char*, const size_t, const enum _EDevNameType)>
             icsneoGetDeviceName(lib, "icsneoGetDeviceName");
-        if (auto length = icsneoGetDeviceName(const_cast<NeoDeviceEx*>(nde), name, 255, dev_name_type); length == 0) {
-            Py_BLOCK_THREADS;
+        if (auto length = icsneoGetDeviceName(const_cast<NeoDeviceEx*>(nde), name, NAME_SIZE, dev_name_type);
+            length == 0) {
+            gil.restore();
             PyBuffer_Release(&nde_buffer);
             return set_ics_exception(exception_runtime_error(), "icsneoGetDeviceName() Failed");
         }
-        Py_END_ALLOW_THREADS;
+        gil.restore();
+        PyBuffer_Release(&nde_buffer);
         PyObject* value = Py_BuildValue("s", name);
         return value;
     } catch (ice::Exception& ex) {

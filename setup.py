@@ -69,10 +69,15 @@ class _build_ics_py(build_py):
 
 def get_ics_extension_compiler_arguments() -> List[str]:
     """Return a list of compiler arguments to append for compiling the ics extension module"""
+    # Debug arguments
+    is_debug = True if os.environ.get("DEBUG") else False
     # gcc and clang arguments
     GCC_COMPILE_ARGS = [
         "-Wno-unknown-pragmas",
     ]
+    if is_debug:
+        print("NOTICE: Building for DEBUG!")
+        GCC_COMPILE_ARGS.extend(["-g", "-O0"])
     # Set compiler flags here
     if "WINDOWS" in platform.system().upper():
         compile_args = [
@@ -86,6 +91,8 @@ def get_ics_extension_compiler_arguments() -> List[str]:
             "/wd5045",
             "/std:c++17",
         ]
+        if is_debug:
+            compile_args.extend(["CL=/Zi", "/Od", "/DEBUG"])
         # mingw and clang python builds won't have MSC in the version string
         if "MSC" not in sys.version:
             compile_args = GCC_COMPILE_ARGS
