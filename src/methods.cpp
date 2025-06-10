@@ -686,6 +686,8 @@ auto device_name_from_nde(NeoDeviceEx* nde) -> std::string
                 return "RAD-Epsilon";
             case NEODEVICE_RADEPSILON_T:
                 return "RAD-EpsilonT";
+            case NEODEVICE_RADEPSILON_EXPRESS:
+                return "RAD-Epsilon Express";
             case NEODEVICE_RADPROXIMA:
                 return "RAD-Proxima";
             case NEODEVICE_RAD_BMS:
