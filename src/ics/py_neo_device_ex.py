@@ -494,3 +494,7 @@ class PyNeoDeviceEx(ics.neo_device_ex.neo_device_ex):
     def get_device_name(self, *args, **kwargs):
         "see ics.get_device_name for details on arguments."
         return ics.get_device_name(self, *args, **kwargs)
+    
+    def get_imei(self, *args, **kwargs):
+        "see ics.get_imei for details on arguments."
+        return ics.get_imei(self, *args, **kwargs)

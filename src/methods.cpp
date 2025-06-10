@@ -608,6 +608,12 @@ PyMethodDef IcsMethods[] = {
                           meth_get_device_name,
                           METH_VARARGS,
                           _DOC_GET_DEVICE_NAME),
+    _EZ_ICS_STRUCT_METHOD("get_imei",
+                          "icsneoGetIMEI",
+                          "GetIMEI",
+                          meth_get_imei,
+                          METH_VARARGS,
+                          _DOC_GET_IMEI),
 
     { "override_library_name", (PyCFunction)meth_override_library_name, METH_VARARGS, _DOC_OVERRIDE_LIBRARY_NAME },
     { "get_library_path", (PyCFunction)meth_get_library_path, METH_NOARGS, "" },
@@ -1952,7 +1958,7 @@ PyObject* meth_get_error_messages(PyObject* self, PyObject* args)
             int description_short_length = 255;
             int description_long_length = 255;
             int severity = 0, restart_needed = 0;
-            auto gil = PyAllowThreads();
+            auto gil2 = PyAllowThreads();
             if (!icsneoGetErrorInfo(errors[i],
                                     description_short,
                                     description_long,
@@ -1960,11 +1966,11 @@ PyObject* meth_get_error_messages(PyObject* self, PyObject* args)
                                     &description_long_length,
                                     &severity,
                                     &restart_needed)) {
-                gil.restore();
+                gil2.restore();
                 Py_XDECREF(list);
                 return set_ics_exception(exception_runtime_error(), "icsneoGetErrorInfo() Failed");
             }
-            gil.restore();
+            gil2.restore();
             PyObject* tuple = Py_BuildValue(
                 "i, s, s, i, i", errors[i], description_short, description_long, severity, restart_needed);
 
@@ -5442,6 +5448,39 @@ PyObject* meth_get_device_name(PyObject* self, PyObject* args) // icsneoGetDevic
         return value;
     } catch (ice::Exception& ex) {
         PyBuffer_Release(&nde_buffer);
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+}
+
+PyObject* meth_get_imei(PyObject* self, PyObject* args) { // icsneoGetIMEI
+    (void)self;
+    PyObject* obj = NULL;
+    if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
+        return NULL;
+    }
+    if (!PyNeoDeviceEx_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+    }
+    void* handle = NULL;
+    if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
+        return NULL;
+    }
+    try {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        uint64_t imei = 0;
+        ice::Function<int __stdcall(void*, uint64_t*)> icsneoGetIMEI(lib, "icsneoGetIMEI");
+        auto gil = PyAllowThreads();
+        if (!icsneoGetIMEI(handle, &imei)) {
+            gil.restore();
+            return set_ics_exception(exception_runtime_error(), "icsneoGetIMEI() Failed");
+        }
+        gil.restore();
+        return Py_BuildValue("K", imei);
+    } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
 }

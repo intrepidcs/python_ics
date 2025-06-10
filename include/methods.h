@@ -102,6 +102,7 @@ extern "C"
     PyObject* meth_get_accessory_firmware_version(PyObject* self, PyObject* args);
     PyObject* meth_set_safe_boot_mode(PyObject* self, PyObject* args);
     PyObject* meth_get_device_name(PyObject* self, PyObject* args); // icsneoGetDeviceName
+    PyObject* meth_get_imei(PyObject* self, PyObject* args);        // icsneoGetIMEI
 
 #ifdef _cplusplus
 }
@@ -114,11 +115,11 @@ extern "C"
           flags,                                                                                                       \
           "\n.. note:: Compatibility Function: Identical to PEP8 compliant :func:`" MODULE_NAME "." name               \
           "` method.\n\n" },                                                                                           \
-        { icsname_no_icsneo,                                                                                           \
-          (PyCFunction)meth,                                                                                           \
-          flags,                                                                                                       \
-          "\n.. note:: Compatibility Function: Identical to PEP8 compliant :func:`" MODULE_NAME "." name               \
-          "` method.\n\n" }
+    {                                                                                                                  \
+        icsname_no_icsneo, (PyCFunction)meth, flags,                                                                   \
+            "\n.. note:: Compatibility Function: Identical to PEP8 compliant :func:`" MODULE_NAME "." name             \
+            "` method.\n\n"                                                                                            \
+    }
 
 #define _DOC_FIND_DEVICES                                                                                              \
     MODULE_NAME ".find_devices(device_type=" MODULE_NAME ".NEODEVICE_ALL)\n"                                           \
@@ -1941,6 +1942,21 @@ extern "C"
                 "\n"                                                                                                   \
                 "Returns:\n"                                                                                           \
                 "\tstr\n"                                                                                              \
+                "\n"
+
+#define _DOC_GET_IMEI                                                                                                  \
+    MODULE_NAME ".get_imei(device) -> int\n"                                                                           \
+                "\n"                                                                                                   \
+                "Gets the unique 15 digit IMEI from the device. raises RuntimeError if not supported.\n"               \
+                "\n"                                                                                                   \
+                "Args:\n"                                                                                              \
+                "\tdevice (:class:`" MODULE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME ".PyNeoDeviceEx`\n\n"        \
+                "\n"                                                                                                   \
+                "Raises:\n"                                                                                            \
+                "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
+                "\n"                                                                                                   \
+                "Returns:\n"                                                                                           \
+                "\tint\n"                                                                                              \
                 "\n"
 
 extern PyMethodDef IcsMethods[];
