@@ -498,3 +498,7 @@ class PyNeoDeviceEx(ics.neo_device_ex.neo_device_ex):
     def get_imei(self, *args, **kwargs):
         "see ics.get_imei for details on arguments."
         return ics.get_imei(self, *args, **kwargs)
+    
+    def get_component_versions(self, *args, **kwargs):
+        "see ics.get_component_versions for details on arguments."
+        return ics.get_component_versions(self, *args, **kwargs)

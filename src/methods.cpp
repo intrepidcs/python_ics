@@ -614,6 +614,15 @@ PyMethodDef IcsMethods[] = {
                           meth_get_imei,
                           METH_VARARGS,
                           _DOC_GET_IMEI),
+    _EZ_ICS_STRUCT_METHOD("get_component_versions",
+                          "icsneoGetComponentVersions",
+                          "GetComponentVersions",
+                          meth_get_component_versions,
+                          METH_VARARGS,
+                          _DOC_GET_COMPONENT_VERSIONS),
+
+
+                          
 
     { "override_library_name", (PyCFunction)meth_override_library_name, METH_VARARGS, _DOC_OVERRIDE_LIBRARY_NAME },
     { "get_library_path", (PyCFunction)meth_get_library_path, METH_NOARGS, "" },
@@ -5482,6 +5491,68 @@ PyObject* meth_get_imei(PyObject* self, PyObject* args) { // icsneoGetIMEI
         }
         gil.restore();
         return Py_BuildValue("K", imei);
+    } catch (ice::Exception& ex) {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+}
+
+PyObject* meth_get_component_versions(PyObject* self, PyObject* args) // icsneoGetComponentVersions
+{
+    (void)self;
+    PyObject* obj = NULL;
+    bool force_update = true;
+    uint64_t length = 25;
+    if (!PyArg_ParseTuple(args, arg_parse("O|bK:", __FUNCTION__), &obj, &force_update, &length)) {
+        return NULL;
+    }
+    if (!PyNeoDeviceEx_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+    }
+    void* handle = NULL;
+    if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
+        return NULL;
+    }
+    try {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        uint64_t imei = 0;
+        ice::Function<int __stdcall(void*, VersionReport*, uint64_t*, bool)> icsneoGetComponentVersions(lib, "icsneoGetComponentVersions");
+        auto gil = PyAllowThreads();
+        std::vector<VersionReport> version_reports;
+        version_reports.reserve(length);
+        version_reports.resize(length);
+        if (!icsneoGetComponentVersions(handle, version_reports.data(), &length, force_update)) {
+            gil.restore();
+            return set_ics_exception(exception_runtime_error(), "icsneoGetComponentVersions() Failed");
+        }
+        gil.restore();
+
+        PyObject* tuple = PyTuple_New(length);
+        if (!tuple) {
+            return NULL;
+        }
+        for (int i = 0; i < length; ++i) {
+            PyObject* obj = _getPythonModuleObject("ics.structures.version_report", "version_report");
+            if (!obj) {
+                return set_ics_exception(exception_runtime_error(), "Failed to allocate version_report");
+            }
+
+
+
+            // Get the internal buffer from version_report
+            Py_buffer buffer = {};
+            if (PyObject_GetBuffer(obj, &buffer, PyBUF_CONTIG) != 0) {
+                return NULL;
+            }
+            memcpy(buffer.buf, &version_reports[i], sizeof(version_reports[i]));
+            PyBuffer_Release(&buffer);
+
+            PyTuple_SetItem(tuple, i, obj);
+        }
+        return tuple;
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
