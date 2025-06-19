@@ -5518,7 +5518,6 @@ PyObject* meth_get_component_versions(PyObject* self, PyObject* args) // icsneoG
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
-        uint64_t imei = 0;
         ice::Function<int __stdcall(void*, VersionReport*, uint64_t*, bool)> icsneoGetComponentVersions(lib, "icsneoGetComponentVersions");
         auto gil = PyAllowThreads();
         std::vector<VersionReport> version_reports;
@@ -5534,7 +5533,7 @@ PyObject* meth_get_component_versions(PyObject* self, PyObject* args) // icsneoG
         if (!tuple) {
             return NULL;
         }
-        for (int i = 0; i < length; ++i) {
+        for (uint64_t i = 0; i < length; ++i) {
             PyObject* obj = _getPythonModuleObject("ics.structures.version_report", "version_report");
             if (!obj) {
                 return set_ics_exception(exception_runtime_error(), "Failed to allocate version_report");

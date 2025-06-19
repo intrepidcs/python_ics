@@ -142,7 +142,7 @@ static int spy_message_object_setattr(PyObject* o, PyObject* name, PyObject* val
             if (!data && !PyLong_Check(data)) {
                 obj->msg.AckBytes[i] = 0;
             } else {
-                obj->msg.AckBytes[i] = (unsigned char)PyLong_AsLong(data);
+                obj->msg.AckBytes[i] = static_cast<uint8_t>(PyLong_AsLong(data));
             }
         }
         return 0;
@@ -163,8 +163,8 @@ static int spy_message_object_setattr(PyObject* o, PyObject* name, PyObject* val
             } else {
                 ((spy_message_j1850_object*)obj)->msg.Header[i] = (unsigned char)PyLong_AsLong(data);
             }
-            obj->msg.NumberBytesHeader = static_cast<uint8_t>(PyObject_Length(value));
         }
+        obj->msg.NumberBytesHeader = static_cast<uint8_t>(PyObject_Length(value));
         return 0;
     } else if (PyUnicode_CompareWithASCIIString(name, "Protocol") == 0) {
         // Ethernet behavior is backward to CAN and will crash if enabled.
@@ -181,7 +181,7 @@ static int spy_message_object_setattr(PyObject* o, PyObject* name, PyObject* val
             return -1;
         }
         // Get tuple items and place them in array, set as 0 if error.
-        size_t length = static_cast<uint8_t>(PyObject_Length(value));
+        size_t length = static_cast<uint16_t>(PyObject_Length(value));
         if (obj->msg.ExtraDataPtr != NULL)
             delete[] (unsigned char*)obj->msg.ExtraDataPtr;
         obj->msg.ExtraDataPtr = new unsigned char[length];
