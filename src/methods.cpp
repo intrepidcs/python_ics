@@ -657,6 +657,8 @@ auto device_name_from_nde(NeoDeviceEx* nde) -> std::string
                 icsneoGetDeviceName(const_cast<NeoDeviceEx*>(nde), &name[0], name.capacity(), EDevNameTypeNoSerial);
             length == 0) {
             return std::string("icsneoGetDeviceName() Failed");
+        } else {
+            name.resize(length, '\0');
         }
         return name;
     } catch (ice::Exception&) {
