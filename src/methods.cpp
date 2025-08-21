@@ -5500,6 +5500,12 @@ PyObject* meth_get_imei(PyObject* self, PyObject* args) { // icsneoGetIMEI
 
 PyObject* meth_get_component_versions(PyObject* self, PyObject* args) // icsneoGetComponentVersions
 {
+#ifndef _USE_INTERNAL_HEADER_
+    (void)self;
+    (void)args;
+    return set_ics_exception(exception_runtime_error(),
+                             "icsneoGetComponentVersions is not available");
+#else
     (void)self;
     PyObject* obj = NULL;
     bool force_update = true;
@@ -5557,4 +5563,5 @@ PyObject* meth_get_component_versions(PyObject* self, PyObject* args) // icsneoG
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
+#endif
 }
