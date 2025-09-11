@@ -1,3 +1,4 @@
+import platform
 import subprocess
 import multiprocessing
 import os
@@ -50,33 +51,48 @@ def checkout():
 def _build_libusb():
     os.makedirs(LIBUSB_BUILD, exist_ok=True)
     env = os.environ.copy()
-    if sys.platform == "darwin":
-        env["CFLAGS"] = "-arch x86_64 -arch arm64 -mmacosx-version-min=10.13"
-        env["CXXFLAGS"] = "-arch x86_64 -arch arm64 -mmacosx-version-min=10.13"
+    if "DARWIN" in platform.system().upper():
+        env["CFLAGS"] = "-arch arm64 -mmacosx-version-min=10.13"
+        env["CXXFLAGS"] = "-arch arm64 -mmacosx-version-min=10.13"
+        env["LDFLAGS"] = "-arch arm64 -mmacosx-version-min=10.13"
+
+        # os.environ.update(env)
+
+        # os.system('echo $CFLAGS')
+        # os.system('echo $CXXFLAGS')
+        # os.system('echo $LDFLAGS')
+
+        print("CFLAGS:", env["CFLAGS"])
+        print("CXXFLAGS:", env["CXXFLAGS"])
+        print("LDFLAGS:", env["LDFLAGS"])
     else:
         env["CFLAGS"] = "-fPIC"
         env["CXXFLAGS"] = "-fPIC"
-    subprocess.check_output([
+    result = subprocess.run([
         f"{LIBUSB_SOURCE}/configure",
         "--disable-shared",
         "--enable-static",
+        "--disable-dependency-tracking",
         f"--prefix={LIBUSB_INSTALL}",
         "--disable-udev"
     ], cwd=LIBUSB_BUILD, env=env)
 
-    subprocess.check_output(["make", "-j" + CPUS], cwd=LIBUSB_BUILD)
-    subprocess.check_output(["make", "install"], cwd=LIBUSB_BUILD)
+    print("stdout:", result.stdout)
+    print("stderr:", result.stderr)
+
+    subprocess.run(["make", "-j" + CPUS], cwd=LIBUSB_BUILD)
+    subprocess.run(["make", "install"], cwd=LIBUSB_BUILD)
 
 def _build_libpcap():
     os.makedirs(LIBPCAP_BUILD, exist_ok=True)
     env = os.environ.copy()
-    if sys.platform == "darwin":
-        env["CFLAGS"] = "-arch x86_64 -arch arm64 -mmacosx-version-min=10.13"
-        env["CXXFLAGS"] = "-arch x86_64 -arch arm64 -mmacosx-version-min=10.13"
+    if "DARWIN" in platform.system().upper():
+        env["CFLAGS"] = "-arch arm64 -mmacosx-version-min=10.13"
+        env["CXXFLAGS"] = "-arch arm64 -mmacosx-version-min=10.13"
     else:
         env["CFLAGS"] = "-fPIC"
         env["CXXFLAGS"] = "-fPIC"
-    subprocess.check_output([
+    subprocess.run([
         f"{LIBPCAP_SOURCE}/configure",
         "--disable-shared",
         "--disable-usb",
@@ -93,8 +109,8 @@ def _build_libpcap():
         f"--prefix={LIBPCAP_INSTALL}",
     ], cwd=LIBPCAP_BUILD, env=env)
 
-    subprocess.check_output(["make", "-j" + CPUS], cwd=LIBPCAP_BUILD)
-    subprocess.check_output(["make", "install"], cwd=LIBPCAP_BUILD)
+    subprocess.run(["make", "-j" + CPUS], cwd=LIBPCAP_BUILD)
+    subprocess.run(["make", "install"], cwd=LIBPCAP_BUILD)
 
 def _build_libicsneo_linux():
     print("Cleaning libicsneo...")
@@ -119,11 +135,11 @@ def _build_libicsneo_linux():
     )
 
 def _build_libicsneo_macos():
-    subprocess.check_output(
+    subprocess.run(
         [
             "cmake",
             "-DCMAKE_BUILD_TYPE=Release",
-            "-DCMAKE_OSX_ARCHITECTURES=arm64;x86_64",
+            "-DCMAKE_OSX_ARCHITECTURES=arm64;arm64",
             "-DLIBICSNEO_BUILD_ICSNEOLEGACY=ON",
             "-DCMAKE_OSX_DEPLOYMENT_TARGET=10.13",
             f"-DCMAKE_PREFIX_PATH={LIBUSB_INSTALL};{LIBPCAP_INSTALL}",
@@ -132,7 +148,7 @@ def _build_libicsneo_macos():
         ]
     )
 
-    subprocess.check_output(
+    subprocess.run(
         ["cmake", "--build", LIBICSNEO_BUILD, "--target", "icsneolegacy", "--parallel", CPUS]
     )
 
