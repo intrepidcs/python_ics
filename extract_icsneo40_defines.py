@@ -134,7 +134,8 @@ def extract():
                                 sline[0] = sline[0].split(",")[0]
                                 # This removes anything after the equal sign as we don't need it
                                 sline[0] = sline[0].split("=")[0]
-                            print("\tresult += PyModule_AddIntMacro(module, %s);" % sline[0].replace(",", ""), file=f)
+                            value = sline[0].replace(",", "")
+                            print(f"\tresult += PyModule_AddObjectRef(module, \"{value}\", PyLong_FromLongLong({value}));", file=f)
                         continue
                     if "#define" in line:
                         sline = line.split("//")[0].split()
@@ -144,21 +145,36 @@ def extract():
                         if len(sline) >= 3 and re.match(r"^\d+?\.\d+?$", sline[2]) is not None:
                             # Value is a float
                             print(
-                                '\tresult += PyModule_AddObject(module, "{0}", PyFloat_FromDouble({0}));'.format(
+                                '\tresult += PyModule_AddObjectRef(module, "{0}", PyFloat_FromDouble({0}));'.format(
                                     sline[1]
                                 ),
                                 file=f,
                             )
+                        elif len(sline) >= 3 and re.match(r"^\d+$", sline[2]) is not None:
+                            # We should be an integer at this point
+                            try:
+                                if int(sline[2]) < 0:
+                                    # Integer Value is negative
+                                    print(f"\tresult += PyModule_AddObjectRef(module, \"{sline[1]}\", PyLong_FromLongLong({sline[1]}));", file=f)
+                                else:
+                                    # Integer Value is positive
+                                    print(f"\tresult += PyModule_AddObjectRef(module, \"{sline[1]}\", PyLong_FromUnsignedLongLong({sline[1]}));", file=f)
+                            except ValueError:
+                                # Not an integer, probably another define
+                                # This comes here: #define SPY_STATUS2_RX_TIMEOUT_ERROR SPY_STATUS2_ISO_RX_TIMEOUT_ERROR
+                                print(f"ERROR: {sline[1]} {sline[2]}")
+                                print(f"\tresult += PyModule_AddObjectRef(module, \"{sline[1]}\", PyLong_FromLongLong({sline[1]}));", file=f)
+
                         elif len(sline) == 2:
                             # There is no value, this is used for preprocessor only
                             # and really shouldn't care about it in python. Going to set it as 0 "just in case"
                             print(
-                                '\tresult += PyModule_AddObject(module, "{}", PyLong_FromLong(0));'.format(sline[1]),
+                                '\tresult += PyModule_AddObjectRef(module, "{}", PyLong_FromLong(0));'.format(sline[1]),
                                 file=f,
                             )
                         else:
-                            print("\tresult += PyModule_AddIntMacro(module, %s);" % sline[1], file=f)
-
+                            print(f"\tresult += PyModule_AddObjectRef(module, \"{sline[1]}\", PyLong_FromLongLong({sline[1]}));", file=f)
+                            
                     elif "/*" in line:
                         inside_comment = True
                         continue
@@ -172,7 +188,7 @@ def extract():
                             # Remove =X assignments if present.
                             sline = [x.split("=")[0] for x in sline]
                             for e in sline:
-                                print("\tresult += PyModule_AddIntMacro(module, %s);" % e, file=f)
+                                print(f"\tresult += PyModule_AddObjectRef(module, \"{e}\", PyLong_FromLongLong({e}));", file=f)
                             inside_enum = False
                         continue
                 if "icsnVC40Internal" in header_file:
