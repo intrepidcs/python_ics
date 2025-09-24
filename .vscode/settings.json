@@ -1,0 +1,14 @@
+{
+    "python.analysis.autoImportCompletions": false,
+    "python.analysis.indexing": false,
+    "python.analysis.packageIndexDepths": [
+        {
+            "name": "ics",
+            "depth": 0
+        }
+    ],
+    "python.analysis.exclude": [
+        "**/gen/**",
+        "**/.venv/**"
+    ]
+}
