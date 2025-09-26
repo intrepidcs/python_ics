@@ -6,7 +6,7 @@ maintainers = [{ name = "David Rebbe", email = "drebbe@intrepidcs.com" }]
 description = "Python wrapper for interfacing to IntrepidCS Hardware."
 keywords = ["intrepidcs", "CAN", "Ethernet", "Automotive", "ICS"]
 readme = { file = "README.md", content-type = "text/markdown" }
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = { file = "LICENSE.md" }
 classifiers = [
   "Development Status :: 5 - Production/Stable",
@@ -15,11 +15,11 @@ classifiers = [
   "Topic :: Software Development :: Libraries :: Python Modules",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
 ]
 
 [project.urls]
@@ -27,6 +27,11 @@ Homepage = "https://intrepidcs.com"
 Documentation = "http://python-ics.readthedocs.io/"
 Repository = "https://github.com/intrepidcs/python_ics/"
 Issues = "https://github.com/intrepidcs/python_ics/issues"
+
+[dependency-groups]
+test = [
+  "pytest>=8.4.2",
+]
 
 [tool.setuptools.dynamic]
 version = { attr = "ics.__version__" }
@@ -36,17 +41,17 @@ requires = [
   "setuptools",
   "wheel",
   "dunamai",
+  "pytest>=8.4.2",
 ]
 
 
 [tool.cibuildwheel]
-build = "{*-win32,*-win_amd64,*-macosx_universal2,*-manylinux_x86_64,*-manylinux_aarch64}"
-skip = "cp36-* cp37-* pp* *-manylinux_i686 *-musllinux_*"
+build = "cp{310,311,312,313,314}-{win32,win_amd64,macosx_universal2,manylinux_x86_64,manylinux_aarch64}"
+skip = "cp36-* cp37-* cp38-* cp39-* pp* *-manylinux_i686 *-musllinux_*"
 environment = { CIBW_BUILD_VERBOSITY = 1, DISTUTILS_DEBUG = 1, MACOSX_DEPLOYMENT_TARGET = "10.13", CIBW_ARCHS_LINUX = "auto aarch64" }
 before-build = "python -m pip install wheel"
 manylinux-x86_64-image = "quay.io/pypa/manylinux_2_28_x86_64"
 manylinux-aarch64-image = "quay.io/pypa/manylinux_2_28_aarch64"
-free-threaded-support = true
 
 [tool.cibuildwheel.linux]
 before-build = "dnf install -y cmake clang clang-tools-extra flex bison"
