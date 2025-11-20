@@ -101,9 +101,10 @@ extern "C"
     PyObject* meth_flash_accessory_firmware(PyObject* self, PyObject* args);
     PyObject* meth_get_accessory_firmware_version(PyObject* self, PyObject* args);
     PyObject* meth_set_safe_boot_mode(PyObject* self, PyObject* args);
-    PyObject* meth_get_device_name(PyObject* self, PyObject* args);        // icsneoGetDeviceName
-    PyObject* meth_get_imei(PyObject* self, PyObject* args);               // icsneoGetIMEI
-    PyObject* meth_get_component_versions(PyObject* self, PyObject* args); // icsneoGetComponentVersions
+    PyObject* meth_get_device_name(PyObject* self, PyObject* args);          // icsneoGetDeviceName
+    PyObject* meth_get_imei(PyObject* self, PyObject* args);                 // icsneoGetIMEI
+    PyObject* meth_get_component_versions(PyObject* self, PyObject* args);   // icsneoGetComponentVersions
+    PyObject* meth_request_set_neovi_miscio(PyObject* self, PyObject* args); // icsneoRequestSetNeoVIMiscIO
 
 #ifdef _cplusplus
 }
@@ -1973,6 +1974,33 @@ extern "C"
                 "\n"                                                                                                   \
                 "Returns:\n"                                                                                           \
                 "\ttuple of ics.structures.version_report.version_report\n"                                            \
+                "\n"
+
+#define _DOC_REQUEST_SET_NEOVI_MISCIO                                                                                  \
+    MODULE_NAME ".request_set_neovi_miscio(device, ddrs, ddrs_mask, states, states_mask, leds, leds_mask) -> None\n"   \
+                "\n"                                                                                                   \
+                "Sets MISCIO states for the device.\n"                                                                 \
+                "\n"                                                                                                   \
+                "Args:\n"                                                                                              \
+                "\tdevice (:class:`" MODULE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME ".PyNeoDeviceEx`\n\n"        \
+                "\n"                                                                                                   \
+                "\tddrs (:class:`int`): :class:`int`: Bitfield direction of IO. 1 = output.\n\n"                       \
+                "\n"                                                                                                   \
+                "\tddrs_mask (:class:`int`): :class:`int`: Bitfield mask for ddrs. 1 = set\n\n"                        \
+                "\n"                                                                                                   \
+                "\tstates (:class:`int`): :class:`int`: Bitfield state of IO. 1 = high.\n\n"                           \
+                "\n"                                                                                                   \
+                "\tstates_mask (:class:`int`): :class:`int`: Bitfield mask for states. 1 = set\n\n"                    \
+                "\n"                                                                                                   \
+                "\tleds (:class:`int`): :class:`int`: Bitfield state of LEDs. 1 = on.\n\n"                             \
+                "\n"                                                                                                   \
+                "\tleds_mask (:class:`int`): :class:`int`: Bitfield mask for LEDs. 1 = set\n\n"                        \
+                "\n"                                                                                                   \
+                "Raises:\n"                                                                                            \
+                "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
+                "\n"                                                                                                   \
+                "Returns:\n"                                                                                           \
+                "\tNone\n"                                                                                             \
                 "\n"
 
 extern PyMethodDef IcsMethods[];

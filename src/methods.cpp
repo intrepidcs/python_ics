@@ -608,21 +608,19 @@ PyMethodDef IcsMethods[] = {
                           meth_get_device_name,
                           METH_VARARGS,
                           _DOC_GET_DEVICE_NAME),
-    _EZ_ICS_STRUCT_METHOD("get_imei",
-                          "icsneoGetIMEI",
-                          "GetIMEI",
-                          meth_get_imei,
-                          METH_VARARGS,
-                          _DOC_GET_IMEI),
+    _EZ_ICS_STRUCT_METHOD("get_imei", "icsneoGetIMEI", "GetIMEI", meth_get_imei, METH_VARARGS, _DOC_GET_IMEI),
     _EZ_ICS_STRUCT_METHOD("get_component_versions",
                           "icsneoGetComponentVersions",
                           "GetComponentVersions",
                           meth_get_component_versions,
                           METH_VARARGS,
                           _DOC_GET_COMPONENT_VERSIONS),
-
-
-                          
+    _EZ_ICS_STRUCT_METHOD("request_set_neovi_miscio",
+                          "icsneoRequestSetNeoVIMiscIO",
+                          "RequestSetNeoVIMiscIO",
+                          meth_request_set_neovi_miscio,
+                          METH_VARARGS,
+                          _DOC_REQUEST_SET_NEOVI_MISCIO),
 
     { "override_library_name", (PyCFunction)meth_override_library_name, METH_VARARGS, _DOC_OVERRIDE_LIBRARY_NAME },
     { "get_library_path", (PyCFunction)meth_get_library_path, METH_NOARGS, "" },
@@ -5465,7 +5463,8 @@ PyObject* meth_get_device_name(PyObject* self, PyObject* args) // icsneoGetDevic
     }
 }
 
-PyObject* meth_get_imei(PyObject* self, PyObject* args) { // icsneoGetIMEI
+PyObject* meth_get_imei(PyObject* self, PyObject* args)
+{ // icsneoGetIMEI
     (void)self;
     PyObject* obj = NULL;
     if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
@@ -5503,8 +5502,7 @@ PyObject* meth_get_component_versions(PyObject* self, PyObject* args) // icsneoG
 #ifndef _USE_INTERNAL_HEADER_
     (void)self;
     (void)args;
-    return set_ics_exception(exception_runtime_error(),
-                             "icsneoGetComponentVersions is not available");
+    return set_ics_exception(exception_runtime_error(), "icsneoGetComponentVersions is not available");
 #else
     (void)self;
     PyObject* obj = NULL;
@@ -5526,7 +5524,8 @@ PyObject* meth_get_component_versions(PyObject* self, PyObject* args) // icsneoG
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
-        ice::Function<int __stdcall(void*, VersionReport*, uint64_t*, bool)> icsneoGetComponentVersions(lib, "icsneoGetComponentVersions");
+        ice::Function<int __stdcall(void*, VersionReport*, uint64_t*, bool)> icsneoGetComponentVersions(
+            lib, "icsneoGetComponentVersions");
         auto gil = PyAllowThreads();
         std::vector<VersionReport> version_reports;
         version_reports.reserve(length);
@@ -5547,8 +5546,6 @@ PyObject* meth_get_component_versions(PyObject* self, PyObject* args) // icsneoG
                 return set_ics_exception(exception_runtime_error(), "Failed to allocate version_report");
             }
 
-
-
             // Get the internal buffer from version_report
             Py_buffer buffer = {};
             if (PyObject_GetBuffer(obj, &buffer, PyBUF_CONTIG) != 0) {
@@ -5564,4 +5561,59 @@ PyObject* meth_get_component_versions(PyObject* self, PyObject* args) // icsneoG
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
 #endif
+}
+
+PyObject* meth_request_set_neovi_miscio(PyObject* self, PyObject* args) // icsneoRequestSetNeoVIMiscIO
+{
+    (void)self;
+    PyObject* obj = NULL;
+    uint32_t ddrs = 0;
+    uint32_t ddrs_mask = 0;
+    uint32_t states = 0;
+    uint32_t states_mask = 0;
+    uint32_t leds = 0;
+    uint32_t leds_mask = 0;
+    if (!PyArg_ParseTuple(args,
+                          arg_parse("OIIIIII:", __FUNCTION__),
+                          &obj,
+                          &ddrs,
+                          &ddrs_mask,
+                          &states,
+                          &states_mask,
+                          &leds,
+                          &leds_mask)) {
+        return NULL;
+    }
+    if (!PyNeoDeviceEx_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+    }
+    void* handle = NULL;
+    if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
+        return NULL;
+    }
+    try {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        // int _stdcall icsneoRequestSetNeoVIMiscIO(void* hObject,
+        //      uint32_t ddrs,
+        //      uint32_t ddrs_mask,
+        //      uint32_t states,
+        //      uint32_t states_mask,
+        //      uint32_t leds,
+        //      uint32_t leds_mask)
+        ice::Function<int __stdcall(void*, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t)>
+            icsneoRequestSetNeoVIMiscIO(lib, "icsneoRequestSetNeoVIMiscIO");
+        auto gil = PyAllowThreads();
+        if (!icsneoRequestSetNeoVIMiscIO(handle, ddrs, ddrs_mask, states, states_mask, leds, leds_mask)) {
+            gil.restore();
+            return set_ics_exception(exception_runtime_error(), "icsneoRequestSetNeoVIMiscIO() Failed");
+        }
+        gil.restore();
+        Py_RETURN_NONE;
+    } catch (ice::Exception& ex) {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
 }

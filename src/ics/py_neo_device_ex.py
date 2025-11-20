@@ -502,3 +502,7 @@ class PyNeoDeviceEx(ics.neo_device_ex.neo_device_ex):
     def get_component_versions(self, *args, **kwargs):
         "see ics.get_component_versions for details on arguments."
         return ics.get_component_versions(self, *args, **kwargs)
+    
+    def request_set_neovi_miscio(self, *args, **kwargs):
+        "see ics.request_set_neovi_miscio for details on arguments."
+        return ics.request_set_neovi_miscio(self, *args, **kwargs)
