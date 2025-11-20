@@ -2137,19 +2137,13 @@ PyObject* meth_set_reflash_callback(PyObject* self, PyObject* args)
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
-        ice::Function<int __stdcall(void (*)(const wchar_t*, unsigned long))> icsneoSetReflashCallback(
+        ice::Function<void __stdcall(void (*)(const wchar_t*, unsigned long))> icsneoSetReflashCallback(
             lib, "icsneoSetReflashCallback");
         auto gil = PyAllowThreads();
         if (callback == Py_None) {
-            if (!icsneoSetReflashCallback(NULL)) {
-                gil.restore();
-                return set_ics_exception(exception_runtime_error(), "icsneoSetReflashCallback() Failed");
-            }
+            icsneoSetReflashCallback(NULL);
         } else {
-            if (!icsneoSetReflashCallback(&message_reflash_callback)) {
-                gil.restore();
-                return set_ics_exception(exception_runtime_error(), "icsneoSetReflashCallback() Failed");
-            }
+            icsneoSetReflashCallback(&message_reflash_callback);
         }
         gil.restore();
         Py_RETURN_NONE;
