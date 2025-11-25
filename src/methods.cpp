@@ -2314,7 +2314,7 @@ PyObject* meth_read_sdcard(PyObject* self,
     PyObject* obj = NULL;
     unsigned long index = 0;
     unsigned long size = 0;
-    if (!PyArg_ParseTuple(args, arg_parse("Ok:", __FUNCTION__), &obj, &index, &size)) {
+    if (!PyArg_ParseTuple(args, arg_parse("Okk:", __FUNCTION__), &obj, &index, &size)) {
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
@@ -2995,10 +2995,10 @@ PyObject* meth_get_last_api_error(PyObject* self, PyObject* args)
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
-        ice::Function<int __stdcall(void*, int*)> icsneoGetLastAPIError(lib, "icsneoGetLastAPIError");
-        ice::Function<int __stdcall(int, char*, char*, int*, int*, int*, int*)> icsneoGetErrorInfo(
+        ice::Function<int __stdcall(void*, unsigned long*)> icsneoGetLastAPIError(lib, "icsneoGetLastAPIError");
+        ice::Function<int __stdcall(unsigned long, char*, char*, int*, int*, int*, int*)> icsneoGetErrorInfo(
             lib, "icsneoGetErrorInfo");
-        int error = 0;
+        unsigned long error = 0;
         auto gil = PyAllowThreads();
         if (!icsneoGetLastAPIError(handle, &error)) {
             gil.restore();
@@ -3019,7 +3019,7 @@ PyObject* meth_get_last_api_error(PyObject* self, PyObject* args)
                                 &restart_needed)) {
             return set_ics_exception(exception_runtime_error(), "icsneoGetErrorInfo() Failed");
         }
-        return Py_BuildValue("i, s, s, i, i", error, description_short, description_long, severity, restart_needed);
+        return Py_BuildValue("k, s, s, i, i", error, description_short, description_long, severity, restart_needed);
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
@@ -3616,7 +3616,7 @@ PyObject* meth_iso15765_enable_networks(PyObject* self, PyObject* args)
     (void)self;
     PyObject* obj = NULL;
     unsigned long networks = 0;
-    if (!PyArg_ParseTuple(args, arg_parse("Oi:", __FUNCTION__), &obj, &networks)) {
+    if (!PyArg_ParseTuple(args, arg_parse("Ok:", __FUNCTION__), &obj, &networks)) {
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
@@ -3719,7 +3719,7 @@ PyObject* meth_set_active_vnet_channel(PyObject* self, PyObject* args)
     (void)self;
     PyObject* obj = NULL;
     unsigned long channel = 0;
-    if (!PyArg_ParseTuple(args, arg_parse("Oi:", __FUNCTION__), &obj, &channel)) {
+    if (!PyArg_ParseTuple(args, arg_parse("Ok:", __FUNCTION__), &obj, &channel)) {
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
@@ -3823,10 +3823,10 @@ PyObject* meth_set_bit_rate_ex(PyObject* self, PyObject* args)
 {
     (void)self;
     PyObject* obj = NULL;
-    int bitrate = 0;
+    unsigned long bitrate = 0;
     int net_id = 0;
     int options = 0;
-    if (!PyArg_ParseTuple(args, arg_parse("Oiii:", __FUNCTION__), &obj, &bitrate, &net_id)) {
+    if (!PyArg_ParseTuple(args, arg_parse("Okii:", __FUNCTION__), &obj, &bitrate, &net_id, &options)) {
         return NULL;
     }
     if (!PyNeoDeviceEx_CheckExact(obj)) {
@@ -3842,7 +3842,7 @@ PyObject* meth_set_bit_rate_ex(PyObject* self, PyObject* args)
             char buffer[512];
             return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
         }
-        ice::Function<int __stdcall(void*, int, int, int)> icsneoSetBitRateEx(lib, "icsneoSetBitRateEx");
+        ice::Function<int __stdcall(void*, unsigned long, int, int)> icsneoSetBitRateEx(lib, "icsneoSetBitRateEx");
         auto gil = PyAllowThreads();
         if (!icsneoSetBitRateEx(handle, bitrate, net_id, options)) {
             gil.restore();
@@ -4957,7 +4957,7 @@ PyObject* meth_uart_write(PyObject* self, PyObject* args)
     Py_buffer data = {};
     uint8_t flags = 0;
     bool check_size = true;
-    if (!PyArg_ParseTuple(args, arg_parse("OIy*|bp:", __FUNCTION__), &obj, &port, &data, &flags, &check_size)) {
+    if (!PyArg_ParseTuple(args, arg_parse("OIy*|Bp:", __FUNCTION__), &obj, &port, &data, &flags, &check_size)) {
         return NULL;
     }
 
@@ -5003,7 +5003,7 @@ PyObject* meth_uart_read(PyObject* self, PyObject* args)
     EUartPort_t port = eUART0;
     unsigned int bytesToRead = 256;
     uint8_t flags = 0;
-    if (!PyArg_ParseTuple(args, arg_parse("OI|Is:", __FUNCTION__), &obj, &port, &bytesToRead, &flags)) {
+    if (!PyArg_ParseTuple(args, arg_parse("OI|IB:", __FUNCTION__), &obj, &port, &bytesToRead, &flags)) {
         return NULL;
     }
     // Get the device handle
@@ -5029,10 +5029,10 @@ PyObject* meth_uart_read(PyObject* self, PyObject* args)
         size_t bytesActuallyRead = 0;
         // int _stdcall icsneoUartRead(void* hObject, const EUartPort_t uart, void* bData, const size_t bytesToRead,
         // size_t* bytesActuallyRead, uint8_t* flags)
-        ice::Function<int __stdcall(void*, const EUartPort_t, const void*, const size_t, size_t*, uint8_t*)>
+        ice::Function<int __stdcall(void*, const EUartPort_t, void*, const size_t, size_t*, uint8_t*)>
             icsneoUartRead(lib, "icsneoUartRead");
         auto gil = PyAllowThreads();
-        if (!icsneoUartRead(handle, port, (void*)buffer, bytesToRead, &bytesActuallyRead, &flags)) {
+        if (!icsneoUartRead(handle, port, buffer, bytesToRead, &bytesActuallyRead, &flags)) {
             gil.restore();
             free(buffer);
             buffer = NULL;
@@ -5096,7 +5096,7 @@ PyObject* meth_uart_get_baudrate(PyObject* self, PyObject* args)
     (void)self;
     PyObject* obj = NULL;
     EUartPort_t port = eUART0;
-    if (!PyArg_ParseTuple(args, arg_parse("OII:", __FUNCTION__), &obj, &port)) {
+    if (!PyArg_ParseTuple(args, arg_parse("OI:", __FUNCTION__), &obj, &port)) {
         return NULL;
     }
     // Get the device handle

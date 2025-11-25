@@ -194,6 +194,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddObjectRef(module, "NEODEVICE_GIGASTAR2", PyLong_FromLongLong(NEODEVICE_GIGASTAR2));
 	result += PyModule_AddObjectRef(module, "NEODEVICE_FIRE3_T1S_LIN", PyLong_FromLongLong(NEODEVICE_FIRE3_T1S_LIN));
 	result += PyModule_AddObjectRef(module, "NEODEVICE_FIRE3_T1S_SENT", PyLong_FromLongLong(NEODEVICE_FIRE3_T1S_SENT));
+	result += PyModule_AddObjectRef(module, "NEODEVICE_RADGEMINI", PyLong_FromLongLong(NEODEVICE_RADGEMINI));
 	result += PyModule_AddObjectRef(module, "NEODEVICE_RED", PyLong_FromLongLong(NEODEVICE_RED));
 	result += PyModule_AddObjectRef(module, "NEODEVICE_ECU", PyLong_FromLongLong(NEODEVICE_ECU));
 	result += PyModule_AddObjectRef(module, "NEODEVICE_IEVB_DEPRECATED", PyLong_FromLongLong(NEODEVICE_IEVB_DEPRECATED));
@@ -363,6 +364,7 @@ int setup_module_auto_defines(PyObject * module)
 
 	result += PyModule_AddObjectRef(module, "CMP_STREAMS_FIRE3", PyLong_FromLongLong(CMP_STREAMS_FIRE3));
 	result += PyModule_AddObjectRef(module, "CMP_STREAMS_FIRE3FR", PyLong_FromLongLong(CMP_STREAMS_FIRE3FR));
+	result += PyModule_AddObjectRef(module, "CMP_STREAMS_FIRE3T1SLIN", PyLong_FromLongLong(CMP_STREAMS_FIRE3T1SLIN));
 	result += PyModule_AddObjectRef(module, "CMP_STREAMS_RED2", PyLong_FromLongLong(CMP_STREAMS_RED2));
 	result += PyModule_AddObjectRef(module, "CMP_STREAMS_A2B", PyLong_FromLongLong(CMP_STREAMS_A2B));
 	result += PyModule_AddObjectRef(module, "CMP_STREAMS_GIGASTAR", PyLong_FromLongLong(CMP_STREAMS_GIGASTAR));
@@ -507,6 +509,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddObjectRef(module, "SFP_ID_ICS_MV3244", PyLong_FromLongLong(SFP_ID_ICS_MV3244));
 	result += PyModule_AddObjectRef(module, "SFP_ID_ICS_MC8670", PyLong_FromLongLong(SFP_ID_ICS_MC8670));
 	result += PyModule_AddObjectRef(module, "SFP_ID_ICS_EN11100", PyLong_FromLongLong(SFP_ID_ICS_EN11100));
+	result += PyModule_AddObjectRef(module, "SFP_ID_ICS_AD1101", PyLong_FromLongLong(SFP_ID_ICS_AD1101));
 	result += PyModule_AddObjectRef(module, "SFP_ID_MAX", PyLong_FromLongLong(SFP_ID_MAX));
 	// end of enum -  } SfpId;
 
@@ -542,6 +545,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddObjectRef(module, "ETHERNET10T1S_SETTINGS_FLAG_ENABLE_CSMA_FALLBACK", PyLong_FromLongLong(ETHERNET10T1S_SETTINGS_FLAG_ENABLE_CSMA_FALLBACK));
 	result += PyModule_AddObjectRef(module, "ETHERNET10T1S_SETTINGS_FLAG_DISABLE_ALL_DECODING", PyLong_FromLongLong(ETHERNET10T1S_SETTINGS_FLAG_DISABLE_ALL_DECODING));
 	result += PyModule_AddObjectRef(module, "ETHERNET10T1S_SETTINGS_EXT_SIZE", PyLong_FromUnsignedLongLong(ETHERNET10T1S_SETTINGS_EXT_SIZE));
+	result += PyModule_AddObjectRef(module, "ETHERNET10T1L_SETTINGS_SIZE", PyLong_FromUnsignedLongLong(ETHERNET10T1L_SETTINGS_SIZE));
 	// enum
 	result += PyModule_AddObjectRef(module, "MACSEC_PACKET_NO_VLAN_OR_MPLS", PyLong_FromLongLong(MACSEC_PACKET_NO_VLAN_OR_MPLS));
 	result += PyModule_AddObjectRef(module, "MACSEC_PACKET_SINGLE_VLAN", PyLong_FromLongLong(MACSEC_PACKET_SINGLE_VLAN));
@@ -861,6 +865,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddObjectRef(module, "SRADA2BSettings_SIZE", PyLong_FromUnsignedLongLong(SRADA2BSettings_SIZE));
 	result += PyModule_AddObjectRef(module, "SRADMoon2Settings_SIZE", PyLong_FromUnsignedLongLong(SRADMoon2Settings_SIZE));
 	result += PyModule_AddObjectRef(module, "SRADMoon3Settings_SIZE", PyLong_FromUnsignedLongLong(SRADMoon3Settings_SIZE));
+	result += PyModule_AddObjectRef(module, "SRADGeminiSettings_SIZE", PyLong_FromUnsignedLongLong(SRADGeminiSettings_SIZE));
 	result += PyModule_AddObjectRef(module, "SRADGigastarSettings_SIZE", PyLong_FromUnsignedLongLong(SRADGigastarSettings_SIZE));
 	result += PyModule_AddObjectRef(module, "SRADGalaxy2Settings_SIZE", PyLong_FromUnsignedLongLong(SRADGalaxy2Settings_SIZE));
 	result += PyModule_AddObjectRef(module, "SVividCANSettings_SIZE", PyLong_FromUnsignedLongLong(SVividCANSettings_SIZE));
@@ -905,6 +910,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddObjectRef(module, "SRed2Settings_SIZE", PyLong_FromLongLong(SRed2Settings_SIZE));
 	result += PyModule_AddObjectRef(module, "SFire3Settings_SIZE", PyLong_FromLongLong(SFire3Settings_SIZE));
 	result += PyModule_AddObjectRef(module, "SFire3FlexraySettings_SIZE", PyLong_FromLongLong(SFire3FlexraySettings_SIZE));
+	result += PyModule_AddObjectRef(module, "SFire3T1sLinSettings_SIZE", PyLong_FromLongLong(SFire3T1sLinSettings_SIZE));
 	result += PyModule_AddObjectRef(module, "RADEPSILON_NUM_PORTS", PyLong_FromUnsignedLongLong(RADEPSILON_NUM_PORTS));
 	result += PyModule_AddObjectRef(module, "RADEPSILON_MAX_PHY", PyLong_FromUnsignedLongLong(RADEPSILON_MAX_PHY));
 	result += PyModule_AddObjectRef(module, "EPSILON_88Q6113_SWITCH_A", PyLong_FromUnsignedLongLong(EPSILON_88Q6113_SWITCH_A));
@@ -1004,6 +1010,8 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddObjectRef(module, "DeviceRADGalaxy2SettingsType", PyLong_FromLongLong(DeviceRADGalaxy2SettingsType));
 	result += PyModule_AddObjectRef(module, "DeviceRADGigastar2SettingsType", PyLong_FromLongLong(DeviceRADGigastar2SettingsType));
 	result += PyModule_AddObjectRef(module, "DeviceRADMoonT1SSettingsType", PyLong_FromLongLong(DeviceRADMoonT1SSettingsType));
+	result += PyModule_AddObjectRef(module, "DeviceRADGeminiSettingsType", PyLong_FromLongLong(DeviceRADGeminiSettingsType));
+	result += PyModule_AddObjectRef(module, "DeviceFire3T1sLinSettingsType", PyLong_FromLongLong(DeviceFire3T1sLinSettingsType));
 	result += PyModule_AddObjectRef(module, "DeviceSettingsTypeMax", PyLong_FromLongLong(DeviceSettingsTypeMax));
 	result += PyModule_AddObjectRef(module, "DeviceSettingsNone", PyLong_FromLongLong(DeviceSettingsNone));
 	// end of enum -  } EDeviceSettingsType;
