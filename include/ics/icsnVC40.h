@@ -253,6 +253,7 @@ typedef unsigned __int64 uint64_t;
 #define NEODEVICE_GIGASTAR2 (0x00000029)
 #define NEODEVICE_FIRE3_T1S_LIN (0x0000002A)
 #define NEODEVICE_FIRE3_T1S_SENT (0x0000002B)
+#define NEODEVICE_RADGEMINI (0x0000002C)
 
 #define NEODEVICE_RED (0x00000040)
 #define NEODEVICE_ECU (0x00000080)
@@ -285,7 +286,7 @@ typedef unsigned __int64 uint64_t;
 #define NEODEVICE_NEOECUCHIP NEODEVICE_IEVB_DEPRECATED
 //clang-format on
 
-#define DEVICECOUNT_FOR_EXPLORER (34) //this value will be checked by the NeoViExplorer after #6453!
+#define DEVICECOUNT_FOR_EXPLORER (36) //this value will be checked by the NeoViExplorer after #6453!
 
 #define ISO15765_2_NETWORK_HSCAN 0x01
 #define ISO15765_2_NETWORK_MSCAN 0x02
@@ -568,6 +569,7 @@ typedef struct _stAPIFirmwareInfo
 /* Define number of CMP streams per device*/
 #define CMP_STREAMS_FIRE3 (10)
 #define CMP_STREAMS_FIRE3FR (10)
+#define CMP_STREAMS_FIRE3T1SLIN (10)
 #define CMP_STREAMS_RED2 (10)
 #define CMP_STREAMS_A2B (3)
 #define CMP_STREAMS_GIGASTAR (10)
@@ -951,6 +953,11 @@ typedef union _stChipVersions
 		uint8_t mchip_major;
 		uint8_t mchip_minor;
 	} radmoon3_versions;
+	struct
+	{
+		uint8_t mchip_major;
+		uint8_t mchip_minor;
+	} radgemini_versions;
 
 	struct
 	{
@@ -1006,6 +1013,16 @@ typedef union _stChipVersions
 		uint8_t vem_f_major;
 		uint8_t vem_f_minor;
 	} fire3_flexray_versions;
+
+	struct
+	{
+		uint8_t zchip_major;
+		uint8_t zchip_minor;
+		uint8_t schip_major;
+		uint8_t schip_minor;
+		uint8_t vem_z_major;
+		uint8_t vem_z_minor;
+	} fire3_t1slin_versions;
 
 	struct
 	{
@@ -1271,6 +1288,7 @@ typedef enum
 	SFP_ID_ICS_MV3244,
 	SFP_ID_ICS_MC8670,
 	SFP_ID_ICS_EN11100,
+	SFP_ID_ICS_AD1101,
 	// add new entries here
 	SFP_ID_MAX,
 } SfpId;
@@ -1396,6 +1414,13 @@ typedef struct ETHERNET10T1S_SETTINGS_EXT_t
 	uint8_t rsvd[8];
 } ETHERNET10T1S_SETTINGS_EXT;
 #define ETHERNET10T1S_SETTINGS_EXT_SIZE 16
+
+typedef struct ETHERNET10T1L_SETTINGS_t
+{
+	uint8_t tx_mode;
+	uint8_t rsvd[7];
+} ETHERNET10T1L_SETTINGS;
+#define ETHERNET10T1L_SETTINGS_SIZE 8
 
 /* 
  * START - MACsec Definitions 
@@ -2948,6 +2973,31 @@ typedef struct _SRADMoon3Settings
 
 #define SRADMoon3Settings_SIZE 68
 
+typedef struct _SRADGeminiSettings
+{
+	uint16_t perf_en; // 2
+
+	ETHERNET_SETTINGS2 ethernet1; // 16
+	ETHERNET_SETTINGS2 ethernet2; // 16
+	ETHERNET_SETTINGS2 autoEthernet1; // 16
+	ETHERNET_SETTINGS2 autoEthernet2; // 16
+
+	uint16_t network_enabled_on_boot; // 2
+	uint16_t network_enables; // 2
+	uint16_t network_enables_2; // 2
+	uint16_t network_enables_3; // 2
+	uint16_t network_enables_4; // 2
+	uint64_t network_enables_5; // 8
+
+	struct
+	{
+		uint16_t enableLatencyTest : 1;
+		uint16_t reserved : 15;
+	} flags; // 2
+} SRADGeminiSettings;
+
+#define SRADGeminiSettings_SIZE 86
+
 typedef struct _SRADGigastarSettings
 {
 	uint32_t ecu_id;
@@ -3030,9 +3080,12 @@ typedef struct _SRADGigastarSettings
 
 	CMP_GLOBAL_DATA cmp_global_data;
 	CMP_NETWORK_DATA cmp_stream_data[CMP_STREAMS_GIGASTAR];
+	// SFP T1L
+	ETHERNET10T1L_SETTINGS sfp_t1l_1;
+	ETHERNET10T1L_SETTINGS sfp_t1l_2;
 } SRADGigastarSettings;
 
-#define SRADGigastarSettings_SIZE 1010
+#define SRADGigastarSettings_SIZE 1026
 
 typedef struct _SRADGalaxy2Settings
 {
@@ -3824,6 +3877,129 @@ typedef struct _SFire3FlexraySettings
 } SFire3FlexraySettings;
 #define SFire3FlexraySettings_SIZE (1372)
 
+typedef struct _SFire3T1SLINSettings
+{
+	uint16_t perf_en;
+	uint16_t network_enabled_on_boot;
+	uint16_t misc_io_on_report_events;
+	uint16_t pwr_man_enable;
+	int16_t iso15765_separation_time_offset;
+	uint16_t slaveVnetA;
+	uint32_t reserved;
+	uint64_t termination_enables_1;
+	uint64_t network_enables;
+	uint32_t pwr_man_timeout;
+	CAN_SETTINGS can1;
+	CANFD_SETTINGS canfd1;
+	CAN_SETTINGS can2;
+	CANFD_SETTINGS canfd2;
+	CAN_SETTINGS can3;
+	CANFD_SETTINGS canfd3;
+	CAN_SETTINGS can4;
+	CANFD_SETTINGS canfd4;
+	CAN_SETTINGS can5;
+	CANFD_SETTINGS canfd5;
+	CAN_SETTINGS can6;
+	CANFD_SETTINGS canfd6;
+	CAN_SETTINGS can7;
+	CANFD_SETTINGS canfd7;
+	CAN_SETTINGS can8;
+	CANFD_SETTINGS canfd8;
+	LIN_SETTINGS lin1;
+	LIN_SETTINGS lin2;
+	ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings_1;
+	uint16_t iso_parity_1;
+	uint16_t iso_msg_termination_1;
+	ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings_2;
+	uint16_t iso_parity_2;
+	uint16_t iso_msg_termination_2;
+	ETHERNET_SETTINGS ethernet_1;
+	TIMESYNC_ICSHARDWARE_SETTINGS timeSync;
+	STextAPISettings text_api;
+	struct
+	{
+		uint32_t disableUsbCheckOnBoot : 1;
+		uint32_t enableLatencyTest : 1;
+		uint32_t busMessagesToAndroid : 1;
+		uint32_t reserved1 : 1;
+		uint32_t enableDefaultLogger : 1;
+		uint32_t enableDefaultUpload : 1;
+		uint32_t reserved : 26;
+	} flags;
+	DISK_SETTINGS disk;
+	uint16_t misc_io_report_period;
+	uint16_t ain_threshold;
+	uint16_t misc_io_analog_enable;
+	uint16_t digitalIoThresholdTicks;
+	uint16_t digitalIoThresholdEnable;
+	uint16_t misc_io_initial_ddr;
+	uint16_t misc_io_initial_latch;
+	ETHERNET_SETTINGS2 ethernet2_1;
+	ETHERNET_SETTINGS ethernet_2;
+	ETHERNET_SETTINGS2 ethernet2_2;
+	Fire3LinuxSettings os_settings;
+	RAD_GPTP_SETTINGS gPTP;
+
+	/* VEM */
+	// 10T1S
+	ETHERNET_SETTINGS2 ethT1s1;
+	ETHERNET10T1S_SETTINGS t1s1;
+	ETHERNET10T1S_SETTINGS_EXT t1s1Ext;
+	// 10T1S
+	ETHERNET_SETTINGS2 ethT1s2;
+	ETHERNET10T1S_SETTINGS t1s2;
+	ETHERNET10T1S_SETTINGS_EXT t1s2Ext;
+	// 10T1S
+	ETHERNET_SETTINGS2 ethT1s3;
+	ETHERNET10T1S_SETTINGS t1s3;
+	ETHERNET10T1S_SETTINGS_EXT t1s3Ext;
+	// 10T1S
+	ETHERNET_SETTINGS2 ethT1s4;
+	ETHERNET10T1S_SETTINGS t1s4;
+	ETHERNET10T1S_SETTINGS_EXT t1s4Ext;
+	// 10T1S
+	ETHERNET_SETTINGS2 ethT1s5;
+	ETHERNET10T1S_SETTINGS t1s5;
+	ETHERNET10T1S_SETTINGS_EXT t1s5Ext;
+	// 10T1S
+	ETHERNET_SETTINGS2 ethT1s6;
+	ETHERNET10T1S_SETTINGS t1s6;
+	ETHERNET10T1S_SETTINGS_EXT t1s6Ext;
+	// 10T1S
+	ETHERNET_SETTINGS2 ethT1s7;
+	ETHERNET10T1S_SETTINGS t1s7;
+	ETHERNET10T1S_SETTINGS_EXT t1s7Ext;
+	// 10T1S
+	ETHERNET_SETTINGS2 ethT1s8;
+	ETHERNET10T1S_SETTINGS t1s8;
+	ETHERNET10T1S_SETTINGS_EXT t1s8Ext;
+
+	LIN_SETTINGS lin3;
+	LIN_SETTINGS lin4;
+	LIN_SETTINGS lin5;
+	LIN_SETTINGS lin6;
+	LIN_SETTINGS lin7;
+	LIN_SETTINGS lin8;
+	LIN_SETTINGS lin9;
+	LIN_SETTINGS lin10;
+
+	ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings_3;
+	uint16_t iso_parity_3;
+	uint16_t iso_msg_termination_3;
+	ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings_4;
+	uint16_t iso_parity_4;
+	uint16_t iso_msg_termination_4;
+
+	uint16_t iso_tester_pullup_enable;
+
+	uint64_t network_enables_5;
+
+	CMP_GLOBAL_DATA cmp_global_data;
+	CMP_NETWORK_DATA cmp_stream_data[CMP_STREAMS_FIRE3T1SLIN];
+	uint32_t networkTimeSync;
+} SFire3T1sLinSettings;
+#define SFire3T1sLinSettings_SIZE (1594)
+
 #define RADEPSILON_NUM_PORTS 18 // ATSAM + PHYs
 #define RADEPSILON_MAX_PHY 18
 #define EPSILON_88Q6113_SWITCH_A 1
@@ -4303,8 +4479,11 @@ typedef struct _SRADGigaStar2Settings
 	LIN_SETTINGS lin14;
 	LIN_SETTINGS lin15;
 	LIN_SETTINGS lin16;
+	// SFP T1L
+	ETHERNET10T1L_SETTINGS sfp_t1l_1;
+	ETHERNET10T1L_SETTINGS sfp_t1l_2;
 } SRADGigastar2Settings;
-#define SRADGigastar2Settings_SIZE 2140
+#define SRADGigastar2Settings_SIZE 2156
 
 // variants to be used with icsneoSetFirmwareVariant
 enum Gigastar2FwVariants
@@ -4443,10 +4622,12 @@ typedef struct _GLOBAL_SETTINGS
 		SRed2Settings red2;
 		SFire3Settings fire3;
 		SFire3FlexraySettings fire3fr;
+		SFire3T1sLinSettings fire3t1slin;
 		SRADA2BSettings rad_a2b;
 		SRADEpsilonSettings epsilon;
 		SRADBMSSettings rad_bms;
 		SRADMoon3Settings radmoon3;
+		SRADGeminiSettings radgemini;
 		SRADCometSettings radcomet;
 		SRADComet3Settings radcomet3;
 		SRADGigastar2Settings radgigastar2;
@@ -4505,6 +4686,8 @@ typedef enum _EDeviceSettingsType
 	DeviceRADGalaxy2SettingsType,
 	DeviceRADGigastar2SettingsType,
 	DeviceRADMoonT1SSettingsType,
+	DeviceRADGeminiSettingsType,
+	DeviceFire3T1sLinSettingsType,
 	// add new settings type here
 	// Also add to map inside cicsneoVI::Init()
 	DeviceSettingsTypeMax,
@@ -4544,7 +4727,9 @@ typedef struct _SDeviceSettings
 		SRADEpsilonSettings epsilon;
 		SRADBMSSettings rad_bms;
 		SRADMoon3Settings radmoon3;
+		SRADGeminiSettings radgemini;
 		SFire3FlexraySettings fire3Flexray;
+		SFire3T1sLinSettings fire3t1slin;
 		SRADCometSettings radcomet;
 		SRADComet3Settings radcomet3;
 		SRADGigastar2Settings radgigastar2;
@@ -5144,7 +5329,9 @@ typedef struct
 typedef struct
 {
 	uint8_t ethernetActivationLineEnabled;
-	ethernetNetworkStatus_t ethernetStatus[3];
+	ethernetNetworkStatus_t ethernetStatus[16];
+	uint8_t numNetworks;
+	uint8_t reserved;
 	uint8_t ethernetActivationLineEnabled_2;
 } icsFire3DeviceStatus;
 
@@ -5399,6 +5586,7 @@ CHECK_STRUCT_SIZE(ETHERNET_SETTINGS2);
 CHECK_STRUCT_SIZE(ETHERNET10G_SETTINGS);
 CHECK_STRUCT_SIZE(ETHERNET10T1S_SETTINGS);
 CHECK_STRUCT_SIZE(ETHERNET10T1S_SETTINGS_EXT);
+CHECK_STRUCT_SIZE(ETHERNET10T1L_SETTINGS);
 CHECK_STRUCT_SIZE(MACSEC_SETTINGS);
 CHECK_STRUCT_SIZE(LOGGER_SETTINGS);
 CHECK_STRUCT_SIZE(DISK_SETTINGS);
@@ -5444,7 +5632,9 @@ CHECK_STRUCT_SIZE(SRADEpsilonSettings);
 CHECK_STRUCT_SIZE(RAD_GPTP_SETTINGS);
 CHECK_STRUCT_SIZE(SRADBMSSettings);
 CHECK_STRUCT_SIZE(SRADMoon3Settings);
+CHECK_STRUCT_SIZE(SRADGeminiSettings);
 CHECK_STRUCT_SIZE(SFire3FlexraySettings);
+CHECK_STRUCT_SIZE(SFire3T1sLinSettings);
 CHECK_STRUCT_SIZE(CANHubSettings);
 CHECK_STRUCT_SIZE(SRADCometSettings);
 CHECK_STRUCT_SIZE(SRADComet3Settings);
