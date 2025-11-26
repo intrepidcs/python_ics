@@ -621,6 +621,12 @@ PyMethodDef IcsMethods[] = {
                           meth_request_set_neovi_miscio,
                           METH_VARARGS,
                           _DOC_REQUEST_SET_NEOVI_MISCIO),
+    _EZ_ICS_STRUCT_METHOD("get_firmware_variant",
+                          "icsneoGetFirmwareVariant",
+                          "GetFirmwareVariant",
+                          meth_get_firmware_variant,
+                          METH_VARARGS,
+                          _DOC_GET_FIRMWARE_VARIANT),
 
     { "override_library_name", (PyCFunction)meth_override_library_name, METH_VARARGS, _DOC_OVERRIDE_LIBRARY_NAME },
     { "get_library_path", (PyCFunction)meth_get_library_path, METH_NOARGS, "" },
@@ -5029,8 +5035,8 @@ PyObject* meth_uart_read(PyObject* self, PyObject* args)
         size_t bytesActuallyRead = 0;
         // int _stdcall icsneoUartRead(void* hObject, const EUartPort_t uart, void* bData, const size_t bytesToRead,
         // size_t* bytesActuallyRead, uint8_t* flags)
-        ice::Function<int __stdcall(void*, const EUartPort_t, void*, const size_t, size_t*, uint8_t*)>
-            icsneoUartRead(lib, "icsneoUartRead");
+        ice::Function<int __stdcall(void*, const EUartPort_t, void*, const size_t, size_t*, uint8_t*)> icsneoUartRead(
+            lib, "icsneoUartRead");
         auto gil = PyAllowThreads();
         if (!icsneoUartRead(handle, port, buffer, bytesToRead, &bytesActuallyRead, &flags)) {
             gil.restore();
@@ -5607,6 +5613,41 @@ PyObject* meth_request_set_neovi_miscio(PyObject* self, PyObject* args) // icsne
         }
         gil.restore();
         Py_RETURN_NONE;
+    } catch (ice::Exception& ex) {
+        return set_ics_exception(exception_runtime_error(), (char*)ex.what());
+    }
+}
+
+PyObject* meth_get_firmware_variant(PyObject* self, PyObject* args) // icsneoGetFirmwareVariant
+{
+    (void)self;
+    PyObject* obj = NULL;
+    if (!PyArg_ParseTuple(args, arg_parse("O:", __FUNCTION__), &obj)) {
+        return NULL;
+    }
+    if (!PyNeoDeviceEx_CheckExact(obj)) {
+        return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
+    }
+    void* handle = NULL;
+    if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
+        return NULL;
+    }
+    try {
+        ice::Library* lib = dll_get_library();
+        if (!lib) {
+            char buffer[512];
+            return set_ics_exception(exception_runtime_error(), dll_get_error(buffer));
+        }
+        // int __stdcall icsneoGetFirmwareVariant(void* hObject, uint32_t* variant)
+        ice::Function<int __stdcall(void*, uint32_t*)> icsneoGetFirmwareVariant(lib, "icsneoGetFirmwareVariant");
+        auto gil = PyAllowThreads();
+        uint32_t variant = 0;
+        if (!icsneoGetFirmwareVariant(handle, &variant)) {
+            gil.restore();
+            return set_ics_exception(exception_runtime_error(), "icsneoGetFirmwareVariant() Failed");
+        }
+        gil.restore();
+        return Py_BuildValue("I", variant);
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
