@@ -101,10 +101,11 @@ extern "C"
     PyObject* meth_flash_accessory_firmware(PyObject* self, PyObject* args);
     PyObject* meth_get_accessory_firmware_version(PyObject* self, PyObject* args);
     PyObject* meth_set_safe_boot_mode(PyObject* self, PyObject* args);
-    PyObject* meth_get_device_name(PyObject* self, PyObject* args);          // icsneoGetDeviceName
-    PyObject* meth_get_imei(PyObject* self, PyObject* args);                 // icsneoGetIMEI
-    PyObject* meth_get_component_versions(PyObject* self, PyObject* args);   // icsneoGetComponentVersions
+    PyObject* meth_get_device_name(PyObject* self, PyObject* args);        // icsneoGetDeviceName
+    PyObject* meth_get_imei(PyObject* self, PyObject* args);               // icsneoGetIMEI
+    PyObject* meth_get_component_versions(PyObject* self, PyObject* args); // icsneoGetComponentVersions
     PyObject* meth_request_set_neovi_miscio(PyObject* self, PyObject* args); // icsneoRequestSetNeoVIMiscIO
+    PyObject* meth_get_firmware_variant(PyObject* self, PyObject* args);   // icsneoGetFirmwareVariant
 
 #ifdef _cplusplus
 }
@@ -2001,6 +2002,21 @@ extern "C"
                 "\n"                                                                                                   \
                 "Returns:\n"                                                                                           \
                 "\tNone\n"                                                                                             \
+                "\n"
+
+#define _DOC_GET_FIRMWARE_VARIANT                                                                                      \
+    MODULE_NAME ".get_firmware_variant(device) -> Int\n"                                                               \
+                "\n"                                                                                                   \
+                "Gets firmware variant of the device.\n"                                                               \
+                "\n"                                                                                                   \
+                "Args:\n"                                                                                              \
+                "\tdevice (:class:`" MODULE_NAME ".PyNeoDeviceEx`): :class:`" MODULE_NAME ".PyNeoDeviceEx`\n\n"        \
+                "\n"                                                                                                   \
+                "Raises:\n"                                                                                            \
+                "\t:class:`" MODULE_NAME ".RuntimeError`\n"                                                            \
+                "\n"                                                                                                   \
+                "Returns:\n"                                                                                           \
+                "\t(:class:`int`): :class:`int`: variant\n"                                                            \
                 "\n"
 
 extern PyMethodDef IcsMethods[];

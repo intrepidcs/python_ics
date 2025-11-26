@@ -506,3 +506,7 @@ class PyNeoDeviceEx(ics.neo_device_ex.neo_device_ex):
     def request_set_neovi_miscio(self, *args, **kwargs):
         "see ics.request_set_neovi_miscio for details on arguments."
         return ics.request_set_neovi_miscio(self, *args, **kwargs)
+
+    def get_firmware_variant(self, *args, **kwargs):
+        "see ics.get_firmware_variant for details on arguments."
+        return ics.get_firmware_variant(self, *args, **kwargs)
