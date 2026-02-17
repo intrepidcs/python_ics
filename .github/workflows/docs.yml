@@ -1,0 +1,26 @@
+name: Documentation
+
+on:
+  push:
+    tags:
+      - 'v*'
+      - '*.*.*'
+
+jobs:
+  trigger-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Read the Docs Build
+        run: |
+          # Create request body
+          BODY='{}'
+          
+          # Create HMAC-SHA256 signature
+          SIGNATURE=$(echo -n "$BODY" | openssl dgst -sha256 -hmac "${{ secrets.RTD_WEBHOOK_TOKEN }}" -binary | xxd -p -c 256)
+          
+          # Send request to Read the Docs webhook
+          curl -X POST \
+            -H "X-RTD-Signature: sha256=$SIGNATURE" \
+            -H "Content-Type: application/json" \
+            -d "$BODY" \
+            https://app.readthedocs.org/api/v2/webhook/python-ics/319966/

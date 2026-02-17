@@ -464,11 +464,6 @@ typedef struct _NeoDeviceEx
 #define DRIVER_USB1 (0x40)
 #define DRIVER_USB2 (0x80)
 #define DRIVER_USB3 (0xC0)
-#define SERVD_DRIVER_MASK  (0xFF00)
-#define SERVD_DRIVER_VCP   (0x0100)
-#define SERVD_DRIVER_DXX   (0x0200)
-#define SERVD_DRIVER_CAB   (0x0400)
-#define SERVD_DRIVER_TCP   (0x1000)
 	uint32_t Options;
 
 	void* pAvailWIFINetwork;
@@ -479,7 +474,7 @@ typedef struct _NeoDeviceEx
 	uint8_t MACAddress[6];
 	uint16_t hardwareRev;
 	uint16_t revReserved;
-	uint32_t tcpIpAddress[4];
+	uint32_t ipAddress[4];
 	uint16_t tcpPort;
 	uint16_t Reserved0;
 	uint32_t Reserved1;
@@ -1236,7 +1231,9 @@ typedef struct OP_ETH_SETTINGS_t
 			uint16_t snf_tap : 1; // store and forward
 			uint16_t disable_tap_to_host : 1;
 			uint16_t show_tap_tx_receipt : 1;
-			uint16_t reserved : 5;
+			uint16_t tap_dest : 2;
+			uint16_t tc10_tap : 1;
+			uint16_t reserved : 2;
 		};
 		uint8_t reserved0[14];
 	};
@@ -1277,6 +1274,10 @@ typedef struct ETHERNET_SETTINGS_t
 #define ETHERNET_SETTINGS2_FLAG2_TAP_DEST_SHIFT 13
 #define ETHERNET_SETTINGS2_FLAG2_TAP_DEST_MASK 0x3
 #define ETHERNET_SETTINGS2_FLAG2_TC10_FWD_TAP_ENABLE 0x8000
+#define ETHERNET_SETTINGS2_FLAG2_GET_TAP_DEST(s) \
+	(((s)->flags2 >> ETHERNET_SETTINGS2_FLAG2_TAP_DEST_SHIFT) & ETHERNET_SETTINGS2_FLAG2_TAP_DEST_MASK)
+#define ETHERNET_SETTINGS2_FLAG2_SET_TAP_DEST(s, d) \
+	((s)->flags2 |= ((d)&ETHERNET_SETTINGS2_FLAG2_TAP_DEST_MASK) << ETHERNET_SETTINGS2_FLAG2_TAP_DEST_SHIFT)
 
 typedef enum
 {
@@ -1839,11 +1840,13 @@ typedef struct _wBMSManagerReset
 	uint8_t managerIndex;
 } wBMSManagerReset;
 
+#define UART_DATA_BUFFER_SIZE 256
+
 typedef struct _UartPortData
 {
 	uint16_t len;
 	uint8_t port;
-	uint8_t bData[256];
+	uint8_t bData[UART_DATA_BUFFER_SIZE];
 } UartPortData;
 
 typedef struct _UartPortPortBytes
@@ -5550,23 +5553,8 @@ typedef enum _epsilon10GPHYFW
 #define NUM_DEVICE_FEATURE_BITFIELDS ((NUM_VALID_DEVICE_FEATURES + 31) / 32)
 
 
-#if !defined(INTREPID_NO_CHECK_STRUCT_SIZE) && !defined(ics_static_assert)
-
-#if (defined(__cplusplus) && (__cplusplus > 199711L))
-#define ics_static_assert(e, msg) static_assert(e, msg)
-#define CHECK_STRUCT_SIZE(X) ics_static_assert(sizeof(X) == X##_SIZE, #X " is the wrong size");
-#else
-#define ASSERT_CONCAT_(a, b) a##b
-#define ASSERT_CONCAT(a, b) ASSERT_CONCAT_(a, b)
-#define ics_static_assert(e, msg)                                \
-	enum                                                         \
-	{                                                            \
-		ASSERT_CONCAT(assert_line_, __LINE__) = 1 / (int)(!!(e)) \
-	}
-#define CHECK_STRUCT_SIZE(X) ics_static_assert(sizeof(X) == X##_SIZE, #X " is the wrong size");
-#endif
-
-
+#if !defined(INTREPID_NO_CHECK_STRUCT_SIZE) && defined(__cpp_static_assert)
+#define CHECK_STRUCT_SIZE(X) static_assert(sizeof(X) == X##_SIZE, #X " is the wrong size");
 CHECK_STRUCT_SIZE(CAN_SETTINGS);
 CHECK_STRUCT_SIZE(CANFD_SETTINGS);
 CHECK_STRUCT_SIZE(SWCAN_SETTINGS);
@@ -5642,7 +5630,7 @@ CHECK_STRUCT_SIZE(SRADGigastar2Settings);
 CHECK_STRUCT_SIZE(SRADMoonT1SSettings);
 CHECK_STRUCT_SIZE(SNeoVIConnectSettings);
 CHECK_STRUCT_SIZE(FlashAccessoryFirmwareParams);
-
+#undef CHECK_STRUCT_SIZE
 #endif /* INTREPID_NO_CHECK_STRUCT_SIZE */
 
 #endif /* _ICSNVC40_H */

@@ -1,9 +1,30 @@
 import os
 import dunamai
 import pathlib
+import re
 
 GEN_DIR = pathlib.Path("./gen")
 GEN_ICS_DIR = GEN_DIR / "ics"
+
+
+def _get_version_from_metadata() -> str:
+    """
+    Try to read version from existing package metadata (PKG-INFO).
+    Used as fallback when building from sdist in isolated environment.
+    """
+    # Check for PKG-INFO in the egg-info directory
+    egg_info_dirs = list(pathlib.Path(".").glob("*.egg-info"))
+    if egg_info_dirs:
+        pkg_info = egg_info_dirs[0] / "PKG-INFO"
+        if pkg_info.exists():
+            try:
+                content = pkg_info.read_text()
+                match = re.search(r"^Version:\s+(.+)$", content, re.MULTILINE)
+                if match:
+                    return match.group(1)
+            except Exception:
+                pass
+    return None
 
 def get_pkg_version() -> str:
     """
@@ -18,7 +39,16 @@ def get_pkg_version() -> str:
     #     pkg_version = version.serialize(format="v{base}.dev{distance}", style=dunamai.Style.Pep440)
     # else:
     #     pkg_version = version.serialize(format="{base}", style=dunamai.Style.Pep440)
-    return dunamai.Version.from_git().serialize(metadata=False)
+    try:
+        return dunamai.Version.from_git().serialize(metadata=False)
+    except RuntimeError:
+        # Fallback when git is not available (e.g., in isolated build environments)
+        # Try to read version from existing package metadata
+        metadata_version = _get_version_from_metadata()
+        if metadata_version:
+            return metadata_version
+        # Final fallback
+        return "0.0.0.dev0"
     # return pkg_version
 
 def create_version_py(path: pathlib.Path = pathlib.Path("gen/ics/__version.py")) -> None:
@@ -32,7 +62,11 @@ def create_version_py(path: pathlib.Path = pathlib.Path("gen/ics/__version.py"))
         None
     """
     pkg_version = get_pkg_version()
-    full_version = dunamai.Version.from_git().serialize(format="v{base}-{commit}-{timestamp}")
+    try:
+        full_version = dunamai.Version.from_git().serialize(format="v{base}-{commit}-{timestamp}")
+    except RuntimeError:
+        # Fallback when git is not available
+        full_version = f"v{pkg_version}"
     print(f"Creating '{path}' with version {pkg_version} and full version {full_version}...")
     path.parent.mkdir(parents=True, exist_ok=True)
     # Write the version file to disk

@@ -345,11 +345,6 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddObjectRef(module, "DRIVER_USB1", PyLong_FromLongLong(DRIVER_USB1));
 	result += PyModule_AddObjectRef(module, "DRIVER_USB2", PyLong_FromLongLong(DRIVER_USB2));
 	result += PyModule_AddObjectRef(module, "DRIVER_USB3", PyLong_FromLongLong(DRIVER_USB3));
-	result += PyModule_AddObjectRef(module, "SERVD_DRIVER_MASK", PyLong_FromLongLong(SERVD_DRIVER_MASK));
-	result += PyModule_AddObjectRef(module, "SERVD_DRIVER_VCP", PyLong_FromLongLong(SERVD_DRIVER_VCP));
-	result += PyModule_AddObjectRef(module, "SERVD_DRIVER_DXX", PyLong_FromLongLong(SERVD_DRIVER_DXX));
-	result += PyModule_AddObjectRef(module, "SERVD_DRIVER_CAB", PyLong_FromLongLong(SERVD_DRIVER_CAB));
-	result += PyModule_AddObjectRef(module, "SERVD_DRIVER_TCP", PyLong_FromLongLong(SERVD_DRIVER_TCP));
 	// enum
 	result += PyModule_AddObjectRef(module, "PHY_88Q211x_Z1", PyLong_FromLongLong(PHY_88Q211x_Z1));
 	result += PyModule_AddObjectRef(module, "PHY_88Q211x_A0", PyLong_FromLongLong(PHY_88Q211x_A0));
@@ -625,6 +620,7 @@ int setup_module_auto_defines(PyObject * module)
 	// end of enum -  } ExtendedResponseCode;
 
 	result += PyModule_AddObjectRef(module, "GENERIC_API_DATA_BUFFER_SIZE", PyLong_FromUnsignedLongLong(GENERIC_API_DATA_BUFFER_SIZE));
+	result += PyModule_AddObjectRef(module, "UART_DATA_BUFFER_SIZE", PyLong_FromUnsignedLongLong(UART_DATA_BUFFER_SIZE));
 	result += PyModule_AddObjectRef(module, "MACADDR_LEN", PyLong_FromUnsignedLongLong(MACADDR_LEN));
 	result += PyModule_AddObjectRef(module, "MULTI_MACADDR_CNT", PyLong_FromUnsignedLongLong(MULTI_MACADDR_CNT));
 	result += PyModule_AddObjectRef(module, "GENERIC_BINARY_STATUS_ERROR_UNKNOWN_BINARY", PyLong_FromLongLong(GENERIC_BINARY_STATUS_ERROR_UNKNOWN_BINARY));
@@ -1145,9 +1141,6 @@ int setup_module_auto_defines(PyObject * module)
 	// end of enum -  } epsilon10GPHYFW;
 
 	result += PyModule_AddObjectRef(module, "NUM_DEVICE_FEATURE_BITFIELDS", PyLong_FromLongLong(NUM_DEVICE_FEATURE_BITFIELDS));
-	// enum
-	// end of enum -    }
-
 	result += PyModule_AddObjectRef(module, "CICSSPYSTATUSBITS_H_", PyLong_FromUnsignedLongLong(CICSSPYSTATUSBITS_H_));
 	result += PyModule_AddObjectRef(module, "SPY_STATUS_GLOBAL_ERR", PyLong_FromLongLong(SPY_STATUS_GLOBAL_ERR));
 	result += PyModule_AddObjectRef(module, "SPY_STATUS_TX_MSG", PyLong_FromLongLong(SPY_STATUS_TX_MSG));
