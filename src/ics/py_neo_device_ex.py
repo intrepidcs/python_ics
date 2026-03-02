@@ -16,7 +16,7 @@ class PyNeoDeviceEx(ics.neo_device_ex.neo_device_ex):
         super().__init__()
 
     def __del__(self):
-        if self._auto_handle_close is True:
+        if self._auto_handle_close and ics is not None:
             ics.close_device(self)
 
     def __str__(self):
@@ -101,7 +101,9 @@ class PyNeoDeviceEx(ics.neo_device_ex.neo_device_ex):
 
     def close(self):
         """Close the device. Returns the number of errors on close. See ics.close_device for details on arguments."""
-        return ics.close_device(self)
+        result = ics.close_device(self)
+        self._handle = None
+        return result
 
     def load_default_settings(self):
         """Loads default settings on the device. Requires the device to be open. See ics.load_default_settings for details on arguments."""
