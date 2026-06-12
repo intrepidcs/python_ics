@@ -466,7 +466,8 @@ def convert_to_ctype_object(data_type):
         ctype_types[f"c_uint{d}"] = (f"uint{d}_t",)
 
     # This is dirty but we don't parse typedefs...
-    ctype_types["c_uint16"] = ctype_types["c_uint16"] + ("descIdType",)
+    # descIdType is int16_t in icsnVC40.h (EXTERNAL_PROJECT build)
+    ctype_types["c_int16"] = ctype_types["c_int16"] + ("descIdType",)
     ctype_types["c_uint64"] = ctype_types["c_uint64"] + ("_clock_identity",)
 
     is_pointer = "*" in data_type and not "void" in data_type
@@ -818,6 +819,13 @@ def _write_c_object(f, c_object):
                         # 4 byte integer on most systems (even 64-bit)
                         # This is a potential hole but nothing we can do here
                         data_type = "ctypes.c_int32"
+                        # Use the unsigned variant when any enumerator needs the
+                        # full 32 bits (e.g. DeviceSettingsNone = 0xFFFFFFFF) so
+                        # the value round-trips through the field.
+                        for enum_member in obj.members:
+                            if isinstance(enum_member.enum_value, int) and enum_member.enum_value > 0x7FFFFFFF:
+                                data_type = "ctypes.c_uint32"
+                                break
                 else:
                     data_type = member.data_type
                 if member.bitfield_size:

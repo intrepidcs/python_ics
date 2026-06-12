@@ -135,7 +135,20 @@ def extract():
                                 # This removes anything after the equal sign as we don't need it
                                 sline[0] = sline[0].split("=")[0]
                             value = sline[0].replace(",", "")
-                            print(f"\tresult += PyModule_AddObjectRef(module, \"{value}\", PyLong_FromLongLong({value}));", file=f)
+                            # Hex enumerators with the high bit set (e.g. 0xFFFFFFFF) get an
+                            # implementation-defined underlying type: MSVC wraps them negative
+                            # while GCC/Clang keep them unsigned. Normalize through unsigned
+                            # int so every platform exposes the positive value.
+                            unsigned32 = False
+                            code_part = line.split("//")[0]
+                            if "=" in code_part:
+                                rhs = code_part.split("=", 1)[1].strip().rstrip(",").strip().strip("()")
+                                if re.match(r"^0[xX][0-9a-fA-F]+$", rhs) and 0x7FFFFFFF < int(rhs, 16) <= 0xFFFFFFFF:
+                                    unsigned32 = True
+                            if unsigned32:
+                                print(f"\tresult += PyModule_AddObjectRef(module, \"{value}\", PyLong_FromUnsignedLongLong(static_cast<unsigned int>({value})));", file=f)
+                            else:
+                                print(f"\tresult += PyModule_AddObjectRef(module, \"{value}\", PyLong_FromLongLong({value}));", file=f)
                         continue
                     if "#define" in line:
                         sline = line.split("//")[0].split()
