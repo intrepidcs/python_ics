@@ -83,12 +83,15 @@ class PyNeoDeviceEx(ics.neo_device_ex.neo_device_ex):
     @property
     def serial_number(self) -> str:
         """Return the serial number as a string."""
-        if self.SerialNumber <= ics.MIN_BASE36_SERIAL:
-            return str(self.SerialNumber)
-        elif self.SerialNumber <= ics.MAX_SERIAL:
-            return ics.base36enc(self.SerialNumber)
+        # SerialNumber is an int32_t in the NeoDevice struct, so serials
+        # above 0x7FFFFFFF ("ZIK0ZK".."ZZZZZZ") read back negative.
+        serial = self.SerialNumber & 0xFFFFFFFF
+        if serial < ics.MIN_BASE36_SERIAL:
+            return str(serial)
+        elif serial <= ics.MAX_SERIAL:
+            return ics.base36enc(serial)
         else:
-            raise ValueError(f"Failed to convert SerialNumber {self.SerialNumber} to a valid serial number.")
+            raise ValueError(f"Failed to convert SerialNumber {serial} to a valid serial number.")
     
     @property
     def AutoHandleClose(self) -> bool:
