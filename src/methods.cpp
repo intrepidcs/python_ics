@@ -1054,7 +1054,7 @@ PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
         if (!_convertListOrTupleToArray(device_types, &device_type_vector))
             return NULL;
         device_types_list_size = static_cast<unsigned int>(device_type_vector.size());
-        device_types_list.reset((new unsigned int(device_types_list_size)));
+        device_types_list.reset(new unsigned int[device_types_list_size]);
         for (unsigned int i = 0; i < device_types_list_size; ++i)
             device_types_list[i] = (unsigned int)PyLong_AsLong(device_type_vector[i]);
     }
