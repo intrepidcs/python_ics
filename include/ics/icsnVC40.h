@@ -65,7 +65,9 @@ typedef unsigned __int64 uint64_t;
 /* Network IDs -- value of NetworkID member of icsSpyMessage */
 #define NETID_DEVICE 0
 #define NETID_HSCAN 1
+#define NETID_DWCAN_01 (NETID_HSCAN)
 #define NETID_MSCAN 2
+#define NETID_DWCAN_08 (NETID_MSCAN)
 #define NETID_SWCAN 3
 #define NETID_LSFTCAN 4
 #define NETID_FORDSCP 5
@@ -81,13 +83,20 @@ typedef unsigned __int64 uint64_t;
 #define NETID_ISO14230 15
 #define NETID_LIN 16
 #define NETID_OP_ETHERNET1 17
+#define NETID_AE_01 (NETID_OP_ETHERNET1)
 #define NETID_OP_ETHERNET2 18
+#define NETID_AE_02 (NETID_OP_ETHERNET2)
 #define NETID_OP_ETHERNET3 19
+#define NETID_AE_03 (NETID_OP_ETHERNET3)
 #define NETID_ISO3 41
 #define NETID_HSCAN2 42
+#define NETID_DWCAN_02 (NETID_HSCAN2)
 #define NETID_HSCAN3 44
+#define NETID_DWCAN_03 (NETID_HSCAN3)
 #define NETID_OP_ETHERNET4 45
+#define NETID_AE_04 (NETID_OP_ETHERNET4)
 #define NETID_OP_ETHERNET5 46
+#define NETID_AE_05 (NETID_OP_ETHERNET5)
 #define NETID_ISO4 47
 #define NETID_LIN2 48
 #define NETID_LIN3 49
@@ -103,7 +112,9 @@ typedef unsigned __int64 uint64_t;
 #define NETID_3G_LOGGING_OVERFLOW 59
 #define NETID_3G_READ_SETTINGS_EX 60
 #define NETID_HSCAN4 61
+#define NETID_DWCAN_04 (NETID_HSCAN4)
 #define NETID_HSCAN5 62
+#define NETID_DWCAN_05 (NETID_HSCAN5)
 #define NETID_RS232 63
 #define NETID_UART 64
 #define NETID_UART2 65
@@ -115,12 +126,18 @@ typedef unsigned __int64 uint64_t;
 #define NETID_TEXTAPI_TO_HOST 71
 #define NETID_SPI1 72
 #define NETID_OP_ETHERNET6 73
+#define NETID_AE_06 (NETID_OP_ETHERNET6)
 #define NETID_RED_VBAT 74
 #define NETID_OP_ETHERNET7 75
+#define NETID_AE_07 (NETID_OP_ETHERNET7)
 #define NETID_OP_ETHERNET8 76
+#define NETID_AE_08 (NETID_OP_ETHERNET8)
 #define NETID_OP_ETHERNET9 77
+#define NETID_AE_09 (NETID_OP_ETHERNET9)
 #define NETID_OP_ETHERNET10 78
+#define NETID_AE_10 (NETID_OP_ETHERNET10)
 #define NETID_OP_ETHERNET11 79
+#define NETID_AE_11 (NETID_OP_ETHERNET11)
 #define NETID_FLEXRAY1A 80
 #define NETID_FLEXRAY1B 81
 #define NETID_FLEXRAY2A 82
@@ -129,6 +146,7 @@ typedef unsigned __int64 uint64_t;
 #define NETID_FLEXRAY 85
 #define NETID_FLEXRAY2 86
 #define NETID_OP_ETHERNET12 87
+#define NETID_AE_12 (NETID_OP_ETHERNET12)
 #define NETID_I2C1 88
 #define NETID_MOST25 90
 #define NETID_MOST50 91
@@ -137,7 +155,9 @@ typedef unsigned __int64 uint64_t;
 #define NETID_GMFSA 94
 #define NETID_TCP 95
 #define NETID_HSCAN6 96
+#define NETID_DWCAN_06 (NETID_HSCAN6)
 #define NETID_HSCAN7 97
+#define NETID_DWCAN_07 (NETID_HSCAN7)
 #define NETID_LIN6 98
 #define NETID_LSFTCAN2 99
 /**
@@ -181,9 +201,13 @@ typedef unsigned __int64 uint64_t;
 #define NETID_MDIO_07 551
 #define NETID_MDIO_08 552
 #define NETID_OP_ETHERNET13 553
+#define NETID_AE_13 (NETID_OP_ETHERNET13)
 #define NETID_OP_ETHERNET14 554
+#define NETID_AE_14 (NETID_OP_ETHERNET14)
 #define NETID_OP_ETHERNET15 555
+#define NETID_AE_15 (NETID_OP_ETHERNET15)
 #define NETID_OP_ETHERNET16 556
+#define NETID_AE_16 (NETID_OP_ETHERNET16)
 #define NETID_SPI3 557
 #define NETID_SPI4 558
 #define NETID_SPI5 559
@@ -210,14 +234,14 @@ typedef unsigned __int64 uint64_t;
  */
 //clang-format off
 #define NEODEVICE_UNKNOWN (0x00000000)
-#define NEODEVICE_BLUE (0x00000001)
+#define NEODEVICE_BLUE_DEPRECATED (0x00000001)
 #define NEODEVICE_ECU_AVB_DEPRECATED (0x00000002)
 #define NEODEVICE_RADSUPERMOON_DEPRECATED (0x00000003)
-#define NEODEVICE_DW_VCAN (0x00000004)
+#define NEODEVICE_DW_VCAN_DEPRECATED (0x00000004)
 #define NEODEVICE_RADMOON2 (0x00000005)
 #define NEODEVICE_RADGIGALOG_DEPRECATED (0x00000006) /* AKA RADMARS */
 #define NEODEVICE_VCAN41 (0x00000007)
-#define NEODEVICE_FIRE (0x00000008)
+#define NEODEVICE_FIRE_DEPRECATED (0x00000008)
 #define NEODEVICE_RADPLUTO_DEPRECATED (0x00000009)
 #define NEODEVICE_VCAN42_EL (0x0000000a)
 #define NEODEVICE_RADIO_CANHUB (0x0000000b)
@@ -225,7 +249,7 @@ typedef unsigned __int64 uint64_t;
 #define NEODEVICE_OBD2_LC (0x0000000d)
 #define NEODEVICE_RAD_MOON_DUO_DEPRECATED (0x0000000e)
 #define NEODEVICE_FIRE3 (0x0000000f)
-#define NEODEVICE_VCAN3 (0x00000010)
+#define NEODEVICE_VCAN3_DEPRECATED (0x00000010)
 #define NEODEVICE_RADJUPITER (0x00000011)
 #define NEODEVICE_VCAN4_IND (0x00000012)
 #define NEODEVICE_GIGASTAR (0x00000013)
@@ -255,16 +279,16 @@ typedef unsigned __int64 uint64_t;
 #define NEODEVICE_FIRE3_T1S_SENT (0x0000002B)
 #define NEODEVICE_RADGEMINI (0x0000002C)
 
-#define NEODEVICE_RED (0x00000040)
-#define NEODEVICE_ECU (0x00000080)
+#define NEODEVICE_RED_DEPRECATED (0x00000040)
+#define NEODEVICE_ECU_DEPRECATED (0x00000080)
 #define NEODEVICE_IEVB_DEPRECATED (0x00000100)
-#define NEODEVICE_PENDANT (0x00000200)
+#define NEODEVICE_PENDANT_DEPRECATED (0x00000200)
 #define NEODEVICE_OBD2_PRO_DEPRECATED (0x00000400)
 #define NEODEVICE_ECUCHIP_UART_DEPRECATED (0x00000800)
 #define NEODEVICE_PLASMA (0x00001000)
 #define NEODEVICE_DONT_REUSE0 (0x00002000) //NEODEVICE_FIRE_VNET
-#define NEODEVICE_NEOANALOG (0x00004000)
-#define NEODEVICE_CT_OBD (0x00008000)
+#define NEODEVICE_NEOANALOG_DEPRECATED (0x00004000)
+#define NEODEVICE_CT_OBD_DEPRECATED (0x00008000)
 #define NEODEVICE_DONT_REUSE1 (0x00010000) //NEODEVICE_PLASMA_1_12
 #define NEODEVICE_DONT_REUSE2 (0x00020000) //NEODEVICE_PLASMA_1_13
 #define NEODEVICE_ION (0x00040000)
@@ -286,7 +310,7 @@ typedef unsigned __int64 uint64_t;
 #define NEODEVICE_NEOECUCHIP NEODEVICE_IEVB_DEPRECATED
 //clang-format on
 
-#define DEVICECOUNT_FOR_EXPLORER (36) //this value will be checked by the NeoViExplorer after #6453!
+#define DEVICECOUNT_FOR_EXPLORER (32) //this value will be checked by the NeoViExplorer after #6453!
 
 #define ISO15765_2_NETWORK_HSCAN 0x01
 #define ISO15765_2_NETWORK_MSCAN 0x02
@@ -313,7 +337,6 @@ typedef unsigned __int64 uint64_t;
 #define SCRIPT_LOCATION_FLASH_MEM 0
 #define SCRIPT_LOCATION_INTERNAL_FLASH 2
 #define SCRIPT_LOCATION_SDCARD 1
-#define SCRIPT_LOCATION_VCAN3_MEM 4
 #define SCRIPT_LOCATION_EMMC 6
 
 /* Protocols -- value of Protocol member of icsSpyMessage */
@@ -568,14 +591,26 @@ typedef struct _stAPIFirmwareInfo
 #define CMP_STREAMS_RED2 (10)
 #define CMP_STREAMS_A2B (3)
 #define CMP_STREAMS_GIGASTAR (10)
+#define CMP_STREAMS_GIGASTAR2 (10)
+#define CMP_STREAMS_COMET (10)
+#define CMP_STREAMS_COMET3 (10)
+#define CMP_STREAMS_GALAXY2 (10)
 
 /* CMP Network Enables */
 typedef struct
 {
-	uint8_t bStreamEnabled : 1;
-	uint8_t EthModule : 2;
-	uint8_t bControlEnabled : 1;
-	uint8_t spare : 4;
+	union
+	{
+		uint8_t byte0;
+		struct
+		{
+			uint8_t bStreamEnabled : 1;
+			uint8_t EthModule : 2;
+			uint8_t bControlEnabled : 1;
+			uint8_t EthModule2 : 3;
+			uint8_t spare : 1;
+		};
+	};
 	uint8_t streamId;
 	uint8_t dstMac[6];
 	union
@@ -803,15 +838,6 @@ typedef struct
 } J1708_SETTINGS;
 #define J1708_SETTINGS_SIZE 2
 
-typedef struct _SRedSettings
-{
-	CAN_SETTINGS can1;
-	CAN_SETTINGS can2;
-	LIN_SETTINGS lin1;
-	LIN_SETTINGS lin2;
-} SRedSettings;
-#define SRedSettings_SIZE 44
-
 typedef struct _STextAPISettings
 {
 	uint32_t can1_tx_id;
@@ -893,12 +919,6 @@ typedef union _stChipVersions
 		uint8_t hid_maj;
 		uint8_t hid_min;
 	} plasma_fire_vnet;
-
-	struct
-	{
-		uint8_t mpic_maj;
-		uint8_t mpic_min;
-	} vcan3_versions;
 
 	struct
 	{
@@ -1396,7 +1416,13 @@ typedef struct ETHERNET10T1S_SETTINGS_t
 	uint8_t to_timer;
 	uint8_t flags;
 	uint8_t local_id_alternate;
-	uint8_t rsvd[5];
+	struct
+	{
+		uint8_t pcp_thresh : 3; // >= pcp_thresh means high priority
+		uint8_t enable_high_priority : 1;
+		uint8_t : 4;
+	} vlan_cos;
+	uint8_t rsvd[4];
 } ETHERNET10T1S_SETTINGS;
 #define ETHERNET10T1S_SETTINGS_SIZE 12
 
@@ -2229,94 +2255,6 @@ enum
 	REPORT_ON_GPS, /* send GPS 0x110-0x116 on change */
 };
 
-typedef struct _SFireSettings
-{
-	CAN_SETTINGS can1;
-	CAN_SETTINGS can2;
-	CAN_SETTINGS can3;
-	CAN_SETTINGS can4;
-
-	SWCAN_SETTINGS swcan;
-	CAN_SETTINGS lsftcan;
-
-	LIN_SETTINGS lin1;
-	LIN_SETTINGS lin2;
-	LIN_SETTINGS lin3;
-	LIN_SETTINGS lin4;
-
-	uint16_t cgi_enable_reserved;
-	uint16_t cgi_baud;
-	uint16_t cgi_tx_ifs_bit_times;
-	uint16_t cgi_rx_ifs_bit_times;
-	uint16_t cgi_chksum_enable;
-
-	uint16_t network_enables;
-	uint16_t network_enabled_on_boot;
-
-	uint32_t pwm_man_timeout;
-	uint16_t pwr_man_enable;
-
-	uint16_t misc_io_initial_ddr;
-	uint16_t misc_io_initial_latch;
-
-	uint16_t misc_io_analog_enable;
-	uint16_t misc_io_report_period;
-	uint16_t misc_io_on_report_events;
-	uint16_t ain_sample_period;
-	uint16_t ain_threshold;
-
-	uint16_t iso15765_separation_time_offset;
-
-	uint16_t iso9141_kwp_enable_reserved;
-	ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings;
-
-	uint16_t perf_en;
-
-	/* ISO9141: iso_parity 0 - no parity, 1 - event, 2 - odd; iso_msg_termination 0 - use inner frame time, 1 - GME CIM-SCL */
-
-	uint16_t iso_parity;
-	uint16_t iso_msg_termination;
-	uint16_t iso_tester_pullup_enable;
-
-	uint16_t network_enables_2;
-
-	ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings_2;
-	uint16_t iso_parity_2;
-	uint16_t iso_msg_termination_2;
-
-	ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings_3;
-	uint16_t iso_parity_3;
-	uint16_t iso_msg_termination_3;
-
-	ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings_4;
-	uint16_t iso_parity_4;
-	uint16_t iso_msg_termination_4;
-
-	uint16_t fast_init_network_enables_1;
-	uint16_t fast_init_network_enables_2;
-
-	UART_SETTINGS uart;
-	UART_SETTINGS uart2;
-
-	STextAPISettings text_api;
-
-	SNeoMostGatewaySettings neoMostGateway;
-
-#define VNETBITS_FEATURE_ANDROID_MSGS (1)
-	/**
-	 * Unfortuntely I haven't gone thru the trouble
-	 * of splitting the FIRE VNET and FIRE settings
-	 * structures. So until I can do so and reserve
-	 * some time to test it, add a member that only
-	 * VNET looks at for VNET features (like
-	 * Android CoreMiniMsg pump).
-	 * Defaults to zero.
-	 * @see VNETBITS_FEATURE_ANDROID_MSGS
-	 */
-	uint16_t vnetBits;
-} SFireSettings;
-#define SFireSettings_SIZE 744
-
 typedef struct _SFireVnetSettings
 {
 	CAN_SETTINGS can1;
@@ -2507,25 +2445,6 @@ typedef struct _SCyanSettings
 
 typedef SCyanSettings SFire2Settings;
 
-typedef struct _SVCAN3Settings
-{
-	CAN_SETTINGS can1;
-	CAN_SETTINGS can2;
-
-	uint16_t network_enables;
-	uint16_t network_enabled_on_boot;
-
-	uint16_t iso15765_separation_time_offset;
-
-	uint16_t perf_en;
-
-	uint16_t misc_io_initial_ddr;
-	uint16_t misc_io_initial_latch;
-	uint16_t misc_io_report_period;
-	uint16_t misc_io_on_report_events;
-} SVCAN3Settings;
-#define SVCAN3Settings_SIZE 40
-
 typedef struct _SVCAN4Settings
 {
 	uint16_t perf_en;
@@ -2561,110 +2480,6 @@ typedef struct _SVCAN4Settings
 	ETHERNET_SETTINGS2 ethernet2;
 } SVCAN4Settings;
 #define SVCAN4Settings_SIZE 342
-
-typedef struct _SECUSettings
-{
-	/* ECU ID used in CAN communications.
-	 * TX ID = ECU ID with bit28 cleared,
-	 * RX ID = ECUID with bit28 set,
-	 * ECU ID = 0 implies ECU ID = serial no with bit 27 set\
-	*/
-	uint32_t ecu_id;
-
-	uint16_t selected_network; // not supported yet - default to HSCAN
-
-	CAN_SETTINGS can1;
-	CAN_SETTINGS can2;
-
-	LIN_SETTINGS lin1;
-	LIN_SETTINGS lin2;
-
-	uint16_t iso15765_separation_time_offset;
-
-	ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings;
-	uint16_t iso_parity;
-	uint16_t iso_msg_termination;
-
-	ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings_2;
-	uint16_t iso_parity_2;
-	uint16_t iso_msg_termination_2;
-
-	uint16_t network_enables;
-	uint16_t network_enables_2;
-	uint16_t network_enabled_on_boot;
-
-	uint32_t pwr_man_timeout;
-	uint16_t pwr_man_enable;
-
-	uint16_t misc_io_initial_ddr;
-	uint16_t misc_io_initial_latch;
-	uint16_t misc_io_analog_enable;
-	uint16_t misc_io_report_period;
-	uint16_t misc_io_on_report_events;
-	uint16_t ain_sample_period;
-	uint16_t ain_threshold;
-
-	SWCAN_SETTINGS swcan;
-	SWCAN_SETTINGS swcan2;
-	CAN_SETTINGS lsftcan;
-	CAN_SETTINGS lsftcan2;
-
-	UART_SETTINGS uart;
-	UART_SETTINGS uart2;
-
-	STextAPISettings text_api;
-} SECUSettings;
-#define SECUSettings_SIZE 470
-
-typedef struct _SPendantSettings
-{
-	/* see SECUSettings */
-	uint32_t ecu_id;
-
-	uint16_t selected_network; /* not supported yet - default to HSCAN */
-
-	CAN_SETTINGS can1;
-	CAN_SETTINGS can2;
-
-	LIN_SETTINGS lin1;
-	LIN_SETTINGS lin2;
-
-	uint16_t iso15765_separation_time_offset;
-
-	ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings;
-	uint16_t iso_parity;
-	uint16_t iso_msg_termination;
-
-	ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings_2;
-	uint16_t iso_parity_2;
-	uint16_t iso_msg_termination_2;
-
-	uint16_t network_enables;
-	uint16_t network_enables_2;
-	uint16_t network_enabled_on_boot;
-
-	uint32_t pwr_man_timeout;
-	uint16_t pwr_man_enable;
-
-	uint16_t misc_io_initial_ddr;
-	uint16_t misc_io_initial_latch;
-	uint16_t misc_io_analog_enable;
-	uint16_t misc_io_report_period;
-	uint16_t misc_io_on_report_events;
-	uint16_t ain_sample_period;
-	uint16_t ain_threshold;
-
-	SWCAN_SETTINGS swcan;
-	SWCAN_SETTINGS swcan2;
-	CAN_SETTINGS lsftcan;
-	CAN_SETTINGS lsftcan2;
-
-	UART_SETTINGS uart;
-	UART_SETTINGS uart2;
-
-	STextAPISettings text_api;
-} SPendantSettings;
-#define SPendantSettings_SIZE 470
 
 /* GPTP portEnable options */
 enum eGPTPPort
@@ -3185,9 +3000,10 @@ typedef struct _SRADGalaxy2Settings
 	ISO9141_KEYWORD2000_SETTINGS iso9141_kwp_settings_2;
 	uint16_t iso_parity_2;
 	uint16_t iso_msg_termination_2;
-
+	CMP_GLOBAL_DATA cmp_global_data;
+	CMP_NETWORK_DATA cmp_stream_data[CMP_STREAMS_GALAXY2];
 } SRADGalaxy2Settings;
-#define SRADGalaxy2Settings_SIZE 960
+#define SRADGalaxy2Settings_SIZE 1204
 
 typedef struct _SVividCANSettings
 {
@@ -4281,8 +4097,10 @@ typedef struct _SRADCometSettings
 	// 10T1S Extended settings
 	ETHERNET10T1S_SETTINGS_EXT t1s1Ext;
 	ETHERNET10T1S_SETTINGS_EXT t1s2Ext;
+	CMP_GLOBAL_DATA cmp_global_data;
+	CMP_NETWORK_DATA cmp_stream_data[CMP_STREAMS_COMET];
 } SRADCometSettings;
-#define SRADCometSettings_SIZE 498
+#define SRADCometSettings_SIZE 742
 
 typedef struct _SRADComet3Settings
 {
@@ -4349,8 +4167,10 @@ typedef struct _SRADComet3Settings
 	ETHERNET10T1S_SETTINGS_EXT t1s4Ext;
 	ETHERNET10T1S_SETTINGS_EXT t1s5Ext;
 	ETHERNET10T1S_SETTINGS_EXT t1s6Ext;
+	CMP_GLOBAL_DATA cmp_global_data;
+	CMP_NETWORK_DATA cmp_stream_data[CMP_STREAMS_COMET3];
 } SRADComet3Settings;
-#define SRADComet3Settings_SIZE 674
+#define SRADComet3Settings_SIZE 918
 
 typedef struct _SRADGigaStar2Settings
 {
@@ -4485,8 +4305,10 @@ typedef struct _SRADGigaStar2Settings
 	// SFP T1L
 	ETHERNET10T1L_SETTINGS sfp_t1l_1;
 	ETHERNET10T1L_SETTINGS sfp_t1l_2;
+	CMP_GLOBAL_DATA cmp_global_data;
+	CMP_NETWORK_DATA cmp_stream_data[CMP_STREAMS_GIGASTAR2];
 } SRADGigastar2Settings;
-#define SRADGigastar2Settings_SIZE 2156
+#define SRADGigastar2Settings_SIZE 2400
 
 // variants to be used with icsneoSetFirmwareVariant
 enum Gigastar2FwVariants
@@ -4600,14 +4422,9 @@ typedef struct _GLOBAL_SETTINGS
 	uint16_t chksum;
 	union
 	{
-		SRedSettings red;
-		SFireSettings fire;
 		SFireVnetSettings firevnet;
 		SCyanSettings cyan;
-		SVCAN3Settings vcan3;
 		SVCAN4Settings vcan4;
-		SECUSettings ecu;
-		SPendantSettings pendant;
 		SRADGalaxySettings radgalaxy;
 		SRADStar2Settings radstar2;
 		SVCAN412Settings vcan412;
@@ -4648,7 +4465,7 @@ typedef enum _EDeviceSettingsType
 	DeviceFireSettingsType,
 	DeviceFireVnetSettingsType,
 	DeviceFire2SettingsType,
-	DeviceVCAN3SettingsType,
+	DeviceVCAN3SettingsTypeDeprecated,
 	DeviceRADGalaxySettingsType,
 	DeviceRADStar2SettingsType,
 	DeviceVCAN4SettingsType,
@@ -4669,7 +4486,7 @@ typedef enum _EDeviceSettingsType
 	DeviceOBD2SimSettingsTypeDeprecated,
 	DeviceCMProbeSettingsTypeDeprecated,
 	DeviceOBD2ProSettingsTypeDeprecated,
-	DeviceRedSettingsType,
+	DeviceRedSettingsTypeDeprecated,
 	DeviceRADPlutoSwitchSettingsTypeDeprecated,
 	DeviceRADGigastarSettingsType,
 	DeviceRADJupiterSettingsType,
@@ -4702,14 +4519,9 @@ typedef struct _SDeviceSettings
 	EDeviceSettingsType DeviceSettingType;
 	union
 	{
-		SRedSettings red;
-		SFireSettings fire;
 		SFireVnetSettings firevnet;
 		SCyanSettings cyan;
-		SVCAN3Settings vcan3;
 		SVCAN4Settings vcan4;
-		SECUSettings ecu;
-		SPendantSettings pendant;
 		SRADGalaxySettings radgalaxy;
 		SRADStar2Settings radstar2;
 		SVCAN412Settings vcan412;
@@ -5563,7 +5375,6 @@ CHECK_STRUCT_SIZE(ISO9141_KEYWORD2000__INIT_STEP);
 CHECK_STRUCT_SIZE(ISO9141_KEYWORD2000_SETTINGS);
 CHECK_STRUCT_SIZE(UART_SETTINGS);
 CHECK_STRUCT_SIZE(J1708_SETTINGS);
-CHECK_STRUCT_SIZE(SRedSettings);
 CHECK_STRUCT_SIZE(STextAPISettings);
 CHECK_STRUCT_SIZE(stChipVersions);
 CHECK_STRUCT_SIZE(SNeoMostGatewaySettings);
@@ -5583,13 +5394,9 @@ CHECK_STRUCT_SIZE(SERDESPOC_SETTINGS);
 CHECK_STRUCT_SIZE(SERDESGEN_SETTINGS);
 CHECK_STRUCT_SIZE(RAD_REPORTING_SETTINGS);
 CHECK_STRUCT_SIZE(CANTERM_SETTINGS);
-CHECK_STRUCT_SIZE(SFireSettings);
 CHECK_STRUCT_SIZE(SFireVnetSettings);
 CHECK_STRUCT_SIZE(SCyanSettings);
-CHECK_STRUCT_SIZE(SVCAN3Settings);
 CHECK_STRUCT_SIZE(SVCAN4Settings);
-CHECK_STRUCT_SIZE(SECUSettings);
-CHECK_STRUCT_SIZE(SPendantSettings);
 CHECK_STRUCT_SIZE(SRADGalaxySettings);
 CHECK_STRUCT_SIZE(SRADStar2Settings);
 CHECK_STRUCT_SIZE(GLOBAL_SETTINGS);

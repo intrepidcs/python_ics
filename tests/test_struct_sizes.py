@@ -57,5 +57,9 @@ def test_generated_struct_sizes_match_header_macros():
         elif macro not in KNOWN_STALE_MACROS:
             mismatches.append(f"{macro}: header says {expected}, ctypes says {actual}")
     assert not mismatches, "\n".join(mismatches)
-    assert matched >= 77, f"only {matched} macros matched a struct; mapping regressed"
+    # 3.26.3.9 removed 5 legacy settings structs (SRedSettings, SFireSettings,
+    # SVCAN3Settings, SECUSettings, SPendantSettings) and their *_SIZE macros
+    # together, dropping the matched baseline from 77 to 72. That is a clean
+    # removal, not a mapping regression: both sides disappeared in lockstep.
+    assert matched >= 72, f"only {matched} macros matched a struct; mapping regressed"
     assert len(unmatched) <= EXPECTED_UNMATCHED, f"unmatched grew: {sorted(unmatched)}"
