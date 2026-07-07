@@ -95,5 +95,11 @@ jobs:
         run: |
           source .venv/bin/activate
           uv pip install check-wheel-contents twine
-          check-wheel-contents ./wheelhouse/*.whl
+          # W009/W010 fire on the delvewheel-repaired Windows wheels, whose
+          # vendored-runtime dir (python_ics.libs/ with msvcp140*.dll) is a
+          # second toplevel entry with no Python modules. That layout is
+          # correct for repaired wheels; a [tool.check-wheel-contents]
+          # toplevel allowlist would instead fail the macOS/Linux wheels,
+          # which don't have the directory.
+          check-wheel-contents --ignore W009,W010 ./wheelhouse/*.whl
           twine upload -u __token__ -p ${{ secrets.PYPI_TOKEN }} --verbose ./wheelhouse/*
