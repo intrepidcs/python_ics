@@ -15,6 +15,7 @@
 #include "object_spy_message.h"
 #include "setup_module_auto_defines.h"
 
+#include <climits>
 #include <memory>
 #include <sstream>
 #include <string>
@@ -1054,9 +1055,14 @@ PyObject* meth_find_devices(PyObject* self, PyObject* args, PyObject* keywords)
         if (!_convertListOrTupleToArray(device_types, &device_type_vector))
             return NULL;
         device_types_list_size = static_cast<unsigned int>(device_type_vector.size());
-        device_types_list.reset((new unsigned int(device_types_list_size)));
-        for (unsigned int i = 0; i < device_types_list_size; ++i)
-            device_types_list[i] = (unsigned int)PyLong_AsLong(device_type_vector[i]);
+        device_types_list.reset(new unsigned int[device_types_list_size]);
+        for (unsigned int i = 0; i < device_types_list_size; ++i) {
+            // Device type masks like NEODEVICE_ALL (0xFFFFFFFF) don't fit in a
+            // 32 bit signed long, so use the masked unsigned conversion.
+            device_types_list[i] = (unsigned int)PyLong_AsUnsignedLongMask(device_type_vector[i]);
+            if (PyErr_Occurred())
+                return NULL;
+        }
     }
     // Lets finally call the icsneo40 function
     try {
@@ -1163,8 +1169,11 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
             return NULL;
         network_ids_list_size = static_cast<unsigned int>(network_ids_vector.size());
         network_ids_list.reset(new unsigned char[network_ids_list_size]);
-        for (unsigned int i = 0; i < network_ids_list_size; ++i)
+        for (unsigned int i = 0; i < network_ids_list_size; ++i) {
             network_ids_list[i] = (unsigned char)PyLong_AsLong(network_ids_vector[i]);
+            if (PyErr_Occurred())
+                return NULL;
+        }
         use_network_ids = true;
     }
 
@@ -1172,6 +1181,8 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
     if (device && PyLong_CheckExact(device)) {
         // Device is a serial number in integer format
         serial_number = PyLong_AsUnsignedLong(device);
+        if (PyErr_Occurred())
+            return NULL;
     } else if (device && PyUnicode_CheckExact(device)) {
         // Lets convert the base36 string into an integer
         PyObject* module_name = PyUnicode_FromString("builtins");
@@ -1190,6 +1201,9 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
                 return NULL;
             } else {
                 serial_number = PyLong_AsUnsignedLong(return_value);
+                Py_DECREF(return_value);
+                if (PyErr_Occurred())
+                    return NULL;
             }
         } else {
             return set_ics_exception(exception_runtime_error(), "Failed to convert serial number string to integer.");
@@ -1440,7 +1454,7 @@ PyObject* meth_get_rtc(PyObject* self, PyObject* args)
         device_utc_time.tm_year = ics_time.year;
         device_utc_time.tm_isdst = -1;
         device_utc_time.tm_year += 100;
-        unsigned long offset = (unsigned long)_tm_secs_offset(&device_utc_time, current_utc_time);
+        long long offset = _tm_secs_offset(&device_utc_time, current_utc_time);
         PyDateTime_IMPORT;
         if (!PyDateTimeAPI) {
             return set_ics_exception(exception_runtime_error(), "Failed to initialize PyDateTime");
@@ -1452,7 +1466,7 @@ PyObject* meth_get_rtc(PyObject* self, PyObject* args)
                                                         device_utc_time.tm_min,
                                                         device_utc_time.tm_sec,
                                                         0);
-        return Py_BuildValue("(O,i)", datetime, offset);
+        return Py_BuildValue("(O,L)", datetime, offset);
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
@@ -1555,6 +1569,12 @@ PyObject* meth_coremini_load(PyObject* self, PyObject* args)
         fseek(f, 0, SEEK_END);
         fsize = ftell(f);
         rewind(f);
+        // ftell() returns a 32 bit long on Windows; a negative or huge result
+        // means the file is too large to load through this int-sized API.
+        if (fsize < 0 || fsize > INT_MAX) {
+            fclose(f);
+            return set_ics_exception(exception_runtime_error(), "CoreMini script file size is invalid");
+        }
         data = (unsigned char*)malloc(sizeof(char) * fsize);
         data_size = (int)fread(data, 1, static_cast<size_t>(fsize), f);
         fclose(f);
@@ -1809,7 +1829,8 @@ PyObject* meth_get_messages(PyObject* self, PyObject* args)
 {
     (void)self;
     double timeout = 0.1;
-    int use_j1850 = 0;
+    // 'b' writes a single byte, so the target must be byte sized
+    unsigned char use_j1850 = 0;
     PyObject* obj = NULL;
     if (!PyArg_ParseTuple(args, arg_parse("O|bd:", __FUNCTION__), &obj, &use_j1850, &timeout)) {
         return NULL;
@@ -1920,7 +1941,7 @@ PyObject* meth_get_script_status(PyObject* self, PyObject* args)
             icsneoScriptGetScriptStatusEx(lib, "icsneoScriptGetScriptStatusEx");
         auto gil = PyAllowThreads();
         if (!icsneoScriptGetScriptStatusEx(
-                handle, parameters, sizeof(parameters) / sizeof(&parameters[0]), parameters_count)) {
+                handle, parameters, sizeof(parameters) / sizeof(parameters[0]), parameters_count)) {
             gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoScriptGetScriptStatusEx() Failed");
         }
@@ -1930,8 +1951,9 @@ PyObject* meth_get_script_status(PyObject* self, PyObject* args)
     }
     PyObject* list_object = PyList_New(0);
     for (unsigned long i = 0; i < parameters_count; ++i) {
-        PyObject* _obj = Py_BuildValue("i", parameters[i]);
+        PyObject* _obj = PyLong_FromUnsignedLong(parameters[i]);
         PyList_Append(list_object, _obj);
+        Py_XDECREF(_obj);
     }
     return list_object;
 }
@@ -2094,7 +2116,16 @@ PyObject* meth_flash_devices(PyObject* self, PyObject* args)
                                     void (*MessageCallback)(const char* message, bool success))>
             FlashDevice2(lib, "FlashDevice2");
         auto gil = PyAllowThreads();
-        if (!FlashDevice2(0x3835C256, &nde->neoDevice, rc, reflash_count, network_id, iOptions, 0, &message_callback)) {
+        // Avoid sign-extending the -1 sentinel to 0xFFFFFFFFFFFFFFFF on LP64;
+        // the DLL expects the 32 bit value on every platform.
+        if (!FlashDevice2(0x3835C256,
+                          &nde->neoDevice,
+                          rc,
+                          reflash_count,
+                          static_cast<unsigned long>(static_cast<unsigned int>(network_id)),
+                          iOptions,
+                          0,
+                          &message_callback)) {
             gil.restore();
             PyBuffer_Release(&buffer);
             return set_ics_exception(exception_runtime_error(), "FlashDevice2() Failed");
@@ -2116,9 +2147,9 @@ static void message_reflash_callback(const wchar_t* message, unsigned long progr
     if (!msg_reflash_callback) {
         PySys_WriteStdout("%ls -%ld\n", message, progress);
     } else if (PyObject_HasAttrString(msg_reflash_callback, "reflash_callback")) {
-        PyObject_CallMethod(msg_reflash_callback, "reflash_callback", "u,i", message, progress);
+        PyObject_CallMethod(msg_reflash_callback, "reflash_callback", "u,k", message, progress);
     } else {
-        PyObject_CallFunction(msg_reflash_callback, "u,i", message, progress);
+        PyObject_CallFunction(msg_reflash_callback, "u,k", message, progress);
     }
     // Unlock the GIL here again...
     PyGILState_Release(state);
@@ -2163,10 +2194,13 @@ PyObject* meth_get_device_settings(PyObject* self, PyObject* args)
     (void)self;
     PyObject* obj = NULL;
     long device_type_override = -1;
-    EPlasmaIonVnetChannel_t vnet_slot = (EPlasmaIonVnetChannel_t)PlasmaIonVnetChannelMain;
-    if (!PyArg_ParseTuple(args, arg_parse("O|lk:", __FUNCTION__), &obj, &device_type_override, &vnet_slot)) {
+    // 'k' would write a full unsigned long (8 bytes on LP64) into a 4 byte
+    // enum, so parse into an unsigned int and cast at the call sites.
+    unsigned int vnet_slot_arg = (unsigned int)PlasmaIonVnetChannelMain;
+    if (!PyArg_ParseTuple(args, arg_parse("O|lI:", __FUNCTION__), &obj, &device_type_override, &vnet_slot_arg)) {
         return NULL;
     }
+    EPlasmaIonVnetChannel_t vnet_slot = static_cast<EPlasmaIonVnetChannel_t>(vnet_slot_arg);
 
     // Before we do anything, we need to grab the python s_device_settings ctype.Structure.
     PyObject* settings = _getPythonModuleObject("ics.structures.s_device_settings", "s_device_settings");
@@ -2236,10 +2270,13 @@ PyObject* meth_set_device_settings(PyObject* self, PyObject* args)
     PyObject* obj = NULL;
     PyObject* settings = NULL;
     int save_to_eeprom = 1;
-    EPlasmaIonVnetChannel_t vnet_slot = PlasmaIonVnetChannelMain;
-    if (!PyArg_ParseTuple(args, arg_parse("OO|ik:", __FUNCTION__), &obj, &settings, &save_to_eeprom, &vnet_slot)) {
+    // 'k' would write a full unsigned long (8 bytes on LP64) into a 4 byte
+    // enum, so parse into an unsigned int and cast at the call site.
+    unsigned int vnet_slot_arg = (unsigned int)PlasmaIonVnetChannelMain;
+    if (!PyArg_ParseTuple(args, arg_parse("OO|iI:", __FUNCTION__), &obj, &settings, &save_to_eeprom, &vnet_slot_arg)) {
         return NULL;
     }
+    EPlasmaIonVnetChannel_t vnet_slot = static_cast<EPlasmaIonVnetChannel_t>(vnet_slot_arg);
     if (!PyNeoDeviceEx_CheckExact(obj)) {
         return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
     }
@@ -2640,7 +2677,8 @@ PyObject* meth_coremini_read_tx_message(PyObject* self, PyObject* args) // Scrip
     (void)self;
     unsigned int index;
     PyObject* obj = NULL;
-    int j1850 = 0;
+    // 'b' writes a single byte, so the target must be byte sized
+    unsigned char j1850 = 0;
     if (!PyArg_ParseTuple(args, arg_parse("OI|b:", __FUNCTION__), &obj, &index, &j1850)) {
         return NULL;
     }
@@ -2699,7 +2737,8 @@ PyObject* meth_coremini_read_rx_message(PyObject* self, PyObject* args) // Scrip
     (void)self;
     unsigned int index;
     PyObject* obj = NULL;
-    int j1850 = 0;
+    // 'b' writes a single byte, so the target must be byte sized
+    unsigned char j1850 = 0;
     if (!PyArg_ParseTuple(args, arg_parse("OI|b:", __FUNCTION__), &obj, &index, &j1850)) {
         return NULL;
     }
@@ -2777,7 +2816,8 @@ PyObject* meth_coremini_write_tx_message(PyObject* self, PyObject* args) // icsn
     unsigned int index;
     PyObject* obj = NULL;
     PyObject* msg_obj = NULL;
-    int j1850 = 0;
+    // 'b' writes a single byte, so the target must be byte sized
+    unsigned char j1850 = 0;
     if (!PyArg_ParseTuple(args, arg_parse("OIO|b:", __FUNCTION__), &obj, &index, &msg_obj, &j1850)) {
         return NULL;
     }
@@ -2831,7 +2871,8 @@ PyObject* meth_coremini_write_rx_message(PyObject* self, PyObject* args) // icsn
     PyObject* obj = NULL;
     PyObject* msg_obj = NULL;
     PyObject* msg_mask_obj = NULL;
-    int j1850 = 0;
+    // 'b' writes a single byte, so the target must be byte sized
+    unsigned char j1850 = 0;
     if (!PyArg_ParseTuple(args, arg_parse("OIOO|b:", __FUNCTION__), &obj, &index, &msg_obj, &msg_mask_obj, &j1850)) {
         return NULL;
     }
@@ -3080,7 +3121,8 @@ PyObject* meth_get_serial_number(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), "icsneoGetSerialNumber() Failed");
         }
         gil.restore();
-        return Py_BuildValue("i", serial);
+        // 'I': serials above 0x7FFFFFFF ("ZIK0ZK".."ZZZZZZ") must stay positive
+        return Py_BuildValue("I", serial);
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
@@ -3370,7 +3412,8 @@ PyObject* meth_set_backup_power_enabled(PyObject* self, PyObject* args)
 {
     (void)self;
     PyObject* obj = NULL;
-    unsigned int enabled = 1;
+    // 'b' writes a single byte, so the target must be byte sized
+    unsigned char enabled = 1;
     if (!PyArg_ParseTuple(args, arg_parse("O|b:", __FUNCTION__), &obj, &enabled)) {
         return NULL;
     }
@@ -3475,6 +3518,12 @@ PyObject* meth_load_readbin(PyObject* self, PyObject* args)
         fseek(f, 0, SEEK_END);
         fsize = ftell(f);
         rewind(f);
+        // ftell() returns a 32 bit long on Windows; a negative or huge result
+        // means the file is too large to load through this int-sized API.
+        if (fsize < 0 || fsize > INT_MAX) {
+            fclose(f);
+            return set_ics_exception(exception_runtime_error(), "Readbin file size is invalid");
+        }
         data = (unsigned char*)malloc(sizeof(char) * fsize);
         data_size = (int)fread(data, 1, static_cast<size_t>(fsize), f);
         fclose(f);
@@ -3714,7 +3763,7 @@ PyObject* meth_get_active_vnet_channel(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), "icsneoGetActiveVNETChannel() Failed");
         }
         gil.restore();
-        return Py_BuildValue("i", channel);
+        return Py_BuildValue("k", channel);
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
@@ -3749,7 +3798,7 @@ PyObject* meth_set_active_vnet_channel(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), "icsneoSetActiveVNETChannel() Failed");
         }
         gil.restore();
-        return Py_BuildValue("i", channel);
+        return Py_BuildValue("k", channel);
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
@@ -3906,7 +3955,8 @@ PyObject* meth_get_device_status(PyObject* self, PyObject* args)
 {
     (void)self;
     PyObject* obj = NULL;
-    int throw_exception_on_size_mismatch = 0;
+    // 'b' writes a single byte, so the target must be byte sized
+    unsigned char throw_exception_on_size_mismatch = 0;
     if (!PyArg_ParseTuple(args, arg_parse("O|b:", __FUNCTION__), &obj, &throw_exception_on_size_mismatch)) {
         return NULL;
     }
@@ -4066,7 +4116,7 @@ PyObject* meth_get_bus_voltage(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(), "icsneoGetBusVoltage() Failed");
         }
         gil.restore();
-        return Py_BuildValue("i", mV);
+        return Py_BuildValue("k", mV);
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
@@ -4076,11 +4126,17 @@ PyObject* meth_read_jupiter_firmware(PyObject* self, PyObject* args)
 {
     (void)self;
     PyObject* obj = NULL;
-    size_t fileSize = 0;
+    // 'i' would write only 4 of size_t's 8 bytes (and reject sizes >= 2GB),
+    // so parse with 'n' into a Py_ssize_t.
+    Py_ssize_t file_size_arg = 0;
     EPlasmaIonVnetChannel_t channel = PlasmaIonVnetChannelMain;
-    if (!PyArg_ParseTuple(args, arg_parse("Oi|i:", __FUNCTION__), &obj, &fileSize, &channel)) {
+    if (!PyArg_ParseTuple(args, arg_parse("On|i:", __FUNCTION__), &obj, &file_size_arg, &channel)) {
         return NULL;
     }
+    if (file_size_arg < 0) {
+        return set_ics_exception(exception_runtime_error(), "file_size must not be negative");
+    }
+    size_t fileSize = static_cast<size_t>(file_size_arg);
 
     // Create the ByteArray
     PyObject* ba = PyObject_CallObject((PyObject*)&PyByteArray_Type, NULL);
@@ -4123,7 +4179,7 @@ PyObject* meth_read_jupiter_firmware(PyObject* self, PyObject* args)
         }
         gil.restore();
         PyBuffer_Release(&ba_buffer);
-        return Py_BuildValue("Oi", ba, fileSize);
+        return Py_BuildValue("On", ba, (Py_ssize_t)fileSize);
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
@@ -4295,8 +4351,9 @@ PyObject* meth_get_accessory_firmware_version(PyObject* self, PyObject* args)
 {
     (void)self;
     PyObject* obj = NULL;
-    char accessory_indx = 0;
-    bool check_success = true;
+    // 'i' writes a full int, so the target must be int sized
+    int accessory_indx = 0;
+    unsigned char check_success = 1;
     if (!PyArg_ParseTuple(args, arg_parse("Oi|b:", __FUNCTION__), &obj, &accessory_indx, &check_success)) {
         return NULL;
     }
@@ -4320,10 +4377,14 @@ PyObject* meth_get_accessory_firmware_version(PyObject* self, PyObject* args)
         ice::Function<int __stdcall(void*, unsigned char, unsigned int*, int*)> icsneoGetAccessoryFirmwareVersion(
             lib, "icsneoGetAccessoryFirmwareVersion");
 
+        if (accessory_indx < 0 || accessory_indx > 255) {
+            return set_ics_exception(exception_runtime_error(), "Accessory index must be between 0 and 255");
+        }
         unsigned int accessory_version = 0;
         int function_error = 0;
         auto gil = PyAllowThreads();
-        if (!icsneoGetAccessoryFirmwareVersion(handle, accessory_indx, &accessory_version, &function_error)) {
+        if (!icsneoGetAccessoryFirmwareVersion(
+                handle, static_cast<unsigned char>(accessory_indx), &accessory_version, &function_error)) {
             gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoGetAccessoryFirmwareVersion() Failed");
         }
@@ -4962,7 +5023,8 @@ PyObject* meth_uart_write(PyObject* self, PyObject* args)
     EUartPort_t port = eUART0;
     Py_buffer data = {};
     uint8_t flags = 0;
-    bool check_size = true;
+    // 'p' writes a full int, so the target must be int sized
+    int check_size = 1;
     if (!PyArg_ParseTuple(args, arg_parse("OIy*|Bp:", __FUNCTION__), &obj, &port, &data, &flags, &check_size)) {
         return NULL;
     }
@@ -4996,7 +5058,7 @@ PyObject* meth_uart_write(PyObject* self, PyObject* args)
             return set_ics_exception(exception_runtime_error(),
                                      "Bytes actually sent didn't match bytes to send length");
         }
-        return Py_BuildValue("i", bytesActuallySent);
+        return Py_BuildValue("n", (Py_ssize_t)bytesActuallySent);
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }

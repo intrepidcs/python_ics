@@ -1009,7 +1009,7 @@ int setup_module_auto_defines(PyObject * module)
 	result += PyModule_AddObjectRef(module, "DeviceRADGeminiSettingsType", PyLong_FromLongLong(DeviceRADGeminiSettingsType));
 	result += PyModule_AddObjectRef(module, "DeviceFire3T1sLinSettingsType", PyLong_FromLongLong(DeviceFire3T1sLinSettingsType));
 	result += PyModule_AddObjectRef(module, "DeviceSettingsTypeMax", PyLong_FromLongLong(DeviceSettingsTypeMax));
-	result += PyModule_AddObjectRef(module, "DeviceSettingsNone", PyLong_FromLongLong(DeviceSettingsNone));
+	result += PyModule_AddObjectRef(module, "DeviceSettingsNone", PyLong_FromUnsignedLongLong(static_cast<unsigned int>(DeviceSettingsNone)));
 	// end of enum -  } EDeviceSettingsType;
 
 	// enum
