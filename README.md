@@ -38,7 +38,7 @@ Earlier releases used the icsneo40 DLL version (e.g. 923.11), which sorts
 - `pip install python_ics` and `pip install -U python_ics` correctly
   resolve `1!26.3.9` as newer than `923.11`.
 - Exact pins must include the epoch: `python_ics==1!26.3.9`.
-- Range pins work with or without it: `python_ics>=1!26.3` .
+- Range pins work with or without it: `python_ics>=1!26.3`.
 
 **Release tagging:** tags are `v1!<version>` (e.g. `v1!26.3.9`). Every
 future tag keeps the `1!` prefix — a bare `v26.x` tag would sort below

@@ -63,3 +63,7 @@ def test_generated_struct_sizes_match_header_macros():
     # removal, not a mapping regression: both sides disappeared in lockstep.
     assert matched >= 72, f"only {matched} macros matched a struct; mapping regressed"
     assert len(unmatched) <= EXPECTED_UNMATCHED, f"unmatched grew: {sorted(unmatched)}"
+
+
+if __name__ == "__main__":
+    pytest.main(args=[__file__, "--verbose", "-s"])
