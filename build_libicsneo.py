@@ -14,7 +14,10 @@ LIBUSB_SOURCE = f"{LIBUSB_ROOT}/source"
 LIBUSB_BUILD = f"{LIBUSB_ROOT}/build"
 LIBUSB_INSTALL = f"{LIBUSB_ROOT}/install"
 
-LIBICSNEO_VERSION = "830fe1a"
+# libicsneo master as of 2026-07-07. NOTE: its vendored icsnVC40.h still
+# predates Vspy 3.26.3.9 (SRADGalaxy2Settings 840 vs 1204, no Comet3/
+# Gigastar2) — Linux/macOS wheels lag the Windows ABI until upstream syncs.
+LIBICSNEO_VERSION = "4ed29b4"
 LIBICSNEO_ROOT = f"{ROOT}/libicsneo/{LIBICSNEO_VERSION}"
 LIBICSNEO_SOURCE = f"{LIBICSNEO_ROOT}/source"
 LIBICSNEO_BUILD = f"{LIBICSNEO_ROOT}/build"
