@@ -42,6 +42,9 @@ requires = [
   "wheel",
   "dunamai",
   "pytest>=8.4.2",
+  # Puts the ninja executable on the isolated build env's PATH; required by
+  # build_libicsneo.py's `cmake -G Ninja` on Linux/macOS (see comments there).
+  "ninja",
 ]
 
 

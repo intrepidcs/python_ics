@@ -14,18 +14,28 @@ LIBUSB_SOURCE = f"{LIBUSB_ROOT}/source"
 LIBUSB_BUILD = f"{LIBUSB_ROOT}/build"
 LIBUSB_INSTALL = f"{LIBUSB_ROOT}/install"
 
-# NOTE: this pin's vendored icsnVC40.h predates Vspy 3.26.3.9
+# NOTE: this pin's vendored icsnVC40.h still predates Vspy 3.26.3.9
 # (SRADGalaxy2Settings 840 vs 1204, no Comet3/Gigastar2), so Linux/macOS
-# wheels lag the Windows ABI. Newer upstream doesn't help yet: master
-# (4ed29b4, 2026-07-07) still has the old header AND adds a mandatory
-# icspb protobuf dependency whose codegen fails on clean CI runners.
-# Bump once upstream syncs the header and icspb builds.
-LIBICSNEO_VERSION = "830fe1a"
+# wheels lag the Windows ABI until upstream syncs the header; bump again
+# when it does. libicsneo requires icspb (protobuf) as of 2026: its
+# codegen needs the Ninja generator (protobuf_generate never creates
+# PROTOC_OUT_DIR; Make doesn't pre-create declared output dirs, Ninja
+# does), and it bootstraps protobuf from source at configure time — see
+# ICSPB_BOOTSTRAP_DIR below.
+LIBICSNEO_VERSION = "4ed29b4"
 LIBICSNEO_ROOT = f"{ROOT}/libicsneo/{LIBICSNEO_VERSION}"
 LIBICSNEO_SOURCE = f"{LIBICSNEO_ROOT}/source"
 LIBICSNEO_BUILD = f"{LIBICSNEO_ROOT}/build"
 LIBICSNEO_INSTALL = f"{LIBICSNEO_ROOT}/install"
 print(f"LIBICSNEO PATH: {LIBICSNEO_ROOT}")
+
+# icspb bootstraps protobuf from source at configure time. Keep the
+# bootstrap OUTSIDE the libicsneo build dir so it survives the per-python
+# `git clean` in _build_libicsneo_linux and is reused across all
+# cibuildwheel builds in a job (it self-partitions by <system>-<processor>,
+# so sharing one root across archs is safe). Building protobuf once per
+# arch instead of once per python matters most under QEMU aarch64.
+ICSPB_BOOTSTRAP_DIR = f"{ROOT}/icspb_bootstrap"
 
 LIBPCAP_VERSION = "1.10.4"
 LIBPCAP_ROOT = f"{ROOT}/libpcap/{LIBPCAP_VERSION}"
@@ -111,9 +121,13 @@ def _build_libicsneo_linux():
     subprocess.check_output(
         [
             "cmake",
+            # Ninja is required: icspb's protobuf_generate never creates its
+            # output dir, and only Ninja pre-creates declared output dirs.
+            "-G", "Ninja",
             "-DCMAKE_BUILD_TYPE=Release",
             "-DLIBICSNEO_BUILD_ICSNEOLEGACY=ON",
             f"-DCMAKE_PREFIX_PATH={LIBUSB_INSTALL};{LIBPCAP_INSTALL}",
+            f"-DICSPB_BOOTSTRAP_DIR={ICSPB_BOOTSTRAP_DIR}",
             "-S", LIBICSNEO_SOURCE,
             "-B", LIBICSNEO_BUILD,
             "-Wno-dev",
@@ -125,17 +139,29 @@ def _build_libicsneo_linux():
     )
 
 def _build_libicsneo_macos():
+    env = os.environ.copy()
+    # Set as env vars (not only -D flags) so icspb's nested protobuf
+    # bootstrap — a separate cmake invocation via execute_process, which
+    # inherits the environment but not our -D cache entries — also builds
+    # universal2 static libs instead of arm64-only ones.
+    env["CMAKE_OSX_ARCHITECTURES"] = "arm64;x86_64"
+    env["CMAKE_OSX_DEPLOYMENT_TARGET"] = "10.13"
     subprocess.check_output(
         [
             "cmake",
+            # Ninja is required: icspb's protobuf_generate never creates its
+            # output dir, and only Ninja pre-creates declared output dirs.
+            "-G", "Ninja",
             "-DCMAKE_BUILD_TYPE=Release",
             "-DCMAKE_OSX_ARCHITECTURES=arm64;x86_64",
             "-DLIBICSNEO_BUILD_ICSNEOLEGACY=ON",
             "-DCMAKE_OSX_DEPLOYMENT_TARGET=10.13",
             f"-DCMAKE_PREFIX_PATH={LIBUSB_INSTALL};{LIBPCAP_INSTALL}",
+            f"-DICSPB_BOOTSTRAP_DIR={ICSPB_BOOTSTRAP_DIR}",
             "-S", LIBICSNEO_SOURCE,
             "-B", LIBICSNEO_BUILD
-        ]
+        ],
+        env=env,
     )
 
     subprocess.check_output(
