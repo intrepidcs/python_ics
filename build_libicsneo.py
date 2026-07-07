@@ -112,6 +112,18 @@ def _build_libpcap():
     subprocess.check_output(["make", "-j" + CPUS], cwd=LIBPCAP_BUILD)
     subprocess.check_output(["make", "install"], cwd=LIBPCAP_BUILD)
 
+def _cmake_ninja_args():
+    # pip's ninja lives inside each isolated build env, and cibuildwheel
+    # deletes that env between python versions. A reused CMake build dir
+    # caches the old (now dead) path in CMAKE_MAKE_PROGRAM and fails at
+    # the next configure, so always override with the current ninja.
+    ninja = shutil.which("ninja")
+    args = ["-G", "Ninja"]
+    if ninja:
+        args.append(f"-DCMAKE_MAKE_PROGRAM={ninja}")
+    return args
+
+
 def _build_libicsneo_linux():
     print("Cleaning libicsneo...")
     subprocess.check_output(["git", "clean", "-xdf"], cwd="libicsneo")
@@ -123,7 +135,7 @@ def _build_libicsneo_linux():
             "cmake",
             # Ninja is required: icspb's protobuf_generate never creates its
             # output dir, and only Ninja pre-creates declared output dirs.
-            "-G", "Ninja",
+            *_cmake_ninja_args(),
             "-DCMAKE_BUILD_TYPE=Release",
             "-DLIBICSNEO_BUILD_ICSNEOLEGACY=ON",
             f"-DCMAKE_PREFIX_PATH={LIBUSB_INSTALL};{LIBPCAP_INSTALL}",
@@ -151,7 +163,7 @@ def _build_libicsneo_macos():
             "cmake",
             # Ninja is required: icspb's protobuf_generate never creates its
             # output dir, and only Ninja pre-creates declared output dirs.
-            "-G", "Ninja",
+            *_cmake_ninja_args(),
             "-DCMAKE_BUILD_TYPE=Release",
             "-DCMAKE_OSX_ARCHITECTURES=arm64;x86_64",
             "-DLIBICSNEO_BUILD_ICSNEOLEGACY=ON",
