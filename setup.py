@@ -27,8 +27,10 @@ if not os.getenv("READTHEDOCS"):
         raise RuntimeError("clang-format is required for building python_ics.")
 
 def get_version():
-    major = int(get_pkg_version().split(".")[0])
-    minor = int(get_pkg_version().split(".")[1])
+    # Strip a PEP 440 epoch ("1!26.3.9" -> "26.3.9") before numeric parsing.
+    version = get_pkg_version().split("!", 1)[-1]
+    major = int(version.split(".")[0])
+    minor = int(version.split(".")[1])
     return major, minor
 
 class _build_libicsneo(build_clib):

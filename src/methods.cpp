@@ -672,15 +672,15 @@ auto device_name_from_nde(NeoDeviceEx* nde) -> std::string
         switch (nde->neoDevice.DeviceType) {
             case NEODEVICE_UNKNOWN:
                 return "Unknown";
-            case NEODEVICE_BLUE:
+            case NEODEVICE_BLUE_DEPRECATED:
                 return "neoVI BLUE";
-            case NEODEVICE_DW_VCAN:
+            case NEODEVICE_DW_VCAN_DEPRECATED:
                 return "ValueCAN DW";
             case NEODEVICE_RADMOON2:
                 return "RAD-Moon 2";
             case NEODEVICE_VCAN41:
                 return "ValueCAN 4-1";
-            case NEODEVICE_FIRE:
+            case NEODEVICE_FIRE_DEPRECATED:
                 return "neoVI FIRE";
             case NEODEVICE_VCAN42_EL:
                 return "ValueCAN 4-2EL";
@@ -690,7 +690,7 @@ auto device_name_from_nde(NeoDeviceEx* nde) -> std::string
                 return "neoECU12";
             case NEODEVICE_OBD2_LC:
                 return "neoOBD2-LC";
-            case NEODEVICE_VCAN3:
+            case NEODEVICE_VCAN3_DEPRECATED:
                 return "ValueCAN 3";
             case NEODEVICE_FIRE3:
                 return "neoVI FIRE 3";
@@ -728,17 +728,17 @@ auto device_name_from_nde(NeoDeviceEx* nde) -> std::string
                 return "RAD-MOON-T1S";
             case NEODEVICE_GIGASTAR2:
                 return "RAD-GigaStar2";
-            case NEODEVICE_RED:
+            case NEODEVICE_RED_DEPRECATED:
                 return "neoVI RED";
-            case NEODEVICE_ECU:
+            case NEODEVICE_ECU_DEPRECATED:
                 return "neoECU";
-            case NEODEVICE_PENDANT:
+            case NEODEVICE_PENDANT_DEPRECATED:
                 return "Pendant";
             case NEODEVICE_PLASMA: // also NEODEVICE_ANY_PLASMA
                 return "neoVI PLASMA";
-            case NEODEVICE_NEOANALOG:
+            case NEODEVICE_NEOANALOG_DEPRECATED:
                 return "neoAnalog";
-            case NEODEVICE_CT_OBD:
+            case NEODEVICE_CT_OBD_DEPRECATED:
                 return "neoOBD CT";
             case NEODEVICE_ION: // also NEODEVICE_ANY_ION
                 return "neoVI ION";

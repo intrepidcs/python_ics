@@ -26,6 +26,24 @@ Python wrapper for interfacing to IntrepidCS Hardware.
 - Mac builds use [libicsneo](https://github.com/intrepidcs/libicsneo) and are built using cibuildwheel
 - libicsneolegacy.dylib is bundled with the wheel and python_ics will automatically use it.
 
+## Versioning
+
+Starting with **1!26.3.9**, python_ics versions track the Vehicle Spy
+version they were generated from (Vspy 3.26.3.9 → python_ics 26.3.9).
+
+The `1!` prefix is a [PEP 440 epoch](https://peps.python.org/pep-0440/#version-epochs).
+Earlier releases used the icsneo40 DLL version (e.g. 923.11), which sorts
+*above* 26.x, so the epoch tells pip the scheme changed:
+
+- `pip install python_ics` and `pip install -U python_ics` correctly
+  resolve `1!26.3.9` as newer than `923.11`.
+- Exact pins must include the epoch: `python_ics==1!26.3.9`.
+- Range pins work with or without it: `python_ics>=1!26.3`.
+
+**Release tagging:** tags are `v1!<version>` (e.g. `v1!26.3.9`). Every
+future tag keeps the `1!` prefix — a bare `v26.x` tag would sort below
+the historical 923.x releases and pip would ignore it.
+
 # Basic usage
 
 ```python

@@ -14,6 +14,12 @@ LIBUSB_SOURCE = f"{LIBUSB_ROOT}/source"
 LIBUSB_BUILD = f"{LIBUSB_ROOT}/build"
 LIBUSB_INSTALL = f"{LIBUSB_ROOT}/install"
 
+# NOTE: this pin's vendored icsnVC40.h predates Vspy 3.26.3.9
+# (SRADGalaxy2Settings 840 vs 1204, no Comet3/Gigastar2), so Linux/macOS
+# wheels lag the Windows ABI. Newer upstream doesn't help yet: master
+# (4ed29b4, 2026-07-07) still has the old header AND adds a mandatory
+# icspb protobuf dependency whose codegen fails on clean CI runners.
+# Bump once upstream syncs the header and icspb builds.
 LIBICSNEO_VERSION = "830fe1a"
 LIBICSNEO_ROOT = f"{ROOT}/libicsneo/{LIBICSNEO_VERSION}"
 LIBICSNEO_SOURCE = f"{LIBICSNEO_ROOT}/source"
