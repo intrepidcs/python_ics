@@ -14,15 +14,14 @@ LIBUSB_SOURCE = f"{LIBUSB_ROOT}/source"
 LIBUSB_BUILD = f"{LIBUSB_ROOT}/build"
 LIBUSB_INSTALL = f"{LIBUSB_ROOT}/install"
 
-# NOTE: this pin's vendored icsnVC40.h still predates Vspy 3.26.3.9
-# (SRADGalaxy2Settings 840 vs 1204, no Comet3/Gigastar2), so Linux/macOS
-# wheels lag the Windows ABI until upstream syncs the header; bump again
-# when it does. libicsneo requires icspb (protobuf) as of 2026: its
-# codegen needs the Ninja generator (protobuf_generate never creates
-# PROTOC_OUT_DIR; Make doesn't pre-create declared output dirs, Ninja
-# does), and it bootstraps protobuf from source at configure time — see
-# ICSPB_BOOTSTRAP_DIR below.
-LIBICSNEO_VERSION = "4ed29b4"
+# libicsneo master 2026-07-08; its vendored icsnVC40.h is byte-identical
+# to include/ics/icsnVC40.h (Vspy 3.26.3.9), so Linux/macOS wheels match
+# the Windows ABI. Keep the two headers in lockstep on future bumps.
+# libicsneo requires icspb (protobuf) as of 2026: its codegen needs the
+# Ninja generator (protobuf_generate never creates PROTOC_OUT_DIR; Make
+# doesn't pre-create declared output dirs, Ninja does), and it bootstraps
+# protobuf from source at configure time — see ICSPB_BOOTSTRAP_DIR below.
+LIBICSNEO_VERSION = "0dd8dbf"
 LIBICSNEO_ROOT = f"{ROOT}/libicsneo/{LIBICSNEO_VERSION}"
 LIBICSNEO_SOURCE = f"{LIBICSNEO_ROOT}/source"
 LIBICSNEO_BUILD = f"{LIBICSNEO_ROOT}/build"
