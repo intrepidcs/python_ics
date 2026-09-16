@@ -2176,18 +2176,45 @@ PyObject* meth_flash_devices(PyObject* self, PyObject* args)
 }
 #endif // _USE_INTERNAL_HEADER_
 
-PyObject* msg_reflash_callback = NULL;
+// Owned reference, accessed with the GIL held. NULL selects stdout output.
+static PyObject* msg_reflash_callback = NULL;
 static void message_reflash_callback(const wchar_t* message, unsigned long progress)
 {
     // We need to relock the GIL here otherwise we crash
     PyGILState_STATE state = PyGILState_Ensure();
-    if (!msg_reflash_callback) {
-        PySys_WriteStdout("%ls -%ld\n", message, progress);
-    } else if (PyObject_HasAttrString(msg_reflash_callback, "reflash_callback")) {
-        PyObject_CallMethod(msg_reflash_callback, "reflash_callback", "u,k", message, progress);
+    // Keep the current handler alive even if it unregisters/replaces itself.
+    PyObject* callback = msg_reflash_callback;
+    Py_XINCREF(callback);
+    if (!callback) {
+        PyObject* text = PyUnicode_FromWideChar(message, -1);
+        if (text) {
+            PySys_FormatStdout("%U -%lu\n", text, progress);
+            Py_DECREF(text);
+        } else {
+            PyErr_WriteUnraisable(Py_None);
+        }
     } else {
-        PyObject_CallFunction(msg_reflash_callback, "u,k", message, progress);
+        PyObject* callable = PyObject_GetAttrString(callback, "reflash_callback");
+        if (!callable && PyErr_ExceptionMatches(PyExc_AttributeError)) {
+            PyErr_Clear();
+            callable = callback;
+            Py_INCREF(callable);
+        }
+        if (callable) {
+            PyObject* text = PyUnicode_FromWideChar(message, -1);
+            if (text) {
+                PyObject* result = PyObject_CallFunction(callable, "Ok", text, progress);
+                Py_XDECREF(result);
+                Py_DECREF(text);
+            }
+            Py_DECREF(callable);
+        }
+        // Native progress notifications have no Python caller to receive errors.
+        if (PyErr_Occurred()) {
+            PyErr_WriteUnraisable(callback);
+        }
     }
+    Py_XDECREF(callback);
     // Unlock the GIL here again...
     PyGILState_Release(state);
 }
@@ -2200,10 +2227,22 @@ PyObject* meth_set_reflash_callback(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, arg_parse("|O:", __FUNCTION__), &callback)) {
         return NULL;
     }
-    if (!callback) {
-        msg_reflash_callback = NULL;
-    } else {
-        msg_reflash_callback = callback;
+    if (callback && callback != Py_None) {
+        PyObject* callable = PyObject_GetAttrString(callback, "reflash_callback");
+        if (!callable) {
+            if (!PyErr_ExceptionMatches(PyExc_AttributeError)) {
+                return NULL;
+            }
+            PyErr_Clear();
+            callable = callback;
+            Py_INCREF(callable);
+        }
+        int is_callable = PyCallable_Check(callable);
+        Py_DECREF(callable);
+        if (!is_callable) {
+            PyErr_SetString(PyExc_TypeError, "callback must be callable or have a callable reflash_callback method");
+            return NULL;
+        }
     }
     try {
         ice::Library* lib = dll_get_library();
@@ -2213,6 +2252,12 @@ PyObject* meth_set_reflash_callback(PyObject* self, PyObject* args)
         }
         ice::Function<void __stdcall(void (*)(const wchar_t*, unsigned long))> icsneoSetReflashCallback(
             lib, "icsneoSetReflashCallback");
+        // Resolve the library symbol before changing ownership. Publish before
+        // calling native code, which may immediately deliver a progress event.
+        PyObject* replacement = callback == Py_None ? NULL : callback;
+        Py_XINCREF(replacement);
+        PyObject* previous = msg_reflash_callback;
+        msg_reflash_callback = replacement;
         auto gil = PyAllowThreads();
         if (callback == Py_None) {
             icsneoSetReflashCallback(NULL);
@@ -2220,6 +2265,7 @@ PyObject* meth_set_reflash_callback(PyObject* self, PyObject* args)
             icsneoSetReflashCallback(&message_reflash_callback);
         }
         gil.restore();
+        Py_XDECREF(previous);
         Py_RETURN_NONE;
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
