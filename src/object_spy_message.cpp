@@ -64,11 +64,8 @@ static PyObject* spy_message_object_getattr(PyObject* o, PyObject* attr_name)
 #endif
         PyErr_Format(PyExc_TypeError, "attribute name must be string, not '%.200s'", attr_name->ob_type->tp_name);
         return NULL;
-    } else {
-        Py_INCREF(attr_name);
     }
     if (PyUnicode_CompareWithASCIIString(attr_name, "Data") == 0) {
-        Py_DECREF(attr_name);
         spy_message_object* obj = (spy_message_object*)o;
         PyObject* temp = Py_BuildValue("(i,i,i,i,i,i,i,i)",
                                        obj->msg.Data[0],
@@ -83,7 +80,6 @@ static PyObject* spy_message_object_getattr(PyObject* o, PyObject* attr_name)
         Py_DECREF(temp);
         return data;
     } else if (PyUnicode_CompareWithASCIIString(attr_name, "AckBytes") == 0) {
-        Py_DECREF(attr_name);
         spy_message_object* obj = (spy_message_object*)o;
         return Py_BuildValue("(i,i,i,i,i,i,i,i)",
                              obj->msg.AckBytes[0],
@@ -95,7 +91,6 @@ static PyObject* spy_message_object_getattr(PyObject* o, PyObject* attr_name)
                              obj->msg.AckBytes[6],
                              obj->msg.AckBytes[7]);
     } else if (PyUnicode_CompareWithASCIIString(attr_name, "Header") == 0) {
-        Py_DECREF(attr_name);
         spy_message_j1850_object* obj = (spy_message_j1850_object*)o;
         PyObject* temp =
             Py_BuildValue("(i,i,i,i)", obj->msg.Header[0], obj->msg.Header[1], obj->msg.Header[2], obj->msg.Header[3]);
@@ -103,7 +98,6 @@ static PyObject* spy_message_object_getattr(PyObject* o, PyObject* attr_name)
         Py_DECREF(temp);
         return data;
     } else if (PyUnicode_CompareWithASCIIString(attr_name, "ExtraDataPtr") == 0) {
-        Py_DECREF(attr_name);
         spy_message_j1850_object* obj = (spy_message_j1850_object*)o;
         unsigned char* ExtraDataPtr = (unsigned char*)obj->msg.ExtraDataPtr;
         bool extra_data_ptr_enabled = obj->msg.ExtraDataPtrEnabled != 0;
