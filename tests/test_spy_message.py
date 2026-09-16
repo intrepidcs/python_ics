@@ -1,5 +1,46 @@
+import os
+import subprocess
+import sys
+import textwrap
+
 import pytest
 import ics
+
+
+@pytest.mark.parametrize("message_type", ["SpyMessage", "SpyMessageJ1850"])
+@pytest.mark.parametrize("attribute", ["Data", "AckBytes", "Header", "ExtraDataPtr", "Protocol", "ExtraDataPtrEnabled"])
+@pytest.mark.parametrize("initialized", [False, True])
+def test_attribute_deletion_is_safe(message_type, attribute, initialized):
+    # Isolate native crashes so every affected attribute/type is reported.
+    code = textwrap.dedent(f"""
+        import ics
+
+        msg = ics.{message_type}()
+        if {initialized!r}:
+            msg.Protocol = ics.SPY_PROTOCOL_CANFD
+            msg.Data = (1, 2, 3)
+            msg.AckBytes = (4, 5)
+            msg.Header = (6, 7)
+            msg.ExtraDataPtr = (8, 9, 10)
+        fields = ("Data", "AckBytes", "Header", "ExtraDataPtr", "Protocol",
+                  "ExtraDataPtrEnabled", "NumberBytesData", "NumberBytesHeader")
+        before = tuple(getattr(msg, field) for field in fields)
+        try:
+            delattr(msg, {attribute!r})
+        except (AttributeError, TypeError):
+            pass
+        else:
+            raise AssertionError("deletion should be rejected")
+        assert tuple(getattr(msg, field) for field in fields) == before
+        # The message remains usable, including replacing and freeing its buffer.
+        msg.ExtraDataPtr = (11, 12)
+        assert msg.ExtraDataPtr == (11, 12)
+        del msg
+    """)
+    env = os.environ.copy()
+    env["PYTHONPATH"] = os.pathsep.join(str(path) for path in sys.path)
+    result = subprocess.run([sys.executable, "-c", code], env=env, capture_output=True, text=True, timeout=30)
+    assert result.returncode == 0, f"exit {result.returncode}\n{result.stdout}\n{result.stderr}"
 
 
 def test_data_roundtrip():
