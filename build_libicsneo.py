@@ -30,7 +30,7 @@ print(f"LIBICSNEO PATH: {LIBICSNEO_ROOT}")
 
 # icspb bootstraps protobuf from source at configure time. Keep the
 # bootstrap OUTSIDE the libicsneo build dir so it survives the per-python
-# `git clean` in _build_libicsneo_linux and is reused across all
+# build-directory cleanup in _build_libicsneo_linux and is reused across all
 # cibuildwheel builds in a job (it self-partitions by <system>-<processor>,
 # so sharing one root across archs is safe). Building protobuf once per
 # arch instead of once per python matters most under QEMU aarch64.
@@ -125,8 +125,11 @@ def _cmake_ninja_args():
 
 def _build_libicsneo_linux():
     print("Cleaning libicsneo...")
-    subprocess.check_output(["git", "clean", "-xdf"], cwd="libicsneo")
-    subprocess.check_output(["mkdir", "-p", "libicsneo/build"])
+    # Source archives have no parent Git checkout. Reset only the CMake
+    # build tree, preserving the source checkout and protobuf bootstrap.
+    if os.path.exists(LIBICSNEO_BUILD):
+        shutil.rmtree(LIBICSNEO_BUILD)
+    os.makedirs(LIBICSNEO_BUILD, exist_ok=True)
 
     print("cmake libicsneo...")
     subprocess.check_output(
