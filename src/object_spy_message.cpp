@@ -1,11 +1,37 @@
 #include "object_spy_message.h"
 
+size_t spy_message_extra_data_length(const icsSpyMessage& msg)
+{
+    if (msg.Protocol == SPY_PROTOCOL_A2B || msg.Protocol == SPY_PROTOCOL_ETHERNET ||
+        msg.Protocol == SPY_PROTOCOL_SPI || msg.Protocol == SPY_PROTOCOL_WBMS)
+        return (msg.NumberBytesHeader << 8) | msg.NumberBytesData;
+    return msg.NumberBytesData;
+}
+
+bool spy_message_validate_extra_data(const spy_message_object* obj)
+{
+    if (obj->msg.ExtraDataPtr && spy_message_extra_data_length(obj->msg) > obj->extraDataCapacity) {
+        PyErr_SetString(PyExc_ValueError, "ExtraDataPtr length exceeds its buffer capacity");
+        return false;
+    }
+    return true;
+}
+
+void spy_message_record_received_extra_data(PyObject* o)
+{
+    spy_message_object* obj = (spy_message_object*)o;
+    // The DLL owns the pointer; its original reported length is the readable bound.
+    obj->extraDataCapacity = obj->msg.ExtraDataPtr ? spy_message_extra_data_length(obj->msg) : 0;
+    obj->noExtraDataPtrCleanup = true;
+}
+
 static int spy_message_object_alloc(spy_message_object* self, PyObject* args, PyObject* kwds)
 {
     (void)args;
     (void)kwds;
     memset(&self->msg, 0, sizeof(self->msg));
     self->noExtraDataPtrCleanup = false;
+    self->extraDataCapacity = 0;
     return 0;
 }
 
@@ -98,6 +124,8 @@ static PyObject* spy_message_object_getattr(PyObject* o, PyObject* attr_name)
         Py_DECREF(temp);
         return data;
     } else if (PyUnicode_CompareWithASCIIString(attr_name, "ExtraDataPtr") == 0) {
+        if (!spy_message_validate_extra_data((spy_message_object*)o))
+            return NULL;
         spy_message_j1850_object* obj = (spy_message_j1850_object*)o;
         unsigned char* ExtraDataPtr = (unsigned char*)obj->msg.ExtraDataPtr;
         bool extra_data_ptr_enabled = obj->msg.ExtraDataPtrEnabled != 0;
@@ -108,14 +136,7 @@ static PyObject* spy_message_object_getattr(PyObject* o, PyObject* attr_name)
             && obj->msg.ExtraDataPtr != NULL) {
             extra_data_ptr_enabled = true;
         }
-        int actual_size = 0;
-        // Some newer protocols are packing the length into NumberBytesHeader also so lets handle it here...
-        if (obj->msg.Protocol == SPY_PROTOCOL_A2B || obj->msg.Protocol == SPY_PROTOCOL_ETHERNET || 
-            obj->msg.Protocol == SPY_PROTOCOL_SPI || obj->msg.Protocol == SPY_PROTOCOL_WBMS) {
-            actual_size = (obj->msg.NumberBytesHeader << 8) | obj->msg.NumberBytesData;
-        } else {
-            actual_size = obj->msg.NumberBytesData;
-        }
+        size_t actual_size = spy_message_extra_data_length(((spy_message_object*)o)->msg);
         if (extra_data_ptr_enabled && actual_size && obj->msg.ExtraDataPtr) {
             PyObject* tuple = PyTuple_New(actual_size);
             for (int i = 0; i < actual_size; ++i) {
@@ -130,7 +151,7 @@ static PyObject* spy_message_object_getattr(PyObject* o, PyObject* attr_name)
     }
 }
 
-static int spy_message_object_setattr(PyObject* o, PyObject* name, PyObject* value)
+static int spy_message_object_setattr_impl(PyObject* o, PyObject* name, PyObject* value)
 {
     // tp_setattro receives NULL for deletion. Let descriptors reject deletion
     // before any custom setter inspects the value or changes message storage.
@@ -155,14 +176,6 @@ static int spy_message_object_setattr(PyObject* o, PyObject* name, PyObject* val
             return -1;
         obj->msg.NumberBytesHeader = static_cast<uint8_t>(length);
         return 0;
-    } else if (PyUnicode_CompareWithASCIIString(name, "Protocol") == 0) {
-        // Ethernet behavior is backward to CAN and will crash if enabled.
-        long protocol = PyLong_AsLong(value);
-        if (protocol == -1 && PyErr_Occurred())
-            PyErr_Clear(); // let PyObject_GenericSetAttr report the type error
-        else if (protocol == SPY_PROTOCOL_ETHERNET)
-            obj->msg.ExtraDataPtrEnabled = 0;
-        return PyObject_GenericSetAttr(o, name, value);
     } else if (PyUnicode_CompareWithASCIIString(name, "ExtraDataPtr") == 0) {
         if (!PyTuple_Check(value)) {
             PyErr_Format(PyExc_AttributeError,
@@ -200,6 +213,7 @@ static int spy_message_object_setattr(PyObject* o, PyObject* name, PyObject* val
         if (obj->msg.ExtraDataPtr != NULL && !obj->noExtraDataPtrCleanup)
             delete[] (unsigned char*)obj->msg.ExtraDataPtr;
         obj->msg.ExtraDataPtr = buffer;
+        obj->extraDataCapacity = (size_t)length;
         if (packs_length)
             obj->msg.NumberBytesHeader = static_cast<uint8_t>(length >> 8);
         obj->msg.NumberBytesData = static_cast<uint8_t>(length & 0xFF);
@@ -219,6 +233,7 @@ static int spy_message_object_setattr(PyObject* o, PyObject* name, PyObject* val
             if (obj->msg.ExtraDataPtr != NULL) {
                 delete[] (unsigned char*)obj->msg.ExtraDataPtr;
                 obj->msg.ExtraDataPtr = NULL;
+                obj->extraDataCapacity = 0;
             }
         } else if (enabled != 0 && obj->msg.Protocol == SPY_PROTOCOL_ETHERNET) {
             // Ethernet always needs to be set to 0
@@ -228,6 +243,81 @@ static int spy_message_object_setattr(PyObject* o, PyObject* name, PyObject* val
     } else {
         return PyObject_GenericSetAttr(o, name, value);
     }
+}
+
+static int spy_message_object_setattr(PyObject* o, PyObject* name, PyObject* value)
+{
+    // Subclass deletion descriptors may execute Python. Never include them in
+    // a native-message rollback transaction.
+    if (!value)
+        return PyObject_GenericSetAttr(o, name, value);
+    // These assignments can reinterpret or enlarge the payload length. Roll back
+    // the complete native message, including Data/Header bytes, on failure.
+    bool scalar_length = PyUnicode_CompareWithASCIIString(name, "NumberBytesData") == 0 ||
+        PyUnicode_CompareWithASCIIString(name, "NumberBytesHeader") == 0 ||
+        PyUnicode_CompareWithASCIIString(name, "Protocol") == 0;
+    bool data = PyUnicode_CompareWithASCIIString(name, "Data") == 0;
+    bool header = PyUnicode_CompareWithASCIIString(name, "Header") == 0;
+    bool changes_length = scalar_length || data || header;
+    // __index__ can execute arbitrary Python, including replacing the payload.
+    // Finish all such conversions BEFORE snapshotting the message for rollback.
+    PyObject* normalized = NULL;
+    if (value && scalar_length) {
+        normalized = PyNumber_Index(value);
+        if (!normalized)
+            return -1;
+        long byte = PyLong_AsLong(normalized);
+        if ((byte == -1 && PyErr_Occurred()) || byte < 0 || byte > 255) {
+            Py_DECREF(normalized);
+            if (!PyErr_Occurred())
+                PyErr_SetString(PyExc_ValueError, "Message length and protocol fields must be in range 0..255");
+            return -1;
+        }
+        // Reject truncation rather than letting T_UBYTE issue a warning inside
+        // the transaction: a user warning hook can also replace the payload.
+    } else if (value && (data || header) && PyTuple_Check(value) &&
+               PyTuple_Size(value) <= (data ? 8 : 4)) {
+        normalized = PyTuple_New(PyTuple_Size(value));
+        if (!normalized)
+            return -1;
+        for (Py_ssize_t i = 0; i < PyTuple_Size(value); ++i) {
+            PyObject* byte = PyNumber_Index(PyTuple_GetItem(value, i));
+            if (!byte) {
+                Py_DECREF(normalized);
+                return -1;
+            }
+            PyTuple_SET_ITEM(normalized, i, byte);
+        }
+    }
+    spy_message_object* obj = (spy_message_object*)o;
+    icsSpyMessage original = obj->msg;
+    int result = 0;
+    if (scalar_length) {
+        // These native fields, like Data/Header, must not dispatch subclass
+        // descriptors inside the transaction: they can replace/free payloads.
+        unsigned char byte = (unsigned char)PyLong_AsLong(normalized);
+        if (PyUnicode_CompareWithASCIIString(name, "NumberBytesData") == 0)
+            obj->msg.NumberBytesData = byte;
+        else if (PyUnicode_CompareWithASCIIString(name, "NumberBytesHeader") == 0)
+            obj->msg.NumberBytesHeader = byte;
+        else {
+            obj->msg.Protocol = byte;
+            if (byte == SPY_PROTOCOL_ETHERNET)
+                obj->msg.ExtraDataPtrEnabled = 0;
+        }
+    } else {
+        result = spy_message_object_setattr_impl(o, name, normalized ? normalized : value);
+    }
+    Py_XDECREF(normalized);
+    if (result == 0 && changes_length && obj->msg.ExtraDataPtr &&
+        spy_message_extra_data_length(obj->msg) > obj->extraDataCapacity) {
+        // Restore before allocating the exception: cyclic-GC finalizers may
+        // execute Python during allocation and must see the committed state.
+        obj->msg = original;
+        PyErr_SetString(PyExc_ValueError, "ExtraDataPtr length exceeds its buffer capacity");
+        return -1;
+    }
+    return result;
 }
 
 static PyMemberDef spy_message_object_members[] = {

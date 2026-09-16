@@ -1845,6 +1845,19 @@ PyObject* meth_transmit_messages(PyObject* self, PyObject* args)
     if (!PyTuple_CheckExact(tuple)) {
         return set_ics_exception(exception_argument_error(), "Second argument must be of tuple type!");
     }
+    for (Py_ssize_t i = 0; i < PyTuple_Size(tuple); ++i) {
+        PyObject* item = PyTuple_GetItem(tuple, i);
+        if (!PySpyMessage_CheckExact(item) && !PySpyMessageJ1850_CheckExact(item)) {
+            if (created_tuple)
+                Py_DECREF(tuple);
+            return set_ics_exception(exception_runtime_error(), "Expected SpyMessage or SpyMessageJ1850");
+        }
+        if (!spy_message_validate_extra_data((spy_message_object*)item)) {
+            if (created_tuple)
+                Py_DECREF(tuple);
+            return NULL;
+        }
+    }
     try {
         ice::Library* lib = dll_get_library();
         if (!lib) {
@@ -1956,6 +1969,7 @@ PyObject* meth_get_messages(PyObject* self, PyObject* args)
                 // Looks like icsneo40 does its own memory management so don't delete when we dealloc
                 msg->noExtraDataPtrCleanup = true;
             }
+            spy_message_record_received_extra_data(_obj);
             PyTuple_SetItem(tuple, i, _obj);
         }
         PyObject* result = Py_BuildValue("(O,i)", tuple, errors);
@@ -2834,6 +2848,7 @@ PyObject* meth_coremini_read_tx_message(PyObject* self, PyObject* args) // Scrip
             }
             gil.restore();
         }
+        spy_message_record_received_extra_data(msg);
         return msg;
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -2885,7 +2900,7 @@ PyObject* meth_coremini_read_rx_message(PyObject* self, PyObject* args) // Scrip
             auto gil = PyAllowThreads();
             if (!icsneoScriptReadRxMessage(handle,
                                            index,
-                                           &PySpyMessageJ1850_GetObject(msg_mask)->msg,
+                                           &PySpyMessageJ1850_GetObject(msg)->msg,
                                            &PySpyMessageJ1850_GetObject(msg_mask)->msg)) {
                 gil.restore();
                 return set_ics_exception(exception_runtime_error(), "icsneoScriptReadRxMessage() Failed");
@@ -2912,6 +2927,8 @@ PyObject* meth_coremini_read_rx_message(PyObject* self, PyObject* args) // Scrip
             }
             gil.restore();
         }
+        spy_message_record_received_extra_data(msg);
+        spy_message_record_received_extra_data(msg_mask);
         return Py_BuildValue("(O,O)", msg, msg_mask);
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -2952,6 +2969,8 @@ PyObject* meth_coremini_write_tx_message(PyObject* self, PyObject* args) // icsn
         }
         msg = (void*)&PySpyMessage_GetObject(msg_obj)->msg;
     }
+    if (!spy_message_validate_extra_data((spy_message_object*)msg_obj))
+        return NULL;
     try {
         ice::Library* lib = dll_get_library();
         if (!lib) {
@@ -2991,6 +3010,12 @@ PyObject* meth_coremini_write_rx_message(PyObject* self, PyObject* args) // icsn
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
         return NULL;
     }
+    if ((PySpyMessage_CheckExact(msg_obj) || PySpyMessageJ1850_CheckExact(msg_obj)) &&
+        !spy_message_validate_extra_data((spy_message_object*)msg_obj))
+        return NULL;
+    if ((PySpyMessage_CheckExact(msg_mask_obj) || PySpyMessageJ1850_CheckExact(msg_mask_obj)) &&
+        !spy_message_validate_extra_data((spy_message_object*)msg_mask_obj))
+        return NULL;
     void* msg = NULL;
     void* msg_mask = NULL;
     if (j1850) {
