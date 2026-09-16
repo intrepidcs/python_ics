@@ -138,6 +138,11 @@ static PyObject* spy_message_object_getattr(PyObject* o, PyObject* attr_name)
 
 static int spy_message_object_setattr(PyObject* o, PyObject* name, PyObject* value)
 {
+    // tp_setattro receives NULL for deletion. Let descriptors reject deletion
+    // before any custom setter inspects the value or changes message storage.
+    if (value == NULL)
+        return PyObject_GenericSetAttr(o, name, value);
+
     spy_message_object* obj = (spy_message_object*)o;
     if (PyUnicode_CompareWithASCIIString(name, "Data") == 0) {
         Py_ssize_t length = _copy_byte_tuple(value, name, obj->msg.Data, sizeof(obj->msg.Data));
