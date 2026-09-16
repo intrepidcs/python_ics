@@ -49,6 +49,20 @@ class PyAllowThreads
     }
 };
 
+// Own an already acquired export. Construct only after successful argument
+// parsing: PyArg_ParseTuple releases any acquired buffers itself on failure.
+// Declare before PyAllowThreads so unwinding restores the GIL before release.
+class PyBufferRelease
+{
+    Py_buffer& buffer;
+
+  public:
+    explicit PyBufferRelease(Py_buffer& value) : buffer(value) {}
+    ~PyBufferRelease() { PyBuffer_Release(&buffer); }
+    PyBufferRelease(const PyBufferRelease&) = delete;
+    PyBufferRelease& operator=(const PyBufferRelease&) = delete;
+};
+
 extern PyTypeObject spy_message_object_type;
 // __func__, __FUNCTION__ and __PRETTY_FUNCTION__ are not preprocessor macros.
 // but MSVC doesn't follow c standard and treats __FUNCTION__ as a string literal macro...
@@ -3183,17 +3197,20 @@ PyObject* meth_get_hw_firmware_info(PyObject* self, PyObject* args)
         if (!info) {
             return NULL;
         }
+        std::unique_ptr<PyObject, decltype(&Py_DecRef)> result(info, Py_DecRef);
         Py_buffer info_buffer = {};
-        PyObject_GetBuffer(info, &info_buffer, PyBUF_CONTIG);
+        if (PyObject_GetBuffer(info, &info_buffer, PyBUF_CONTIG) < 0) {
+            return NULL;
+        }
+        PyBufferRelease buffer_release(info_buffer);
 
         auto gil = PyAllowThreads();
         if (!icsneoGetHWFirmwareInfo(handle, (stAPIFirmwareInfo*)info_buffer.buf)) {
             gil.restore();
-            PyBuffer_Release(&info_buffer);
             return set_ics_exception(exception_runtime_error(), "icsneoGetHWFirmwareInfo() Failed");
         }
         gil.restore();
-        return info;
+        return result.release();
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
@@ -3389,15 +3406,19 @@ PyObject* meth_get_dll_firmware_info(PyObject* self, PyObject* args)
         if (!info) {
             return NULL;
         }
+        std::unique_ptr<PyObject, decltype(&Py_DecRef)> result(info, Py_DecRef);
         Py_buffer info_buffer = {};
-        PyObject_GetBuffer(info, &info_buffer, PyBUF_CONTIG);
+        if (PyObject_GetBuffer(info, &info_buffer, PyBUF_CONTIG) < 0) {
+            return NULL;
+        }
+        PyBufferRelease buffer_release(info_buffer);
         auto gil = PyAllowThreads();
         if (!icsneoGetDLLFirmwareInfo(handle, (stAPIFirmwareInfo*)info_buffer.buf)) {
             gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoGetDLLFirmwareInfo() Failed");
         }
         gil.restore();
-        return info;
+        return result.release();
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
@@ -4007,8 +4028,12 @@ PyObject* meth_get_device_status(PyObject* self, PyObject* args)
         if (!device_status) {
             return NULL;
         }
+        std::unique_ptr<PyObject, decltype(&Py_DecRef)> result(device_status, Py_DecRef);
         Py_buffer device_status_buffer = {};
-        PyObject_GetBuffer(device_status, &device_status_buffer, PyBUF_CONTIG);
+        if (PyObject_GetBuffer(device_status, &device_status_buffer, PyBUF_CONTIG) < 0) {
+            return NULL;
+        }
+        PyBufferRelease buffer_release(device_status_buffer);
 
         size_t device_status_size = static_cast<size_t>(device_status_buffer.len);
         ice::Function<int __stdcall(void*, icsDeviceStatus*, size_t*)> icsneoGetDeviceStatus(lib,
@@ -4016,18 +4041,16 @@ PyObject* meth_get_device_status(PyObject* self, PyObject* args)
         auto gil = PyAllowThreads();
         if (!icsneoGetDeviceStatus(handle, (icsDeviceStatus*)device_status_buffer.buf, &device_status_size)) {
             gil.restore();
-            PyBuffer_Release(&device_status_buffer);
             return set_ics_exception(exception_runtime_error(), "icsneoGetDeviceStatus() Failed");
         }
         if (throw_exception_on_size_mismatch) {
             if (device_status_size != (size_t)device_status_buffer.len) {
                 gil.restore();
-                PyBuffer_Release(&device_status_buffer);
                 return set_ics_exception(exception_runtime_error(), "icsneoGetDeviceStatus() API mismatch detected!");
             }
         }
         gil.restore();
-        return device_status;
+        return result.release();
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
     }
@@ -4306,13 +4329,17 @@ PyObject* meth_flash_accessory_firmware(PyObject* self, PyObject* args)
             lib, "icsneoFlashAccessoryFirmware");
 
         Py_buffer parms_buffer = {};
-        PyObject_GetBuffer(parms, &parms_buffer, PyBUF_CONTIG_RO);
+        if (PyObject_GetBuffer(parms, &parms_buffer, PyBUF_CONTIG_RO) < 0) {
+            return NULL;
+        }
+        PyBufferRelease parms_release(parms_buffer);
 
         auto gil = PyAllowThreads();
         if (!icsneoFlashAccessoryFirmware(handle, (FlashAccessoryFirmwareParams*)parms_buffer.buf, &function_error)) {
             gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoFlashAccessoryFirmware() Failed");
         }
+        gil.restore();
         // check the return value to make sure we are good
         if (check_success && function_error != AccessoryOperationSuccess) {
             std::stringstream ss;
@@ -5059,6 +5086,7 @@ PyObject* meth_uart_write(PyObject* self, PyObject* args)
         return NULL;
     }
 
+    PyBufferRelease data_release(data);
     // Get the device handle
     if (!PyNeoDeviceEx_CheckExact(obj)) {
         return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
@@ -5240,6 +5268,7 @@ PyObject* meth_generic_api_send_command(PyObject* self, PyObject* args)
             args, arg_parse("Obbby*:", __FUNCTION__), &obj, &apiIndex, &instanceIndex, &functionIndex, &data)) {
         return NULL;
     }
+    PyBufferRelease data_release(data);
     // Get the device handle
     if (!PyNeoDeviceEx_CheckExact(obj)) {
         return set_ics_exception(exception_runtime_error(), "Argument must be of type " MODULE_NAME ".PyNeoDeviceEx");
