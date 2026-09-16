@@ -39,6 +39,8 @@ typedef struct
 {
     PyObject_HEAD icsSpyMessage msg;
     bool noExtraDataPtrCleanup;
+    // Private bound, independent of writable protocol/length/ownership fields.
+    size_t extraDataCapacity;
 } spy_message_object;
 #pragma pack(pop)
 
@@ -47,6 +49,7 @@ typedef struct
 {
     PyObject_HEAD icsSpyMessageJ1850 msg;
     bool noExtraDataPtrCleanup;
+    size_t extraDataCapacity;
 } spy_message_j1850_object;
 #pragma pack(pop)
 
@@ -63,5 +66,8 @@ extern PyTypeObject spy_message_j1850_object_type;
 #define PySpyMessageJ1850_GetObject(obj) ((spy_message_j1850_object*)obj)
 
 bool setup_spy_message_object(PyObject* module);
+size_t spy_message_extra_data_length(const icsSpyMessage& msg);
+bool spy_message_validate_extra_data(const spy_message_object* obj);
+void spy_message_record_received_extra_data(PyObject* obj);
 
 #endif // _OBJECT_SPY_MESSAGE_H_
