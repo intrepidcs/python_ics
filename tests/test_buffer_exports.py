@@ -25,7 +25,8 @@ def mock_libraries(tmp_path_factory):
                 pytest.skip("LLVM clang-cl and lld-link are required for the mock DLL")
             library = directory / (name + ".dll")
             obj = directory / (name + ".obj")
-            subprocess.run([compiler, "/nologo", "/c", "/GS-", "/Zl", *defines,
+            target = "x86_64-pc-windows-msvc" if sys.maxsize > 2**32 else "i686-pc-windows-msvc"
+            subprocess.run([compiler, "--target=" + target, "/nologo", "/c", "/GS-", "/Zl", *defines,
                             str(source), "/Fo" + str(obj)], check=True, capture_output=True)
             subprocess.run([linker, "/dll", "/noentry", "/nodefaultlib",
                             "/out:" + str(library), str(obj)], check=True, capture_output=True)
