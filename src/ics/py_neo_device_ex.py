@@ -26,8 +26,11 @@ class PyNeoDeviceEx(ics.neo_device_ex.neo_device_ex):
         return f"<ics.{self.__class__.__name__} {self.Name} {self.serial_number}>"
 
     def __eq__(self, other) -> bool:
+        if not isinstance(other, PyNeoDeviceEx):
+            return NotImplemented
         return \
             self.DeviceType == other.DeviceType and \
+            self.SerialNumber == other.SerialNumber and \
             self.Handle == other.Handle and \
             self.NumberOfClients == other.NumberOfClients and \
             self.MaxAllowedClients == other.MaxAllowedClients and \

@@ -39,5 +39,64 @@ def test_serial_number_out_of_range_raises():
         _make_device(ics.MAX_SERIAL + 1).serial_number
 
 
+@pytest.mark.parametrize("serial", [100, ics.MAX_SERIAL])
+def test_equal_device_snapshots(serial):
+    first, second = _make_device(serial), _make_device(serial)
+    assert first is not second
+    assert first == second
+    assert second == first
+    assert not (first != second)
+    assert second in [first]
+
+
+@pytest.mark.parametrize("serials", [(100, 200), (0x7FFFFFFF, 0x80000000)])
+def test_different_serials_are_distinct_devices(serials):
+    first, second = map(_make_device, serials)
+    assert first != second
+    assert second != first
+    assert not (first == second)
+    assert second not in [first]
+    devices = [first]
+    if second not in devices:
+        devices.append(second)
+    assert len(devices) == 2
+
+
+@pytest.mark.parametrize("field", ["DeviceType", "Handle", "NumberOfClients", "MaxAllowedClients"])
+def test_device_snapshot_fields_still_affect_equality(field):
+    first, second = _make_device(100), _make_device(100)
+    setattr(second.neoDevice, field, 1)
+    assert first != second
+
+
+@pytest.mark.parametrize("field", [
+    "FirmwareMajor", "FirmwareMinor", "Status", "Options", "pAvailWIFINetwork",
+    "isEthernetDevice", "hardwareRev", "revReserved", "tcpPort",
+])
+def test_extended_snapshot_fields_still_affect_equality(field):
+    first, second = _make_device(100), _make_device(100)
+    setattr(second, field, 1)
+    assert first != second
+
+
+@pytest.mark.parametrize("other", [None, object(), 100, "100"])
+def test_unrelated_objects_compare_unequal(other):
+    device = _make_device(100)
+    assert device.__eq__(other) is NotImplemented
+    assert not (device == other)
+    assert not (other == device)
+    assert device != other
+    assert other != device
+
+
+def test_equality_allows_reflected_comparison():
+    class AcceptsDevice:
+        def __eq__(self, other):
+            return isinstance(other, ics.PyNeoDeviceEx)
+
+    device = _make_device(100)
+    assert device == AcceptsDevice()
+
+
 if __name__ == "__main__":
     pytest.main(args=[__file__, "--verbose", "-s"])
