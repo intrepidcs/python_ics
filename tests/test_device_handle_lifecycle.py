@@ -44,14 +44,26 @@ API void failures(int opening, int closing) { fail_open = opening; fail_close = 
             pytest.skip("handle mock requires clang-cl and lld-link")
         library = root / "mock.dll"
         obj = root / "mock.obj"
-        subprocess.run([compiler, "/nologo", "/c", "/GS-", "/Zl", str(source), f"/Fo{obj}"], check=True)
-        subprocess.run([linker, "/dll", "/noentry", "/nodefaultlib", f"/out:{library}", str(obj)], check=True)
+        bits = 64 if sys.maxsize > 2**32 else 32
+        subprocess.run(
+            [compiler, f"-m{bits}", "/nologo", "/c", "/GS-", "/Zl", str(source), f"/Fo{obj}"],
+            check=True, timeout=60,
+        )
+        command = [linker, "/dll", "/noentry", "/nodefaultlib", f"/out:{library}", str(obj)]
+        if bits == 32:
+            # ice loads undecorated names; x86 stdcall exports are decorated.
+            command.extend([
+                "/export:icsneoOpenDevice=_icsneoOpenDevice@28",
+                "/export:icsneoClosePort=_icsneoClosePort@8",
+                "/export:icsneoFreeObject=_icsneoFreeObject@4",
+            ])
+        subprocess.run(command, check=True, timeout=60)
     else:
         compiler = shutil.which("cc")
         if not compiler:
             pytest.skip("handle mock requires a C compiler")
         library = root / ("mock.dylib" if sys.platform == "darwin" else "mock.so")
-        subprocess.run([compiler, "-shared", "-fPIC", str(source), "-o", str(library)], check=True)
+        subprocess.run([compiler, "-shared", "-fPIC", str(source), "-o", str(library)], check=True, timeout=60)
     return library
 
 
@@ -77,7 +89,7 @@ device._auto_handle_close = False
 def counts():
     return tuple(mock.counts(i) for i in range(3))
 """ + code, str(library)],
-        env=env, capture_output=True, text=True,
+        env=env, capture_output=True, text=True, timeout=30,
     )
     assert result.returncode == 0, result.stdout + result.stderr
 
