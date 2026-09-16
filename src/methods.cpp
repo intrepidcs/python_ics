@@ -20,6 +20,13 @@
 #include <sstream>
 #include <string>
 
+// Own a Python reference while the GIL is held, including on early returns.
+struct PyObjectDecref
+{
+    void operator()(PyObject* object) const { Py_XDECREF(object); }
+};
+using PyObjectRef = std::unique_ptr<PyObject, PyObjectDecref>;
+
 // This class allows RAII of the python GIL. This is a C++ replacement of
 // Py_BEGIN_ALLOW_THREADS / Py_END_ALLOW_THREADS
 class PyAllowThreads
@@ -794,12 +801,12 @@ bool _convertListOrTupleToArray(PyObject* obj, std::vector<PyObject*>* results)
 PyObject* _getPythonModuleObject(const char* module_name, const char* module_object_name)
 {
     // Before we do anything, we need to grab the python s_device_settings ctype.Structure.
-    PyObject* module = PyImport_ImportModule(module_name);
+    PyObjectRef module(PyImport_ImportModule(module_name));
     if (!module) {
         return set_ics_exception(exception_runtime_error(), "_getPythonModuleObject(): Failed to import module");
     }
     // Grab the module Dictionary
-    PyObject* module_dict = PyModule_GetDict(module);
+    PyObject* module_dict = PyModule_GetDict(module.get());
     if (!module_dict) {
         return set_ics_exception(exception_runtime_error(),
                                  "_getPythonModuleObject(): Failed to grab module dict from module");
@@ -823,13 +830,13 @@ PyObject* _getPythonModuleObject(const char* module_name, const char* module_obj
 int _isPythonModuleObject_IsInstance(PyObject* object, const char* module_name, const char* module_object_name)
 {
     // Before we do anything, we need to grab the python s_device_settings ctype.Structure.
-    PyObject* module = PyImport_ImportModule(module_name);
+    PyObjectRef module(PyImport_ImportModule(module_name));
     if (!module) {
         set_ics_exception(exception_runtime_error(), "_isPythonModuleObjectInstanceOf(): Failed to import module");
         return -1;
     }
     // Grab the module Dictionary
-    PyObject* module_dict = PyModule_GetDict(module);
+    PyObject* module_dict = PyModule_GetDict(module.get());
     if (!module_dict) {
         set_ics_exception(exception_runtime_error(),
                           "_isPythonModuleObjectInstanceOf(): Failed to grab module dict from module");
@@ -940,14 +947,14 @@ bool PyNeoDeviceEx_GetHandle(PyObject* object, void** handle)
         set_ics_exception(exception_runtime_error(), "Object is not of type PyNeoDeviceEx");
         return false;
     }
-    PyObject* _handle = PyObject_GetAttrString(object, "_handle");
+    PyObjectRef _handle(PyObject_GetAttrString(object, "_handle"));
     if (!_handle) {
         return false;
     }
-    if (!PyCapsule_CheckExact(_handle)) {
+    if (!PyCapsule_CheckExact(_handle.get())) {
         return true;
     }
-    void* ptr = PyCapsule_GetPointer(_handle, NULL);
+    void* ptr = PyCapsule_GetPointer(_handle.get(), NULL);
     if (!ptr) {
         return false;
     }
@@ -965,20 +972,20 @@ bool PyNeoDeviceEx_SetHandle(PyObject* object, void* handle)
         set_ics_exception(exception_runtime_error(), "Object is not of type PyNeoDeviceEx");
         return false;
     }
-    PyObject* _handle = PyObject_GetAttrString(object, "_handle");
+    PyObjectRef _handle(PyObject_GetAttrString(object, "_handle"));
     if (!_handle) {
         return false;
     }
-    if (!PyCapsule_CheckExact(_handle) && handle) {
-        PyObject* capsule = PyCapsule_New(handle, NULL, __destroy_PyNeoDeviceEx_Handle);
+    if (!PyCapsule_CheckExact(_handle.get()) && handle) {
+        PyObjectRef capsule(PyCapsule_New(handle, NULL, __destroy_PyNeoDeviceEx_Handle));
         if (!capsule) {
             return false;
         }
-        if (PyObject_SetAttrString(object, "_handle", capsule) != 0) {
+        if (PyObject_SetAttrString(object, "_handle", capsule.get()) != 0) {
             return false;
         }
     } else if (handle) {
-        if (!PyCapsule_SetPointer(_handle, handle)) {
+        if (!PyCapsule_SetPointer(_handle.get(), handle)) {
             return NULL;
         }
     } else {
