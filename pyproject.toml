@@ -31,10 +31,12 @@ Issues = "https://github.com/intrepidcs/python_ics/issues"
 [dependency-groups]
 test = [
   "pytest>=8.4.2",
+  "dunamai",
+  "setuptools",
 ]
 
 [tool.setuptools.dynamic]
-version = { attr = "ics.__version__" }
+version = { attr = "ics.__version.__version__" }
 
 [build-system]
 requires = [

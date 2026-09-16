@@ -49,6 +49,15 @@ jobs:
       run: |
         uv sync --group test
     
+    - name: Rebuild extension in place twice (Windows)
+      if: runner.os == 'Windows'
+      run: |
+        uv pip install setuptools wheel
+        uv run --no-sync python setup.py build_ext --inplace --force
+        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+        uv run --no-sync python setup.py build_ext --inplace --force
+        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
     - name: Run tests
       run: |
         uv run pytest tests/ --verbose
