@@ -2200,6 +2200,11 @@ PyObject* meth_get_device_settings(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, arg_parse("O|lI:", __FUNCTION__), &obj, &device_type_override, &vnet_slot_arg)) {
         return NULL;
     }
+    if (device_type_override != -1 &&
+        (device_type_override < 0 || device_type_override >= DeviceSettingsTypeMax)) {
+        PyErr_SetString(PyExc_ValueError, "device_type must be -1 or a valid EDeviceSettingsType");
+        return NULL;
+    }
     EPlasmaIonVnetChannel_t vnet_slot = static_cast<EPlasmaIonVnetChannel_t>(vnet_slot_arg);
 
     // Before we do anything, we need to grab the python s_device_settings ctype.Structure.
@@ -2243,6 +2248,8 @@ PyObject* meth_get_device_settings(PyObject* self, PyObject* args)
                 Py_DECREF(settings);
                 return set_ics_exception(exception_runtime_error(), "icsneoGetDeviceSettingsType() Failed");
             }
+        } else {
+            *setting_type = static_cast<EDeviceSettingsType>(device_type_override);
         }
         // int _stdcall icsneoGetDeviceSettings(void* hObject, SDeviceSettings* pSettings, int iNumBytes,
         // EPlasmaIonVnetChannel_t vnetSlot)
