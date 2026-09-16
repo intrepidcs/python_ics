@@ -3,6 +3,7 @@
 import os
 from pathlib import Path
 import shutil
+import struct
 import subprocess
 import sys
 
@@ -37,16 +38,20 @@ API int CALL icsneoScriptLoadReadBin(void* h, const unsigned char* data, unsigne
         if not compiler or not linker:
             pytest.skip("LLVM is required for the mock DLL")
         library = root / "mock.dll"
-        subprocess.run([compiler, "/nologo", "/c", "/GS-", "/Zl", str(source),
-                        f"/Fo{root / 'mock.obj'}"], check=True, capture_output=True)
+        is_32bit = struct.calcsize("P") == 4
+        target = "i686-pc-windows-msvc" if is_32bit else "x86_64-pc-windows-msvc"
+        subprocess.run([compiler, f"--target={target}", "/nologo", "/c", "/GS-", "/Zl", str(source),
+                        f"/Fo{root / 'mock.obj'}"], check=True, capture_output=True, timeout=60)
+        aliases = (["/export:icsneoScriptLoad=_icsneoScriptLoad@16",
+                    "/export:icsneoScriptLoadReadBin=_icsneoScriptLoadReadBin@16"] if is_32bit else [])
         subprocess.run([linker, "/dll", "/noentry", "/nodefaultlib", f"/out:{library}",
-                        str(root / "mock.obj")], check=True, capture_output=True)
+                        str(root / "mock.obj"), *aliases], check=True, capture_output=True, timeout=60)
     else:
         compiler = shutil.which("cc")
         if not compiler:
             pytest.skip("C compiler is required for the mock library")
         library = root / "mock.so"
-        subprocess.run([compiler, "-shared", "-fPIC", str(source), "-o", str(library)], check=True)
+        subprocess.run([compiler, "-shared", "-fPIC", str(source), "-o", str(library)], check=True, timeout=60)
     return library
 
 
@@ -132,5 +137,5 @@ else:
     raise AssertionError("missing file accepted")
 '''
     result = subprocess.run([sys.executable, "-c", script, str(script_library), loader, kind,
-                             str(failure), str(tmp_path)], env=env, capture_output=True, text=True)
+                             str(failure), str(tmp_path)], env=env, capture_output=True, text=True, timeout=60)
     assert result.returncode == 0, result.stdout + result.stderr
