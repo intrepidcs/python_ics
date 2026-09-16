@@ -34,15 +34,26 @@ def expect_error(action, error):
         action()
 
 
+def assert_capsule_ownership(capsules, device_references=0):
+    new = ctypes.pythonapi.PyCapsule_New
+    new.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_void_p]
+    new.restype = ctypes.py_object
+    control = [new(0x1234, None, None)]
+    # Compare equally owned list elements. CPython versions can differ in the
+    # temporary references they use for local variables and getrefcount calls.
+    for index in range(len(capsules)):
+        assert sys.getrefcount(capsules[index]) == sys.getrefcount(control[0]) + device_references
+
+
 def test_handle_creation_and_clear(device):
     for _ in range(50):
         assert ics.open_device(device) is device
-        capsule = device._handle
-        assert sys.getrefcount(capsule) == 3  # local, device, getrefcount argument
+        capsules = [device._handle]
+        assert_capsule_ownership(capsules, device_references=1)
         assert device._Handle == 0x1234
         assert ics.close_device(device) == 0
         assert device._handle is None
-        assert sys.getrefcount(capsule) == 2
+        assert_capsule_ownership(capsules)
 
 
 @pytest.mark.parametrize("kind", ["capsule", "noncapsule", "named_capsule"])
@@ -77,8 +88,7 @@ def test_handle_attribute_failure(device, monkeypatch, failure):
         sentinel = object()
         assert_stable(sentinel, lambda: expect_error(lambda: ics.open_device(device), ValueError))
         # A failing setter never stole the helper's newly created reference.
-        for capsule in rejected:
-            assert sys.getrefcount(capsule) == 3  # list, loop local, getrefcount
+        assert_capsule_ownership(rejected)
 
 
 @pytest.mark.parametrize("helper", ["construct", "isinstance"])
