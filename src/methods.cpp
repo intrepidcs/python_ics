@@ -20,6 +20,13 @@
 #include <sstream>
 #include <string>
 
+// Own a Python reference while the GIL is held, including on early returns.
+struct PyObjectDecref
+{
+    void operator()(PyObject* object) const { Py_XDECREF(object); }
+};
+using PyObjectRef = std::unique_ptr<PyObject, PyObjectDecref>;
+
 // This class allows RAII of the python GIL. This is a C++ replacement of
 // Py_BEGIN_ALLOW_THREADS / Py_END_ALLOW_THREADS
 class PyAllowThreads
@@ -794,12 +801,12 @@ bool _convertListOrTupleToArray(PyObject* obj, std::vector<PyObject*>* results)
 PyObject* _getPythonModuleObject(const char* module_name, const char* module_object_name)
 {
     // Before we do anything, we need to grab the python s_device_settings ctype.Structure.
-    PyObject* module = PyImport_ImportModule(module_name);
+    PyObjectRef module(PyImport_ImportModule(module_name));
     if (!module) {
         return set_ics_exception(exception_runtime_error(), "_getPythonModuleObject(): Failed to import module");
     }
     // Grab the module Dictionary
-    PyObject* module_dict = PyModule_GetDict(module);
+    PyObject* module_dict = PyModule_GetDict(module.get());
     if (!module_dict) {
         return set_ics_exception(exception_runtime_error(),
                                  "_getPythonModuleObject(): Failed to grab module dict from module");
@@ -823,13 +830,13 @@ PyObject* _getPythonModuleObject(const char* module_name, const char* module_obj
 int _isPythonModuleObject_IsInstance(PyObject* object, const char* module_name, const char* module_object_name)
 {
     // Before we do anything, we need to grab the python s_device_settings ctype.Structure.
-    PyObject* module = PyImport_ImportModule(module_name);
+    PyObjectRef module(PyImport_ImportModule(module_name));
     if (!module) {
         set_ics_exception(exception_runtime_error(), "_isPythonModuleObjectInstanceOf(): Failed to import module");
         return -1;
     }
     // Grab the module Dictionary
-    PyObject* module_dict = PyModule_GetDict(module);
+    PyObject* module_dict = PyModule_GetDict(module.get());
     if (!module_dict) {
         set_ics_exception(exception_runtime_error(),
                           "_isPythonModuleObjectInstanceOf(): Failed to grab module dict from module");
@@ -940,14 +947,14 @@ bool PyNeoDeviceEx_GetHandle(PyObject* object, void** handle)
         set_ics_exception(exception_runtime_error(), "Object is not of type PyNeoDeviceEx");
         return false;
     }
-    PyObject* _handle = PyObject_GetAttrString(object, "_handle");
+    PyObjectRef _handle(PyObject_GetAttrString(object, "_handle"));
     if (!_handle) {
         return false;
     }
-    if (!PyCapsule_CheckExact(_handle)) {
+    if (!PyCapsule_CheckExact(_handle.get())) {
         return true;
     }
-    void* ptr = PyCapsule_GetPointer(_handle, NULL);
+    void* ptr = PyCapsule_GetPointer(_handle.get(), NULL);
     if (!ptr) {
         return false;
     }
@@ -965,20 +972,20 @@ bool PyNeoDeviceEx_SetHandle(PyObject* object, void* handle)
         set_ics_exception(exception_runtime_error(), "Object is not of type PyNeoDeviceEx");
         return false;
     }
-    PyObject* _handle = PyObject_GetAttrString(object, "_handle");
+    PyObjectRef _handle(PyObject_GetAttrString(object, "_handle"));
     if (!_handle) {
         return false;
     }
-    if (!PyCapsule_CheckExact(_handle) && handle) {
-        PyObject* capsule = PyCapsule_New(handle, NULL, __destroy_PyNeoDeviceEx_Handle);
+    if (!PyCapsule_CheckExact(_handle.get()) && handle) {
+        PyObjectRef capsule(PyCapsule_New(handle, NULL, __destroy_PyNeoDeviceEx_Handle));
         if (!capsule) {
             return false;
         }
-        if (PyObject_SetAttrString(object, "_handle", capsule) != 0) {
+        if (PyObject_SetAttrString(object, "_handle", capsule.get()) != 0) {
             return false;
         }
     } else if (handle) {
-        if (!PyCapsule_SetPointer(_handle, handle)) {
+        if (!PyCapsule_SetPointer(_handle.get(), handle)) {
             return NULL;
         }
     } else {
@@ -1771,6 +1778,17 @@ PyObject* meth_transmit_messages(PyObject* self, PyObject* args)
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
         return NULL;
     }
+    // Validate the entire batch before taking native pointers or transmitting.
+    // A non-tuple argument represents a single message.
+    const Py_ssize_t message_count = PyTuple_CheckExact(temp) ? PyTuple_Size(temp) : 1;
+    for (Py_ssize_t i = 0; i < message_count; ++i) {
+        PyObject* message = PyTuple_CheckExact(temp) ? PyTuple_GetItem(temp, i) : temp;
+        if (!PySpyMessage_CheckExact(message) && !PySpyMessageJ1850_CheckExact(message)) {
+            return set_ics_exception(PyExc_TypeError,
+                                     "Message must be of type " MODULE_NAME "." SPY_MESSAGE_OBJECT_NAME " or "
+                                     MODULE_NAME "." SPY_MESSAGE_J1850_OBJECT_NAME);
+        }
+    }
     PyObject* tuple = temp;
     if (!PyTuple_CheckExact(temp)) {
         tuple = Py_BuildValue("(O)", temp);
@@ -1804,20 +1822,12 @@ PyObject* meth_transmit_messages(PyObject* self, PyObject* args)
         ice::Function<int __stdcall(void*, icsSpyMessage*, int, int)> icsneoTxMessages(lib, "icsneoTxMessages");
         const Py_ssize_t TUPLE_COUNT = PyTuple_Size(tuple);
         icsSpyMessage** msgs = new icsSpyMessage*[static_cast<size_t>(TUPLE_COUNT)]();
-        for (int i = 0; i < TUPLE_COUNT; ++i) {
+        for (Py_ssize_t i = 0; i < TUPLE_COUNT; ++i) {
             spy_message_object* _obj = (spy_message_object*)PyTuple_GetItem(tuple, static_cast<Py_ssize_t>(i));
-            if (!_obj) {
-                if (created_tuple) {
-                    Py_XDECREF(tuple);
-                }
-                delete[] msgs;
-                return set_ics_exception(exception_runtime_error(),
-                                         "Tuple item must be of " MODULE_NAME "." SPY_MESSAGE_OBJECT_NAME);
-            }
             msgs[i] = &(_obj->msg);
         }
         auto gil = PyAllowThreads();
-        for (int i = 0; i < TUPLE_COUNT; ++i) {
+        for (Py_ssize_t i = 0; i < TUPLE_COUNT; ++i) {
             if (!icsneoTxMessages(handle, msgs[i], (msgs[i]->NetworkID2 << 8) | msgs[i]->NetworkID, 1)) {
                 gil.restore();
                 if (created_tuple) {

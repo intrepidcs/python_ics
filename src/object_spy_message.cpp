@@ -90,11 +90,8 @@ static PyObject* spy_message_object_getattr(PyObject* o, PyObject* attr_name)
 #endif
         PyErr_Format(PyExc_TypeError, "attribute name must be string, not '%.200s'", attr_name->ob_type->tp_name);
         return NULL;
-    } else {
-        Py_INCREF(attr_name);
     }
     if (PyUnicode_CompareWithASCIIString(attr_name, "Data") == 0) {
-        Py_DECREF(attr_name);
         spy_message_object* obj = (spy_message_object*)o;
         PyObject* temp = Py_BuildValue("(i,i,i,i,i,i,i,i)",
                                        obj->msg.Data[0],
@@ -109,7 +106,6 @@ static PyObject* spy_message_object_getattr(PyObject* o, PyObject* attr_name)
         Py_DECREF(temp);
         return data;
     } else if (PyUnicode_CompareWithASCIIString(attr_name, "AckBytes") == 0) {
-        Py_DECREF(attr_name);
         spy_message_object* obj = (spy_message_object*)o;
         return Py_BuildValue("(i,i,i,i,i,i,i,i)",
                              obj->msg.AckBytes[0],
@@ -121,7 +117,6 @@ static PyObject* spy_message_object_getattr(PyObject* o, PyObject* attr_name)
                              obj->msg.AckBytes[6],
                              obj->msg.AckBytes[7]);
     } else if (PyUnicode_CompareWithASCIIString(attr_name, "Header") == 0) {
-        Py_DECREF(attr_name);
         spy_message_j1850_object* obj = (spy_message_j1850_object*)o;
         PyObject* temp =
             Py_BuildValue("(i,i,i,i)", obj->msg.Header[0], obj->msg.Header[1], obj->msg.Header[2], obj->msg.Header[3]);
@@ -129,7 +124,6 @@ static PyObject* spy_message_object_getattr(PyObject* o, PyObject* attr_name)
         Py_DECREF(temp);
         return data;
     } else if (PyUnicode_CompareWithASCIIString(attr_name, "ExtraDataPtr") == 0) {
-        Py_DECREF(attr_name);
         if (!spy_message_validate_extra_data((spy_message_object*)o))
             return NULL;
         spy_message_j1850_object* obj = (spy_message_j1850_object*)o;
@@ -159,6 +153,11 @@ static PyObject* spy_message_object_getattr(PyObject* o, PyObject* attr_name)
 
 static int spy_message_object_setattr_impl(PyObject* o, PyObject* name, PyObject* value)
 {
+    // tp_setattro receives NULL for deletion. Let descriptors reject deletion
+    // before any custom setter inspects the value or changes message storage.
+    if (value == NULL)
+        return PyObject_GenericSetAttr(o, name, value);
+
     spy_message_object* obj = (spy_message_object*)o;
     if (PyUnicode_CompareWithASCIIString(name, "Data") == 0) {
         Py_ssize_t length = _copy_byte_tuple(value, name, obj->msg.Data, sizeof(obj->msg.Data));
