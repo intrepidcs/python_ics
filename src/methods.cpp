@@ -2489,13 +2489,13 @@ PyObject* meth_write_sdcard(
 PyObject* meth_create_neovi_radio_message(PyObject* self, PyObject* args, PyObject* keywords)
 {
     (void)self;
-    int relay1 = 0;
-    int relay2 = 0;
-    int relay3 = 0;
-    int relay4 = 0;
-    int relay5 = 0;
-    int led5 = 0;
-    int led6 = 0;
+    unsigned char relay1 = 0;
+    unsigned char relay2 = 0;
+    unsigned char relay3 = 0;
+    unsigned char relay4 = 0;
+    unsigned char relay5 = 0;
+    unsigned char led5 = 0;
+    unsigned char led6 = 0;
     int msb = 0;
     int lsb = 0;
     int analog = 0;
@@ -2505,7 +2505,7 @@ PyObject* meth_create_neovi_radio_message(PyObject* self, PyObject* args, PyObje
 #endif
         char* kwords[] = { "Relay1",       "Relay2", "Relay3",          "Relay4",          "Relay5",
                            "LED5",         "LED6",   "MSB_report_rate", "LSB_report_rate", "analog_change_report_rate",
-                           "relay_timeout" };
+                           "relay_timeout", NULL };
     // Accepts keywords: Relay1-Relay5 (boolean), LED5 (boolean), LED6 (boolean), MSB_report_rate (int),
     // LSB_report_rate (int), analog_change_report_rate (int), relay_timeout (int).
     if (!PyArg_ParseTupleAndKeywords(args,
