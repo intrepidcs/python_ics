@@ -737,22 +737,37 @@ def generate(filename="include/ics/icsnVC40.h"):
             f.write(f'    "ics.structures.{fname}",\n')
         f.write("]\n\n")
 
-    # Verify We can at least import all of the modules - quick check to make sure parser worked.
-    ics_module_path = GEN_ICS_DIR.parent.resolve()
-    # Add the module to the eval sys.path.
-    eval("""sys.path.insert(0, f"{ics_module_path}")""")
-    for file_name in file_names:
-        if file_name.startswith("__"):
-            continue
-        import_line = "from ics.structures import {}".format(
-            re.sub(r'(\.py)', '', file_name))
-        try:
-            print(f"Importing / Verifying {output_dir / file_name}...{' '*20}", end="\r")
-            exec(import_line)
-        except Exception as ex:
-            print(f"""\nERROR: {ex} IMPORT LINE: '{import_line}'""")
-            raise ex
+    validate_generated_modules(file_names)
     print("\nDone.")
+
+
+def validate_generated_modules(file_names):
+    """Check imports without keeping an existing native extension loaded in setup."""
+    import json
+
+    # Importing ics also loads ics.ics when it exists. Windows cannot replace a
+    # loaded .pyd, so wait for a separate interpreter to exit before building.
+    # Pass paths and names as data, including paths containing spaces/backslashes.
+    validation_code = """
+import importlib
+import json
+import sys
+
+package_path, file_names = json.load(sys.stdin)
+sys.path.insert(0, package_path)
+for file_name in file_names:
+    if file_name.startswith("__"):
+        continue
+    module_name = "ics.structures." + file_name.removesuffix(".py")
+    print(f"Importing / Verifying {module_name}...", flush=True)
+    importlib.import_module(module_name)
+"""
+    run(
+        [sys.executable, "-c", validation_code],
+        input=json.dumps([str(GEN_ICS_DIR.parent.resolve()), file_names]),
+        text=True,
+        check=True,
+    )
 
 
 def _write_c_object(f, c_object):
