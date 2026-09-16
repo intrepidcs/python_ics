@@ -1584,7 +1584,7 @@ PyObject* meth_coremini_load(PyObject* self, PyObject* args)
         return NULL;
     }
     long fsize;
-    unsigned char* data = NULL;
+    std::unique_ptr<unsigned char, decltype(&free)> data(nullptr, &free);
     int data_size = 0;
 #if PY_MAJOR_VERSION >= 3
     if (PyUnicode_CheckExact(arg_data)) {
@@ -1612,15 +1612,26 @@ PyObject* meth_coremini_load(PyObject* self, PyObject* args)
             fclose(f);
             return set_ics_exception(exception_runtime_error(), "CoreMini script file size is invalid");
         }
-        data = (unsigned char*)malloc(sizeof(char) * fsize);
-        data_size = (int)fread(data, 1, static_cast<size_t>(fsize), f);
+        data.reset(static_cast<unsigned char*>(malloc(fsize ? static_cast<size_t>(fsize) : 1)));
+        if (!data) {
+            fclose(f);
+            return PyErr_NoMemory();
+        }
+        data_size = (int)fread(data.get(), 1, static_cast<size_t>(fsize), f);
         fclose(f);
         if (fsize != data_size) {
             return set_ics_exception(exception_runtime_error(), "CoreMini binary file size mismatch");
         }
     } else if (PyTuple_CheckExact(arg_data)) {
         Py_ssize_t tuple_size = PyTuple_Size(arg_data);
-        data = (unsigned char*)malloc(sizeof(char) * tuple_size);
+        if (tuple_size > INT_MAX) {
+            PyErr_SetString(PyExc_OverflowError, "Script tuple is too large");
+            return NULL;
+        }
+        data.reset(static_cast<unsigned char*>(malloc(tuple_size ? static_cast<size_t>(tuple_size) : 1)));
+        if (!data) {
+            return PyErr_NoMemory();
+        }
         // Move tuple data into array
         for (int i = 0; i < tuple_size; ++i) {
             PyObject* value = PyTuple_GET_ITEM(arg_data, i);
@@ -1628,7 +1639,11 @@ PyObject* meth_coremini_load(PyObject* self, PyObject* args)
                 return set_ics_exception(exception_runtime_error(),
                                          "Failed to convert tuple data. Tuple data must be integer type");
             }
-            data[i] = (unsigned char)PyLong_AsLong(PyTuple_GET_ITEM(arg_data, i));
+            long byte = PyLong_AsLong(value);
+            if (byte == -1 && PyErr_Occurred()) {
+                return NULL;
+            }
+            data.get()[i] = static_cast<unsigned char>(byte);
         }
         fsize = static_cast<long>(tuple_size);
         data_size = fsize;
@@ -1644,7 +1659,7 @@ PyObject* meth_coremini_load(PyObject* self, PyObject* args)
         ice::Function<int __stdcall(void*, const unsigned char*, unsigned long, int)> icsneoScriptLoad(
             lib, "icsneoScriptLoad");
         auto gil = PyAllowThreads();
-        if (!icsneoScriptLoad(handle, data, static_cast<unsigned long>(data_size), location)) {
+        if (!icsneoScriptLoad(handle, data.get(), static_cast<unsigned long>(data_size), location)) {
             gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoScriptLoad() Failed");
         }
@@ -3593,7 +3608,7 @@ PyObject* meth_load_readbin(PyObject* self, PyObject* args)
         return NULL;
     }
     long fsize;
-    unsigned char* data = NULL;
+    std::unique_ptr<unsigned char, decltype(&free)> data(nullptr, &free);
     int data_size = 0;
 #if PY_MAJOR_VERSION >= 3
     if (PyUnicode_CheckExact(arg_data)) {
@@ -3621,15 +3636,26 @@ PyObject* meth_load_readbin(PyObject* self, PyObject* args)
             fclose(f);
             return set_ics_exception(exception_runtime_error(), "Readbin file size is invalid");
         }
-        data = (unsigned char*)malloc(sizeof(char) * fsize);
-        data_size = (int)fread(data, 1, static_cast<size_t>(fsize), f);
+        data.reset(static_cast<unsigned char*>(malloc(fsize ? static_cast<size_t>(fsize) : 1)));
+        if (!data) {
+            fclose(f);
+            return PyErr_NoMemory();
+        }
+        data_size = (int)fread(data.get(), 1, static_cast<size_t>(fsize), f);
         fclose(f);
         if (fsize != data_size) {
             return set_ics_exception(exception_runtime_error(), "Readbin file size mismatch");
         }
     } else if (PyTuple_CheckExact(arg_data)) {
         Py_ssize_t tuple_size = PyTuple_Size(arg_data);
-        data = (unsigned char*)malloc(sizeof(char) * tuple_size);
+        if (tuple_size > INT_MAX) {
+            PyErr_SetString(PyExc_OverflowError, "Script tuple is too large");
+            return NULL;
+        }
+        data.reset(static_cast<unsigned char*>(malloc(tuple_size ? static_cast<size_t>(tuple_size) : 1)));
+        if (!data) {
+            return PyErr_NoMemory();
+        }
         // Move tuple data into array
         for (int i = 0; i < tuple_size; ++i) {
             PyObject* value = PyTuple_GET_ITEM(arg_data, i);
@@ -3637,7 +3663,11 @@ PyObject* meth_load_readbin(PyObject* self, PyObject* args)
                 return set_ics_exception(exception_runtime_error(),
                                          "Failed to convert tuple data. Tuple data must be integer type");
             }
-            data[i] = (unsigned char)PyLong_AsLong(PyTuple_GET_ITEM(arg_data, i));
+            long byte = PyLong_AsLong(value);
+            if (byte == -1 && PyErr_Occurred()) {
+                return NULL;
+            }
+            data.get()[i] = static_cast<unsigned char>(byte);
         }
         fsize = static_cast<long>(tuple_size);
         data_size = fsize;
@@ -3653,7 +3683,7 @@ PyObject* meth_load_readbin(PyObject* self, PyObject* args)
         ice::Function<int __stdcall(void*, const unsigned char*, unsigned long, int)> icsneoScriptLoadReadBin(
             lib, "icsneoScriptLoadReadBin");
         auto gil = PyAllowThreads();
-        if (!icsneoScriptLoadReadBin(handle, data, static_cast<unsigned long>(data_size), location)) {
+        if (!icsneoScriptLoadReadBin(handle, data.get(), static_cast<unsigned long>(data_size), location)) {
             gil.restore();
             return set_ics_exception(exception_runtime_error(), "icsneoScriptLoadReadBin() Failed");
         }
