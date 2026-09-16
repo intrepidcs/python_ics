@@ -79,7 +79,6 @@ for invalid in (None, 42, object(), "message", [], {}, invalid_device):
                      (invalid, ics.SpyMessageJ1850()),
                      (ics.SpyMessage(), invalid, ics.SpyMessageJ1850())):
         before = library.review_calls()
-        refs = sys.getrefcount(invalid)
         try:
             ics.transmit_messages(device, argument)
         except TypeError as error:
@@ -87,7 +86,27 @@ for invalid in (None, 42, object(), "message", [], {}, invalid_device):
         else:
             raise AssertionError(f"accepted invalid input: {argument!r}")
         assert library.review_calls() == before, "partially transmitted invalid batch"
-        assert sys.getrefcount(invalid) == refs, "invalid input leaked a reference"
+
+# Measure ownership separately with private objects. Shared singleton counts
+# include unrelated interpreter activity and device._handle lookups (#243).
+# Check the rejected scalar, batch container, and valid neighbors so neither
+# a direct reference leak nor a retained temporary tuple can go unnoticed.
+sentinel = object()
+neighbors = (ics.SpyMessage(), ics.SpyMessageJ1850())
+for argument in (sentinel, (sentinel,), (neighbors[0], sentinel),
+                 (sentinel, neighbors[1]), (*neighbors, sentinel)):
+    tracked = (sentinel, argument, *neighbors)
+    refs = tuple(sys.getrefcount(value) for value in tracked)
+    before = library.review_calls()
+    for _ in range(100):
+        try:
+            ics.transmit_messages(device, argument)
+        except TypeError:
+            pass
+        else:
+            raise AssertionError("accepted invalid owned input")
+    assert library.review_calls() == before, "partially transmitted invalid batch"
+    assert tuple(sys.getrefcount(value) for value in tracked) == refs, "rejected input retained references"
 
 standard = ics.SpyMessage()
 j1850 = ics.SpyMessageJ1850()
