@@ -1771,6 +1771,17 @@ PyObject* meth_transmit_messages(PyObject* self, PyObject* args)
     if (!PyNeoDeviceEx_GetHandle(obj, &handle)) {
         return NULL;
     }
+    // Validate the entire batch before taking native pointers or transmitting.
+    // A non-tuple argument represents a single message.
+    const Py_ssize_t message_count = PyTuple_CheckExact(temp) ? PyTuple_Size(temp) : 1;
+    for (Py_ssize_t i = 0; i < message_count; ++i) {
+        PyObject* message = PyTuple_CheckExact(temp) ? PyTuple_GetItem(temp, i) : temp;
+        if (!PySpyMessage_CheckExact(message) && !PySpyMessageJ1850_CheckExact(message)) {
+            return set_ics_exception(PyExc_TypeError,
+                                     "Message must be of type " MODULE_NAME "." SPY_MESSAGE_OBJECT_NAME " or "
+                                     MODULE_NAME "." SPY_MESSAGE_J1850_OBJECT_NAME);
+        }
+    }
     PyObject* tuple = temp;
     if (!PyTuple_CheckExact(temp)) {
         tuple = Py_BuildValue("(O)", temp);
@@ -1791,20 +1802,12 @@ PyObject* meth_transmit_messages(PyObject* self, PyObject* args)
         ice::Function<int __stdcall(void*, icsSpyMessage*, int, int)> icsneoTxMessages(lib, "icsneoTxMessages");
         const Py_ssize_t TUPLE_COUNT = PyTuple_Size(tuple);
         icsSpyMessage** msgs = new icsSpyMessage*[static_cast<size_t>(TUPLE_COUNT)]();
-        for (int i = 0; i < TUPLE_COUNT; ++i) {
+        for (Py_ssize_t i = 0; i < TUPLE_COUNT; ++i) {
             spy_message_object* _obj = (spy_message_object*)PyTuple_GetItem(tuple, static_cast<Py_ssize_t>(i));
-            if (!_obj) {
-                if (created_tuple) {
-                    Py_XDECREF(tuple);
-                }
-                delete[] msgs;
-                return set_ics_exception(exception_runtime_error(),
-                                         "Tuple item must be of " MODULE_NAME "." SPY_MESSAGE_OBJECT_NAME);
-            }
             msgs[i] = &(_obj->msg);
         }
         auto gil = PyAllowThreads();
-        for (int i = 0; i < TUPLE_COUNT; ++i) {
+        for (Py_ssize_t i = 0; i < TUPLE_COUNT; ++i) {
             if (!icsneoTxMessages(handle, msgs[i], (msgs[i]->NetworkID2 << 8) | msgs[i]->NetworkID, 1)) {
                 gil.restore();
                 if (created_tuple) {
@@ -2139,18 +2142,45 @@ PyObject* meth_flash_devices(PyObject* self, PyObject* args)
 }
 #endif // _USE_INTERNAL_HEADER_
 
-PyObject* msg_reflash_callback = NULL;
+// Owned reference, accessed with the GIL held. NULL selects stdout output.
+static PyObject* msg_reflash_callback = NULL;
 static void message_reflash_callback(const wchar_t* message, unsigned long progress)
 {
     // We need to relock the GIL here otherwise we crash
     PyGILState_STATE state = PyGILState_Ensure();
-    if (!msg_reflash_callback) {
-        PySys_WriteStdout("%ls -%ld\n", message, progress);
-    } else if (PyObject_HasAttrString(msg_reflash_callback, "reflash_callback")) {
-        PyObject_CallMethod(msg_reflash_callback, "reflash_callback", "u,k", message, progress);
+    // Keep the current handler alive even if it unregisters/replaces itself.
+    PyObject* callback = msg_reflash_callback;
+    Py_XINCREF(callback);
+    if (!callback) {
+        PyObject* text = PyUnicode_FromWideChar(message, -1);
+        if (text) {
+            PySys_FormatStdout("%U -%lu\n", text, progress);
+            Py_DECREF(text);
+        } else {
+            PyErr_WriteUnraisable(Py_None);
+        }
     } else {
-        PyObject_CallFunction(msg_reflash_callback, "u,k", message, progress);
+        PyObject* callable = PyObject_GetAttrString(callback, "reflash_callback");
+        if (!callable && PyErr_ExceptionMatches(PyExc_AttributeError)) {
+            PyErr_Clear();
+            callable = callback;
+            Py_INCREF(callable);
+        }
+        if (callable) {
+            PyObject* text = PyUnicode_FromWideChar(message, -1);
+            if (text) {
+                PyObject* result = PyObject_CallFunction(callable, "Ok", text, progress);
+                Py_XDECREF(result);
+                Py_DECREF(text);
+            }
+            Py_DECREF(callable);
+        }
+        // Native progress notifications have no Python caller to receive errors.
+        if (PyErr_Occurred()) {
+            PyErr_WriteUnraisable(callback);
+        }
     }
+    Py_XDECREF(callback);
     // Unlock the GIL here again...
     PyGILState_Release(state);
 }
@@ -2163,10 +2193,22 @@ PyObject* meth_set_reflash_callback(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, arg_parse("|O:", __FUNCTION__), &callback)) {
         return NULL;
     }
-    if (!callback) {
-        msg_reflash_callback = NULL;
-    } else {
-        msg_reflash_callback = callback;
+    if (callback && callback != Py_None) {
+        PyObject* callable = PyObject_GetAttrString(callback, "reflash_callback");
+        if (!callable) {
+            if (!PyErr_ExceptionMatches(PyExc_AttributeError)) {
+                return NULL;
+            }
+            PyErr_Clear();
+            callable = callback;
+            Py_INCREF(callable);
+        }
+        int is_callable = PyCallable_Check(callable);
+        Py_DECREF(callable);
+        if (!is_callable) {
+            PyErr_SetString(PyExc_TypeError, "callback must be callable or have a callable reflash_callback method");
+            return NULL;
+        }
     }
     try {
         ice::Library* lib = dll_get_library();
@@ -2176,6 +2218,12 @@ PyObject* meth_set_reflash_callback(PyObject* self, PyObject* args)
         }
         ice::Function<void __stdcall(void (*)(const wchar_t*, unsigned long))> icsneoSetReflashCallback(
             lib, "icsneoSetReflashCallback");
+        // Resolve the library symbol before changing ownership. Publish before
+        // calling native code, which may immediately deliver a progress event.
+        PyObject* replacement = callback == Py_None ? NULL : callback;
+        Py_XINCREF(replacement);
+        PyObject* previous = msg_reflash_callback;
+        msg_reflash_callback = replacement;
         auto gil = PyAllowThreads();
         if (callback == Py_None) {
             icsneoSetReflashCallback(NULL);
@@ -2183,6 +2231,7 @@ PyObject* meth_set_reflash_callback(PyObject* self, PyObject* args)
             icsneoSetReflashCallback(&message_reflash_callback);
         }
         gil.restore();
+        Py_XDECREF(previous);
         Py_RETURN_NONE;
     } catch (ice::Exception& ex) {
         return set_ics_exception(exception_runtime_error(), (char*)ex.what());
@@ -2198,6 +2247,11 @@ PyObject* meth_get_device_settings(PyObject* self, PyObject* args)
     // enum, so parse into an unsigned int and cast at the call sites.
     unsigned int vnet_slot_arg = (unsigned int)PlasmaIonVnetChannelMain;
     if (!PyArg_ParseTuple(args, arg_parse("O|lI:", __FUNCTION__), &obj, &device_type_override, &vnet_slot_arg)) {
+        return NULL;
+    }
+    if (device_type_override != -1 &&
+        (device_type_override < 0 || device_type_override >= DeviceSettingsTypeMax)) {
+        PyErr_SetString(PyExc_ValueError, "device_type must be -1 or a valid EDeviceSettingsType");
         return NULL;
     }
     EPlasmaIonVnetChannel_t vnet_slot = static_cast<EPlasmaIonVnetChannel_t>(vnet_slot_arg);
@@ -2243,6 +2297,8 @@ PyObject* meth_get_device_settings(PyObject* self, PyObject* args)
                 Py_DECREF(settings);
                 return set_ics_exception(exception_runtime_error(), "icsneoGetDeviceSettingsType() Failed");
             }
+        } else {
+            *setting_type = static_cast<EDeviceSettingsType>(device_type_override);
         }
         // int _stdcall icsneoGetDeviceSettings(void* hObject, SDeviceSettings* pSettings, int iNumBytes,
         // EPlasmaIonVnetChannel_t vnetSlot)
@@ -2445,13 +2501,13 @@ PyObject* meth_write_sdcard(
 PyObject* meth_create_neovi_radio_message(PyObject* self, PyObject* args, PyObject* keywords)
 {
     (void)self;
-    int relay1 = 0;
-    int relay2 = 0;
-    int relay3 = 0;
-    int relay4 = 0;
-    int relay5 = 0;
-    int led5 = 0;
-    int led6 = 0;
+    unsigned char relay1 = 0;
+    unsigned char relay2 = 0;
+    unsigned char relay3 = 0;
+    unsigned char relay4 = 0;
+    unsigned char relay5 = 0;
+    unsigned char led5 = 0;
+    unsigned char led6 = 0;
     int msb = 0;
     int lsb = 0;
     int analog = 0;
@@ -2461,7 +2517,7 @@ PyObject* meth_create_neovi_radio_message(PyObject* self, PyObject* args, PyObje
 #endif
         char* kwords[] = { "Relay1",       "Relay2", "Relay3",          "Relay4",          "Relay5",
                            "LED5",         "LED6",   "MSB_report_rate", "LSB_report_rate", "analog_change_report_rate",
-                           "relay_timeout" };
+                           "relay_timeout", NULL };
     // Accepts keywords: Relay1-Relay5 (boolean), LED5 (boolean), LED6 (boolean), MSB_report_rate (int),
     // LSB_report_rate (int), analog_change_report_rate (int), relay_timeout (int).
     if (!PyArg_ParseTupleAndKeywords(args,

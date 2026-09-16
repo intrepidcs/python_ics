@@ -436,7 +436,10 @@ extern "C"
     MODULE_NAME                                                                                                        \
     ".set_reflash_callback(callback)\n"                                                                                \
     "\n"                                                                                                               \
-    "Sets the reflash display callback.\n"                                                                             \
+    "Sets the reflash display callback. The callback is retained until replaced or disabled.\n"                        \
+    "An object with a callable reflash_callback method is also accepted.\n"                                             \
+    "Pass None to disable callbacks, or omit the argument to print progress to stdout.\n"                               \
+    "Callback exceptions are reported through sys.unraisablehook.\n"                                                   \
     "\n"                                                                                                               \
     "Args:\n"                                                                                                          \
     "\tcallback (:class:`function`): Must be a callable Python function (`def callback(msg, progress)`)\n\n"           \
