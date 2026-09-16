@@ -54,16 +54,21 @@ API int observed(int field) {
         obj = directory / "settings.obj"
         target = "i686" if sys.maxsize <= 2**32 else "x86_64"
         subprocess.run([compiler, f"--target={target}-pc-windows-msvc", "/nologo", "/c", "/GS-", "/Zl",
-                        str(source), f"/Fo{obj}"], check=True, capture_output=True)
-        subprocess.run([linker, "/dll", "/noentry", "/nodefaultlib", f"/out:{library}", str(obj)],
-                       check=True, capture_output=True)
+                        str(source), f"/Fo{obj}"], check=True, capture_output=True, timeout=60)
+        # The wrapper resolves undecorated API names, also on 32-bit Windows.
+        exports = [] if target == "x86_64" else [
+            "/export:icsneoGetDeviceSettings=_icsneoGetDeviceSettings@16",
+            "/export:icsneoGetDeviceSettingsType=_icsneoGetDeviceSettingsType@12",
+        ]
+        subprocess.run([linker, "/dll", "/noentry", "/nodefaultlib", f"/out:{library}", str(obj), *exports],
+                       check=True, capture_output=True, timeout=60)
     else:
         compiler = shutil.which("cc")
         if not compiler:
             pytest.skip("A C compiler is required for the mock library")
         library = directory / ("settings.dylib" if sys.platform == "darwin" else "settings.so")
         subprocess.run([compiler, "-dynamiclib" if sys.platform == "darwin" else "-shared", "-fPIC",
-                        str(source), "-o", str(library)], check=True, capture_output=True)
+                        str(source), "-o", str(library)], check=True, capture_output=True, timeout=60)
     return library
 
 
@@ -124,5 +129,5 @@ else:
     env = os.environ.copy()
     env["PYTHONPATH"] = os.pathsep.join(str(Path(path).resolve()) for path in sys.path)
     result = subprocess.run([sys.executable, "-c", script, str(settings_library), scenario],
-                            env=env, capture_output=True, text=True)
+                            env=env, capture_output=True, text=True, timeout=30)
     assert result.returncode == 0, result.stdout + result.stderr
