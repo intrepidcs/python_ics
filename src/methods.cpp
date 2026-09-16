@@ -985,8 +985,8 @@ bool PyNeoDeviceEx_SetHandle(PyObject* object, void* handle)
             return false;
         }
     } else if (handle) {
-        if (!PyCapsule_SetPointer(_handle.get(), handle)) {
-            return NULL;
+        if (PyCapsule_SetPointer(_handle.get(), handle) != 0) {
+            return false;
         }
     } else {
         if (PyObject_SetAttrString(object, "_handle", Py_None) != 0) {
@@ -1303,6 +1303,13 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
         if (!PyNeoDeviceEx_GetHandle(device, &handle)) {
             return NULL;
         }
+        if (handle) {
+            return set_ics_exception(exception_runtime_error(), "Device is already open; close it before reopening.");
+        }
+        // Resolve cleanup before opening so a failed Python handle assignment
+        // cannot leave us with a native handle we have no way to release.
+        ice::Function<int __stdcall(void*, int*)> icsneoClosePort(lib, "icsneoClosePort");
+        ice::Function<void __stdcall(void*)> icsneoFreeObject(lib, "icsneoFreeObject");
         // Get the NeoDeviceEx from PyNeoDeviceEx
         Py_buffer buffer = {};
         NeoDeviceEx* nde = NULL;
@@ -1325,6 +1332,15 @@ PyObject* meth_open_device(PyObject* self, PyObject* args, PyObject* keywords)
         gil.restore();
         PyBuffer_Release(&buffer);
         if (!PyNeoDeviceEx_SetHandle(device, handle)) {
+            PyObject *error_type, *error_value, *error_traceback;
+            PyErr_Fetch(&error_type, &error_value, &error_traceback);
+            if (handle) {
+                int error_count = 0;
+                auto cleanup_gil = PyAllowThreads();
+                icsneoClosePort(handle, &error_count);
+                icsneoFreeObject(handle);
+            }
+            PyErr_Restore(error_type, error_value, error_traceback);
             return NULL;
         }
         if (device_need_ref_inc) {
