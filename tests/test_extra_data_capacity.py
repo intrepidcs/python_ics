@@ -1,5 +1,8 @@
 """Payload bounds must not depend on mutable wire-format length fields."""
 import ctypes
+import os
+import subprocess
+import sys
 
 import ics
 import pytest
@@ -7,6 +10,59 @@ import pytest
 
 MESSAGE_TYPES = [ics.SpyMessage, ics.SpyMessageJ1850]
 PACKED_PROTOCOLS = [ics.SPY_PROTOCOL_ETHERNET, ics.SPY_PROTOCOL_A2B, ics.SPY_PROTOCOL_SPI, ics.SPY_PROTOCOL_WBMS]
+
+
+@pytest.mark.parametrize("message_type", MESSAGE_TYPES)
+@pytest.mark.parametrize("attribute", ["NumberBytesData", "NumberBytesHeader", "Protocol"])
+def test_subclass_descriptors_cannot_replace_payload_during_rollback(message_type, attribute):
+    script = r'''
+import ics
+import sys
+
+base = getattr(ics, sys.argv[1])
+attribute = sys.argv[2]
+calls = []
+def replace_payload(self, value):
+    calls.append(True)
+    self.ExtraDataPtr = (2, 3)
+    getattr(base, attribute).__set__(self, value)
+def delete_payload(self):
+    self.ExtraDataPtr = (2, 3)
+    # A deletion callback may leave inconsistent fields; the getter must reject
+    # them, but rollback must never resurrect the freed original payload.
+    base.NumberBytesData.__set__(self, 3)
+message_type = type("Message", (base,), {attribute: property(fset=replace_payload, fdel=delete_payload)})
+msg = message_type()
+base.Protocol.__set__(msg, ics.SPY_PROTOCOL_SPI)
+if attribute == "Protocol":
+    base.Protocol.__set__(msg, ics.SPY_PROTOCOL_CANFD)
+    base.NumberBytesHeader.__set__(msg, 1)
+msg.ExtraDataPtr = (17,)
+value = {"NumberBytesData": 3, "NumberBytesHeader": 1, "Protocol": ics.SPY_PROTOCOL_ETHERNET}[attribute]
+try:
+    setattr(msg, attribute, value)
+except ValueError:
+    pass
+else:
+    raise AssertionError("unsafe native field accepted")
+assert calls == []
+assert msg.ExtraDataPtr == (17,)
+delattr(msg, attribute)
+try:
+    msg.ExtraDataPtr
+except ValueError:
+    pass
+else:
+    raise AssertionError("inconsistent deletion result accepted")
+base.NumberBytesData.__set__(msg, 2)
+assert msg.ExtraDataPtr == (2, 3)
+del msg
+'''
+    env = os.environ.copy()
+    env["PYTHONPATH"] = os.pathsep.join(str(path) for path in sys.path)
+    result = subprocess.run([sys.executable, "-c", script, message_type.__name__, attribute],
+                            env=env, capture_output=True, text=True, timeout=30)
+    assert result.returncode == 0, result.stdout + result.stderr
 
 
 @pytest.mark.parametrize("message_type", MESSAGE_TYPES)
