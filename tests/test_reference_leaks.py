@@ -43,7 +43,22 @@ def test_native_helper_reference_counts(tmp_path):
         target = "x86_64-pc-windows-msvc" if struct.calcsize("P") == 8 else "i686-pc-windows-msvc"
         obj = tmp_path / "reference_mock.obj"
         subprocess.run([clang, "-target", target, "-c", str(source), "-o", str(obj)], check=True)
-        subprocess.run([linker, "/dll", "/noentry", "/nodefaultlib", str(obj), f"/out:{library}"], check=True)
+        exports = []
+        if struct.calcsize("P") == 4:
+            # ice looks up undecorated names; i686 stdcall exports include stack sizes.
+            exports = [
+                f"/export:{name}=_{name}@{size}"
+                for name, size in [
+                    ("icsneoOpenDevice", 28),
+                    ("icsneoClosePort", 8),
+                    ("icsneoFreeObject", 4),
+                    ("icsneoGetDeviceStatus", 12),
+                    ("icsneoISO15765_ReceiveMessage", 12),
+                ]
+            ]
+        subprocess.run(
+            [linker, "/dll", "/noentry", "/nodefaultlib", str(obj), f"/out:{library}", *exports], check=True
+        )
     else:
         subprocess.run([clang, "-shared", "-fPIC", str(source), "-o", str(library)], check=True)
     # Isolate the global library override and module monkeypatches from the suite.
