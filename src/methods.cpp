@@ -693,8 +693,6 @@ auto device_name_from_nde(NeoDeviceEx* nde) -> std::string
                 return "RAD-Gigastar";
             case NEODEVICE_RED2:
                 return "neoVI RED 2";
-            case NEODEVICE_RAD_A2B:
-                return "RAD-A2B";
             case NEODEVICE_RADEPSILON:
                 return "RAD-Epsilon";
             case NEODEVICE_RADEPSILON_T:
