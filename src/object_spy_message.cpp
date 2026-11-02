@@ -84,7 +84,7 @@ static PyObject* spy_message_object_getattr(PyObject* o, PyObject* attr_name)
         }
         int actual_size = 0;
         // Some newer protocols are packing the length into NumberBytesHeader also so lets handle it here...
-        if (obj->msg.Protocol == SPY_PROTOCOL_A2B || obj->msg.Protocol == SPY_PROTOCOL_ETHERNET || 
+        if (obj->msg.Protocol == SPY_PROTOCOL_ETHERNET || 
             obj->msg.Protocol == SPY_PROTOCOL_SPI || obj->msg.Protocol == SPY_PROTOCOL_WBMS) {
             actual_size = (obj->msg.NumberBytesHeader << 8) | obj->msg.NumberBytesData;
         } else {
@@ -186,7 +186,7 @@ static int spy_message_object_setattr(PyObject* o, PyObject* name, PyObject* val
             delete[] (unsigned char*)obj->msg.ExtraDataPtr;
         obj->msg.ExtraDataPtr = new unsigned char[length];
         // Some newer protocols are packing the length into NumberBytesHeader also so lets handle it here...
-        if (obj->msg.Protocol == SPY_PROTOCOL_A2B || obj->msg.Protocol == SPY_PROTOCOL_ETHERNET || 
+        if (obj->msg.Protocol == SPY_PROTOCOL_ETHERNET || 
             obj->msg.Protocol == SPY_PROTOCOL_SPI || obj->msg.Protocol == SPY_PROTOCOL_WBMS) {
             obj->msg.NumberBytesHeader = static_cast<uint8_t>(length >> 8);
         }

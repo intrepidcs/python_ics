@@ -39,7 +39,6 @@ def get_device_specific_settings(s: s_device_settings) -> object:
     setting_map[e_device_settings_type.DeviceFire3SettingsType] = "fire3"
     setting_map[e_device_settings_type.DeviceFire3FlexraySettingsType] = "fire3Flexray"
     setting_map[e_device_settings_type.DeviceRed2SettingsType] = "red2"
-    setting_map[e_device_settings_type.DeviceRADA2BSettingsType] = "rad_a2b"
     setting_map[e_device_settings_type.DeviceOBD2LCSettingsType] = "obd2lc"
 
     if s.DeviceSettingType not in setting_map:
